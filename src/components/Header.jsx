@@ -1,6 +1,6 @@
 import { Search, ShoppingCart, User, Zap } from "lucide-react";
 import React from "react";
-
+import Link from "next/link";
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-[#e5eadd] dark:border-[#2a3825]">
@@ -29,31 +29,31 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-4 sm:gap-6">
             <nav className="hidden lg:flex items-center gap-6">
-              <a
+              <Link
                 className="text-sm font-medium hover:text-primary transition-colors"
-                href="#"
+                href="/shop"
               >
                 Shop
-              </a>
-              <a
+              </Link>
+              <Link
                 className="text-sm font-medium hover:text-primary transition-colors"
-                href="#"
+                href="/shop/parts"
               >
                 Parts
-              </a>
-              <a
+              </Link>
+              <Link
                 className="text-sm font-medium hover:text-primary transition-colors"
-                href="#"
+                href="/support"
               >
                 Support
-              </a>
+              </Link>
             </nav>
             <div className="flex items-center gap-2">
-              <button className="relative p-2 hover:bg-gray-100 dark:hover:bg-[#22301d] rounded-lg transition-colors group">
+              <Link href="/cart" className="relative p-2 hover:bg-gray-100 dark:hover:bg-[#22301d] rounded-lg transition-colors group">
                 <ShoppingCart className="w-5 h-5 group-hover:text-primary transition-colors"/>
                   
                 <span className="absolute top-1.5 right-1.5 size-2 bg-primary rounded-full"></span>
-              </button>
+              </Link>
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-[#22301d] rounded-lg transition-colors group">
                 <User className="w-5 h-5 group-hover:text-primary transition-colors"/>
                   

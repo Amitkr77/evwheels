@@ -1,7 +1,6 @@
 import React from "react";
 import {
   BadgeCheck,
-  Zap,
   Bike,
   Battery,
   ShoppingBag,
@@ -15,7 +14,19 @@ import {
   CheckCircle2Icon,
   Truck,
   Lock,
+  ShieldCheck,
+  Leaf,
+  Zap,
+  HeartPulse,
+  Wallet,
+  Car,
+  Users,
+  Globe,
+  BatteryCharging,
 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default function HeroSection() {
   return (
@@ -73,6 +84,10 @@ export default function HeroSection() {
                   <Zap className="material-symbols-outlined text-primary text-[20px]" />
                   <span className="font-semibold">Fast Charging</span>
                 </div>
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="h-6 w-6 text-primary" />
+                  <span className="font-semibold">Certified Safety</span>
+                </div>
               </div>
             </div>
           </div>
@@ -129,6 +144,203 @@ export default function HeroSection() {
             </a>
           </div>
         </section>
+
+        <section className="bg-white dark:bg-[#1a2c15] border-t border-gray-100 dark:border-gray-800 py-12">
+          <div className="max-w-[1280px] mx-auto px-4 md:px-10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
+                  <BadgeCheck className="material-symbols-outlined text-2xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-text-main dark:text-white">
+                    Quality Assured
+                  </h4>
+                  <p className="text-xs text-text-muted dark:text-gray-400">
+                    Certified OEM parts
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
+                  <CheckCircle2Icon className="material-symbols-outlined text-2xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-text-main dark:text-white">
+                    Compatibility Verified
+                  </h4>
+                  <p className="text-xs text-text-muted dark:text-gray-400">
+                    Guaranteed fitment
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
+                  <Truck className="material-symbols-outlined text-2xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-text-main dark:text-white">
+                    Fast Delivery
+                  </h4>
+                  <p className="text-xs text-text-muted dark:text-gray-400">
+                    2-3 Day shipping
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
+                  <Lock className="material-symbols-outlined text-2xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-text-main dark:text-white">
+                    Secure Payments
+                  </h4>
+                  <p className="text-xs text-text-muted dark:text-gray-400">
+                    256-bit encryption
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="w-full bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-[#131811] py-20">
+          <div className="max-w-[1280px] mx-auto px-4 md:px-10">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-4">
+                Why Go Electric?
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Ride Greener, Healthier, and Smarter
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                Electric cycles aren't just a trend—they're the future of
+                sustainable mobility. Discover why millions are switching to
+                e-cycles for a better ride and a better planet.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+              <div className="space-y-8">
+                <div className="flex gap-6">
+                  <div className="p-4 rounded-full bg-primary/10 text-primary">
+                    <Globe className="h-10 w-10" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">
+                      Massive Environmental Impact
+                    </h3>
+                    <p className="text-lg text-muted-foreground">
+                      E-cycles produce zero tailpipe emissions and have a
+                      lifecycle carbon footprint up to 90% lower than cars.
+                      Switching to e-cycles could cut urban CO₂ emissions by up
+                      to 50% in some regions.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6">
+                  <div className="p-4 rounded-full bg-primary/10 text-primary">
+                    <Wallet className="h-10 w-10" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">
+                      Huge Cost Savings
+                    </h3>
+                    <p className="text-lg text-muted-foreground">
+                      Charge at home for pennies—full charge often costs less
+                      than ₹10. No fuel, minimal maintenance, and lower running
+                      costs make e-cycles far cheaper than cars or petrol bikes
+                      over time.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6">
+                  <div className="p-4 rounded-full bg-primary/10 text-primary">
+                    <HeartPulse className="h-10 w-10" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">
+                      Boost Your Health & Fitness
+                    </h3>
+                    <p className="text-lg text-muted-foreground">
+                      Pedal-assist encourages longer, more frequent rides while
+                      providing moderate-to-vigorous exercise. Studies show
+                      improved heart health, better blood sugar control, and
+                      reduced stress.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <img
+                  src="https://www.troxusmobility.com/cdn/shop/articles/495A2518_1.jpg?v=1709542428&width=1500"
+                  alt="Rider on electric bike in urban green setting"
+                  className="rounded-xl shadow-lg"
+                />
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0683/8560/3641/files/a-person-riding-engwe-l20-3-0-pro.jpg?v=1744097433"
+                  alt="Eco-friendly city commuting on e-bike"
+                  className="rounded-xl shadow-lg"
+                />
+                <img
+                  src="https://media.istockphoto.com/id/1308114739/photo/family-with-small-children-cycling-outdoors-in-summer-nature-high-tatras-in-slovakia.jpg?s=612x612&w=0&k=20&c=5isX1tewBK79tkNK6m7g261APrE5UqBsxzen9Y92Uks="
+                  alt="Happy family riding e-cycles on nature trail"
+                  className="rounded-xl shadow-lg"
+                />
+                <img
+                  src="https://i.ytimg.com/vi/djK50xJF_lU/maxresdefault.jpg"
+                  alt="E-bike effortlessly navigating traffic jam"
+                  className="rounded-xl shadow-lg"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <Card className="text-center p-6">
+                <Leaf className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h4 className="text-xl font-bold">Zero Emissions</h4>
+                <p className="text-muted-foreground mt-2">
+                  Cleaner air for everyone
+                </p>
+              </Card>
+              <Card className="text-center p-6">
+                <Zap className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h4 className="text-xl font-bold">Beat Traffic</h4>
+                <p className="text-muted-foreground mt-2">
+                  Zip past jams effortlessly
+                </p>
+              </Card>
+              <Card className="text-center p-6">
+                <Users className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h4 className="text-xl font-bold">Inclusive Riding</h4>
+                <p className="text-muted-foreground mt-2">
+                  For all ages & fitness levels
+                </p>
+              </Card>
+              <Card className="text-center p-6">
+                <BatteryCharging className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h4 className="text-xl font-bold">Easy Charging</h4>
+                <p className="text-muted-foreground mt-2">
+                  Plug in at home overnight
+                </p>
+              </Card>
+            </div>
+
+            <div className="mt-16 text-center">
+              <p className="text-2xl font-semibold mb-6">
+                Join the electric revolution—ride farther, save more, and help
+                build a sustainable future.
+              </p>
+              <Button size="lg" className="bg-primary hover:bg-[#3ce00b]">
+                Explore E-Cycles Now
+              </Button>
+            </div>
+          </div>
+        </section>
+
         <section className="max-w-[1280px] mx-auto px-4 md:px-10 py-10">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold tracking-tight">
@@ -333,6 +545,7 @@ export default function HeroSection() {
             </div>
           </div>
         </section>
+
         <section className="mt-12 w-full bg-[#131811] dark:bg-black text-white py-16">
           <div className="max-w-[1280px] mx-auto px-4 md:px-10">
             <div className="flex flex-col md:flex-row items-center justify-between gap-10">
@@ -383,64 +596,6 @@ export default function HeroSection() {
                     search
                   </span>
                 </button>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="bg-white dark:bg-[#1a2c15] border-t border-gray-100 dark:border-gray-800 py-12">
-          <div className="max-w-[1280px] mx-auto px-4 md:px-10">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
-                  <BadgeCheck className="material-symbols-outlined text-2xl" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-text-main dark:text-white">
-                    Quality Assured
-                  </h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">
-                    Certified OEM parts
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
-                  <CheckCircle2Icon className="material-symbols-outlined text-2xl" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-text-main dark:text-white">
-                    Compatibility Verified
-                  </h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">
-                    Guaranteed fitment
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
-                  <Truck className="material-symbols-outlined text-2xl" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-text-main dark:text-white">
-                    Fast Delivery
-                  </h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">
-                    2-3 Day shipping
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
-                  <Lock className="material-symbols-outlined text-2xl" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-text-main dark:text-white">
-                    Secure Payments
-                  </h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">
-                    256-bit encryption
-                  </p>
-                </div>
               </div>
             </div>
           </div>
