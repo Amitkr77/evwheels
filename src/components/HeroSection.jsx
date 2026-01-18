@@ -23,6 +23,11 @@ import {
   Users,
   Globe,
   BatteryCharging,
+  Globe2,
+  CreditCard,
+  Heart,
+  Gauge,
+  Fuel,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -145,199 +150,125 @@ export default function HeroSection() {
           </div>
         </section>
 
-        <section className="bg-white dark:bg-[#1a2c15] border-t border-gray-100 dark:border-gray-800 py-12">
-          <div className="max-w-[1280px] mx-auto px-4 md:px-10">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
-                  <BadgeCheck className="material-symbols-outlined text-2xl" />
+        <section className="max-w-[1280px] mx-auto px-4 md:px-10 py-16">
+          <div className="text-center mb-16">
+            <span className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider mb-4 inline-block">
+              Why Go Electric?
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black mb-6">
+              Ride Greener, Healthier, and Smarter
+            </h2>
+            <p className="max-w-2xl mx-auto text-lg text-text-muted dark:text-gray-400">
+              Electric cycles aren't just a trend—they're the future of
+              sustainable mobility. Discover why millions are switching to
+              e-cycles for a better ride and a better planet.
+            </p>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="space-y-8">
+              <div className="flex gap-5 group">
+                <div className="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0 transition-transform group-hover:scale-110">
+                  <Globe2 className="material-symbols-outlined text-3xl" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-text-main dark:text-white">
-                    Quality Assured
-                  </h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">
-                    Certified OEM parts
+                  <h3 className="text-xl font-bold mb-2">
+                    Massive Environmental Impact
+                  </h3>
+                  <p className="text-text-muted dark:text-gray-400">
+                    E-cycles produce zero tailpipe emissions and have a
+                    lifecycle carbon footprint up to 90% lower than cars.
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
-                  <CheckCircle2Icon className="material-symbols-outlined text-2xl" />
+              <div className="flex gap-5 group">
+                <div className="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0 transition-transform group-hover:scale-110">
+                  <CreditCard className="material-symbols-outlined text-3xl" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-text-main dark:text-white">
-                    Compatibility Verified
-                  </h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">
-                    Guaranteed fitment
+                  <h3 className="text-xl font-bold mb-2">Huge Cost Savings</h3>
+                  <p className="text-text-muted dark:text-gray-400">
+                    Charge at home for pennies. No fuel, minimal maintenance,
+                    and lower running costs make e-cycles far cheaper than cars.
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
-                  <Truck className="material-symbols-outlined text-2xl" />
+              <div className="flex gap-5 group">
+                <div className="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0 transition-transform group-hover:scale-110">
+                  <Heart className="material-symbols-outlined text-3xl" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-text-main dark:text-white">
-                    Fast Delivery
-                  </h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">
-                    2-3 Day shipping
+                  <h3 className="text-xl font-bold mb-2">
+                    Boost Your Health &amp; Fitness
+                  </h3>
+                  <p className="text-text-muted dark:text-gray-400">
+                    Pedal-assist encourages longer, more frequent rides while
+                    providing moderate-to-vigorous exercise for heart health.
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
-                  <Lock className="material-symbols-outlined text-2xl" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-text-main dark:text-white">
-                    Secure Payments
-                  </h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">
-                    256-bit encryption
-                  </p>
-                </div>
-              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <img
+                alt="E-cycle lifestyle 1"
+                className="rounded-2xl h-48 w-full object-cover shadow-lg"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy6lIQKH6VedeOoqI_QbCGTC65-vz1M1c9HxAq40nUkAxFVCDO0gebGsWl_kHYC6oQkakpXJ-Ej4XH__PDGm9J1YFpXfpe0PNvtVZZ22MR3_4lucQMTWAB_W3jsarxv0RYRfDuZOvL9N5JJIRn0bFCpExZzA32Yz68w_L41EfNVO0KUUGEs8QHkc9NoCrnt1Q7vvXNBU8JXGQXfjHkLz7h454avXbgYNolqf8MREWFdr2D2GSbGJShjCcmvbtKnJZw1oGJAmqkRBSr"
+              />
+              <img
+                alt="E-cycle lifestyle 2"
+                className="rounded-2xl h-48 w-full object-cover shadow-lg mt-8"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvOzaIIE4qaq2QbME2IvpMFcvs3ujKLmwRo-AvARYviKGVuBzWQ21UOuB8ZzwI-4lSes_vVO9vPAv8umFve9yMKuhnMxJCNlKhERondg3I1eOO7SOUE_4ygAlMKjKCnbMTzKFT0V8oPCcrZR1ZVI2YuK1Ck2MAm1cF5c11XbBBIy5MDtAXVvKg0R7VxI0IhifoMVl5m90heKrr3Z3XMBB3yZwzhH4Flxwyi2fewmZQ1pQpa3svmtbc77Kr3qT6lZJkI0K-TaxZTllA"
+              />
+              <img
+                alt="E-cycle lifestyle 3"
+                className="rounded-2xl h-48 w-full object-cover shadow-lg -mt-8"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzVdCX9az_3q643VE4yvJOrbNEYeE4jmV5U7Ew5gAbt0WLm0iME9d0kcI3-x-04rYwda5mv01a58HU4t74rK9fXS82NMM7K0ronqqnQ1rgBTI1Tem4kLmmjqoecu6FaXt6D2yspy7gO7Se93fcO0XBRbGBbgnC5sh_lR6F44tyCK9VD1aGchaGsspyCrMxPMxD-JXIyyldvneVUPvScf_LX4lybnERfFr1fU8142x_S-idr2Hj8fiHhk8aIEEuxI43FOYI9sf2CuKv"
+              />
+              <img
+                alt="E-cycle lifestyle 4"
+                className="rounded-2xl h-48 w-full object-cover shadow-lg"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp-zzFmEHwLN_bTAnVBKoIfLJ7P5Bx6SjHm4AFQ6RCXUhyGgbN6EI8ehT07YNKzbyvlkrs5HzP2MhaPqBjc0ddS47EzFLPSuNNJlnLI-P3rcmsxhBZQdR2Mjp-WEwQDAiFFaO9ej8L9SuxoLNy65ReIFTKsLUJxGqgKEaaRt7Hlblt4k19JTZvecS5f0uUAegYaPVq0gaRr_ankKyBOcsoUKrFuOHIFg-t5iw2xNnMK-e_sDZDZxx5h-KSwNM7S3_oQESG-Nz4qYCK"
+              />
             </div>
           </div>
-        </section>
-
-        <section className="w-full bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-[#131811] py-20">
-          <div className="max-w-[1280px] mx-auto px-4 md:px-10">
-            <div className="text-center mb-12">
-              <Badge variant="secondary" className="mb-4">
-                Why Go Electric?
-              </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Ride Greener, Healthier, and Smarter
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Electric cycles aren't just a trend—they're the future of
-                sustainable mobility. Discover why millions are switching to
-                e-cycles for a better ride and a better planet.
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <div className="bg-white dark:bg-[#1a2c15] p-6 rounded-2xl border border-[#dee6db] dark:border-[#2a3825] text-center hover:border-primary/40 hover:shadow-xl transition-all">
+              <Leaf className="material-symbols-outlined text-4xl text-primary mb-4 " />
+              <h4 className="font-bold text-lg mb-1">Zero Emissions</h4>
+              <p className="text-sm text-text-muted dark:text-gray-400">
+                Cleaner air for everyone
               </p>
             </div>
-
-            <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-              <div className="space-y-8">
-                <div className="flex gap-6">
-                  <div className="p-4 rounded-full bg-primary/10 text-primary">
-                    <Globe className="h-10 w-10" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2">
-                      Massive Environmental Impact
-                    </h3>
-                    <p className="text-lg text-muted-foreground">
-                      E-cycles produce zero tailpipe emissions and have a
-                      lifecycle carbon footprint up to 90% lower than cars.
-                      Switching to e-cycles could cut urban CO₂ emissions by up
-                      to 50% in some regions.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-6">
-                  <div className="p-4 rounded-full bg-primary/10 text-primary">
-                    <Wallet className="h-10 w-10" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2">
-                      Huge Cost Savings
-                    </h3>
-                    <p className="text-lg text-muted-foreground">
-                      Charge at home for pennies—full charge often costs less
-                      than ₹10. No fuel, minimal maintenance, and lower running
-                      costs make e-cycles far cheaper than cars or petrol bikes
-                      over time.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-6">
-                  <div className="p-4 rounded-full bg-primary/10 text-primary">
-                    <HeartPulse className="h-10 w-10" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-2">
-                      Boost Your Health & Fitness
-                    </h3>
-                    <p className="text-lg text-muted-foreground">
-                      Pedal-assist encourages longer, more frequent rides while
-                      providing moderate-to-vigorous exercise. Studies show
-                      improved heart health, better blood sugar control, and
-                      reduced stress.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <img
-                  src="https://www.troxusmobility.com/cdn/shop/articles/495A2518_1.jpg?v=1709542428&width=1500"
-                  alt="Rider on electric bike in urban green setting"
-                  className="rounded-xl shadow-lg"
-                />
-                <img
-                  src="https://cdn.shopify.com/s/files/1/0683/8560/3641/files/a-person-riding-engwe-l20-3-0-pro.jpg?v=1744097433"
-                  alt="Eco-friendly city commuting on e-bike"
-                  className="rounded-xl shadow-lg"
-                />
-                <img
-                  src="https://media.istockphoto.com/id/1308114739/photo/family-with-small-children-cycling-outdoors-in-summer-nature-high-tatras-in-slovakia.jpg?s=612x612&w=0&k=20&c=5isX1tewBK79tkNK6m7g261APrE5UqBsxzen9Y92Uks="
-                  alt="Happy family riding e-cycles on nature trail"
-                  className="rounded-xl shadow-lg"
-                />
-                <img
-                  src="https://i.ytimg.com/vi/djK50xJF_lU/maxresdefault.jpg"
-                  alt="E-bike effortlessly navigating traffic jam"
-                  className="rounded-xl shadow-lg"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <Card className="text-center p-6">
-                <Leaf className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h4 className="text-xl font-bold">Zero Emissions</h4>
-                <p className="text-muted-foreground mt-2">
-                  Cleaner air for everyone
-                </p>
-              </Card>
-              <Card className="text-center p-6">
-                <Zap className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h4 className="text-xl font-bold">Beat Traffic</h4>
-                <p className="text-muted-foreground mt-2">
-                  Zip past jams effortlessly
-                </p>
-              </Card>
-              <Card className="text-center p-6">
-                <Users className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h4 className="text-xl font-bold">Inclusive Riding</h4>
-                <p className="text-muted-foreground mt-2">
-                  For all ages & fitness levels
-                </p>
-              </Card>
-              <Card className="text-center p-6">
-                <BatteryCharging className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h4 className="text-xl font-bold">Easy Charging</h4>
-                <p className="text-muted-foreground mt-2">
-                  Plug in at home overnight
-                </p>
-              </Card>
-            </div>
-
-            <div className="mt-16 text-center">
-              <p className="text-2xl font-semibold mb-6">
-                Join the electric revolution—ride farther, save more, and help
-                build a sustainable future.
+            <div className="bg-white dark:bg-[#1a2c15] p-6 rounded-2xl border border-[#dee6db] dark:border-[#2a3825] text-center hover:border-primary/40 hover:shadow-xl transition-all">
+              <Gauge className="material-symbols-outlined text-4xl text-primary mb-4" />
+              <h4 className="font-bold text-lg mb-1">Beat Traffic</h4>
+              <p className="text-sm text-text-muted dark:text-gray-400">
+                Zip past jams effortlessly
               </p>
-              <Button size="lg" className="bg-primary hover:bg-[#3ce00b]">
-                Explore E-Cycles Now
-              </Button>
             </div>
+            <div className="bg-white dark:bg-[#1a2c15] p-6 rounded-2xl border border-[#dee6db] dark:border-[#2a3825] text-center hover:border-primary/40 hover:shadow-xl transition-all">
+              <Users className="material-symbols-outlined text-4xl text-primary mb-4" />
+              <h4 className="font-bold text-lg mb-1">Inclusive Riding</h4>
+              <p className="text-sm text-text-muted dark:text-gray-400">
+                For all ages &amp; fitness levels
+              </p>
+            </div>
+            <div className="bg-white dark:bg-[#1a2c15] p-6 rounded-2xl border border-[#dee6db] dark:border-[#2a3825] text-center hover:border-primary/40 hover:shadow-xl transition-all">
+              <Fuel className="material-symbols-outlined text-4xl text-primary mb-4" />
+              <h4 className="font-bold text-lg mb-1">Easy Charging</h4>
+              <p className="text-sm text-text-muted dark:text-gray-400">
+                Plug in at home overnight
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-6">
+            <p className="text-xl font-bold text-center">
+              Join the electric revolution—ride farther, save more, and help
+              build a sustainable future.
+            </p>
+            <button className="h-14 px-10 rounded-full bg-primary hover:bg-[#3ce00b] text-primary-content font-black text-lg transition-all duration-300 hover:scale-[1.05] active:scale-95 shadow-xl shadow-primary/25 flex items-center gap-3">
+              Explore E-Cycles Now
+              <ArrowRight className="material-symbols-outlined font-bold" />
+            </button>
           </div>
         </section>
 
@@ -540,6 +471,65 @@ export default function HeroSection() {
                     Components
                   </span>
                   <span className="font-bold text-lg">₹189</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white dark:bg-[#1a2c15] border-t border-gray-100 dark:border-gray-800 py-12">
+          <div className="max-w-[1280px] mx-auto px-4 md:px-10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
+                  <BadgeCheck className="material-symbols-outlined text-2xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-text-main dark:text-white">
+                    Quality Assured
+                  </h4>
+                  <p className="text-xs text-text-muted dark:text-gray-400">
+                    Certified OEM parts
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
+                  <CheckCircle2Icon className="material-symbols-outlined text-2xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-text-main dark:text-white">
+                    Compatibility Verified
+                  </h4>
+                  <p className="text-xs text-text-muted dark:text-gray-400">
+                    Guaranteed fitment
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
+                  <Truck className="material-symbols-outlined text-2xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-text-main dark:text-white">
+                    Fast Delivery
+                  </h4>
+                  <p className="text-xs text-text-muted dark:text-gray-400">
+                    2-3 Day shipping
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-[#f1f5f0] dark:bg-[#22301d] flex items-center justify-center text-primary flex-shrink-0">
+                  <Lock className="material-symbols-outlined text-2xl" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-text-main dark:text-white">
+                    Secure Payments
+                  </h4>
+                  <p className="text-xs text-text-muted dark:text-gray-400">
+                    256-bit encryption
+                  </p>
                 </div>
               </div>
             </div>
