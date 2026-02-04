@@ -4,6 +4,14 @@
 /* Dark mode variant */
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-background-light: #f6f8f5;
+  --color-background-dark: #142210;
+  --color-text-muted:#6b8a60;
+  --color-deep-green:#131811;
+  --color-border-subtle:#dee6db;
+}
+
 /* =========================================================
    Tailwind Theme Tokens (utility-facing)
    ========================================================= */
