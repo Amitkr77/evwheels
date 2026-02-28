@@ -41,11 +41,9 @@ export default function HeroSection() {
           <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl bg-gray-900 group">
             <div className="absolute inset-0 w-full h-full">
               <video
-                autoPlay=""
+
                 className="w-full h-full object-cover opacity-90"
-                loop=""
-                muted=""
-                playsInline=""
+               
               >
                 <source
                   src="https://assets.mixkit.co/videos/preview/mixkit-riding-a-bike-through-the-city-streets-4157-large.mp4"
@@ -230,37 +228,67 @@ export default function HeroSection() {
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            <div className="bg-white dark:bg-[#1a2c15] p-6 rounded-2xl border border-[#dee6db] dark:border-[#2a3825] text-center hover:border-primary/40 hover:shadow-xl transition-all">
-              <Leaf className="material-symbols-outlined text-4xl text-primary mb-4 " />
-              <h4 className="font-bold text-lg mb-1">Zero Emissions</h4>
-              <p className="text-sm text-text-muted dark:text-gray-400">
-                Cleaner air for everyone
-              </p>
-            </div>
-            <div className="bg-white dark:bg-[#1a2c15] p-6 rounded-2xl border border-[#dee6db] dark:border-[#2a3825] text-center hover:border-primary/40 hover:shadow-xl transition-all">
-              <Gauge className="material-symbols-outlined text-4xl text-primary mb-4" />
-              <h4 className="font-bold text-lg mb-1">Beat Traffic</h4>
-              <p className="text-sm text-text-muted dark:text-gray-400">
-                Zip past jams effortlessly
-              </p>
-            </div>
-            <div className="bg-white dark:bg-[#1a2c15] p-6 rounded-2xl border border-[#dee6db] dark:border-[#2a3825] text-center hover:border-primary/40 hover:shadow-xl transition-all">
-              <Users className="material-symbols-outlined text-4xl text-primary mb-4" />
-              <h4 className="font-bold text-lg mb-1">Inclusive Riding</h4>
-              <p className="text-sm text-text-muted dark:text-gray-400">
-                For all ages &amp; fitness levels
-              </p>
-            </div>
-            <div className="bg-white dark:bg-[#1a2c15] p-6 rounded-2xl border border-[#dee6db] dark:border-[#2a3825] text-center hover:border-primary/40 hover:shadow-xl transition-all">
-              <Fuel className="material-symbols-outlined text-4xl text-primary mb-4" />
-              <h4 className="font-bold text-lg mb-1">Easy Charging</h4>
-              <p className="text-sm text-text-muted dark:text-gray-400">
-                Plug in at home overnight
-              </p>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+            {[
+              {
+                icon: Leaf,
+                title: "Zero Emissions",
+                desc: "Cleaner air for everyone",
+              },
+              {
+                icon: Gauge,
+                title: "Beat Traffic",
+                desc: "Zip past jams effortlessly",
+              },
+              {
+                icon: Users,
+                title: "Inclusive Riding",
+                desc: "For all ages & fitness levels",
+              },
+              {
+                icon: Fuel,
+                title: "Easy Charging",
+                desc: "Plug in at home overnight",
+              },
+            ].map(({ icon: Icon, title, desc }, i) => (
+              <div
+                key={i}
+                className="group relative bg-white/80 dark:bg-[#1a2c15]/80 backdrop-blur-md
+                 p-7 rounded-3xl border border-[#dee6db] dark:border-[#2a3825]
+                 text-center transition-all duration-300
+                 hover:-translate-y-2 hover:shadow-2xl hover:border-primary/40"
+              >
+                {/* Icon */}
+                <div
+                  className="mx-auto mb-5 flex h-14 w-14 items-center justify-center
+                   rounded-full bg-primary/10 text-primary
+                   group-hover:bg-primary group-hover:text-white
+                   transition-colors duration-300"
+                >
+                  <Icon className="text-3xl" />
+                </div>
+
+                {/* Title */}
+                <h4 className="font-semibold text-lg mb-2 tracking-tight">
+                  {title}
+                </h4>
+
+                {/* Description */}
+                <p className="text-sm leading-relaxed text-text-muted dark:text-gray-400">
+                  {desc}
+                </p>
+
+                {/* Glow effect */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-3xl
+                   opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                   ring-1 ring-primary/20"
+                />
+              </div>
+            ))}
           </div>
-          <div className="flex flex-col items-center gap-6">
+
+          {/* <div className="flex flex-col items-center gap-6">
             <p className="text-xl font-bold text-center">
               Join the electric revolution—ride farther, save more, and help
               build a sustainable future.
@@ -269,7 +297,7 @@ export default function HeroSection() {
               Explore E-Cycles Now
               <ArrowRight className="material-symbols-outlined font-bold" />
             </button>
-          </div>
+          </div> */}
         </section>
 
         <section className="max-w-[1280px] mx-auto px-4 md:px-10 py-10">

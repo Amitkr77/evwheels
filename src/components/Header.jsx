@@ -1,7 +1,10 @@
+"use client";
 import { Search, ShoppingCart, User, Zap } from "lucide-react";
 import React from "react";
 import Link from "next/link";
+import { useAuthStore } from "@/store/authStore";
 export default function Header() {
+  const { user, logout } = useAuthStore();
   return (
     <header className="sticky top-0 z-50 w-full bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-[#e5eadd] dark:border-[#2a3825]">
       <div className="max-w-[1280px] mx-auto px-4 md:px-10 py-3">
@@ -61,6 +64,14 @@ export default function Header() {
                   <User className="w-5 h-5 group-hover:text-primary transition-colors" />
                 </button>
               </Link>
+              {user ? (
+                <>
+                  <span>{user.name}</span>
+                  <button onClick={logout}>Logout</button>
+                </>
+              ) : (
+                <a href="/auth/login">Login</a>
+              )}
               <button className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-[#22301d] rounded-lg">
                 <span className="w-5 h-5">menu</span>
               </button>
