@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 export default function UserRootLayout({ children }) {
     return (
         <main>
-            <Header />
+            {/* <Header /> */}
             {children}
             <Footer />
         </main>

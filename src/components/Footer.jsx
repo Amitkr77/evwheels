@@ -1,233 +1,190 @@
-"use client";
+// components/Footer.tsx
 
-import React, { useState } from "react";
+'use client'
+
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
 import {
-  Zap,
+  Mail,
+  Phone,
+  MapPin,
   Facebook,
   Instagram,
   Twitter,
   Youtube,
-  Mail,
-  HelpCircle,
-  Package,
+  MessageCircle,
+  ShieldCheck,
   Truck,
-  Shield,
-  Phone,
-  ShoppingCart,
   Battery,
   Wrench,
-  Gift,
-  Newspaper,
-} from "lucide-react";
+  Newspaper 
+} from 'lucide-react'
 
 export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState(""); // "success", "error", or ""
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState('') // "success" | "error" | ""
 
   const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (!email || !email.includes("@")) {
-      setStatus("error");
-      setTimeout(() => setStatus(""), 3000);
-      return;
+    e.preventDefault()
+    if (!email.trim() || !email.includes('@')) {
+      setStatus('error')
+      setTimeout(() => setStatus(''), 3000)
+      return
     }
-    setStatus("success");
-    setEmail("");
-    setTimeout(() => setStatus(""), 3000);
-  };
+
+    // Simulate successful subscription
+    setStatus('success')
+    setEmail('')
+    setTimeout(() => setStatus(''), 4000)
+  }
+
+  const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-white dark:bg-zinc-950 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Brand Column */}
+    <footer className="bg-[#fdfcf9] border-t border-neutral-200/70 pt-16 pb-12 font-['Inter']">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
+          {/* Brand & Description */}
           <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-3">
-              <div className="size-10 rounded-full bg-primary flex items-center justify-center">
-                <Zap className="w-6 h-6 text-primary-foreground" />
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
+                E
               </div>
-              <h2 className="text-2xl font-bold tracking-tight text-text-main dark:text-white">
-                EvWheels
+              <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium tracking-tight text-neutral-900">
+                EVWheels
               </h2>
             </div>
-            <p className="text
 
-text-sm text-text-muted dark:text-gray-400 leading-relaxed max-w-xs">
-              Your one-stop shop for premium electric mobility solutions. We power your journey with quality parts and accessories.
+            <p className="text-neutral-600 font-light leading-relaxed max-w-xs">
+              Premium electric cycles crafted for real Indian roads — silent, capable, and built to last.
             </p>
+
+            {/* Social Icons */}
             <div className="flex gap-5">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-                className="text-gray-500 hover:text-primary transition-colors"
-              >
-                <Facebook className="w-6 h-6" />
+              <a href="#" className="text-neutral-500 hover:text-emerald-800 transition-colors">
+                <Facebook size={20} />
               </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className="text-gray-500 hover:text-primary transition-colors"
-              >
-                <Instagram className="w-6 h-6" />
+              <a href="#" className="text-neutral-500 hover:text-emerald-800 transition-colors">
+                <Instagram size={20} />
               </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Twitter / X"
-                className="text-gray-500 hover:text-primary transition-colors"
-              >
-                <Twitter className="w-6 h-6" />
+              <a href="#" className="text-neutral-500 hover:text-emerald-800 transition-colors">
+                <Twitter size={20} />
               </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube"
-                className="text-gray-500 hover:text-primary transition-colors"
-              >
-                <Youtube className="w-6 h-6" />
+              <a href="#" className="text-neutral-500 hover:text-emerald-800 transition-colors">
+                <Youtube size={20} />
               </a>
             </div>
           </div>
 
-          {/* Shop Links */}
+          {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-text-main dark:text-white mb-5">Shop</h4>
-            <ul className="space-y-3 text-sm text-text-muted dark:text-gray-400">
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <ShoppingCart className="w-4 h-4" />
-                  Electric Cycles
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <Battery className="w-4 h-4" />
-                  Batteries
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <Wrench className="w-4 h-4" />
-                  Spare Parts
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <Package className="w-4 h-4" />
-                  Accessories
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <Gift className="w-4 h-4" />
-                  New Arrivals
-                </a>
-              </li>
+            <h4 className="text-lg font-medium text-neutral-900 mb-6">Quick Links</h4>
+            <ul className="space-y-3 text-sm text-neutral-600">
+              <li><Link href="/cycles" className="hover:text-emerald-800 transition-colors">Our Cycles</Link></li>
+              <li><Link href="/accessories" className="hover:text-emerald-800 transition-colors">Accessories</Link></li>
+              <li><Link href="/why-us" className="hover:text-emerald-800 transition-colors">Why EVWheels</Link></li>
+              <li><Link href="/contact" className="hover:text-emerald-800 transition-colors">Contact Us</Link></li>
+              <li><Link href="/login" className="hover:text-emerald-800 transition-colors">My Account</Link></li>
             </ul>
           </div>
 
-          {/* Support Links */}
+          {/* Support */}
           <div>
-            <h4 className="font-bold text-text-main dark:text-white mb-5">Support</h4>
-            <ul className="space-y-3 text-sm text-text-muted dark:text-gray-400">
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <HelpCircle className="w-4 h-4" />
-                  Help Center
-                </a>
+            <h4 className="text-lg font-medium text-neutral-900 mb-6">Support</h4>
+            <ul className="space-y-3 text-sm text-neutral-600">
+              <li className="flex items-center gap-2">
+                <Truck size={16} className="text-emerald-800" />
+                <Link href="#" className="hover:text-emerald-800 transition-colors">Shipping & Delivery</Link>
               </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <Shield className="w-4 h-4" />
-                  Compatibility Guide
-                </a>
+              <li className="flex items-center gap-2">
+                <ShieldCheck size={16} className="text-emerald-800" />
+                <Link href="#" className="hover:text-emerald-800 transition-colors">Warranty & Returns</Link>
               </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <Truck className="w-4 h-4" />
-                  Shipping & Returns
-                </a>
+              <li className="flex items-center gap-2">
+                <Battery size={16} className="text-emerald-800" />
+                <Link href="#" className="hover:text-emerald-800 transition-colors">Battery Care</Link>
               </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <Shield className="w-4 h-4" />
-                  Warranty Info
-                </a>
+              <li className="flex items-center gap-2">
+                <Wrench size={16} className="text-emerald-800" />
+                <Link href="#" className="hover:text-emerald-800 transition-colors">Service Centers</Link>
               </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 hover:text-primary transition-colors">
-                  <Phone className="w-4 h-4" />
-                  Contact Us
-                </a>
+              <li className="flex items-center gap-2">
+                <Phone size={16} className="text-emerald-800" />
+                <Link href="tel:+919876543210" className="hover:text-emerald-800 transition-colors">+91 98765 43210</Link>
               </li>
             </ul>
           </div>
 
           {/* Newsletter */}
           <div>
-            <h4 className="font-bold text-text-main dark:text-white mb-5 flex items-center gap-2">
-              <Mail className="w-5 h-5" />
-              Stay Charged
+            <h4 className="text-lg font-medium text-neutral-900 mb-6 flex items-center gap-2">
+              <Mail size={18} />
+              Stay Updated
             </h4>
-            <p className="text-sm text-text-muted dark:text-gray-400 mb-6">
-              Subscribe for latest updates and exclusive offers.
+            <p className="text-sm text-neutral-600 mb-6 leading-relaxed">
+              Get the latest on new models, offers, and Patna ride tips.
             </p>
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
+
+            <form onSubmit={handleSubscribe} className="space-y-4">
               <input
-                className={`flex-1 px-4 py-3 rounded-lg text-sm bg-gray-100 dark:bg-zinc-900 border ${
-                  status === "error" ? "border-red-500" : "border-transparent"
-                } focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-500 transition-all`}
-                placeholder="Your email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                className={`w-full px-5 py-4 border ${
+                  status === 'error' ? 'border-red-500' : 'border-neutral-300'
+                } rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm`}
                 required
               />
+
               <button
                 type="submit"
-                className="bg-primary hover:bg-green-500 text-primary-foreground font-bold px-6 py-3 rounded-lg text-sm transition-all duration-200 whitespace-nowrap flex items-center justify-center gap-2"
+                className="w-full py-4 bg-neutral-900 text-white rounded-full text-sm md:text-base font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2"
               >
-                <Newspaper className="w-4 h-4" />
+                <Newspaper size={16} />
                 Subscribe
               </button>
+
+              {status === 'success' && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-emerald-700 text-sm font-light mt-2"
+                >
+                  Thank you! You're now on the list ⚡
+                </motion.p>
+              )}
+
+              {status === 'error' && (
+                <p className="text-red-600 text-sm font-light mt-2">
+                  Please enter a valid email address.
+                </p>
+              )}
             </form>
-            {status === "success" && (
-              <p className="text-green-600 dark:text-green-400 text-xs mt-2">
-                Thanks for subscribing! ⚡
-              </p>
-            )}
-            {status === "error" && (
-              <p className="text-red-600 dark:text-red-400 text-xs mt-2">
-                Please enter a valid email.
-              </p>
-            )}
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-          <p className="text-text-muted dark:text-gray-500">
-            © {new Date().getFullYear()} EvWheels Inc. All rights reserved.
+        <div className="border-t border-neutral-200/70 pt-10 mt-12 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-neutral-600">
+          <p>
+            © {new Date().getFullYear()} EVWheels. Crafted with care in Patna.
           </p>
-          <div className="flex gap-6 text-text-muted dark:text-gray-500">
-            <a href="#" className="hover:text-text-main dark:hover:text-white transition-colors">
+
+          <div className="flex gap-6">
+            <Link href="#" className="hover:text-neutral-900 transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="hover:text-text-main dark:hover:text-white transition-colors">
+            </Link>
+            <Link href="#" className="hover:text-neutral-900 transition-colors">
               Terms of Service
-            </a>
-            <a href="#" className="hover:text-text-main dark:hover:text-white transition-colors">
-              Cookie Policy
-            </a>
+            </Link>
+            <Link href="#" className="hover:text-neutral-900 transition-colors">
+              Warranty
+            </Link>
           </div>
         </div>
       </div>
     </footer>
-  );
+  )
 }

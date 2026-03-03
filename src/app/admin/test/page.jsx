@@ -1,591 +1,204 @@
-'use client';
+// app/page.tsx
 
-import React, { useState } from 'react';
-import { 
-  Home, ShoppingCart, Package, Ticket, Star, Bell, Plus, Search, 
-  Calendar, Download, Users, TrendingUp, LogOut, Eye, Trash2, Edit2 
-} from 'lucide-react';
-import { Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from 'chart.js';
+"use client";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, ShoppingBag, User } from "lucide-react";
 
+export default function Home() {
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  const scale = useTransform(scrollYProgress, [0, 0.25], [0.92, 1]);
 
-const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showAddProduct, setShowAddProduct] = useState(false);
-  const [showAddCoupon, setShowAddCoupon] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // Form States
-  const [newProduct, setNewProduct] = useState({
-    title: '',
-    description: '',
-    price: '',
-    image: '',
-  });
-
-  const [newCoupon, setNewCoupon] = useState({
-    code: '',
-    discountType: 'percentage' ,
-    discountValue: '',
-    minOrderAmount: '',
-    expiryDate: '',
-  });
-
-  // Data
-  const [products, setProducts] = useState([
-    { 
-      id: 'p1', 
-      title: "Wireless Headphones", 
-      description: "Premium noise-cancelling over-ear headphones with 40hr battery", 
-      price: "₹2,499", 
-      image: "https://picsum.photos/id/20/400/300", 
-      stock: 124, 
-      sold: 342 
-    },
-    { 
-      id: 'p2', 
-      title: "Smart Watch Pro", 
-      description: "1.8\" AMOLED display, heart rate, GPS & 14-day battery", 
-      price: "₹4,999", 
-      image: "https://picsum.photos/id/60/400/300", 
-      stock: 87, 
-      sold: 219 
-    },
-  ]);
-
-  const [coupons, setCoupons] = useState([
-    { 
-      id: 'c1', 
-      code: "WELCOME20", 
-      discountType: 'percentage', 
-      discountValue: 20, 
-      minOrderAmount: 999, 
-      expiryDate: "2026-03-15", 
-      used: 142 
-    },
-    { 
-      id: 'c2', 
-      code: "FREESHIP", 
-      discountType: 'fixed', 
-      discountValue: 99, 
-      minOrderAmount: 499, 
-      expiryDate: "2026-04-01", 
-      used: 89 
-    },
-  ]);
-
-  const [reviews, setReviews] = useState([
-    { 
-      id: 'r1', 
-      product: "Wireless Headphones", 
-      user: "Neha Patel", 
-      rating: 5, 
-      comment: "Sound quality is amazing and noise cancellation is top class!", 
-      date: "Feb 28", 
-      status: 'approved' 
-    },
-    { 
-      id: 'r2', 
-      product: "Smart Watch Pro", 
-      user: "Vikash Sharma", 
-      rating: 4, 
-      comment: "Battery lasts really long but strap could be better", 
-      date: "Feb 27", 
-      status: 'pending' 
-    },
-  ]);
-
-  // Chart Data (same as before)
-  const chartData = { /* same as previous */ };
-  const chartOptions = { /* same as previous */ };
-
-  // Add Product
-  const handleAddProduct = () => {
-    if (!newProduct.title || !newProduct.price || !newProduct.image) {
-      alert("Please fill Title, Price & Image");
-      return;
-    }
-
-    const product = {
-      id: 'p' + Date.now(),
-      title: newProduct.title,
-      description: newProduct.description,
-      price: `₹${newProduct.price}`,
-      image: newProduct.image,
-      stock: Math.floor(Math.random() * 150) + 50,
-      sold: Math.floor(Math.random() * 400) + 100,
-    };
-
-    setProducts([product, ...products]);
-    setNewProduct({ title: '', description: '', price: '', image: '' });
-    setShowAddProduct(false);
-    alert("✅ Product added successfully!");
-  };
-
-  // Add Coupon
-  const handleAddCoupon = () => {
-    if (!newCoupon.code || !newCoupon.discountValue || !newCoupon.expiryDate) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    const coupon = {
-      id: 'c' + Date.now(),
-      code: newCoupon.code.toUpperCase(),
-      discountType: newCoupon.discountType,
-      discountValue: Number(newCoupon.discountValue),
-      minOrderAmount: Number(newCoupon.minOrderAmount) || 0,
-      expiryDate: newCoupon.expiryDate,
-      used: 0,
-    };
-
-    setCoupons([coupon, ...coupons]);
-    setNewCoupon({ code: '', discountType: 'percentage', discountValue: '', minOrderAmount: '', expiryDate: '' });
-    setShowAddCoupon(false);
-    alert("✅ Coupon created successfully!");
-  };
-
-  // Review Actions
-  const approveReview = (id) => {
-    setReviews(reviews.map(r => r.id === id ? { ...r, status: 'approved' } : r));
-  };
-
-  const rejectReview = (id) => {
-    if (confirm("Reject this review?")) {
-      setReviews(reviews.filter(r => r.id !== id));
-    }
-  };
-
-  // Render Products Table
-  const renderProductsTable = () => (
-    <div className="bg-white rounded-3xl overflow-hidden border border-gray-100">
-      <table className="w-full">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="py-6 px-8 text-left font-medium text-sm w-16">Image</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Title</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Description</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Price</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Stock</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Sold</th>
-            <th className="py-6 px-8 w-20"></th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {products.map(product => (
-            <tr key={product.id} className="hover:bg-gray-50">
-              <td className="py-6 px-8">
-                <img src={product.image} alt={product.title} className="w-12 h-12 object-cover rounded-xl" />
-              </td>
-              <td className="py-6 px-8 font-semibold">{product.title}</td>
-              <td className="py-6 px-8 text-gray-600 text-sm line-clamp-2 max-w-md">{product.description}</td>
-              <td className="py-6 px-8 font-bold">{product.price}</td>
-              <td className="py-6 px-8">
-                <span className={`font-medium ${product.stock < 100 ? 'text-red-600' : 'text-emerald-600'}`}>
-                  {product.stock}
-                </span>
-              </td>
-              <td className="py-6 px-8 text-gray-600">{product.sold}</td>
-              <td className="py-6 px-8 flex gap-3">
-                <button className="text-violet-600"><Edit2 size={18} /></button>
-                <button className="text-red-500" onClick={() => {
-                  if (confirm('Delete product?')) setProducts(products.filter(p => p.id !== product.id));
-                }}>
-                  <Trash2 size={18} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-
-  // Render Coupons Table
-  const renderCouponsTable = () => (
-    <div className="bg-white rounded-3xl overflow-hidden border border-gray-100">
-      <table className="w-full">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="py-6 px-8 text-left font-medium text-sm">Code</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Type</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Value</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Min Order</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Expires</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Used</th>
-            <th className="py-6 px-8 w-20"></th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {coupons.map(coupon => (
-            <tr key={coupon.id} className="hover:bg-gray-50">
-              <td className="py-6 px-8 font-mono text-lg font-semibold">{coupon.code}</td>
-              <td className="py-6 px-8">
-                <span className="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium">
-                  {coupon.discountType === 'percentage' ? 'Percentage' : 'Fixed ₹'}
-                </span>
-              </td>
-              <td className="py-6 px-8 font-semibold">
-                {coupon.discountType === 'percentage' ? `${coupon.discountValue}%` : `₹${coupon.discountValue}`}
-              </td>
-              <td className="py-6 px-8">₹{coupon.minOrderAmount}</td>
-              <td className="py-6 px-8 text-gray-500">{coupon.expiryDate}</td>
-              <td className="py-6 px-8">{coupon.used}</td>
-              <td className="py-6 px-8">
-                <button 
-                  onClick={() => {
-                    if (confirm(`Delete ${coupon.code}?`)) {
-                      setCoupons(coupons.filter(c => c.id !== coupon.id));
-                    }
-                  }}
-                  className="text-red-500 hover:text-red-600"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-
-  // Render Reviews Table
-  const renderReviewsTable = () => (
-    <div className="bg-white rounded-3xl overflow-hidden border border-gray-100">
-      <table className="w-full">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="py-6 px-8 text-left font-medium text-sm">Product</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Customer</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Rating</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Comment</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Date</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Status</th>
-            <th className="py-6 px-8 w-32">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {reviews.map(review => (
-            <tr key={review.id} className="hover:bg-gray-50">
-              <td className="py-6 px-8 font-medium">{review.product}</td>
-              <td className="py-6 px-8">{review.user}</td>
-              <td className="py-6 px-8 text-amber-500 font-bold">{'★'.repeat(review.rating)}</td>
-              <td className="py-6 px-8 text-gray-600 max-w-md line-clamp-2">{review.comment}</td>
-              <td className="py-6 px-8 text-gray-500">{review.date}</td>
-              <td className="py-6 px-8">
-                <span className={`px-4 py-1 text-xs font-medium rounded-full
-                  ${review.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 
-                    review.status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
-                  {review.status.toUpperCase()}
-                </span>
-              </td>
-              <td className="py-6 px-8 flex gap-2">
-                {review.status === 'pending' && (
-                  <>
-                    <button 
-                      onClick={() => approveReview(review.id)}
-                      className="bg-emerald-600 text-white text-xs px-4 py-2 rounded-2xl hover:bg-emerald-700"
-                    >
-                      Approve
-                    </button>
-                    <button 
-                      onClick={() => rejectReview(review.id)}
-                      className="bg-red-600 text-white text-xs px-4 py-2 rounded-2xl hover:bg-red-700"
-                    >
-                      Reject
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  useEffect(() => {
+    const handle = () => setScrolled(window.scrollY > 100);
+    window.addEventListener("scroll", handle, { passive: true });
+    return () => window.removeEventListener("scroll", handle);
+  }, []);
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
-      {/* Sidebar (same as before) */}
-      <div className="w-72 bg-white border-r border-gray-200 flex flex-col">
-        {/* ... same sidebar code as previous version ... */}
-        {/* (I'm keeping it identical for brevity - copy from your previous file) */}
-        <div className="p-8 border-b border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-violet-600 rounded-2xl flex items-center justify-center text-white font-bold text-3xl">S</div>
-            <div>
-              <span className="font-bold text-3xl tracking-tighter">Shopify</span>
-              <span className="text-xs text-gray-500 block -mt-1">admin</span>
-            </div>
+    <div className="bg-white text-neutral-900 min-h-screen font-sans antialiased overflow-x-hidden">
+      {/* ─── Ultra-minimal Navbar ─── */}
+      <nav
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "bg-white/95 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.06)]"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="max-w-[1920px] mx-auto px-8 lg:px-16 flex items-center justify-between h-20">
+          <Link
+            href="/"
+            className="text-3xl font-light tracking-widest text-neutral-900"
+          >
+            EVWHEELS
+          </Link>
+
+          <div className="flex items-center gap-10">
+            <Link
+              href="/login"
+              className="text-base font-light text-neutral-700 hover:text-black transition-colors"
+            >
+              <User size={20} strokeWidth={1.6} />
+            </Link>
+
+            <Link
+              href="/cart"
+              className="text-base font-light text-neutral-700 hover:text-black transition-colors"
+            >
+              <ShoppingBag size={22} strokeWidth={1.6} />
+            </Link>
           </div>
         </div>
+      </nav>
 
-        <nav className="flex-1 px-6 py-8 overflow-y-auto">
-          <div className="space-y-1">
-            {[
-              { icon: Home, label: "Dashboard", tab: 0 },
-              { icon: ShoppingCart, label: "Orders", tab: 1, badge: "42" },
-              { icon: Package, label: "Products", tab: 2 },
-              { icon: Ticket, label: "Coupons", tab: 3 },
-              { icon: Star, label: "Reviews", tab: 4, badge: reviews.length.toString() },
-            ].map((item) => (
-              <button
-                key={item.tab}
-                onClick={() => setActiveTab(item.tab)}
-                className={`w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium rounded-2xl transition-all ${
-                  activeTab === item.tab ? 'bg-violet-100 text-violet-700' : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <item.icon size={20} />
-                {item.label}
-                {item.badge && (
-                  <span className="ml-auto bg-emerald-100 text-emerald-700 text-xs px-2.5 py-0.5 rounded-full font-semibold">
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            ))}
+      {/* ─── Hero – pure image + huge number reveal ─── */}
+      <section className="relative h-screen flex items-center justify-center">
+        <motion.div
+          style={{ scale, opacity }}
+          className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/30 z-10 pointer-events-none"
+        />
+
+        <img
+          src="https://images.unsplash.com/photo-1631631480669-535cc43f232c?auto=format&fit=crop&q=90&w=2400"
+          alt="EVWheels RangeX City – front three-quarter view"
+          className="object-cover w-full h-full brightness-[0.92] contrast-[1.05]"
+        />
+
+        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 1.4 }}
+            className="text-[18vw] md:text-[16vw] lg:text-[14vw] font-black leading-none tracking-tighter text-neutral-900"
+          >
+            140
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 1 }}
+            className="text-2xl md:text-4xl font-light mt-[-30px] md:mt-[-60px]"
+          >
+            km
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─── Second product full-bleed ─── */}
+      <section className="relative h-screen flex items-center justify-center border-t border-neutral-200">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-200px" }}
+          transition={{ duration: 1.5 }}
+          className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white/40 z-10 pointer-events-none"
+        />
+
+        <img
+          src="https://images.unsplash.com/photo-1649972077917-2d9b0d2e3e8d?auto=format&fit=crop&q=90&w=2400"
+          alt="EVWheels TrailX Pro – side profile on trail"
+          className="object-cover w-full h-full brightness-[0.94]"
+        />
+
+        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2 }}
+            className="text-[18vw] md:text-[16vw] lg:text-[14vw] font-black leading-none tracking-tighter text-neutral-900"
+          >
+            25
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6, duration: 1 }}
+            className="text-2xl md:text-4xl font-light mt-[-30px] md:mt-[-60px]"
+          >
+            kg
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─── Third product + subtle specs ─── */}
+      <section className="relative h-screen flex items-center justify-center border-t border-neutral-200">
+        <img
+          src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&q=90&w=2400"
+          alt="EVWheels LiteX Fold – folded and riding modes"
+          className="object-cover w-full h-full brightness-[0.96]"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/30 z-10 pointer-events-none" />
+
+        <div className="absolute bottom-20 md:bottom-32 left-6 md:left-12 lg:left-24 z-20">
+          <motion.div
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2 }}
+            className="text-[14vw] md:text-[12vw] lg:text-[10vw] font-black leading-none tracking-tighter text-neutral-900 mb-4"
+          >
+            FOLD
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 1 }}
+            className="text-2xl md:text-4xl font-light text-neutral-700"
+          >
+            Compact. Portable. Effortless.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* ─── Very minimal trust + CTA ─── */}
+      <section className="py-40 md:py-64 bg-white text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="max-w-4xl mx-auto px-6 lg:px-12"
+        >
+          <div className="text-4xl md:text-6xl font-light leading-tight mb-16">
+            Crafted for real roads.
+            <br />
+            Backed by real care.
           </div>
-        </nav>
 
-        <div className="p-6 border-t border-gray-100">
-          {/* user footer same */}
-        </div>
-      </div>
-      
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Topbar (same) */}
-        <header className="h-16 bg-white border-b flex items-center px-8 justify-between">
-          {/* same topbar */}
-        </header>
-
-        {/* Tab Content */}
-        <div className="flex-1 overflow-auto p-8">
-          {/* Dashboard Tab - unchanged */}
-          {activeTab === 0 && (/* same dashboard code */
-            <div> dashboard</div>
-          )}
-
-          {/* Orders Tab - unchanged */}
-          {activeTab === 1 && (/* same orders table */ 
-             <div> dashboard</div>
-          )}
-
-          {/* ==================== PRODUCTS TAB ==================== */}
-          {activeTab === 2 && (
-            <div>
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold">Products</h1>
-                <button 
-                  onClick={() => setShowAddProduct(true)}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-3 px-8 h-12 rounded-2xl font-medium"
-                >
-                  <Plus size={20} /> Add New Product
-                </button>
-              </div>
-              {renderProductsTable()}
-            </div>
-          )}
-
-          {/* ==================== COUPONS TAB ==================== */}
-          {activeTab === 3 && (
-            <div>
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold">Coupons</h1>
-                <button 
-                  onClick={() => setShowAddCoupon(true)}
-                  className="bg-violet-600 text-white flex items-center gap-3 px-8 h-12 rounded-2xl font-medium"
-                >
-                  <Plus size={20} /> Create Coupon
-                </button>
-              </div>
-              {renderCouponsTable()}
-            </div>
-          )}
-
-          {/* ==================== REVIEWS TAB ==================== */}
-          {activeTab === 4 && (
-            <div>
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold">Customer Reviews</h1>
-                <div className="text-gray-500">Showing {reviews.length} reviews</div>
-              </div>
-              {renderReviewsTable()}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ==================== ADD PRODUCT MODAL ==================== */}
-      {showAddProduct && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl w-full max-w-2xl mx-4 overflow-hidden">
-            <div className="p-10">
-              <h2 className="text-3xl font-bold mb-8">Add New Product</h2>
-              
-              <div className="grid grid-cols-2 gap-6">
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium mb-2">Product Title</label>
-                  <input 
-                    type="text" 
-                    value={newProduct.title}
-                    onChange={e => setNewProduct({...newProduct, title: e.target.value})}
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    placeholder="Wireless Headphones Pro"
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium mb-2">Description</label>
-                  <textarea 
-                    value={newProduct.description}
-                    onChange={e => setNewProduct({...newProduct, description: e.target.value})}
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 h-32 focus:outline-none focus:border-violet-500"
-                    placeholder="Premium noise cancelling headphones..."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Price (₹)</label>
-                  <input 
-                    type="number" 
-                    value={newProduct.price}
-                    onChange={e => setNewProduct({...newProduct, price: e.target.value})}
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    placeholder="2499"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Image URL</label>
-                  <input 
-                    type="text" 
-                    value={newProduct.image}
-                    onChange={e => setNewProduct({...newProduct, image: e.target.value})}
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    placeholder="https://picsum.photos/id/20/400/300"
-                  />
-                </div>
-              </div>
-
-              {/* Live Preview */}
-              {newProduct.image && (
-                <div className="mt-6">
-                  <p className="text-sm font-medium mb-2">Image Preview</p>
-                  <img src={newProduct.image} alt="preview" className="h-48 w-auto rounded-2xl border" />
-                </div>
-              )}
-            </div>
-
-            <div className="border-t px-10 py-6 flex gap-4 justify-end">
-              <button 
-                onClick={() => setShowAddProduct(false)}
-                className="px-8 py-3.5 font-medium text-gray-600 hover:bg-gray-100 rounded-2xl"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleAddProduct}
-                className="px-10 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl"
-              >
-                Add Product
-              </button>
-            </div>
+          <div className="flex flex-wrap justify-center gap-12 md:gap-20 text-xl md:text-2xl font-light text-neutral-600 mb-20">
+            <div>2-Year Battery Warranty</div>
+            <div>Free Shipping in Bihar</div>
+            <div>EMI from ₹2,499/mo</div>
+            <div>Patna Service Center</div>
           </div>
-        </div>
-      )}
 
-      {/* ==================== ADD COUPON MODAL ==================== */}
-      {showAddCoupon && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl w-full max-w-lg mx-4 overflow-hidden">
-            <div className="p-10">
-              <h2 className="text-3xl font-bold mb-8">Create New Coupon</h2>
+          <Link
+            href="#cycles"
+            className="inline-flex items-center gap-4 px-12 py-6 bg-neutral-900 text-white rounded-full text-2xl font-light hover:bg-neutral-800 transition-colors"
+          >
+            View All Models
+            <ArrowRight size={28} />
+          </Link>
+        </motion.div>
+      </section>
 
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Coupon Code</label>
-                  <input 
-                    type="text" 
-                    value={newCoupon.code}
-                    onChange={e => setNewCoupon({...newCoupon, code: e.target.value})}
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 font-mono uppercase focus:outline-none focus:border-violet-500"
-                    placeholder="SUMMER25"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Discount Type</label>
-                    <select 
-                      value={newCoupon.discountType}
-                      onChange={e => setNewCoupon({...newCoupon, discountType: e.target.value})}
-                      className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    >
-                      <option value="percentage">Percentage (%)</option>
-                      <option value="fixed">Fixed Amount (₹)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Discount Value</label>
-                    <input 
-                      type="number" 
-                      value={newCoupon.discountValue}
-                      onChange={e => setNewCoupon({...newCoupon, discountValue: e.target.value})}
-                      className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                      placeholder="20"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Min Order Amount (₹)</label>
-                    <input 
-                      type="number" 
-                      value={newCoupon.minOrderAmount}
-                      onChange={e => setNewCoupon({...newCoupon, minOrderAmount: e.target.value})}
-                      className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                      placeholder="999"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Expiry Date</label>
-                    <input 
-                      type="date" 
-                      value={newCoupon.expiryDate}
-                      onChange={e => setNewCoupon({...newCoupon, expiryDate: e.target.value})}
-                      className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t px-10 py-6 flex gap-4 justify-end">
-              <button onClick={() => setShowAddCoupon(false)} className="px-8 py-3.5 font-medium text-gray-600 hover:bg-gray-100 rounded-2xl">Cancel</button>
-              <button onClick={handleAddCoupon} className="px-10 py-3.5 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-2xl">Create Coupon</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <footer className="py-20 text-center text-neutral-500 border-t border-neutral-200 bg-white">
+        <p className="text-lg font-light tracking-wide">
+          EVWheels • Patna, Bihar • Designed for tomorrow
+        </p>
+      </footer>
     </div>
   );
-};
-
-export default AdminDashboard;
+}

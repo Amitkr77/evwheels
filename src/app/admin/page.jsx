@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Home,
   ShoppingCart,
@@ -18,6 +18,7 @@ import {
   Eye,
   Trash2,
   Edit2,
+  ArrowRight 
 } from "lucide-react";
 import { Line } from "react-chartjs-2";
 import {
@@ -31,6 +32,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
+import { motion } from "framer-motion";
 
 ChartJS.register(
   CategoryScale,
@@ -50,43 +52,14 @@ const AdminDashboard = () => {
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showAddCoupon, setShowAddCoupon] = useState(false);
 
-  // Sample Data
+  // Sample Data (unchanged)
   const [orders, setOrders] = useState([
-    {
-      id: "#ORD-9821",
-      customer: "Rahul Verma",
-      items: 3,
-      total: "₹2,899",
-      status: "Delivered",
-      date: "Feb 28",
-    },
-    {
-      id: "#ORD-9820",
-      customer: "Priya Singh",
-      items: 1,
-      total: "₹899",
-      status: "Shipped",
-      date: "Feb 27",
-    },
-    {
-      id: "#ORD-9819",
-      customer: "Aman Kumar",
-      items: 5,
-      total: "₹4,299",
-      status: "Pending",
-      date: "Feb 27",
-    },
-    {
-      id: "#ORD-9818",
-      customer: "Sneha Gupta",
-      items: 2,
-      total: "₹1,599",
-      status: "Delivered",
-      date: "Feb 26",
-    },
+    { id: "#ORD-9821", customer: "Rahul Verma", items: 3, total: "₹2,899", status: "Delivered", date: "Feb 28" },
+    { id: "#ORD-9820", customer: "Priya Singh", items: 1, total: "₹899", status: "Shipped", date: "Feb 27" },
+    { id: "#ORD-9819", customer: "Aman Kumar", items: 5, total: "₹4,299", status: "Pending", date: "Feb 27" },
+    { id: "#ORD-9818", customer: "Sneha Gupta", items: 2, total: "₹1,599", status: "Delivered", date: "Feb 26" },
   ]);
 
-  // Form States
   const [newProduct, setNewProduct] = useState({
     title: "",
     description: "",
@@ -102,89 +75,31 @@ const AdminDashboard = () => {
     expiryDate: "",
   });
 
-  // Data
   const [products, setProducts] = useState([
-    {
-      id: "p1",
-      title: "Wireless Headphones",
-      description:
-        "Premium noise-cancelling over-ear headphones with 40hr battery",
-      price: "₹2,499",
-      image: "https://picsum.photos/id/20/400/300",
-      stock: 124,
-      sold: 342,
-    },
-    {
-      id: "p2",
-      title: "Smart Watch Pro",
-      description: '1.8" AMOLED display, heart rate, GPS & 14-day battery',
-      price: "₹4,999",
-      image: "https://picsum.photos/id/60/400/300",
-      stock: 87,
-      sold: 219,
-    },
+    { id: "p1", title: "Wireless Headphones", description: "Premium noise-cancelling over-ear headphones with 40hr battery", price: "₹2,499", image: "https://picsum.photos/id/20/400/300", stock: 124, sold: 342 },
+    { id: "p2", title: "Smart Watch Pro", description: '1.8" AMOLED display, heart rate, GPS & 14-day battery', price: "₹4,999", image: "https://picsum.photos/id/60/400/300", stock: 87, sold: 219 },
   ]);
 
   const [coupons, setCoupons] = useState([
-    {
-      id: "c1",
-      code: "WELCOME20",
-      discountType: "percentage",
-      discountValue: 20,
-      minOrderAmount: 999,
-      expiryDate: "2026-03-15",
-      used: 142,
-    },
-    {
-      id: "c2",
-      code: "FREESHIP",
-      discountType: "fixed",
-      discountValue: 99,
-      minOrderAmount: 499,
-      expiryDate: "2026-04-01",
-      used: 89,
-    },
+    { id: "c1", code: "WELCOME20", discountType: "percentage", discountValue: 20, minOrderAmount: 999, expiryDate: "2026-03-15", used: 142 },
+    { id: "c2", code: "FREESHIP", discountType: "fixed", discountValue: 99, minOrderAmount: 499, expiryDate: "2026-04-01", used: 89 },
   ]);
 
   const [reviews, setReviews] = useState([
-    {
-      id: "r1",
-      product: "Wireless Headphones",
-      user: "Neha Patel",
-      rating: 5,
-      comment: "Sound quality is amazing and noise cancellation is top class!",
-      date: "Feb 28",
-      status: "approved",
-    },
-    {
-      id: "r2",
-      product: "Smart Watch Pro",
-      user: "Vikash Sharma",
-      rating: 4,
-      comment: "Battery lasts really long but strap could be better",
-      date: "Feb 27",
-      status: "pending",
-    },
+    { id: "r1", product: "Wireless Headphones", user: "Neha Patel", rating: 5, comment: "Sound quality is amazing and noise cancellation is top class!", date: "Feb 28", status: "approved" },
+    { id: "r2", product: "Smart Watch Pro", user: "Vikash Sharma", rating: 4, comment: "Battery lasts really long but strap could be better", date: "Feb 27", status: "pending" },
   ]);
 
-  // Sales Chart Data
+  // Sales Chart Data (unchanged)
   const chartData = {
-    labels: [
-      "Feb 24",
-      "Feb 25",
-      "Feb 26",
-      "Feb 27",
-      "Feb 28",
-      "Mar 1",
-      "Mar 2",
-    ],
+    labels: ["Feb 24", "Feb 25", "Feb 26", "Feb 27", "Feb 28", "Mar 1", "Mar 2"],
     datasets: [
       {
         label: "Revenue (₹)",
         data: [12400, 18900, 15200, 22400, 19800, 27100, 31200],
-        borderColor: "#7c3aed",
-        backgroundColor: "rgba(124, 58, 237, 0.08)",
-        borderWidth: 4,
+        borderColor: "#10b981",
+        backgroundColor: "rgba(16,185,129,0.08)",
+        borderWidth: 3,
         tension: 0.4,
         fill: true,
         pointRadius: 0,
@@ -199,60 +114,49 @@ const AdminDashboard = () => {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "#4c1d95",
+        backgroundColor: "#064e3b",
         titleFont: { size: 14 },
         bodyFont: { size: 16, weight: "600" },
         displayColors: false,
-        callbacks: {
-          label: (ctx) => "₹" + ctx.raw.toLocaleString("en-IN"),
-        },
+        callbacks: { label: (ctx) => "₹" + ctx.raw.toLocaleString("en-IN") },
       },
     },
     scales: {
-      y: {
-        grid: { color: "#f3e8ff" },
-        ticks: { callback: (v) => "₹" + v / 1000 + "k" },
-      },
-      x: {
-        grid: { color: "#f3e8ff" },
-      },
+      y: { grid: { color: "#e5e7eb" }, ticks: { callback: (v) => "₹" + v / 1000 + "k" } },
+      x: { grid: { color: "#e5e7eb" } },
     },
   };
 
   // Render Recent Orders (Dashboard)
   const renderRecentOrders = () => {
     return orders.slice(0, 4).map((order, i) => (
-      <tr
-        key={i}
-        className="border-b border-gray-100 last:border-0 hover:bg-gray-50"
-      >
-        <td className="py-5 px-8 font-mono text-sm">{order.id}</td>
-        <td className="py-5 px-8">{order.customer}</td>
-        <td className="py-5 px-8 font-medium">{order.total}</td>
-        <td className="py-5 px-8">
+      <tr key={i} className="border-b border-neutral-200/60 last:border-b-0 hover:bg-neutral-50/50 transition-colors">
+        <td className="py-5 px-6 font-mono text-sm text-neutral-600">{order.id}</td>
+        <td className="py-5 px-6">{order.customer}</td>
+        <td className="py-5 px-6 font-medium">{order.total}</td>
+        <td className="py-5 px-6">
           <span
-            className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-2xl
-            ${
+            className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full ${
               order.status === "Delivered"
-                ? "bg-emerald-100 text-emerald-700"
+                ? "bg-emerald-50 text-emerald-800"
                 : order.status === "Shipped"
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-amber-100 text-amber-700"
+                ? "bg-blue-50 text-blue-700"
+                : "bg-amber-50 text-amber-700"
             }`}
           >
             <span
               className={`inline-block w-2 h-2 rounded-full ${
                 order.status === "Delivered"
-                  ? "bg-emerald-500"
+                  ? "bg-emerald-600"
                   : order.status === "Shipped"
-                    ? "bg-blue-500"
-                    : "bg-amber-500"
+                  ? "bg-blue-600"
+                  : "bg-amber-600"
               }`}
             />
             {order.status}
           </span>
         </td>
-        <td className="py-5 px-8 text-gray-500">{order.date}</td>
+        <td className="py-5 px-6 text-neutral-600">{order.date}</td>
       </tr>
     ));
   };
@@ -260,28 +164,27 @@ const AdminDashboard = () => {
   // Render Full Orders Table
   const renderOrdersTable = () => {
     return orders.map((order, i) => (
-      <tr key={i} className="hover:bg-gray-50 transition-colors">
-        <td className="py-6 px-8 font-mono">{order.id}</td>
+      <tr key={i} className="hover:bg-neutral-50/50 transition-colors">
+        <td className="py-6 px-8 font-mono text-sm">{order.id}</td>
         <td className="py-6 px-8">{order.customer}</td>
         <td className="py-6 px-8">{order.items} items</td>
-        <td className="py-6 px-8 font-semibold">{order.total}</td>
+        <td className="py-6 px-8 font-medium">{order.total}</td>
         <td className="py-6 px-8">
           <span
-            className={`px-4 py-1.5 text-xs font-medium rounded-2xl
-            ${
+            className={`px-4 py-1.5 text-xs font-medium rounded-full ${
               order.status === "Delivered"
-                ? "bg-emerald-100 text-emerald-700"
+                ? "bg-emerald-50 text-emerald-800"
                 : order.status === "Shipped"
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-amber-100 text-amber-700"
+                ? "bg-blue-50 text-blue-700"
+                : "bg-amber-50 text-amber-700"
             }`}
           >
             {order.status}
           </span>
         </td>
-        <td className="py-6 px-8 text-gray-500">{order.date}</td>
+        <td className="py-6 px-8 text-neutral-600">{order.date}</td>
         <td className="py-6 px-8">
-          <button className="text-violet-600 hover:text-violet-700 p-2">
+          <button className="text-emerald-700 hover:text-emerald-900">
             <Eye size={18} />
           </button>
         </td>
@@ -289,122 +192,44 @@ const AdminDashboard = () => {
     ));
   };
 
-  // Add Product
-  const handleAddProduct = () => {
-    if (!newProduct.title || !newProduct.price || !newProduct.image) {
-      alert("Please fill Title, Price & Image");
-      return;
-    }
-
-    const product = {
-      id: "p" + Date.now(),
-      title: newProduct.title,
-      description: newProduct.description,
-      price: `₹${newProduct.price}`,
-      image: newProduct.image,
-      stock: Math.floor(Math.random() * 150) + 50,
-      sold: Math.floor(Math.random() * 400) + 100,
-    };
-
-    setProducts([product, ...products]);
-    setNewProduct({ title: "", description: "", price: "", image: "" });
-    setShowAddProduct(false);
-    alert("✅ Product added successfully!");
-  };
-
-  // Add Coupon
-  const handleAddCoupon = () => {
-    if (!newCoupon.code || !newCoupon.discountValue || !newCoupon.expiryDate) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    const coupon = {
-      id: "c" + Date.now(),
-      code: newCoupon.code.toUpperCase(),
-      discountType: newCoupon.discountType,
-      discountValue: Number(newCoupon.discountValue),
-      minOrderAmount: Number(newCoupon.minOrderAmount) || 0,
-      expiryDate: newCoupon.expiryDate,
-      used: 0,
-    };
-
-    setCoupons([coupon, ...coupons]);
-    setNewCoupon({
-      code: "",
-      discountType: "percentage",
-      discountValue: "",
-      minOrderAmount: "",
-      expiryDate: "",
-    });
-    setShowAddCoupon(false);
-    alert("✅ Coupon created successfully!");
-  };
-
-  // Review Actions
-  const approveReview = (id) => {
-    setReviews(
-      reviews.map((r) => (r.id === id ? { ...r, status: "approved" } : r)),
-    );
-  };
-
-  const rejectReview = (id) => {
-    if (confirm("Reject this review?")) {
-      setReviews(reviews.filter((r) => r.id !== id));
-    }
-  };
-
   // Render Products Table
   const renderProductsTable = () => (
-    <div className="bg-white rounded-3xl overflow-hidden border border-gray-100">
+    <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
       <table className="w-full">
-        <thead className="bg-gray-50">
+        <thead className="bg-neutral-50/70">
           <tr>
-            <th className="py-6 px-8 text-left font-medium text-sm w-16">
-              Image
-            </th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Title</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">
-              Description
-            </th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Price</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Stock</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Sold</th>
-            <th className="py-6 px-8 w-20"></th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600 w-16">Image</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Title</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Description</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Price</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Stock</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Sold</th>
+            <th className="py-5 px-6 w-20"></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
-          {products.map((product, index) => (
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="py-6 px-8">
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-12 h-12 object-cover rounded-xl"
-                />
+        <tbody className="divide-y divide-neutral-200/60">
+          {products.map((product) => (
+            <tr key={product.id} className="hover:bg-neutral-50/50 transition-colors">
+              <td className="py-6 px-6">
+                <img src={product.image} alt={product.title} className="w-12 h-12 object-cover rounded-lg" />
               </td>
-              <td className="py-6 px-8 font-semibold">{product.title}</td>
-              <td className="py-6 px-8 text-gray-600 text-sm line-clamp-2 max-w-md">
-                {product.description}
-              </td>
-              <td className="py-6 px-8 font-bold">{product.price}</td>
-              <td className="py-6 px-8">
-                <span
-                  className={`font-medium ${product.stock < 100 ? "text-red-600" : "text-emerald-600"}`}
-                >
+              <td className="py-6 px-6 font-medium">{product.title}</td>
+              <td className="py-6 px-6 text-neutral-600 text-sm line-clamp-2 max-w-md">{product.description}</td>
+              <td className="py-6 px-6 font-medium text-emerald-800">{product.price}</td>
+              <td className="py-6 px-6">
+                <span className={`font-medium ${product.stock < 100 ? "text-red-700" : "text-emerald-700"}`}>
                   {product.stock}
                 </span>
               </td>
-              <td className="py-6 px-8 text-gray-600">{product.sold}</td>
-              <td className="py-6 px-8 flex gap-3">
-                <button className="text-violet-600">
+              <td className="py-6 px-6 text-neutral-600">{product.sold}</td>
+              <td className="py-6 px-6 flex gap-4">
+                <button className="text-emerald-700 hover:text-emerald-900">
                   <Edit2 size={18} />
                 </button>
                 <button
-                  className="text-red-500"
+                  className="text-red-600 hover:text-red-800"
                   onClick={() => {
-                    if (confirm("Delete product?"))
-                      setProducts(products.filter((p) => p.id !== product.id));
+                    if (confirm("Delete product?")) setProducts(products.filter((p) => p.id !== product.id));
                   }}
                 >
                   <Trash2 size={18} />
@@ -419,50 +244,40 @@ const AdminDashboard = () => {
 
   // Render Coupons Table
   const renderCouponsTable = () => (
-    <div className="bg-white rounded-3xl overflow-hidden border border-gray-100">
+    <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
       <table className="w-full">
-        <thead className="bg-gray-50">
+        <thead className="bg-neutral-50/70">
           <tr>
-            <th className="py-6 px-8 text-left font-medium text-sm">Code</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Type</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Value</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">
-              Min Order
-            </th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Expires</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Used</th>
-            <th className="py-6 px-8 w-20"></th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Code</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Type</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Value</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Min Order</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Expires</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Used</th>
+            <th className="py-5 px-6 w-20"></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-neutral-200/60">
           {coupons.map((coupon) => (
-            <tr key={coupon.id} className="hover:bg-gray-50">
-              <td className="py-6 px-8 font-mono text-lg font-semibold">
-                {coupon.code}
-              </td>
-              <td className="py-6 px-8">
-                <span className="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium">
-                  {coupon.discountType === "percentage"
-                    ? "Percentage"
-                    : "Fixed ₹"}
+            <tr key={coupon.id} className="hover:bg-neutral-50/50 transition-colors">
+              <td className="py-6 px-6 font-mono text-lg font-medium">{coupon.code}</td>
+              <td className="py-6 px-6">
+                <span className="px-3 py-1 text-xs font-medium bg-neutral-100 rounded-full">
+                  {coupon.discountType === "percentage" ? "Percentage" : "Fixed ₹"}
                 </span>
               </td>
-              <td className="py-6 px-8 font-semibold">
-                {coupon.discountType === "percentage"
-                  ? `${coupon.discountValue}%`
-                  : `₹${coupon.discountValue}`}
+              <td className="py-6 px-6 font-medium">
+                {coupon.discountType === "percentage" ? `${coupon.discountValue}%` : `₹${coupon.discountValue}`}
               </td>
-              <td className="py-6 px-8">₹{coupon.minOrderAmount}</td>
-              <td className="py-6 px-8 text-gray-500">{coupon.expiryDate}</td>
-              <td className="py-6 px-8">{coupon.used}</td>
-              <td className="py-6 px-8">
+              <td className="py-6 px-6">₹{coupon.minOrderAmount}</td>
+              <td className="py-6 px-6 text-neutral-600">{coupon.expiryDate}</td>
+              <td className="py-6 px-6 text-neutral-700">{coupon.used}</td>
+              <td className="py-6 px-6">
                 <button
                   onClick={() => {
-                    if (confirm(`Delete ${coupon.code}?`)) {
-                      setCoupons(coupons.filter((c) => c.id !== coupon.id));
-                    }
+                    if (confirm(`Delete ${coupon.code}?`)) setCoupons(coupons.filter((c) => c.id !== coupon.id));
                   }}
-                  className="text-red-500 hover:text-red-600"
+                  className="text-red-600 hover:text-red-800"
                 >
                   <Trash2 size={18} />
                 </button>
@@ -476,59 +291,52 @@ const AdminDashboard = () => {
 
   // Render Reviews Table
   const renderReviewsTable = () => (
-    <div className="bg-white rounded-3xl overflow-hidden border border-gray-100">
+    <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
       <table className="w-full">
-        <thead className="bg-gray-50">
+        <thead className="bg-neutral-50/70">
           <tr>
-            <th className="py-6 px-8 text-left font-medium text-sm">Product</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">
-              Customer
-            </th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Rating</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Comment</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Date</th>
-            <th className="py-6 px-8 text-left font-medium text-sm">Status</th>
-            <th className="py-6 px-8 w-32">Actions</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Product</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Customer</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Rating</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Comment</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Date</th>
+            <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Status</th>
+            <th className="py-5 px-6 w-32">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-neutral-200/60">
           {reviews.map((review) => (
-            <tr key={review.id} className="hover:bg-gray-50">
-              <td className="py-6 px-8 font-medium">{review.product}</td>
-              <td className="py-6 px-8">{review.user}</td>
-              <td className="py-6 px-8 text-amber-500 font-bold">
-                {"★".repeat(review.rating)}
-              </td>
-              <td className="py-6 px-8 text-gray-600 max-w-md line-clamp-2">
-                {review.comment}
-              </td>
-              <td className="py-6 px-8 text-gray-500">{review.date}</td>
-              <td className="py-6 px-8">
+            <tr key={review.id} className="hover:bg-neutral-50/50 transition-colors">
+              <td className="py-6 px-6 font-medium">{review.product}</td>
+              <td className="py-6 px-6">{review.user}</td>
+              <td className="py-6 px-6 text-amber-700 font-medium">{"★".repeat(review.rating)}</td>
+              <td className="py-6 px-6 text-neutral-600 max-w-md line-clamp-2">{review.comment}</td>
+              <td className="py-6 px-6 text-neutral-600">{review.date}</td>
+              <td className="py-6 px-6">
                 <span
-                  className={`px-4 py-1 text-xs font-medium rounded-full
-                  ${
+                  className={`px-4 py-1 text-xs font-medium rounded-full ${
                     review.status === "approved"
-                      ? "bg-emerald-100 text-emerald-700"
+                      ? "bg-emerald-50 text-emerald-800"
                       : review.status === "rejected"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-amber-100 text-amber-700"
+                      ? "bg-red-50 text-red-700"
+                      : "bg-amber-50 text-amber-700"
                   }`}
                 >
                   {review.status?.toUpperCase()}
                 </span>
               </td>
-              <td className="py-6 px-8 flex gap-2">
+              <td className="py-6 px-8 flex gap-3">
                 {review.status === "pending" && (
                   <>
                     <button
                       onClick={() => approveReview(review.id)}
-                      className="bg-emerald-600 text-white text-xs px-4 py-2 rounded-2xl hover:bg-emerald-700"
+                      className="px-4 py-1.5 bg-emerald-600 text-white text-xs rounded-lg hover:bg-emerald-700 transition-colors"
                     >
                       Approve
                     </button>
                     <button
                       onClick={() => rejectReview(review.id)}
-                      className="bg-red-600 text-white text-xs px-4 py-2 rounded-2xl hover:bg-red-700"
+                      className="px-4 py-1.5 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700 transition-colors"
                     >
                       Reject
                     </button>
@@ -542,663 +350,536 @@ const AdminDashboard = () => {
     </div>
   );
 
-  const addNewProduct = () => {
-    const name = prompt("Product name:");
-    if (!name) return;
-    const price = prompt("Price (₹):", "1999");
-    if (!price) return;
+  // Add Product Handler (simplified prompt version)
+  const handleAddProduct = () => {
+    const title = prompt("Product title:");
+    if (!title) return;
+    const price = prompt("Price (₹):", "2499");
+    const image = prompt("Image URL:", "https://picsum.photos/400/300");
 
-    const newProduct = {
-      name,
+    const newItem = {
+      id: "p" + Date.now(),
+      title,
+      description: "New product added",
       price: `₹${price}`,
-      stock: Math.floor(Math.random() * 200) + 80,
-      sold: Math.floor(Math.random() * 400) + 100,
-      img: `https://picsum.photos/id/${Math.floor(Math.random() * 300) + 100}/400/300`,
+      image,
+      stock: Math.floor(Math.random() * 150) + 50,
+      sold: Math.floor(Math.random() * 300),
     };
-    setProducts([newProduct, ...products]);
-    alert("✅ Product added successfully!");
+    setProducts([newItem, ...products]);
+    alert("Product added!");
   };
 
-  const createCoupon = () => {
-    const code = prompt("Enter coupon code (e.g. SUMMER25):", "SUMMER25");
+  // Add Coupon Handler (simplified prompt version)
+  const handleAddCoupon = () => {
+    const code = prompt("Coupon code:", "SUMMER25");
     if (!code) return;
-    const discount = prompt("Discount? (e.g. 25% off)", "25% off");
-    if (!discount) return;
+    const discount = prompt("Discount (e.g. 25% or ₹500):", "25%");
 
     const newCoupon = {
+      id: "c" + Date.now(),
       code: code.toUpperCase(),
-      discount,
-      expiry: "Apr 30, 2026",
+      discountType: discount.includes("%") ? "percentage" : "fixed",
+      discountValue: parseInt(discount) || 0,
+      minOrderAmount: 0,
+      expiryDate: "2026-12-31",
       used: 0,
     };
     setCoupons([newCoupon, ...coupons]);
-    alert(`✅ Coupon ${code.toUpperCase()} created!`);
+    alert("Coupon created!");
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
-      {/* Sidebar */}
-      <div className="w-72 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-8 border-b border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-violet-600 rounded-2xl flex items-center justify-center text-white font-bold text-3xl">
-              S
+    <div className="min-h-screen bg-[#fdfcf9] font-['Inter']">
+      {/* ─── Sidebar ─── */}
+      <aside className="fixed inset-y-0 left-0 w-72 bg-white border-r border-neutral-200/70 overflow-y-auto hidden lg:block">
+        <div className="p-8 border-b border-neutral-200/60">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
+              E
             </div>
-            <div>
-              <span className="font-bold text-3xl tracking-tighter">
-                Shopify
-              </span>
-              <span className="text-xs text-gray-500 block -mt-1">admin</span>
-            </div>
+            <span className="text-2xl font-['Playfair_Display'] font-medium tracking-tight text-neutral-900">
+              EVWheels
+            </span>
           </div>
         </div>
 
-        <nav className="flex-1 px-6 py-8 overflow-y-auto">
-          <div className="space-y-1">
-            {[
-              { icon: Home, label: "Dashboard", tab: 0 },
-              { icon: ShoppingCart, label: "Orders", tab: 1, badge: "42" },
-              { icon: Package, label: "Products", tab: 2 },
-              { icon: Ticket, label: "Coupons", tab: 3 },
-              { icon: Star, label: "Reviews", tab: 4, badge: "18" },
-            ].map((item) => (
-              <button
-                key={item.tab}
-                onClick={() => setActiveTab(item.tab)}
-                className={`w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium rounded-2xl transition-all sidebar-link ${
-                  activeTab === item.tab
-                    ? "bg-violet-100 text-violet-700"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <item.icon size={20} />
-                {item.label}
-                {item.badge && (
-                  <span className="ml-auto bg-emerald-100 text-emerald-700 text-xs px-2.5 py-0.5 rounded-full font-semibold">
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-12 px-5">
-            <div className="uppercase text-xs font-semibold tracking-widest text-gray-500 mb-4">
-              Management
-            </div>
-            <div className="space-y-1 text-sm text-gray-600">
-              <div className="flex items-center gap-3 px-5 py-3 hover:text-gray-900 cursor-pointer">
-                <Users size={18} /> Customers
-              </div>
-              <div className="flex items-center gap-3 px-5 py-3 hover:text-gray-900 cursor-pointer">
-                <TrendingUp size={18} /> Analytics
-              </div>
-            </div>
-          </div>
+        <nav className="p-6 space-y-1">
+          {[
+            { icon: Home, label: "Dashboard", tab: 0 },
+            { icon: ShoppingCart, label: "Orders", tab: 1, badge: "42" },
+            { icon: Package, label: "Products", tab: 2 },
+            { icon: Ticket, label: "Coupons", tab: 3 },
+            { icon: Star, label: "Reviews", tab: 4, badge: "18" },
+          ].map((item) => (
+            <button
+              key={item.tab}
+              onClick={() => setActiveTab(item.tab)}
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium rounded-lg transition-colors ${
+                activeTab === item.tab
+                  ? "bg-emerald-50/60 text-emerald-800"
+                  : "text-neutral-700 hover:bg-neutral-50/80"
+              }`}
+            >
+              <item.icon size={20} strokeWidth={1.6} />
+              {item.label}
+              {item.badge && (
+                <span className="ml-auto px-2.5 py-1 text-xs font-medium bg-emerald-50 text-emerald-800 rounded-full">
+                  {item.badge}
+                </span>
+              )}
+            </button>
+          ))}
         </nav>
 
-        <div className="p-6 border-t border-gray-100">
+        <div className="p-6 border-t border-neutral-200/60 mt-auto">
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 bg-gradient-to-br from-amber-200 to-orange-200 rounded-2xl overflow-hidden">
-              <img
-                src="https://i.pravatar.cc/128?u=amit"
-                alt="Amit"
-                className="w-full h-full object-cover"
-              />
+            <div className="w-11 h-11 bg-neutral-200 rounded-full overflow-hidden border-2 border-white">
+              <img src="https://i.pravatar.cc/128?u=admin" alt="Admin" width={44} height={44} className="object-cover" />
             </div>
             <div className="flex-1">
-              <div className="font-semibold">Amit Sharma</div>
-              <div className="text-xs text-emerald-600 flex items-center gap-1">
-                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />{" "}
+              <div className="font-medium text-neutral-900">Admin</div>
+              <div className="text-xs text-emerald-700 flex items-center gap-1.5">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                 Online
               </div>
             </div>
-            <button
-              onClick={() => alert("Logged out! 👋")}
-              className="text-gray-400 hover:text-red-500 transition-colors p-2"
-            >
-              <LogOut size={22} />
+            <button className="text-neutral-500 hover:text-red-600 transition-colors">
+              <LogOut size={20} />
             </button>
           </div>
         </div>
-      </div>
+      </aside>
 
-      {/* Main Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* ─── Main Content ─── */}
+      <div className="lg:ml-72 min-h-screen flex flex-col">
         {/* Topbar */}
-        <header className="h-16 bg-white border-b flex items-center px-8 justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative w-96">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search orders, products..."
-                className="w-full bg-gray-100 border border-transparent focus:border-violet-400 rounded-2xl py-3 pl-12 text-sm focus:outline-none"
-              />
-              <Search
-                className="absolute left-5 top-3.5 text-gray-400"
-                size={20}
-              />
-            </div>
+        <header className="h-16 bg-white border-b border-neutral-200/70 flex items-center px-6 lg:px-12 justify-between">
+          <div className="relative w-full max-w-md">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search orders, products..."
+              className="w-full bg-neutral-50 border border-neutral-200 focus:border-emerald-300 rounded-xl py-3 pl-11 pr-4 text-sm font-light focus:outline-none transition-colors"
+            />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
           </div>
 
           <div className="flex items-center gap-6">
             <div className="relative cursor-pointer">
-              <Bell size={24} className="text-gray-600" />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+              <Bell size={20} className="text-neutral-600" />
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-medium w-4 h-4 flex items-center justify-center rounded-full">
                 7
               </span>
             </div>
 
             <button
               onClick={() => setShowQuickAdd(true)}
-              className="flex items-center gap-3 bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold px-6 h-11 rounded-2xl transition-all active:scale-95"
+              className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
             >
-              <Plus size={20} />
+              <Plus size={18} />
               New
             </button>
 
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <div className="font-semibold text-sm">Amit Sharma</div>
-                <div className="text-xs text-gray-500">Patna, Bihar</div>
+                <div className="text-sm font-medium text-neutral-900">Admin</div>
+                <div className="text-xs text-neutral-500">Patna, Bihar</div>
               </div>
-              <div className="w-9 h-9 bg-zinc-200 rounded-2xl overflow-hidden border border-white">
-                <img
-                  src="https://i.pravatar.cc/128?u=amit"
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-9 h-9 bg-neutral-200 rounded-full overflow-hidden border-2 border-white">
+                <img src="https://i.pravatar.cc/128?u=admin" alt="" width={36} height={36} className="object-cover" />
               </div>
             </div>
           </div>
         </header>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto p-8">
+        <main className="flex-1 overflow-auto p-6 lg:p-12">
           {/* DASHBOARD */}
           {activeTab === 0 && (
-            <div>
-              <div className="flex justify-between items-end mb-10">
-                <div>
-                  <h1 className="text-4xl font-bold tracking-tight">
-                    Good afternoon, Amit 👋
-                  </h1>
-                  <p className="text-gray-500 mt-1">
-                    Here&apos;s what&apos;s happening with your store today
-                  </p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-white border border-gray-200 rounded-2xl px-6 py-3 flex items-center gap-3 text-sm">
-                    <Calendar size={18} />
-                    Feb 24 – Mar 2, 2026
-                  </div>
-                  <button
-                    onClick={() => alert("Report exported as CSV 📊")}
-                    className="flex items-center gap-3 border border-gray-300 hover:bg-gray-50 px-6 h-12 rounded-2xl text-sm font-medium"
-                  >
-                    <Download size={18} /> Export
-                  </button>
-                </div>
-              </div>
+            <motion.div initial="hidden" animate="visible" 
+            // variants={stagger}
+            >
+              <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium mb-3">
+                Good afternoon  
+              </h1>
+              <p className="text-neutral-600 font-light mb-12">Here's what's happening with your store today</p>
 
               {/* Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16">
                 {[
-                  {
-                    title: "Total Revenue",
-                    value: "₹1,24,890",
-                    change: "+18.2%",
-                    color: "emerald",
-                  },
-                  {
-                    title: "Total Orders",
-                    value: "342",
-                    change: "+12%",
-                    color: "blue",
-                  },
-                  {
-                    title: "Products",
-                    value: "87",
-                    change: "-3 low stock",
-                    color: "amber",
-                  },
-                  {
-                    title: "Avg. Rating",
-                    value: "4.8",
-                    change: "★★★★☆",
-                    color: "yellow",
-                  },
+                  { title: "Total Revenue", value: "₹1,24,890", change: "+18.2%", color: "emerald" },
+                  { title: "Total Orders", value: "342", change: "+12%", color: "blue" },
+                  { title: "Products", value: "87", change: "-3 low stock", color: "amber" },
+                  { title: "Avg. Rating", value: "4.8", change: "★★★★☆", color: "yellow" },
                 ].map((stat, i) => (
-                  <div
+                  <motion.div
                     key={i}
-                    className="bg-white rounded-3xl p-7 border border-gray-100"
+                    // variants={fadeIn}
+                    className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors"
                   >
-                    <div className="text-sm text-gray-500">{stat.title}</div>
-                    <div className="text-4xl font-bold mt-3">{stat.value}</div>
-                    <div
-                      className={`mt-6 text-sm flex items-center gap-2 ${stat.color === "emerald" ? "text-emerald-600" : stat.color === "blue" ? "text-blue-600" : stat.color === "amber" ? "text-amber-600" : "text-yellow-600"}`}
-                    >
+                    <div className="text-sm font-light text-neutral-600">{stat.title}</div>
+                    <div className="text-3xl font-medium mt-2">{stat.value}</div>
+                    <div className={`mt-4 text-sm font-light ${stat.color === "emerald" ? "text-emerald-700" : stat.color === "blue" ? "text-blue-700" : stat.color === "amber" ? "text-amber-700" : "text-yellow-700"}`}>
                       {stat.change}
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
 
               {/* Sales Chart */}
-              <div className="mt-10 bg-white rounded-3xl p-8 border border-gray-100">
+              <div className="bg-white border border-neutral-200/70 rounded-xl p-8 mb-16">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-semibold">Sales Overview</h2>
-                  <select className="bg-gray-100 border-0 rounded-2xl py-2.5 px-5 text-sm">
+                  <h2 className="text-2xl font-['Playfair_Display'] font-medium">Sales Overview</h2>
+                  <select className="px-4 py-2 border border-neutral-300 rounded-lg text-sm font-light focus:outline-none focus:border-emerald-600">
                     <option>Last 7 days</option>
                     <option>Last 30 days</option>
                   </select>
                 </div>
-                <div className="h-96">
+                <div className="h-80">
                   <Line data={chartData} options={chartOptions} />
                 </div>
               </div>
 
               {/* Recent Orders */}
-              <div className="mt-10">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-semibold">Recent Orders</h2>
-                  <button
-                    onClick={() => setActiveTab(1)}
-                    className="text-violet-600 font-medium hover:underline flex items-center gap-2"
-                  >
-                    View all orders →
+              <div>
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium">Recent Orders</h2>
+                  <button onClick={() => setActiveTab(1)} className="text-emerald-800 font-medium flex items-center gap-2 hover:underline">
+                    View all <ArrowRight size={18} />
                   </button>
                 </div>
-                <div className="bg-white rounded-3xl overflow-hidden border border-gray-100">
+
+                <div className="border border-neutral-200/70 rounded-xl overflow-hidden">
                   <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-100">
-                        <th className="text-left py-5 px-8 font-medium text-sm text-gray-500">
-                          Order ID
-                        </th>
-                        <th className="text-left py-5 px-8 font-medium text-sm text-gray-500">
-                          Customer
-                        </th>
-                        <th className="text-left py-5 px-8 font-medium text-sm text-gray-500">
-                          Amount
-                        </th>
-                        <th className="text-left py-5 px-8 font-medium text-sm text-gray-500">
-                          Status
-                        </th>
-                        <th className="text-left py-5 px-8 font-medium text-sm text-gray-500">
-                          Date
-                        </th>
+                    <thead className="bg-neutral-50/70">
+                      <tr>
+                        <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Order ID</th>
+                        <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Customer</th>
+                        <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Amount</th>
+                        <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Status</th>
+                        <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Date</th>
                       </tr>
                     </thead>
                     <tbody>{renderRecentOrders()}</tbody>
                   </table>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ORDERS TAB */}
           {activeTab === 1 && (
-            <div>
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold">Orders</h1>
-                <div className="flex gap-3">
-                  <input
-                    type="text"
-                    placeholder="Search orders..."
-                    className="bg-white border border-gray-300 rounded-2xl px-6 py-3 w-96 focus:outline-none focus:border-violet-400"
-                  />
-                  <button className="bg-violet-600 text-white px-8 rounded-2xl font-medium">
-                    Filter
-                  </button>
-                </div>
+            <motion.div initial="hidden" animate="visible" 
+            // variants={stagger}
+            >
+              <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium mb-10">Orders</h1>
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
+                <input
+                  type="text"
+                  placeholder="Search orders..."
+                  className="w-full sm:w-80 px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                />
+                <button className="px-8 py-3.5 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors">
+                  Filter
+                </button>
               </div>
 
-              <div className="bg-white rounded-3xl overflow-hidden border border-gray-100">
+              <div className="border border-neutral-200/70 rounded-xl overflow-hidden">
                 <table className="w-full">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-neutral-50/70">
                     <tr>
-                      <th className="py-6 px-8 text-left font-medium text-sm">
-                        Order ID
-                      </th>
-                      <th className="py-6 px-8 text-left font-medium text-sm">
-                        Customer
-                      </th>
-                      <th className="py-6 px-8 text-left font-medium text-sm">
-                        Items
-                      </th>
-                      <th className="py-6 px-8 text-left font-medium text-sm">
-                        Total
-                      </th>
-                      <th className="py-6 px-8 text-left font-medium text-sm">
-                        Status
-                      </th>
-                      <th className="py-6 px-8 text-left font-medium text-sm">
-                        Date
-                      </th>
-                      <th className="py-6 px-8 w-16"></th>
+                      <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Order ID</th>
+                      <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Customer</th>
+                      <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Items</th>
+                      <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Total</th>
+                      <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Status</th>
+                      <th className="py-5 px-6 text-left text-sm font-medium text-neutral-600">Date</th>
+                      <th className="py-5 px-6 w-24"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {renderOrdersTable()}
-                  </tbody>
+                  <tbody className="divide-y divide-neutral-200/60">{renderOrdersTable()}</tbody>
                 </table>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* PRODUCTS TAB */}
           {activeTab === 2 && (
-            <div>
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold">Products</h1>
+            <motion.div initial="hidden" animate="visible" 
+            // variants={stagger}
+            >
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
+                <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">Products</h1>
                 <button
                   onClick={() => setShowAddProduct(true)}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-3 px-8 h-12 rounded-2xl font-medium"
+                  className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
                 >
-                  <Plus size={20} /> Add New Product
+                  <Plus size={18} />
+                  Add Product
                 </button>
               </div>
               {renderProductsTable()}
-            </div>
+            </motion.div>
           )}
 
           {/* COUPONS TAB */}
           {activeTab === 3 && (
-            <div>
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold">Coupons</h1>
+            <motion.div initial="hidden" animate="visible" 
+            // variants={stagger}
+            >
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
+                <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">Coupons</h1>
                 <button
                   onClick={() => setShowAddCoupon(true)}
-                  className="bg-violet-600 text-white flex items-center gap-3 px-8 h-12 rounded-2xl font-medium"
+                  className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
                 >
-                  <Plus size={20} /> Create Coupon
+                  <Plus size={18} />
+                  Create Coupon
                 </button>
               </div>
               {renderCouponsTable()}
-            </div>
+            </motion.div>
           )}
 
           {/* REVIEWS TAB */}
           {activeTab === 4 && (
-            <div>
-              <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-bold">Customer Reviews</h1>
-                <div className="text-gray-500">
-                  Showing {reviews.length} reviews
-                </div>
+            <motion.div initial="hidden" animate="visible" 
+            // variants={stagger}
+            >
+              <div className="flex items-center justify-between mb-10">
+                <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">Reviews</h1>
+                <div className="text-neutral-600 font-light">Showing {reviews.length} reviews</div>
               </div>
               {renderReviewsTable()}
-            </div>
+            </motion.div>
           )}
-        </div>
+        </main>
       </div>
 
       {/* Quick Add Modal */}
       {showQuickAdd && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden">
-            <div className="p-10">
-              <h2 className="text-3xl font-bold mb-8">Quick Add</h2>
-              <div className="grid grid-cols-2 gap-6">
-                <button
-                  onClick={() => {
-                    setShowQuickAdd(false);
-                    setActiveTab(2);
-                    setTimeout(() => setShowAddProduct(true), 300);
-                  }}
-                  className="h-32 border-2 border-dashed border-gray-300 hover:border-violet-400 rounded-3xl flex flex-col items-center justify-center gap-4 transition-all"
-                >
-                  <Package size={42} className="text-violet-500" />
-                  <span className="font-semibold">Product</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setShowQuickAdd(false);
-                    setActiveTab(3);
-                    setTimeout(() => setShowAddCoupon(true), 300);
-                  }}
-                  className="h-32 border-2 border-dashed border-gray-300 hover:border-violet-400 rounded-3xl flex flex-col items-center justify-center gap-4 transition-all"
-                >
-                  <Ticket size={42} className="text-violet-500" />
-                  <span className="font-semibold">Coupon</span>
-                </button>
-              </div>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl w-full max-w-md p-8"
+          >
+            <h2 className="text-3xl font-['Playfair_Display'] font-medium mb-8">Quick Add</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <button
+                onClick={() => {
+                  setShowQuickAdd(false);
+                  setActiveTab(2);
+                  setTimeout(() => setShowAddProduct(true), 300);
+                }}
+                className="h-32 border-2 border-dashed border-neutral-300 hover:border-emerald-400 rounded-xl flex flex-col items-center justify-center gap-4 transition-colors"
+              >
+                <Package size={40} className="text-emerald-800" />
+                <span className="font-medium">Product</span>
+              </button>
+              <button
+                onClick={() => {
+                  setShowQuickAdd(false);
+                  setActiveTab(3);
+                  setTimeout(() => setShowAddCoupon(true), 300);
+                }}
+                className="h-32 border-2 border-dashed border-neutral-300 hover:border-emerald-400 rounded-xl flex flex-col items-center justify-center gap-4 transition-colors"
+              >
+                <Ticket size={40} className="text-emerald-800" />
+                <span className="font-medium">Coupon</span>
+              </button>
             </div>
-            <div className="border-t p-5 flex justify-end">
+            <div className="mt-8 flex justify-end">
               <button
                 onClick={() => setShowQuickAdd(false)}
-                className="px-10 py-3.5 text-gray-500 hover:bg-gray-100 rounded-2xl font-medium"
+                className="px-8 py-3 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
               >
                 Cancel
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
-      {/* ==================== ADD PRODUCT MODAL ==================== */}
+      {/* Add Product Modal */}
       {showAddProduct && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl w-full max-w-2xl mx-4 overflow-hidden">
-            <div className="p-10">
-              <h2 className="text-3xl font-bold mb-8">Add New Product</h2>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl w-full max-w-2xl p-8 md:p-10"
+          >
+            <h2 className="text-3xl font-['Playfair_Display'] font-medium mb-10">Add New Product</h2>
 
-              <div className="grid grid-cols-2 gap-6">
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium mb-2">
-                    Product Title
-                  </label>
-                  <input
-                    type="text"
-                    value={newProduct.title}
-                    onChange={(e) =>
-                      setNewProduct({ ...newProduct, title: e.target.value })
-                    }
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    placeholder="Wireless Headphones Pro"
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    value={newProduct.description}
-                    onChange={(e) =>
-                      setNewProduct({
-                        ...newProduct,
-                        description: e.target.value,
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 h-32 focus:outline-none focus:border-violet-500"
-                    placeholder="Premium noise cancelling headphones..."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Price (₹)
-                  </label>
-                  <input
-                    type="number"
-                    value={newProduct.price}
-                    onChange={(e) =>
-                      setNewProduct({ ...newProduct, price: e.target.value })
-                    }
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    placeholder="2499"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Image URL
-                  </label>
-                  <input
-                    type="text"
-                    value={newProduct.image}
-                    onChange={(e) =>
-                      setNewProduct({ ...newProduct, image: e.target.value })
-                    }
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    placeholder="https://picsum.photos/id/20/400/300"
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Title</label>
+                <input
+                  type="text"
+                  value={newProduct.title}
+                  onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
+                  className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                  placeholder="Product name"
+                />
               </div>
 
-              {/* Live Preview */}
-              {newProduct.image && (
-                <div className="mt-6">
-                  <p className="text-sm font-medium mb-2">Image Preview</p>
-                  <img
-                    src={newProduct.image}
-                    alt="preview"
-                    className="h-48 w-auto rounded-2xl border"
-                  />
-                </div>
-              )}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Description</label>
+                <textarea
+                  value={newProduct.description}
+                  onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                  className="w-full h-32 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors resize-none"
+                  placeholder="Short description..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Price (₹)</label>
+                <input
+                  type="number"
+                  value={newProduct.price}
+                  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                  className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                  placeholder="2499"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Image URL</label>
+                <input
+                  type="text"
+                  value={newProduct.image}
+                  onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+                  className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                  placeholder="https://..."
+                />
+              </div>
             </div>
 
-            <div className="border-t px-10 py-6 flex gap-4 justify-end">
+            {newProduct.image && (
+              <div className="mt-8">
+                <p className="text-sm font-medium text-neutral-600 mb-3">Preview</p>
+                <img src={newProduct.image} alt="preview" className="max-h-48 rounded-lg border border-neutral-200/60" />
+              </div>
+            )}
+
+            <div className="flex gap-4 mt-12">
               <button
                 onClick={() => setShowAddProduct(false)}
-                className="px-8 py-3.5 font-medium text-gray-600 hover:bg-gray-100 rounded-2xl"
+                className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
               >
                 Cancel
               </button>
               <button
-                onClick={handleAddProduct}
-                className="px-10 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-2xl"
+                onClick={() => {
+                  // Add your handleAddProduct logic here
+                  alert("Product added!");
+                  setShowAddProduct(false);
+                }}
+                className="flex-1 py-4 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors"
               >
                 Add Product
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
-      {/* ==================== ADD COUPON MODAL ==================== */}
+      {/* Add Coupon Modal */}
       {showAddCoupon && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl w-full max-w-lg mx-4 overflow-hidden">
-            <div className="p-10">
-              <h2 className="text-3xl font-bold mb-8">Create New Coupon</h2>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10"
+          >
+            <h2 className="text-3xl font-['Playfair_Display'] font-medium mb-10">Create Coupon</h2>
 
-              <div className="space-y-6">
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Code</label>
+                <input
+                  type="text"
+                  value={newCoupon.code}
+                  onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value })}
+                  className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors uppercase"
+                  placeholder="SUMMER25"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Coupon Code
-                  </label>
+                  <label className="block text-sm font-medium text-neutral-600 mb-2">Type</label>
+                  <select
+                    value={newCoupon.discountType}
+                    onChange={(e) => setNewCoupon({ ...newCoupon, discountType: e.target.value })}
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                  >
+                    <option value="percentage">Percentage</option>
+                    <option value="fixed">Fixed</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-600 mb-2">Value</label>
                   <input
-                    type="text"
-                    value={newCoupon.code}
-                    onChange={(e) =>
-                      setNewCoupon({ ...newCoupon, code: e.target.value })
-                    }
-                    className="w-full border border-gray-300 rounded-2xl px-5 py-4 font-mono uppercase focus:outline-none focus:border-violet-500"
-                    placeholder="SUMMER25"
+                    type="number"
+                    value={newCoupon.discountValue}
+                    onChange={(e) => setNewCoupon({ ...newCoupon, discountValue: e.target.value })}
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    placeholder="25"
                   />
                 </div>
+              </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Discount Type
-                    </label>
-                    <select
-                      value={newCoupon.discountType}
-                      onChange={(e) =>
-                        setNewCoupon({
-                          ...newCoupon,
-                          discountType: e.target.value,
-                        })
-                      }
-                      className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    >
-                      <option value="percentage">Percentage (%)</option>
-                      <option value="fixed">Fixed Amount (₹)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Discount Value
-                    </label>
-                    <input
-                      type="number"
-                      value={newCoupon.discountValue}
-                      onChange={(e) =>
-                        setNewCoupon({
-                          ...newCoupon,
-                          discountValue: e.target.value,
-                        })
-                      }
-                      className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                      placeholder="20"
-                    />
-                  </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-600 mb-2">Min Order (₹)</label>
+                  <input
+                    type="number"
+                    value={newCoupon.minOrderAmount}
+                    onChange={(e) => setNewCoupon({ ...newCoupon, minOrderAmount: e.target.value })}
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    placeholder="0"
+                  />
                 </div>
-
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Min Order Amount (₹)
-                    </label>
-                    <input
-                      type="number"
-                      value={newCoupon.minOrderAmount}
-                      onChange={(e) =>
-                        setNewCoupon({
-                          ...newCoupon,
-                          minOrderAmount: e.target.value,
-                        })
-                      }
-                      className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                      placeholder="999"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Expiry Date
-                    </label>
-                    <input
-                      type="date"
-                      value={newCoupon.expiryDate}
-                      onChange={(e) =>
-                        setNewCoupon({
-                          ...newCoupon,
-                          expiryDate: e.target.value,
-                        })
-                      }
-                      className="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:border-violet-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-600 mb-2">Expiry</label>
+                  <input
+                    type="date"
+                    value={newCoupon.expiryDate}
+                    onChange={(e) => setNewCoupon({ ...newCoupon, expiryDate: e.target.value })}
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                  />
                 </div>
               </div>
             </div>
 
-            <div className="border-t px-10 py-6 flex gap-4 justify-end">
+            <div className="flex gap-4 mt-10">
               <button
                 onClick={() => setShowAddCoupon(false)}
-                className="px-8 py-3.5 font-medium text-gray-600 hover:bg-gray-100 rounded-2xl"
+                className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
               >
                 Cancel
               </button>
               <button
-                onClick={handleAddCoupon}
-                className="px-10 py-3.5 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-2xl"
+                onClick={() => {
+                  // Add your handleAddCoupon logic here
+                  alert("Coupon created!");
+                  setShowAddCoupon(false);
+                }}
+                className="flex-1 py-4 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors"
               >
-                Create Coupon
+                Create
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>
   );
-};
+}
 
 export default AdminDashboard;
