@@ -34,6 +34,29 @@ const stagger = {
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
+  const [featuredProducts, setFeaturedProducts] = useState([]); // or better: define Product type
+  const [loading, setLoading] = useState(true);
+
+  // Fetch featured products
+  useEffect(() => {
+    async function fetchFeatured() {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/products?featured=true");
+        if (!res.ok) throw new Error("Failed to fetch featured products");
+
+        const result = await res.json();
+        // Assuming your API returns { products: [...] }
+        setFeaturedProducts(result.products || []);
+      } catch (err) {
+        console.error("Error fetching featured products:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchFeatured();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80);
@@ -114,7 +137,7 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* ─── Improved Hero – better balance & less empty space ─── */}
+        {/* ─── hero section ─── */}
         <section className="relative h-[85vh] md:h-screen flex items-center pt-20 pb-16 md:pb-0">
           <div className="absolute inset-0">
             <img
@@ -216,77 +239,61 @@ export default function Home() {
         {/* ─── Featured Products ─── */}
         <section id="cycles" className="py-24 md:py-40 bg-white">
           <div className="max-w-6xl mx-auto px-6 lg:px-12 space-y-32 md:space-y-48">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-150px" }}
-              transition={{ duration: 1.4 }}
-              className="grid md:grid-cols-2 gap-16 lg:gap-24 items-center"
-            >
-              <div>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-light leading-tight mb-10">
-                  RangeX City
-                </h2>
-                <div className="space-y-6 text-lg md:text-xl font-light text-neutral-700">
-                  <div>₹ 54,999</div>
-                  <div>140 km real range</div>
-                  <div>25 kg total weight</div>
-                </div>
+            {loading ? (
+              <div className="text-center py-20 text-neutral-500">
+                Loading featured cycles...
               </div>
-              <img
-                src="https://images.unsplash.com/photo-1631631480669-535cc43f232c?auto=format&fit=crop&q=90&w=1600"
-                alt="RangeX City – Patna street ride"
-                className="w-full h-auto object-cover rounded-none"
-              />
-            </motion.div>
+            ) : featuredProducts.length === 0 ? (
+              <div className="text-center py-20 text-neutral-500">
+                No featured products available at the moment.
+              </div>
+            ) : (
+              featuredProducts.map((product, index) => {
+                // Alternate image left / right layout
+                const isEven = index % 2 === 0;
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-150px" }}
-              transition={{ duration: 1.4 }}
-              className="grid md:grid-cols-2 gap-16 lg:gap-24 items-center"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1649972077917-2d9b0d2e3e8d?auto=format&fit=crop&q=90&w=1600"
-                alt="TrailX Pro – Patna outskirts"
-                className="w-full h-auto object-cover rounded-none order-1 md:order-2"
-              />
-              <div className="order-2 md:order-1">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-light leading-tight mb-10">
-                  TrailX Pro
-                </h2>
-                <div className="space-y-6 text-lg md:text-xl font-light text-neutral-700">
-                  <div>₹ 74,999</div>
-                  <div>Off-road geometry</div>
-                  <div>High torque mid-drive</div>
-                </div>
-              </div>
-            </motion.div>
+                return (
+                  <motion.div
+                    key={product._id}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true, margin: "-150px" }}
+                    transition={{ duration: 1.4 }}
+                    className={`grid md:grid-cols-2 gap-16 lg:gap-24 items-center ${
+                      !isEven ? "md:flex-row-reverse" : ""
+                    }`}
+                  >
+                    <div className={isEven ? "" : "order-2 md:order-1"}>
+                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-light leading-tight mb-10">
+                        {product.title}
+                      </h2>
+                      <div className="space-y-5 text-lg md:text-xl font-light text-neutral-700">
+                        <div className="text-3xl font-medium text-neutral-900">
+                          ₹ {product.price.toLocaleString("en-IN")}
+                        </div>
+                        <div>
+                          {product.specs?.battery?.range || "?"} km real range
+                        </div>
+                        <div>{product.specs?.physical?.weight || "?"} kg</div>
+                        {product.description && (
+                          <p className="text-base text-neutral-600 mt-4">
+                            {product.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-150px" }}
-              transition={{ duration: 1.4 }}
-              className="grid md:grid-cols-2 gap-16 lg:gap-24 items-center"
-            >
-              <div>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-light leading-tight mb-10">
-                  LiteX Fold
-                </h2>
-                <div className="space-y-6 text-lg md:text-xl font-light text-neutral-700">
-                  <div>₹ 44,999</div>
-                  <div>Folds in seconds</div>
-                  <div>Urban & apartment friendly</div>
-                </div>
-              </div>
-              <img
-                src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&q=90&w=1600"
-                alt="LiteX Fold – Patna apartment stairs"
-                className="w-full h-auto object-cover rounded-none"
-              />
-            </motion.div>
+                    <div className={isEven ? "" : "order-1 md:order-2"}>
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-full h-auto object-cover rounded-none shadow-xl"
+                      />
+                    </div>
+                  </motion.div>
+                );
+              })
+            )}
           </div>
         </section>
 
