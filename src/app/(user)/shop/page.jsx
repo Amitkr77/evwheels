@@ -3,35 +3,113 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
-const products = [
-  {
-    name: "RangeX City",
-    price: "₹54,999",
-    range: "140 km",
-    weight: "25 kg",
-    image:
-      "https://images.unsplash.com/photo-1631631480669-535cc43f232c?auto=format&fit=crop&q=90&w=800",
-  },
-  {
-    name: "TrailX Pro",
-    price: "₹74,999",
-    range: "120 km",
-    weight: "28 kg",
-    image:
-      "https://images.unsplash.com/photo-1649972077917-2d9b0d2e3e8d?auto=format&fit=crop&q=90&w=800",
-  },
-  {
-    name: "LiteX Fold",
-    price: "₹44,999",
-    range: "90 km",
-    weight: "22 kg",
-    image:
-      "https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&q=90&w=800",
-  },
-];
+import { useEffect, useState, useMemo } from "react";
 
 export default function CyclesPage() {
+  const [products, setProducts] = useState([]);           // all fetched products
+  const [filteredProducts, setFilteredProducts] = useState([]); // displayed list
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Filter & sort states
+  const [typeFilter, setTypeFilter] = useState("All Types");
+  const [priceFilter, setPriceFilter] = useState("All Prices");
+  const [sortOption, setSortOption] = useState("Featured");
+
+  // For future: grid/list toggle (logic prepared but UI not fully wired yet)
+  const [viewMode, setViewMode] = useState("Grid"); // "Grid" | "List"
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch("/api/products");
+        if (!res.ok) throw new Error("Failed to fetch products");
+
+        const result = await res.json();
+        const fetched = result.products || [];
+        setProducts(fetched);
+        setFilteredProducts(fetched); // initial display = all
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  // Combined filtering + sorting logic → memoized
+  const displayedProducts = useMemo(() => {
+    let result = [...products];
+
+    // 1. Type filter
+    if (typeFilter !== "All Types") {
+      result = result.filter((p) => {
+        const category = p.category || p.type || ""; // adjust field name as per your data
+        return category.toLowerCase() === typeFilter.toLowerCase();
+      });
+    }
+
+    // 2. Price filter
+    if (priceFilter !== "All Prices") {
+      result = result.filter((p) => {
+        const price = Number(p.price) || 0;
+        if (priceFilter === "Under ₹50,000") return price < 50000;
+        if (priceFilter === "₹50,000 – ₹75,000") return price >= 50000 && price <= 75000;
+        if (priceFilter === "Above ₹75,000") return price > 75000;
+        return true;
+      });
+    }
+
+    // 3. Sorting
+    if (sortOption === "Price: Low to High") {
+      result.sort((a, b) => Number(a.price) - Number(b.price));
+    } else if (sortOption === "Price: High to Low") {
+      result.sort((a, b) => Number(b.price) - Number(a.price));
+    } else if (sortOption === "Range: High to Low") {
+      result.sort((a, b) => {
+        const rangeA = Number(a.specs?.battery?.range || 0);
+        const rangeB = Number(b.specs?.battery?.range || 0);
+        return rangeB - rangeA;
+      });
+    } else if (sortOption === "Newest First") {
+      // Assuming you have a createdAt / date field (ISO string or timestamp)
+      result.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+        const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+        return dateB - dateA;
+      });
+    }
+    // "Featured" → we keep original order (or you can add featured logic later)
+
+    return result;
+  }, [products, typeFilter, priceFilter, sortOption]);
+
+  // Sync filteredProducts when dependencies change (optional – can use displayedProducts directly)
+  useEffect(() => {
+    setFilteredProducts(displayedProducts);
+  }, [displayedProducts]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-20 flex items-center justify-center">
+        <p className="text-xl text-neutral-600">Loading cycles...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-20 flex items-center justify-center">
+        <p className="text-xl text-red-600">Error: {error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -43,15 +121,19 @@ export default function CyclesPage() {
           Our Cycles
         </motion.h1>
 
-        {/* Filters + Sorting + View Toggle */}
+        {/* Controls */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-12 md:mb-16">
-          {/* Left: Filters */}
+          {/* Filters */}
           <div className="flex flex-wrap items-center gap-4 md:gap-6">
             <div className="flex items-center gap-2">
               <span className="text-sm md:text-base font-light text-neutral-600">
                 Filter by:
               </span>
-              <select className="px-4 py-2.5 border border-neutral-300 rounded-lg text-sm md:text-base font-light focus:outline-none focus:border-emerald-600 transition-colors bg-white">
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="px-4 py-2.5 border border-neutral-300 rounded-lg text-sm md:text-base font-light focus:outline-none focus:border-emerald-600 transition-colors bg-white"
+              >
                 <option>All Types</option>
                 <option>City</option>
                 <option>Trail / Off-road</option>
@@ -63,7 +145,11 @@ export default function CyclesPage() {
               <span className="text-sm md:text-base font-light text-neutral-600">
                 Price:
               </span>
-              <select className="px-4 py-2.5 border border-neutral-300 rounded-lg text-sm md:text-base font-light focus:outline-none focus:border-emerald-600 transition-colors bg-white">
+              <select
+                value={priceFilter}
+                onChange={(e) => setPriceFilter(e.target.value)}
+                className="px-4 py-2.5 border border-neutral-300 rounded-lg text-sm md:text-base font-light focus:outline-none focus:border-emerald-600 transition-colors bg-white"
+              >
                 <option>All Prices</option>
                 <option>Under ₹50,000</option>
                 <option>₹50,000 – ₹75,000</option>
@@ -72,14 +158,17 @@ export default function CyclesPage() {
             </div>
           </div>
 
-          {/* Right: Sort + View Toggle */}
+          {/* Sort + View */}
           <div className="flex items-center gap-6 md:gap-8">
-            {/* Sort */}
             <div className="flex items-center gap-2">
               <span className="text-sm md:text-base font-light text-neutral-600">
                 Sort by:
               </span>
-              <select className="px-4 py-2.5 border border-neutral-300 rounded-lg text-sm md:text-base font-light focus:outline-none focus:border-emerald-600 transition-colors bg-white">
+              <select
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+                className="px-4 py-2.5 border border-neutral-300 rounded-lg text-sm md:text-base font-light focus:outline-none focus:border-emerald-600 transition-colors bg-white"
+              >
                 <option>Featured</option>
                 <option>Price: Low to High</option>
                 <option>Price: High to Low</option>
@@ -88,59 +177,100 @@ export default function CyclesPage() {
               </select>
             </div>
 
-            {/* View Toggle (Grid / List) */}
             <div className="flex items-center gap-3 border border-neutral-300 rounded-lg overflow-hidden">
-              <button className="px-4 py-2.5 bg-neutral-100 text-neutral-900 font-medium text-sm md:text-base transition-colors hover:bg-neutral-200">
+              <button
+                onClick={() => setViewMode("Grid")}
+                className={`px-4 py-2.5 text-sm md:text-base font-medium transition-colors ${
+                  viewMode === "Grid"
+                    ? "bg-neutral-900 text-white"
+                    : "bg-neutral-100 text-neutral-900 hover:bg-neutral-200"
+                }`}
+              >
                 Grid
               </button>
-              <button className="px-4 py-2.5 text-neutral-600 hover:text-neutral-900 transition-colors text-sm md:text-base">
+              <button
+                onClick={() => setViewMode("List")}
+                className={`px-4 py-2.5 text-sm md:text-base transition-colors ${
+                  viewMode === "List"
+                    ? "bg-neutral-900 text-white"
+                    : "text-neutral-600 hover:text-neutral-900"
+                }`}
+              >
                 List
               </button>
             </div>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16">
-          {products.map((product, i) => (
-            <motion.div
-              key={product.name}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: i * 0.15 }}
-              className="group"
-            >
-              <div className="aspect-[4/3] overflow-hidden mb-6">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-
-              <h3 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium mb-3">
-                {product.name}
-              </h3>
-
-              <div className="text-xl font-light text-emerald-800 mb-4">
-                {product.price}
-              </div>
-
-              <div className="text-sm text-neutral-600 font-light space-y-1 mb-6">
-                <p>Range: {product.range}</p>
-                <p>Weight: {product.weight}</p>
-              </div>
-
-              <Link
-                href="#"
-                className="inline-flex items-center gap-2 text-neutral-900 font-medium hover:text-emerald-800 transition-colors"
+        {displayedProducts.length === 0 ? (
+          <p className="text-center text-xl text-neutral-600">
+            No cycles match the selected filters.
+          </p>
+        ) : (
+          <div
+            className={
+              viewMode === "Grid"
+                ? "grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-16"
+                : "flex flex-col gap-10"
+            }
+          >
+            {displayedProducts.map((product, i) => (
+              <motion.div
+                key={product._id || product.slug}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9, delay: i * 0.1 }}
+                className={`group ${viewMode === "List" ? "flex gap-8 items-center" : ""}`}
               >
-                View Details
-                <ArrowRight size={18} />
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+                <div
+                  className={`overflow-hidden bg-neutral-100 ${
+                    viewMode === "Grid"
+                      ? "aspect-[4/3] mb-6"
+                      : "w-48 md:w-64 h-36 md:h-48 flex-shrink-0"
+                  }`}
+                >
+                  <img
+                    src={
+                      product.image ||
+                      "https://via.placeholder.com/800x600?text=No+Image"
+                    }
+                    alt={product.title}
+                    className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${
+                      viewMode === "List" ? "object-contain" : ""
+                    }`}
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/800x600?text=Image+Error";
+                    }}
+                  />
+                </div>
+
+                <div className={viewMode === "List" ? "flex-1" : ""}>
+                  <h3 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium mb-3">
+                    {product.title}
+                  </h3>
+
+                  <div className="text-xl font-light text-emerald-800 mb-4">
+                    ₹{Number(product.price).toLocaleString("en-IN")}
+                  </div>
+
+                  <div className="text-sm text-neutral-600 font-light space-y-1 mb-6">
+                    <p>Range: {product.specs?.battery?.range || "N/A"} km</p>
+                    <p>Weight: {product.specs?.physical?.weight || "N/A"} kg</p>
+                  </div>
+
+                  <Link
+                    href={`/shop/${product.slug}` || "#"}
+                    className="inline-flex items-center gap-2 text-neutral-900 font-medium hover:text-emerald-800 transition-colors"
+                  >
+                    View Details
+                    <ArrowRight size={18} />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
