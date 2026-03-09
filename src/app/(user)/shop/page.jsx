@@ -6,8 +6,8 @@ import { ArrowRight } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 
 export default function CyclesPage() {
-  const [products, setProducts] = useState([]);           // all fetched products
-  const [filteredProducts, setFilteredProducts] = useState([]); // displayed list
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,8 +17,7 @@ export default function CyclesPage() {
   const [priceFilter, setPriceFilter] = useState("All Prices");
   const [sortOption, setSortOption] = useState("Featured");
 
-  // For future: grid/list toggle (logic prepared but UI not fully wired yet)
-  const [viewMode, setViewMode] = useState("Grid"); // "Grid" | "List"
+  const [viewMode, setViewMode] = useState("Grid");
 
   useEffect(() => {
     async function fetchProducts() {
@@ -59,7 +58,8 @@ export default function CyclesPage() {
       result = result.filter((p) => {
         const price = Number(p.price) || 0;
         if (priceFilter === "Under ₹50,000") return price < 50000;
-        if (priceFilter === "₹50,000 – ₹75,000") return price >= 50000 && price <= 75000;
+        if (priceFilter === "₹50,000 – ₹75,000")
+          return price >= 50000 && price <= 75000;
         if (priceFilter === "Above ₹75,000") return price > 75000;
         return true;
       });
@@ -96,8 +96,22 @@ export default function CyclesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-20 flex items-center justify-center">
-        <p className="text-xl text-neutral-600">Loading cycles...</p>
+      <div className="w-full max-w-md mx-auto">
+        <div className="h-1.5 w-full bg-neutral-200 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-emerald-800 rounded-full"
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{
+              duration: 2.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </div>
+        <p className="text-center text-sm text-neutral-500 mt-3 font-light">
+          Preparing your ride...
+        </p>
       </div>
     );
   }
@@ -240,7 +254,8 @@ export default function CyclesPage() {
                       viewMode === "List" ? "object-contain" : ""
                     }`}
                     onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/800x600?text=Image+Error";
+                      e.target.src =
+                        "https://via.placeholder.com/800x600?text=Image+Error";
                     }}
                   />
                 </div>

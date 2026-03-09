@@ -5,9 +5,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Star, MessageCircle } from "lucide-react";
+import { useCartStore } from "@/store/cartStore";
 
 export default function ProductDetailPage({ params }) {
   const { slug } = params;
+  const addToCart = useCartStore((state) => state.addToCart);
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -135,7 +137,10 @@ export default function ProductDetailPage({ params }) {
             <p className="text-neutral-600 mb-10">{product.description}</p>
 
             <div className="flex gap-4">
-              <button className="px-8 py-4 bg-black text-white rounded-full">
+              <button
+                onClick={() => addToCart(product, 1)}
+                className="px-8 py-4 bg-black text-white rounded-full cursor-pointer"
+              >
                 Add to Cart
               </button>
 

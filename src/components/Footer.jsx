@@ -1,10 +1,10 @@
 // components/Footer.tsx
 
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
+import React, { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Mail,
   Phone,
@@ -18,31 +18,33 @@ import {
   Truck,
   Battery,
   Wrench,
-  Newspaper 
-} from 'lucide-react'
+  Newspaper,
+} from "lucide-react";
 
 export default function Footer() {
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState('') // "success" | "error" | ""
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState(""); // "success" | "error" | ""
 
   const handleSubscribe = (e) => {
-    e.preventDefault()
-    if (!email.trim() || !email.includes('@')) {
-      setStatus('error')
-      setTimeout(() => setStatus(''), 3000)
-      return
+    e.preventDefault();
+    if (!email.trim() || !email.includes("@")) {
+      setStatus("error");
+      setTimeout(() => setStatus(""), 3000);
+      return;
     }
 
     // Simulate successful subscription
-    setStatus('success')
-    setEmail('')
-    setTimeout(() => setStatus(''), 4000)
-  }
+    setStatus("success");
+    setEmail("");
+    setTimeout(() => setStatus(""), 4000);
+  };
 
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#fdfcf9] border-t border-neutral-200/70 pt-16 pb-12 font-['Inter']">
+    <footer className="bg-[#fdfcf9]   pt-16 pb-12 font-['Inter']">
+      {" "}
+      {/* border-t border-neutral-200/70*/}
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
@@ -58,21 +60,34 @@ export default function Footer() {
             </div>
 
             <p className="text-neutral-600 font-light leading-relaxed max-w-xs">
-              Premium electric cycles crafted for real Indian roads — silent, capable, and built to last.
+              Premium electric cycles crafted for real Indian roads — silent,
+              capable, and built to last.
             </p>
 
             {/* Social Icons */}
             <div className="flex gap-5">
-              <a href="#" className="text-neutral-500 hover:text-emerald-800 transition-colors">
+              <a
+                href="#"
+                className="text-neutral-500 hover:text-emerald-800 transition-colors"
+              >
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-neutral-500 hover:text-emerald-800 transition-colors">
+              <a
+                href="#"
+                className="text-neutral-500 hover:text-emerald-800 transition-colors"
+              >
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-neutral-500 hover:text-emerald-800 transition-colors">
+              <a
+                href="#"
+                className="text-neutral-500 hover:text-emerald-800 transition-colors"
+              >
                 <Twitter size={20} />
               </a>
-              <a href="#" className="text-neutral-500 hover:text-emerald-800 transition-colors">
+              <a
+                href="#"
+                className="text-neutral-500 hover:text-emerald-800 transition-colors"
+              >
                 <Youtube size={20} />
               </a>
             </div>
@@ -80,39 +95,103 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-medium text-neutral-900 mb-6">Quick Links</h4>
+            <h4 className="text-lg font-medium text-neutral-900 mb-6">
+              Quick Links
+            </h4>
             <ul className="space-y-3 text-sm text-neutral-600">
-              <li><Link href="/cycles" className="hover:text-emerald-800 transition-colors">Our Cycles</Link></li>
-              <li><Link href="/accessories" className="hover:text-emerald-800 transition-colors">Accessories</Link></li>
-              <li><Link href="/why-us" className="hover:text-emerald-800 transition-colors">Why EVWheels</Link></li>
-              <li><Link href="/contact" className="hover:text-emerald-800 transition-colors">Contact Us</Link></li>
-              <li><Link href="/login" className="hover:text-emerald-800 transition-colors">My Account</Link></li>
+              <li>
+                <Link
+                  href="/cycles"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Our Cycles
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/accessories"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Accessories
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/why-us"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Why EVWheels
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  My Account
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Support */}
           <div>
-            <h4 className="text-lg font-medium text-neutral-900 mb-6">Support</h4>
+            <h4 className="text-lg font-medium text-neutral-900 mb-6">
+              Support
+            </h4>
             <ul className="space-y-3 text-sm text-neutral-600">
               <li className="flex items-center gap-2">
                 <Truck size={16} className="text-emerald-800" />
-                <Link href="#" className="hover:text-emerald-800 transition-colors">Shipping & Delivery</Link>
+                <Link
+                  href="#"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Shipping & Delivery
+                </Link>
               </li>
               <li className="flex items-center gap-2">
                 <ShieldCheck size={16} className="text-emerald-800" />
-                <Link href="#" className="hover:text-emerald-800 transition-colors">Warranty & Returns</Link>
+                <Link
+                  href="#"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Warranty & Returns
+                </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Battery size={16} className="text-emerald-800" />
-                <Link href="#" className="hover:text-emerald-800 transition-colors">Battery Care</Link>
+                <Link
+                  href="#"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Battery Care
+                </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Wrench size={16} className="text-emerald-800" />
-                <Link href="#" className="hover:text-emerald-800 transition-colors">Service Centers</Link>
+                <Link
+                  href="#"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Service Centers
+                </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} className="text-emerald-800" />
-                <Link href="tel:+919876543210" className="hover:text-emerald-800 transition-colors">+91 98765 43210</Link>
+                <Link
+                  href="tel:+919876543210"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  +91 98765 43210
+                </Link>
               </li>
             </ul>
           </div>
@@ -134,7 +213,7 @@ export default function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
                 className={`w-full px-5 py-4 border ${
-                  status === 'error' ? 'border-red-500' : 'border-neutral-300'
+                  status === "error" ? "border-red-500" : "border-neutral-300"
                 } rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm`}
                 required
               />
@@ -147,7 +226,7 @@ export default function Footer() {
                 Subscribe
               </button>
 
-              {status === 'success' && (
+              {status === "success" && (
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -157,7 +236,7 @@ export default function Footer() {
                 </motion.p>
               )}
 
-              {status === 'error' && (
+              {status === "error" && (
                 <p className="text-red-600 text-sm font-light mt-2">
                   Please enter a valid email address.
                 </p>
@@ -186,5 +265,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

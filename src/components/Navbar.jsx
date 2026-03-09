@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingBag, User } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import { useCartStore } from "@/store/cartStore";
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuthStore();
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const totalQuantity = useCartStore((state) => state.totalQuantity);
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -63,6 +65,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-6">
+            <div>Cart ({totalQuantity})</div>
             <Link
               href="/cart"
               className={`transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}

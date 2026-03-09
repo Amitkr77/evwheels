@@ -19,29 +19,35 @@ async function getUserId(req) {
 // GET → Get Cart
 export async function GET(req) {
   const userId = await getUserId(req);
-  if (!userId)
+
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   await connectDB();
 
   const cart = await Cart.findOne({ user: userId }).populate("items.product");
 
-  return NextResponse.json(cart || { items: [] });
+  return NextResponse.json({ items: cart?.items || [] });
 }
 
 // POST → Add to Cart
 export async function POST(req) {
   const userId = await getUserId(req);
-  if (!userId)
+
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { productId, quantity } = await req.json();
 
   await connectDB();
 
   const product = await Product.findById(productId);
-  if (!product)
+
+  if (!product) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
+  }
 
   let cart = await Cart.findOne({ user: userId });
 
@@ -64,14 +70,21 @@ export async function POST(req) {
     await cart.save();
   }
 
-  return NextResponse.json({ message: "Added to cart" });
+  // return updated cart
+  const updatedCart = await Cart.findOne({ user: userId }).populate(
+    "items.product"
+  );
+
+  return NextResponse.json({ items: updatedCart.items });
 }
 
 // PUT → Update Quantity
 export async function PUT(req) {
   const userId = await getUserId(req);
-  if (!userId)
+
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { productId, quantity } = await req.json();
 
@@ -79,27 +92,36 @@ export async function PUT(req) {
 
   const cart = await Cart.findOne({ user: userId });
 
-  if (!cart)
+  if (!cart) {
     return NextResponse.json({ error: "Cart not found" }, { status: 404 });
+  }
 
   const item = cart.items.find(
     (item) => item.product.toString() === productId
   );
 
-  if (!item)
+  if (!item) {
     return NextResponse.json({ error: "Item not in cart" }, { status: 404 });
+  }
 
   item.quantity = quantity;
+
   await cart.save();
 
-  return NextResponse.json({ message: "Cart updated" });
+  const updatedCart = await Cart.findOne({ user: userId }).populate(
+    "items.product"
+  );
+
+  return NextResponse.json({ items: updatedCart.items });
 }
 
 // DELETE → Remove Item
 export async function DELETE(req) {
   const userId = await getUserId(req);
-  if (!userId)
+
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { productId } = await req.json();
 
@@ -107,8 +129,9 @@ export async function DELETE(req) {
 
   const cart = await Cart.findOne({ user: userId });
 
-  if (!cart)
+  if (!cart) {
     return NextResponse.json({ error: "Cart not found" }, { status: 404 });
+  }
 
   cart.items = cart.items.filter(
     (item) => item.product.toString() !== productId
@@ -116,5 +139,9 @@ export async function DELETE(req) {
 
   await cart.save();
 
-  return NextResponse.json({ message: "Item removed" });
+  const updatedCart = await Cart.findOne({ user: userId }).populate(
+    "items.product"
+  );
+
+  return NextResponse.json({ items: updatedCart.items });
 }

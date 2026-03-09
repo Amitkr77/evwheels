@@ -1,14 +1,29 @@
 // app/cart/page.tsx
 
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { ArrowLeft, Trash2, Plus, Minus, Lock ,ArrowRight ,ShieldCheck  } from 'lucide-react'
+import { motion } from "framer-motion";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  Trash2,
+  Plus,
+  Minus,
+  Lock,
+  ArrowRight,
+  ShieldCheck,
+} from "lucide-react";
+import { useCartStore } from "@/store/cartStore";
 
 export default function CartPage() {
+  const { items, totalPrice, removeFromCart } = useCartStore();
+
+  console.log(items);
+  console.log(totalPrice);
+
   return (
     <main className="flex-grow bg-[#fdfcf9] min-h-screen font-['Inter'] pt-20 pb-20">
+      <div className="fixed"/>
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-10 border-b border-neutral-200/70 mb-12">
@@ -17,7 +32,7 @@ export default function CartPage() {
               Your Shopping Cart
             </h1>
             <p className="text-lg text-neutral-600 font-light">
-              You have 2 items in your cart
+              You have {items.length} items in your cart
             </p>
           </div>
 
@@ -36,17 +51,31 @@ export default function CartPage() {
             {/* Free Shipping Alert */}
             <div className="flex items-center gap-3 p-5 bg-emerald-50/60 border border-emerald-100 rounded-xl text-sm text-neutral-700">
               <span className="text-emerald-800">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
               </span>
               <span className="font-medium">
-                You've qualified for <span className="text-emerald-800 font-semibold">Free Shipping</span> on this order!
+                You've qualified for{" "}
+                <span className="text-emerald-800 font-semibold">
+                  Free Shipping
+                </span>{" "}
+                on this order!
               </span>
             </div>
 
             {/* Cart Item 1 */}
-            <div className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors">
+            {/* <div className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors">
               <div className="flex flex-col sm:flex-row gap-6">
                 <div className="relative shrink-0 w-full sm:w-32 h-32">
                   <img
@@ -64,13 +93,21 @@ export default function CartPage() {
                           Urban E-Bike X1
                         </h3>
                         <p className="text-sm text-neutral-600 mb-1">
-                          Color: <span className="text-neutral-900 font-medium">Matte Black</span>
+                          Color:{" "}
+                          <span className="text-neutral-900 font-medium">
+                            Matte Black
+                          </span>
                         </p>
                         <p className="text-sm text-neutral-600">
-                          Size: <span className="text-neutral-900 font-medium">Medium (17")</span>
+                          Size:{" "}
+                          <span className="text-neutral-900 font-medium">
+                            Medium (17")
+                          </span>
                         </p>
                       </div>
-                      <p className="text-xl font-medium text-emerald-800">₹1,299.00</p>
+                      <p className="text-xl font-medium text-emerald-800">
+                        ₹1,299.00
+                      </p>
                     </div>
                   </div>
 
@@ -80,7 +117,9 @@ export default function CartPage() {
                         <button className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors">
                           <Minus size={16} />
                         </button>
-                        <span className="w-12 text-center text-sm font-medium">1</span>
+                        <span className="w-12 text-center text-sm font-medium">
+                          1
+                        </span>
                         <button className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors">
                           <Plus size={16} />
                         </button>
@@ -98,10 +137,10 @@ export default function CartPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Cart Item 2 */}
-            <div className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors">
+            {/* <div className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors">
               <div className="flex flex-col sm:flex-row gap-6">
                 <div className="relative shrink-0 w-full sm:w-32 h-32">
                   <img
@@ -118,13 +157,21 @@ export default function CartPage() {
                         Carbon Fiber Helmet
                       </h3>
                       <p className="text-sm text-neutral-600 mb-1">
-                        Color: <span className="text-neutral-900 font-medium">Charcoal</span>
+                        Color:{" "}
+                        <span className="text-neutral-900 font-medium">
+                          Charcoal
+                        </span>
                       </p>
                       <p className="text-sm text-neutral-600">
-                        Size: <span className="text-neutral-900 font-medium">Large</span>
+                        Size:{" "}
+                        <span className="text-neutral-900 font-medium">
+                          Large
+                        </span>
                       </p>
                     </div>
-                    <p className="text-xl font-medium text-emerald-800">₹149.00</p>
+                    <p className="text-xl font-medium text-emerald-800">
+                      ₹149.00
+                    </p>
                   </div>
 
                   <div className="flex items-center justify-between mt-6">
@@ -133,7 +180,9 @@ export default function CartPage() {
                         <button className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors">
                           <Minus size={16} />
                         </button>
-                        <span className="w-12 text-center text-sm font-medium">1</span>
+                        <span className="w-12 text-center text-sm font-medium">
+                          1
+                        </span>
                         <button className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors">
                           <Plus size={16} />
                         </button>
@@ -147,19 +196,101 @@ export default function CartPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
+            {items.map((item) => {
+              const { product, quantity } = item;
+
+              return (
+                <div
+                  key={product._id}
+                  className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors"
+                >
+                  <div className="flex flex-col sm:flex-row gap-6">
+                    <div className="relative shrink-0 w-full sm:w-32 h-32">
+                      <img
+                        src={product?.image}
+                        alt={product?.title}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    </div>
+
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3 className="text-xl font-['Playfair_Display'] font-medium text-neutral-900 mb-1">
+                              {product?.title}
+                            </h3>
+
+                            <p className="text-sm text-neutral-600 mb-1">
+                              Brand:{" "}
+                              <span className="text-neutral-900 font-medium">
+                                {product.brand}
+                              </span>
+                            </p>
+
+                            <p className="text-sm text-neutral-600">
+                              Color:{" "}
+                              <span className="text-neutral-900 font-medium">
+                                {product.color}
+                              </span>
+                            </p>
+                          </div>
+
+                          <p className="text-xl font-medium text-emerald-800">
+                            ₹{product.price.toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-6">
+                        <div className="flex items-center gap-4">
+                          {/* Quantity UI */}
+                          <div className="flex items-center border border-neutral-300 rounded-lg overflow-hidden">
+                            <button className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100">
+                              <Minus size={16} />
+                            </button>
+
+                            <span className="w-12 text-center text-sm font-medium">
+                              {quantity}
+                            </span>
+
+                            <button className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100">
+                              <Plus size={16} />
+                            </button>
+                          </div>
+
+                          {/* Remove */}
+                          <button
+                            onClick={() => removeFromCart(product._id)}
+                            className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-red-600"
+                          >
+                            <Trash2 size={16} />
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {/* Right: Order Summary */}
           <div className="lg:w-[380px] shrink-0">
             <div className="sticky top-24 flex flex-col gap-8">
               <div className="bg-white border border-neutral-200/70 rounded-xl p-8">
-                <h2 className="text-2xl font-['Playfair_Display'] font-medium mb-8">Order Summary</h2>
+                <h2 className="text-2xl font-['Playfair_Display'] font-medium mb-8">
+                  Order Summary
+                </h2>
 
                 <div className="space-y-4 mb-8 pb-8 border-b border-neutral-200/60">
                   <div className="flex justify-between text-neutral-600">
                     <span>Subtotal</span>
-                    <span className="text-neutral-900 font-medium">₹1,448.00</span>
+                    <span className="text-neutral-900 font-medium">
+                      ₹1,448.00
+                    </span>
                   </div>
                   <div className="flex justify-between text-neutral-600">
                     <span>Shipping Estimate</span>
@@ -167,7 +298,9 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-neutral-600">
                     <span>Tax Estimate</span>
-                    <span className="text-neutral-900 font-medium">₹115.84</span>
+                    <span className="text-neutral-900 font-medium">
+                      ₹115.84
+                    </span>
                   </div>
                 </div>
 
@@ -209,20 +342,50 @@ export default function CartPage() {
               {/* Trust Badges */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="flex flex-col items-center text-center gap-2 p-4 border border-neutral-200/60 rounded-lg">
-                  <ShieldCheck size={28} className="text-emerald-800" strokeWidth={1.5} />
-                  <span className="text-xs font-medium text-neutral-600">2 Year Warranty</span>
+                  <ShieldCheck
+                    size={28}
+                    className="text-emerald-800"
+                    strokeWidth={1.5}
+                  />
+                  <span className="text-xs font-medium text-neutral-600">
+                    2 Year Warranty
+                  </span>
                 </div>
                 <div className="flex flex-col items-center text-center gap-2 p-4 border border-neutral-200/60 rounded-lg">
-                  <svg className="w-7 h-7 text-emerald-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <svg
+                    className="w-7 h-7 text-emerald-800"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
                   </svg>
-                  <span className="text-xs font-medium text-neutral-600">30-Day Returns</span>
+                  <span className="text-xs font-medium text-neutral-600">
+                    30-Day Returns
+                  </span>
                 </div>
                 <div className="flex flex-col items-center text-center gap-2 p-4 border border-neutral-200/60 rounded-lg">
-                  <svg className="w-7 h-7 text-emerald-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                  <svg
+                    className="w-7 h-7 text-emerald-800"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                    />
                   </svg>
-                  <span className="text-xs font-medium text-neutral-600">24/7 Support</span>
+                  <span className="text-xs font-medium text-neutral-600">
+                    24/7 Support
+                  </span>
                 </div>
               </div>
             </div>
@@ -230,5 +393,5 @@ export default function CartPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }
