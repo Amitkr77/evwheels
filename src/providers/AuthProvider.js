@@ -7,7 +7,12 @@ export default function AuthProvider({ children }) {
   const checkAuth = useAuthStore((state) => state.checkAuth);
 
   useEffect(() => {
-    checkAuth();
+    const init = async () => {
+      await checkAuth();
+      const { initializeCart } = require("@/store/cartStore").useCartStore.getState();
+      await initializeCart();
+    };
+    init();
   }, []);
 
   return children;

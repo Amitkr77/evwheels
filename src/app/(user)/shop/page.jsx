@@ -126,6 +126,9 @@ export default function CyclesPage() {
 
   return (
     <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-20">
+       <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
+        <div className="absolute inset-0 subtle-gradient"></div>
+      </div>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}

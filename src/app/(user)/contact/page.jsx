@@ -122,6 +122,9 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-[#fdfcf9] font-['Inter']">
+       <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
+        <div className="absolute inset-0 subtle-gradient"></div>
+      </div>
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/30 via-transparent to-emerald-50/20" />

@@ -2,13 +2,68 @@
 
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, Lock, CreditCard, ShieldCheck, Phone ,ArrowRight } from "lucide-react";
+import {
+ 
+  CreditCard,
+  ShieldCheck,
+  Phone,
+  ArrowRight,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function CheckoutPage() {
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [address, setAddress] = useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    phone: "",
+  });
+
+  const fetchSummary = async () => {
+    const res = await fetch("/api/cart/summary", {
+      credentials: "include",
+    });
+
+    const data = await res.json();
+
+    setSummary(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchSummary();
+  }, []);
+
+  const placeOrder = async () => {
+    const res = await fetch("/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        shippingAddress: address,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      window.location.href = `/order-success?id=${data._id}`;
+    } else {
+      alert(data.error);
+    }
+  };
   return (
     <main className="flex-grow bg-[#fdfcf9] min-h-screen font-['Inter'] pt-20 pb-20">
+      <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
+        <div className="absolute inset-0 subtle-gradient"></div>
+      </div>
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="grid lg:grid-cols-12 gap-10 xl:gap-16">
           {/* Left Column: Forms */}
@@ -305,7 +360,11 @@ export default function CheckoutPage() {
               </div>
             </section>
 
-            <button className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 mt-8">
+            <button
+              onClick={placeOrder}
+              disabled={loading}
+              className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 mt-8"
+            >
               Place Order
               <ArrowRight size={18} />
             </button>
@@ -414,7 +473,10 @@ export default function CheckoutPage() {
                   <div className="flex justify-between">
                     <span>Subtotal</span>
                     <span className="text-neutral-900 font-medium">
-                      ₹1,290.00
+                      {new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      }).format(summary?.subtotal || 0)}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -439,12 +501,22 @@ export default function CheckoutPage() {
                         </svg>
                       </span>
                     </span>
-                    <span className="text-emerald-800 font-medium">Free</span>
+                    <span className="text-emerald-800 font-medium">
+                      {summary?.shipping === 0
+                        ? "Free"
+                        : new Intl.NumberFormat("en-IN", {
+                            style: "currency",
+                            currency: "INR",
+                          }).format(summary?.shipping || 0)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Estimated Tax</span>
                     <span className="text-neutral-900 font-medium">
-                      ₹103.20
+                      {new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      }).format(summary?.tax || 0)}
                     </span>
                   </div>
                 </div>
@@ -458,7 +530,10 @@ export default function CheckoutPage() {
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-sm text-neutral-600">INR</span>
                     <span className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-emerald-800">
-                      ₹1,393.20
+                      {new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      }).format(summary?.total || 0)}{" "}
                     </span>
                   </div>
                 </div>

@@ -88,6 +88,9 @@ export default function ProductDetailPage({ params }) {
 
   return (
     <div className="min-h-screen bg-[#fdfcf9] pt-20 pb-20">
+      <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
+        <div className="absolute inset-0 subtle-gradient"></div>
+      </div>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Breadcrumb */}
         <nav className="mb-10 text-sm text-neutral-600">

@@ -7,9 +7,9 @@
 @theme {
   --color-background-light: #f6f8f5;
   --color-background-dark: #142210;
-  --color-text-muted:#6b8a60;
-  --color-deep-green:#131811;
-  --color-border-subtle:#dee6db;
+  --color-text-muted: #6b8a60;
+  --color-deep-green: #131811;
+  --color-border-subtle: #dee6db;
 }
 
 /* =========================================================
@@ -218,4 +218,25 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Subtle Emerald Gradient Animation */
+@keyframes subtle-gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.subtle-gradient {
+  background: linear-gradient(
+    90deg,
+    #065f46,   /* dark emerald */
+    #10b981,   /* emerald */
+    #065f46    /* dark emerald again */
+  );
+  background-size: 200% 200%;
+  animation: subtle-gradient 6s ease infinite;
 }

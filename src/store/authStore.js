@@ -5,12 +5,46 @@ export const useAuthStore = create((set) => ({
     isAuthenticated: false,
     isLoading: true,
 
-    login: (user) =>
+    login: async (user) => {
         set({
             user,
             isAuthenticated: true,
             isLoading: false,
-        }),
+        });
+
+        // Merge guest cart
+        const guestCart =
+            typeof window !== "undefined"
+                ? JSON.parse(localStorage.getItem("guestCart")) || []
+                : [];
+
+        if (guestCart.length > 0) {
+            try {
+                const res = await fetch("/api/cart/merge", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ items: guestCart }),
+                    credentials: "include",
+                });
+
+                if (!res.ok) throw new Error("Merge failed");
+
+                await res.json(); // merge response
+
+                // Only now clear guest cart
+                localStorage.removeItem("guestCart");
+
+                // Refresh cart store after merge
+                const { initializeCart } = require("@/store/cartStore").useCartStore.getState();
+                await initializeCart();
+            } catch (err) {
+                console.error("Cart merge failed", err);
+            }
+        } else {
+            const { initializeCart } = require("@/store/cartStore").useCartStore.getState();
+            await initializeCart();
+        }
+    },
 
     logout: async () => {
         await fetch("/api/auth/logout", { method: "POST" });
@@ -30,15 +64,11 @@ export const useAuthStore = create((set) => ({
     checkAuth: async () => {
         const state = useAuthStore.getState();
 
-        // 🚫 If already logged out, don't check again
-        if (state.user === null && state.isAuthenticated === false) {
-            return;
-        }
+        if (state.user === null && state.isAuthenticated === false && !state.isLoading) return;
 
         try {
-            const res = await fetch("/api/auth/me");
-
-            if (!res.ok) throw new Error();
+            const res = await fetch("/api/auth/me", { credentials: "include" });
+            if (!res.ok) throw new Error("Unauthorized");
 
             const data = await res.json();
 

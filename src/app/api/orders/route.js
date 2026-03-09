@@ -6,6 +6,7 @@ import Cart from "@/models/Cart";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import Coupon from "@/models/Coupon";
+import { getCartSummary } from "@/lib/cartSummary";
 
 async function getUserId(req) {
     const token = req.cookies.get("token")?.value;
@@ -42,59 +43,34 @@ export async function POST(req) {
             throw new Error("Cart is empty");
         }
 
-        let total = 0;
-        const orderItems = [];
+        // 1️⃣ Get cart summary including subtotal, discount, tax, shipping
+        const summary = await getCartSummary(userId, couponCode);
 
-        // 1️⃣ Calculate total & reduce stock
-        for (const item of cart.items) {
+        if (!summary || summary.items.length === 0) {
+            throw new Error("Cart is empty");
+        }
+
+        // Prepare order items
+        const orderItems = summary.items.map((i) => ({
+            product: i.product._id,
+            title: i.product.title,
+            price: i.product.price,
+            quantity: i.quantity,
+        }));
+
+        // 2️⃣ Reduce stock
+        for (const item of summary.items) {
             const product = await Product.findById(item.product._id).session(session);
-
-            if (!product)
-                throw new Error("Product not found");
-
+            if (!product) throw new Error(`Product ${item.product.title} not found`);
             if (product.stock < item.quantity)
-                throw new Error(`Insufficient stock for ${product.title}`);
-
+                throw new Error(`Insufficient stock for ${item.product.title}`);
             product.stock -= item.quantity;
             await product.save({ session });
-
-            total += product.price * item.quantity;
-
-            orderItems.push({
-                product: product._id,
-                title: product.title,
-                price: product.price,
-                quantity: item.quantity,
-            });
         }
 
-        // 2️⃣ Apply coupon ONCE
-        let discountAmount = 0;
+        // 3️⃣ Use summary totals
+        const { total, discount, tax, shipping } = summary;
 
-        if (couponCode) {
-            const coupon = await Coupon.findOne({
-                code: couponCode.toUpperCase(),
-            }).session(session);
-
-            if (!coupon) throw new Error("Invalid coupon code");
-            if (!coupon.isActive) throw new Error("Coupon is inactive");
-            if (coupon.expiryDate < new Date()) throw new Error("Coupon expired");
-            if (coupon.usageLimit !== 0 && coupon.usedCount >= coupon.usageLimit)
-                throw new Error("Coupon usage limit reached");
-            if (total < coupon.minOrderAmount)
-                throw new Error("Minimum order amount not met");
-
-            if (coupon.discountType === "percentage") {
-                discountAmount = (total * coupon.discountValue) / 100;
-            } else {
-                discountAmount = coupon.discountValue;
-            }
-
-            coupon.usedCount += 1;
-            await coupon.save({ session });
-        }
-
-        const finalTotal = total - discountAmount;
 
         // 3️⃣ Create order
         const order = await Order.create(
@@ -103,10 +79,12 @@ export async function POST(req) {
                     user: userId,
                     items: orderItems,
                     shippingAddress,
-                    totalAmount: finalTotal,
-                    discountAmount,
+                    totalAmount: total,
+                    discountAmount: discount,
+                    taxAmount: tax,
+                    shippingAmount: shipping,
                     paymentMethod: "COD",
-                    orderStatus: "Pending",
+                    // orderStatus: "Pending",
                 },
             ],
             { session }
