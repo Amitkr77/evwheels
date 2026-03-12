@@ -3,62 +3,109 @@
 "use client";
 
 import Link from "next/link";
-import {
- 
-  CreditCard,
-  ShieldCheck,
-  Phone,
-  ArrowRight,
-} from "lucide-react";
+import { CreditCard, ShieldCheck, Phone, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCartStore } from "@/store/cartStore";
 
 export default function CheckoutPage() {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [address, setAddress] = useState({
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    postalCode: "",
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Shipping address state – matches required backend format
+  const [shippingAddress, setShippingAddress] = useState({
+    fullName: "",
     phone: "",
+    street: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "India",
   });
 
+  // Payment method – controlled by tabs
+  const [paymentMethod, setPaymentMethod] = useState("COD");
+
+  const { items, clearCart } = useCartStore();
+
   const fetchSummary = async () => {
-    const res = await fetch("/api/cart/summary", {
-      credentials: "include",
-    });
-
-    const data = await res.json();
-
-    setSummary(data);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/cart/summary", { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load summary");
+      const data = await res.json();
+      setSummary(data);
+    } catch (err) {
+      setError(err.message || "Could not load order summary");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchSummary();
   }, []);
 
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    setShippingAddress((prev) => ({ ...prev, [name]: value }));
+  };
+
   const placeOrder = async () => {
-    const res = await fetch("/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        shippingAddress: address,
-      }),
-    });
+    if (submitting) return;
 
-    const data = await res.json();
+    // Basic client-side check (expand with proper validation later)
+    if (
+      !shippingAddress.fullName ||
+      !shippingAddress.phone ||
+      !shippingAddress.street ||
+      !shippingAddress.city ||
+      !shippingAddress.state ||
+      !shippingAddress.postalCode
+    ) {
+      setError("Please fill in all required shipping fields.");
+      return;
+    }
 
-    if (res.ok) {
-      window.location.href = `/order-success?id=${data._id}`;
-    } else {
-      alert(data.error);
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const payload = {
+        shippingAddress,
+        paymentMethod,
+      };
+
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Optional: clear cart after success
+        // clearCart();
+        window.location.href = `/order-success?id=${data._id}`;
+      } else {
+        setError(data.error || "Failed to place order. Please try again.");
+      }
+    } catch (err) {
+      setError("Network error. Please check your connection.");
+    } finally {
+      setSubmitting(false);
     }
   };
+
+  if (loading) {
+    return <div className="text-center py-20">Loading order summary...</div>;
+  }
+
+  if (error && !summary) {
+    return <div className="text-center py-20 text-red-600">{error}</div>;
+  }
   return (
     <main className="flex-grow bg-[#fdfcf9] min-h-screen font-['Inter'] pt-20 pb-20">
       <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
@@ -67,9 +114,9 @@ export default function CheckoutPage() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="grid lg:grid-cols-12 gap-10 xl:gap-16">
           {/* Left Column: Forms */}
-          <div className="lg:col-span-7 flex flex-col gap-12 md:gap-16">
+          <div className="lg:col-span-7 flex flex-col gap-12 md:gap-10">
             {/* Breadcrumbs */}
-            <nav className="flex items-center gap-2 md:gap-3 text-sm md:text-base font-light text-neutral-600">
+            <nav className="flex items-center gap-2 md:gap-3 text-sm md:text-base font-light text-neutral-600 mt-5">
               <Link
                 href="/cart"
                 className="hover:text-neutral-900 transition-colors"
@@ -77,43 +124,22 @@ export default function CheckoutPage() {
                 Cart
               </Link>
               <span className="text-neutral-400">/</span>
-              <span className="text-neutral-900 font-medium">Information</span>
-              <span className="text-neutral-400">/</span>
-              <span>Shipping</span>
-              <span className="text-neutral-400">/</span>
-              <span>Payment</span>
+              <span className="text-neutral-900 font-medium">Checkout</span>
+              {/* <span className="text-neutral-400">/</span> */}
             </nav>
 
             {/* Contact Information */}
             <section>
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900">
-                  Contact Information
-                </h2>
-                <Link
-                  href="/login"
-                  className="text-sm md:text-base font-medium text-emerald-800 hover:underline transition-colors"
-                >
-                  Log in
-                </Link>
-              </div>
-
+              <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
+                Contact Information
+              </h2>
               <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
-                    placeholder="you@example.com"
-                  />
-                </div>
-
+                {/* You can add email back if needed – skipped for now as per payload */}
                 <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     id="news"
+                    disabled
                     className="w-4 h-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-600"
                   />
                   <label
@@ -131,67 +157,97 @@ export default function CheckoutPage() {
               <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
                 Shipping Address
               </h2>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
+                <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    First name
+                    Full Name *
                   </label>
                   <input
                     type="text"
+                    name="fullName"
+                    value={shippingAddress.fullName}
+                    onChange={handleAddressChange}
                     className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Last name
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    required
                   />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Address
+                    Street Address *
                   </label>
                   <input
                     type="text"
-                    placeholder="Apartment, suite, etc."
+                    name="street"
+                    value={shippingAddress.street}
+                    onChange={handleAddressChange}
+                    placeholder="House no, Building, Street, Area"
                     className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    required
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    City
+                    City *
                   </label>
                   <input
                     type="text"
+                    name="city"
+                    value={shippingAddress.city}
+                    onChange={handleAddressChange}
                     className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    required
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Postal code
+                    State *
+                  </label>
+                  <select
+                    name="state"
+                    value={shippingAddress.state}
+                    onChange={handleAddressChange}
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors bg-white"
+                    required
+                  >
+                    <option value="">Select State</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bihar">Bihar</option>
+                    {/* Add all Indian states – or use a library like country-state-city */}
+                    <option value="Maharashtra">Maharashtra</option>
+                    {/* ... more options ... */}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-neutral-600 mb-2">
+                    Postal Code (PIN) *
                   </label>
                   <input
                     type="text"
+                    name="postalCode"
+                    value={shippingAddress.postalCode}
+                    onChange={handleAddressChange}
                     className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    required
                   />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Phone
+                    Phone *
                   </label>
                   <div className="relative">
                     <input
                       type="tel"
+                      name="phone"
+                      value={shippingAddress.phone}
+                      onChange={handleAddressChange}
                       className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                      required
                     />
                     <Phone
                       className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500"
@@ -269,103 +325,59 @@ export default function CheckoutPage() {
               <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
                 Payment
               </h2>
-
               <div className="bg-white border border-neutral-200/70 rounded-xl overflow-hidden">
-                {/* Payment Tabs */}
                 <div className="flex border-b border-neutral-200/70">
-                  <button className="flex-1 py-4 text-sm md:text-base font-medium bg-emerald-50/50 text-emerald-800 border-b-2 border-emerald-600">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("Credit Card")}
+                    className={`flex-1 py-4 text-sm md:text-base font-medium transition-colors border-b-2 ${
+                      paymentMethod === "Credit Card"
+                        ? "bg-emerald-50/50 text-emerald-800 border-emerald-600"
+                        : "text-neutral-600 hover:text-neutral-900"
+                    }`}
+                  >
                     Credit Card
                   </button>
-                  <button className="flex-1 py-4 text-sm md:text-base font-medium text-neutral-600 hover:text-neutral-900 transition-colors">
-                    PayPal
-                  </button>
-                  <button className="flex-1 py-4 text-sm md:text-base font-medium text-neutral-600 hover:text-neutral-900 transition-colors">
-                    Crypto
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("COD")}
+                    className={`flex-1 py-4 text-sm md:text-base font-medium transition-colors border-b-2 ${
+                      paymentMethod === "COD"
+                        ? "bg-emerald-50/50 text-emerald-800 border-emerald-600"
+                        : "text-neutral-600 hover:text-neutral-900"
+                    }`}
+                  >
+                    COD
                   </button>
                 </div>
 
-                {/* Card Form */}
-                <div className="p-6 md:p-8 space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-600 mb-2">
-                      Card number
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        placeholder="0000 0000 0000 0000"
-                        className="w-full px-5 pl-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors font-mono"
-                      />
-                      <CreditCard
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500"
-                        size={20}
-                      />
-                    </div>
+                {/* Conditional card form – hide when COD */}
+                {paymentMethod === "Credit Card" && (
+                  <div className="p-6 md:p-8 space-y-6">
+                    {/* Keep your card number, expiry, CVC, name fields */}
+                    <h1 className="p-8 text-center text-neutral-600">
+                      will be avail soon
+                    </h1>
+                    {/* ... existing code ... */}
                   </div>
+                )}
 
-                  <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-neutral-600 mb-2">
-                        Expiration
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="MM / YY"
-                        className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors font-mono"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-neutral-600 mb-2">
-                        CVC
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          placeholder="123"
-                          className="w-full px-5 pr-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors font-mono"
-                        />
-                        <span
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500"
-                          title="3 digits on back of card"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={1.5}
-                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
+                {paymentMethod === "COD" && (
+                  <div className="p-8 text-center text-neutral-600">
+                    Cash on Delivery – Pay when your order arrives.
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-600 mb-2">
-                      Name on card
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
-                    />
-                  </div>
-                </div>
+                )}
               </div>
             </section>
 
+            {error && <p className="text-red-600 text-center mt-4">{error}</p>}
+
             <button
               onClick={placeOrder}
-              disabled={loading}
-              className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 mt-8"
+              disabled={submitting || loading}
+              className={`w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed`}
             >
-              Place Order
+              {submitting ? "Placing Order..." : "Place Order"}
               <ArrowRight size={18} />
             </button>
 
@@ -392,79 +404,41 @@ export default function CheckoutPage() {
 
                 {/* Items List */}
                 <div className="space-y-8 mb-10">
-                  {/* Item 1 */}
-                  <div className="flex gap-6">
-                    <div className="relative w-20 h-20 shrink-0">
-                      <img
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDWCPCMwido0CTwC6e-pvT1I-LssryoC8FEe7nbufMewWBjDFfRYGCjvgNNDduJks-d1_4iOE3SHTJibBqhhu3k73fS25GY1qpoXi7Zh9U4zv98HQqcoWOteFL0GvgtzPABDy5ByWvhpzcZUTCIC958ejNZl1weOjGJODnKlmGna7rpGG1o0Spgm-UV65Ea0AhyoXfX8ipoD1eUEoAFZD4K3eV2gFnxOHwGUH0kKH1zWIAxCC3m5mywBEX5x_f0URaZ1JULMPNYCiB"
-                        alt="Urban Glide E-Bike"
-                        className="w-full h-full object-cover rounded-lg border border-neutral-200/60"
-                      />
-                      <span className="absolute -top-2 -right-2 bg-neutral-900 text-white text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center">
-                        1
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-lg font-medium text-neutral-900">
-                          Urban Glide E-Bike
-                        </h4>
-                        <span className="text-xl font-medium text-emerald-800">
-                          ₹1,200.00
-                        </span>
+                  {items.map((item) => {
+                    const { product, quantity } = item;
+                    return (
+                      <div key={product._id}>
+                        <div className="flex gap-6">
+                          <div className="relative w-20 h-20 shrink-0">
+                            <img
+                              src={product?.image}
+                              alt={product?.title}
+                              className="w-full h-full object-cover rounded-lg border border-neutral-200/60"
+                            />
+                            <span className="absolute -top-2 -right-2 bg-neutral-900 text-white text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center">
+                              {quantity}
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                              <h4 className="text-lg font-medium text-neutral-900">
+                                {product?.title}
+                              </h4>
+                              <span className="text-xl font-medium text-emerald-800">
+                                ₹{product.price.toLocaleString()}
+                              </span>
+                            </div>
+                            <p className="text-sm text-neutral-600 mt-1">
+                              {product.color}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-neutral-600 mt-1">
-                        Matte Black / Large
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Item 2 */}
-                  <div className="flex gap-6">
-                    <div className="relative w-20 h-20 shrink-0">
-                      <img
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ0iV0NVHW_gIe3A09n5zGVUC_BScM_c-cR55MDsK1htRQ9AY1DwGp6miEJuPL4iMf_05pCxXOWCwTyzs-3HTLR051gDb-sS31hk1lNrkhiEoku9217KfMqoSPYQGI_ZCEygvb6HFcSfrGrA58hqMC6gsblHigXY924WqjYIu90P8bcon1XIwrGR7YcpRuX4NKzGC4VFc2tnkmrB6x_zrwUKcqYcok7pwe8_VtuigaUIZrIr7qW4nIpkO6JvEaLglrZsMe0ba63e4X"
-                        alt="Pro Safety Helmet"
-                        className="w-full h-full object-cover rounded-lg border border-neutral-200/60"
-                      />
-                      <span className="absolute -top-2 -right-2 bg-neutral-900 text-white text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center">
-                        1
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-lg font-medium text-neutral-900">
-                          Pro Safety Helmet
-                        </h4>
-                        <span className="text-xl font-medium text-emerald-800">
-                          ₹90.00
-                        </span>
-                      </div>
-                      <p className="text-sm text-neutral-600 mt-1">
-                        Carbon Fiber
-                      </p>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
 
                 <hr className="border-dashed border-neutral-200/60 my-8" />
-
-                {/* Promo Code */}
-                <div className="mb-8">
-                  <label className="block text-sm font-medium text-neutral-600 mb-3">
-                    Gift card or discount code
-                  </label>
-                  <div className="flex gap-3">
-                    <input
-                      type="text"
-                      placeholder="Enter code"
-                      className="flex-1 px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm"
-                    />
-                    <button className="px-6 py-3.5 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition-colors">
-                      Apply
-                    </button>
-                  </div>
-                </div>
 
                 <hr className="border-dashed border-neutral-200/60 my-8" />
 

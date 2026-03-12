@@ -1,12 +1,104 @@
-// app/order-confirmation/page.tsx
-
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle, ArrowRight, Lock, CreditCard } from "lucide-react";
+import {
+  CheckCircle,
+  ArrowRight,
+  Lock,
+  CreditCard,
+  Package,
+} from "lucide-react";
+import { formatDate, formatDateTime } from "@/lib/Date-time"; // keep your formatter
+
+// Optional: helper to estimate delivery (customize days based on your policy)
+const getEstimatedDelivery = (placedDate) => {
+  const date = new Date(placedDate);
+  const min = new Date(date);
+  const max = new Date(date);
+
+  min.setDate(date.getDate() + 4); // e.g. 4 days for standard
+  max.setDate(date.getDate() + 8); // up to 8 days
+
+  // Simple skip weekends if you want (not perfect, ignores holidays)
+  // You can improve with date-fns or luxon later
+
+  const format = (d) =>
+    d.toLocaleDateString("en-IN", {
+      month: "short",
+      day: "numeric",
+    });
+
+  return `${format(min)} – ${format(max)}`;
+};
 
 export default function OrderConfirmationPage() {
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("id");
+
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!orderId) {
+      setError("No order ID found.");
+      setLoading(false);
+      return;
+    }
+
+    const fetchOrder = async () => {
+      try {
+        const res = await fetch(`/api/user/orders/${orderId}`, {
+          credentials: "include",
+        });
+
+        if (!res.ok) throw new Error("Failed to load order details");
+
+        const data = await res.json();
+        setOrder(data);
+      } catch (err) {
+        setError(err.message || "Could not fetch order information.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [orderId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-neutral-600">
+          Loading your order details...
+        </p>
+      </div>
+    );
+  }
+
+  if (error || !order) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-center px-6">
+        <div>
+          <h2 className="text-2xl font-medium text-red-600 mb-4">Oops!</h2>
+          <p className="text-neutral-700">{error || "Order not found."}</p>
+          <Link
+            href="/profile/orders"
+            className="text-emerald-800 hover:underline mt-4 inline-block"
+          >
+            View all orders →
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const placedDate = new Date(order.createdAt);
+  const estDelivery = getEstimatedDelivery(placedDate);
+
   return (
     <main className="flex-grow bg-[#fdfcf9] min-h-screen font-['Inter'] pt-20 pb-20">
       <div className="max-w-4xl mx-auto px-5 sm:px-8 lg:px-12">
@@ -32,7 +124,8 @@ export default function OrderConfirmationPage() {
               Thank you for your order! Your gear is on the way. A confirmation
               email has been sent to{" "}
               <span className="text-neutral-900 font-medium">
-                amit@example.com
+                {/* Replace with real email – from user session or order.user.email if populated */}
+                {order.user?.email || "your registered email"}
               </span>
               .
             </p>
@@ -46,15 +139,15 @@ export default function OrderConfirmationPage() {
                   <p className="text-sm font-medium text-neutral-900 mb-1">
                     Order Placed
                   </p>
-                  <p className="text-xs text-neutral-600">Mar 03, 11:12 PM</p>
+                  <p className="text-xs text-neutral-600">
+                    {formatDateTime(placedDate)}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium text-neutral-900 mb-1">
                     Est. Delivery
                   </p>
-                  <p className="text-emerald-800 font-medium">
-                    Mar 07 - Mar 09
-                  </p>
+                  <p className="text-emerald-800 font-medium">{estDelivery}</p>
                 </div>
               </div>
 
@@ -63,8 +156,8 @@ export default function OrderConfirmationPage() {
               </div>
 
               <div className="flex justify-between text-xs font-light text-neutral-600">
+                <span>Placed</span>
                 <span>Confirmed</span>
-                <span>Processing</span>
                 <span>Shipped</span>
                 <span>Delivered</span>
               </div>
@@ -80,62 +173,47 @@ export default function OrderConfirmationPage() {
               Items Ordered
             </h3>
 
-            {/* Item 1 */}
-            <div className="flex gap-6">
-              <div className="relative w-24 h-24 shrink-0">
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVepsbCS4lmJIT4iOzG6pMSJaHYg72LgzMnHjgh0yoBdvnMwTzYUgKASZWKJigTVczd792tkdLg6JlZF4-tQMygITpQ8VIEjRUFcJzRoeACN1yC36sy7AnTQSLl5m12EQc775bVpYh9u6k6Eds5pv8A9GwY_VDuXJDHD1QllvhnXPirDyorgdS3dlUCSpvK3neUg3XUPUQI2QPU0WZKfQd29xOfmkzUwuGgrZQO9CPUIdTel8k6cYN9Wvcq6QyIu6SELlC_9BkxEN1"
-                  alt="Aero E-Bike Helmet"
-                  className="w-full h-full object-cover rounded-lg border border-neutral-200/60"
-                />
-                <span className="absolute -top-2 -right-2 bg-neutral-900 text-white text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center">
-                  1
-                </span>
-              </div>
+            {order.items.map((item, index) => (
+              <div
+                key={item.product || index}
+                className={`flex gap-6 ${index > 0 ? "border-t border-neutral-200/60 pt-6" : ""}`}
+              >
+                <div className="relative w-24 h-24 shrink-0 bg-neutral-50 rounded-lg overflow-hidden">
+                  <img
+                    src={item.product.image || "/placeholder-product.jpg"} // ← use real product.image if populated in backend
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <span className="absolute -top-2 -right-2 bg-neutral-900 text-white text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center">
+                    {item.quantity}
+                  </span>
+                </div>
 
-              <div className="flex-1">
-                <h4 className="text-lg font-medium text-neutral-900 mb-1">
-                  Aero E-Bike Helmet
-                </h4>
-                <p className="text-sm text-neutral-600">Matte Black / L</p>
-              </div>
+                <div className="flex-1">
+                  <h4 className="text-lg font-medium text-neutral-900 mb-1">
+                    {item.name}
+                  </h4>
+                  {/* Add variant/color if you have it in data */}
+                  <p className="text-sm text-neutral-600">
+                    Qty: {item.quantity}
+                  </p>
+                </div>
 
-              <div className="text-right">
-                <p className="text-xl font-medium text-emerald-800">₹120.00</p>
-                <p className="text-xs text-neutral-600 mt-1">Qty: 1</p>
+                <div className="text-right">
+                  <p className="text-xl font-medium text-emerald-800">
+                    ₹{(item.price * item.quantity).toLocaleString("en-IN")}
+                  </p>
+                  <p className="text-xs text-neutral-600 mt-1">
+                    ₹{item.price.toLocaleString("en-IN")} each
+                  </p>
+                </div>
               </div>
-            </div>
-
-            {/* Item 2 */}
-            <div className="flex gap-6 border-t border-neutral-200/60 pt-6">
-              <div className="relative w-24 h-24 shrink-0">
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUtKkyEXBodWIYoqsWGR8XmKIw2wPoD9jfnHcjQVbqlNB3ZOBkgKNqn-cKGgLtiEVK64cLRgolfx2TrQLDYmktbReJRQSApzKNEgv5DdytsIJnPEpUxwB1as3N_gMGo6tbwSULshem0zDm82ILeTtYAq7GPjGWW-0-XG7iRRMPj96LjEZeQX9F3FPCM4Sd7Q492fL9cs_j2CSrpqEd3iUvmWaSlKskdG89Qpp79bzq5ucSPZxOc1v4hZYpwZPYLTSwS8fzr_LhrG3S"
-                  alt="EvWheels Pro Charger"
-                  className="w-full h-full object-cover rounded-lg border border-neutral-200/60"
-                />
-                <span className="absolute -top-2 -right-2 bg-neutral-900 text-white text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center">
-                  1
-                </span>
-              </div>
-
-              <div className="flex-1">
-                <h4 className="text-lg font-medium text-neutral-900 mb-1">
-                  EvWheels Pro Charger
-                </h4>
-                <p className="text-sm text-neutral-600">Fast Charge / Type 2</p>
-              </div>
-
-              <div className="text-right">
-                <p className="text-xl font-medium text-emerald-800">₹85.00</p>
-                <p className="text-xs text-neutral-600 mt-1">Qty: 1</p>
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* Right: Order Summary */}
           <div className="md:col-span-1">
-            <div className="bg-white border border-neutral-200/70 rounded-xl p-8">
+            <div className="bg-white border border-neutral-200/70 rounded-xl p-8 sticky top-24">
               <h3 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-6 pb-4 border-b border-neutral-200/60">
                 Summary
               </h3>
@@ -146,7 +224,7 @@ export default function OrderConfirmationPage() {
                     Order ID
                   </p>
                   <p className="text-sm font-medium text-neutral-900">
-                    #EV-8829-XJ
+                    {order.id || `#ORD-${order._id.slice(-6).toUpperCase()}`}
                   </p>
                 </div>
 
@@ -155,7 +233,7 @@ export default function OrderConfirmationPage() {
                     Date
                   </p>
                   <p className="text-sm font-medium text-neutral-900">
-                    Mar 03, 2026
+                    {formatDate(placedDate)}
                   </p>
                 </div>
 
@@ -164,9 +242,14 @@ export default function OrderConfirmationPage() {
                     Payment Method
                   </p>
                   <div className="flex items-center gap-2">
-                    <CreditCard size={16} className="text-neutral-600" />
+                    {order.paymentMethod === "COD" ? (
+                      <Package size={16} className="text-neutral-600" />
+                    ) : (
+                      <CreditCard size={16} className="text-neutral-600" />
+                    )}
                     <p className="text-sm font-medium text-neutral-900">
-                      Visa •••• 4242
+                      {order.paymentMethod}
+                      {order.paymentMethod !== "COD" && " •••• (card)"}
                     </p>
                   </div>
                 </div>
@@ -177,9 +260,14 @@ export default function OrderConfirmationPage() {
                       Total Paid
                     </p>
                     <p className="text-2xl font-['Playfair_Display'] font-medium text-emerald-800">
-                      ₹205.00
+                      ₹{order.totalAmount.toLocaleString("en-IN")}
                     </p>
                   </div>
+                  {order.taxAmount > 0 && (
+                    <p className="text-xs text-neutral-600 mt-1 text-right">
+                      Incl. ₹{order.taxAmount.toLocaleString("en-IN")} tax
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -194,7 +282,7 @@ export default function OrderConfirmationPage() {
           </button>
 
           <Link
-            href="/cycles"
+            href="/cycles" // or /products, /shop etc.
             className="flex-1 py-4 border border-neutral-300 text-neutral-900 rounded-full text-lg font-medium hover:bg-neutral-50 transition-colors flex items-center justify-center"
           >
             Continue Shopping

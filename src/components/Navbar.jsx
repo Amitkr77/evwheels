@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 
 export default function Navbar() {
-  const { isAuthenticated, user, logout ,isLoading} = useAuthStore();
+  const { isAuthenticated, user, logout, isLoading } = useAuthStore();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const totalQuantity = useCartStore((state) => state.totalQuantity);
 
@@ -65,7 +65,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-6">
-            <div>Cart ({totalQuantity})</div>
+            {/* <div>Cart ({totalQuantity})</div> */}
             <Link
               href="/cart"
               className={`transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}
@@ -134,14 +134,13 @@ export default function Navbar() {
               (isAuthenticated ? (
                 <div className="relative">
                   <button
-                    className="
-                    flex items-center gap-1 px-3 py-1.5 rounded-lg
-                     dark:hover:bg-[#22301d] transition-colors border border-primary/20 hover:border-primary/40
-                  "
+                    className={`  flex items-center gap-1 px-3 py-1.5 rounded-lg ${scrolled ? "":" bg-black/50"}`}
                     onClick={() => toggleDropdown("user")}
                   >
-                    <User className="w-4 h-4" />
-                    <span className="text-sm font-medium hidden xl:block">
+                    <User className={`w-4 h-4 transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`} />
+                    <span
+                      className={`text-sm font-medium hidden xl:block transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}
+                    >
                       {user?.name?.split(" ")[0] || "Account"}
                     </span>
                   </button>

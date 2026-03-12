@@ -2,64 +2,78 @@ import { create } from "zustand";
 import { useAuthStore } from "@/store/authStore";
 
 export const useWishlistStore = create((set, get) => ({
-    items: [],
-    isLoading: false,
+  items: [],         // Array of product snapshots { productId, title, price, image }
+  isLoading: false,
 
-    // 🟢 Fetch wishlist
-    fetchWishlist: async () => {
-        const { isAuthenticated } = useAuthStore.getState();
-        if (!isAuthenticated) return;
+  // 🟢 Fetch wishlist from backend
+  fetchWishlist: async () => {
+    const { isAuthenticated } = useAuthStore.getState();
+    if (!isAuthenticated) return;
 
-        try {
-            set({ isLoading: true });
+    try {
+      set({ isLoading: true });
 
-            const res = await fetch("/api/wishlist");
-            if (!res.ok) throw new Error();
+      const res = await fetch("/api/user/wishlist");
+      if (!res.ok) throw new Error("Failed to fetch wishlist");
 
-            const data = await res.json();
+      const data = await res.json();
 
-            set({
-                items: data.items.map((item) => item.product),
-                isLoading: false,
-            });
-        } catch (err) {
-            set({ isLoading: false });
+      set({
+        items: data.products || [],
+        isLoading: false,
+      });
+    } catch (err) {
+      console.error("Fetch wishlist failed", err);
+      set({ isLoading: false });
+    }
+  },
+
+  // 🟢 Toggle wishlist using the toggle API
+  toggleWishlist: async (productId) => {
+    const { isAuthenticated } = useAuthStore.getState();
+    if (!isAuthenticated) {
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/user/wishlist/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId }),
+      });
+
+      if (!res.ok) throw new Error("Failed to toggle wishlist");
+
+      const data = await res.json();
+
+      const { wished } = data;
+
+      set((state) => {
+        let updatedItems;
+        if (wished) {
+          // Add product placeholder (optional: fetch product data again if needed)
+          updatedItems = [...state.items, data.product];
+        } else {
+          // Remove product
+          updatedItems = state.items.filter(
+            (item) => item.productId !== productId
+          );
         }
-    },
+        return { items: updatedItems };
+      });
+    } catch (err) {
+      console.error("Wishlist toggle failed", err);
+    }
+  },
 
-    // 🟢 Toggle wishlist
-    toggleWishlist: async (productId) => {
-        const { isAuthenticated } = useAuthStore.getState();
+  // 🟢 Check if product is in wishlist
+  isInWishlist: (productId) => {
+    return get().items.some((item) => item.productId === productId);
+  },
 
-        if (!isAuthenticated) {
-            window.location.href = "/login";
-            return;
-        }
-
-        try {
-            const res = await fetch("/api/wishlist/toggle", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ productId }),
-            });
-
-            const data = await res.json();
-
-            set({
-                items: data.items.map((item) => item.product),
-            });
-        } catch (err) {
-            console.error("Wishlist toggle failed");
-        }
-    },
-
-    // 🟢 Check if product is wished
-    isInWishlist: (productId) => {
-        return get().items.includes(productId);
-    },
-
-    // 🟢 Clear on logout
-    clearWishlist: () => {
-        set({ items: [] });
-    },
+  // 🟢 Clear wishlist on logout
+  clearWishlist: () => {
+    set({ items: [] });
+  },
 }));

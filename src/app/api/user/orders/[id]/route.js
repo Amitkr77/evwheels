@@ -1,4 +1,38 @@
-export async function GET(req, { params }) {
+
+import { NextResponse } from "next/server";
+import Order from "@/models/Order";
+import { connectDB } from "@/lib/db";
+import jwt from "jsonwebtoken";
+
+async function getUserId(req) {
+    // Attempt to get the token from cookies
+    const token = req.cookies.get("token")?.value;
+    console.log("Token from cookie:", token);
+
+    if (!token) {
+        console.warn("No token found in request cookies.");
+        return null;
+    }
+
+    try {
+        // Verify the JWT
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Decoded JWT payload:", decoded);
+
+        // Check common payload keys
+        if (decoded.id) return decoded.id;
+        if (decoded.userId) return decoded.userId;
+
+        console.warn("JWT payload does not contain 'id' or 'userId'. Returning null.");
+        return null;
+    } catch (err) {
+        console.error("JWT verification failed:", err);
+        return null;
+    }
+}
+
+export async function GET(req, context) {
+    const { params } = await context;
     const userId = await getUserId(req);
 
     if (!userId)
@@ -17,7 +51,8 @@ export async function GET(req, { params }) {
     return NextResponse.json(order);
 }
 
-export async function PATCH(req, { params }) {
+export async function PATCH(req, context) {
+    const { params } = await context;
     const userId = await getUserId(req);
 
     if (!userId)

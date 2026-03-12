@@ -9,10 +9,30 @@ const wishlistSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
+
     products: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        _id: false,
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+
+        title: {
+          type: String,
+          required: true,
+        },
+
+        price: {
+          type: Number,
+          required: true,
+        },
+
+        image: {
+          type: String,
+          required: true,
+        },
       },
     ],
   },

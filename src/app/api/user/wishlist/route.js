@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Wishlist from "@/models/Wishlist";
+import Product from "@/models/Product";
 import { getUserId } from "@/lib/getUserId";
+
+
+// GET WISHLIST
 
 export async function GET(req) {
     const userId = await getUserId(req);
@@ -11,18 +15,24 @@ export async function GET(req) {
 
     await connectDB();
 
-    const wishlist = await Wishlist.findOne({ user: userId })
-        .populate("products");
+    const wishlist = await Wishlist.findOne({ user: userId }).lean();
 
-    return NextResponse.json(wishlist || { products: [] });
+    // Transform the products array
+    const transformedWishlist = {
+        ...wishlist,
+        products: wishlist?.products.map((p) => ({
+            _id: p.productId,  
+            title: p.title,
+            price: p.price,
+            image: p.image
+        })) || []
+    };
+
+    return NextResponse.json(transformedWishlist);
 }
 
 export async function POST(req) {
     const userId = await getUserId(req);
-
-    if (!userId)
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
     const { productId } = await req.json();
 
     await connectDB();
@@ -30,40 +40,39 @@ export async function POST(req) {
     let wishlist = await Wishlist.findOne({ user: userId });
 
     if (!wishlist) {
+        const product = await Product.findById(productId);
         wishlist = await Wishlist.create({
             user: userId,
-            products: [productId],
+            products: [{
+                productId: product._id,
+                title: product.title,
+                price: product.price,
+                image: product.image,
+            }]
         });
-    } else {
-        if (!wishlist.products.includes(productId)) {
-            wishlist.products.push(productId);
-            await wishlist.save();
-        }
+        return NextResponse.json({ productId, wished: true });
     }
 
-    return NextResponse.json(wishlist);
-}
-
-export async function DELETE(req) {
-    const userId = await getUserId(req);
-
-    if (!userId)
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-    const { productId } = await req.json();
-
-    await connectDB();
-
-    const wishlist = await Wishlist.findOne({ user: userId });
-
-    if (!wishlist)
-        return NextResponse.json({ error: "Wishlist not found" }, { status: 404 });
-
-    wishlist.products = wishlist.products.filter(
-        (id) => id.toString() !== productId
+    const index = wishlist.products.findIndex(
+        (p) => p.productId.toString() === productId
     );
+
+    let wished;
+    if (index > -1) {
+        wishlist.products.splice(index, 1);
+        wished = false;
+    } else {
+        const product = await Product.findById(productId);
+        wishlist.products.push({
+            productId: product._id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+        });
+        wished = true;
+    }
 
     await wishlist.save();
 
-    return NextResponse.json(wishlist);
+    return NextResponse.json({ productId, wished });
 }

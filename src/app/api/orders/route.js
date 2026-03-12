@@ -5,7 +5,6 @@ import { connectDB } from "@/lib/db";
 import Cart from "@/models/Cart";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
-import Coupon from "@/models/Coupon";
 import { getCartSummary } from "@/lib/cartSummary";
 
 async function getUserId(req) {
@@ -20,14 +19,18 @@ async function getUserId(req) {
     }
 }
 
-// CREATE ORDER (COD)
+function generateNextOrderId(lastId) {
+    if (!lastId) return "#ORD-1000";
+    const number = parseInt(lastId.split("-")[1], 10) + 1;
+    return `#ORD-${String(number).padStart(4, "0")}`;
+}
+
 export async function POST(req) {
     const userId = await getUserId(req);
-
     if (!userId)
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { shippingAddress, couponCode } = await req.json();
+    const { shippingAddress, couponCode, paymentMethod } = await req.json();
 
     await connectDB();
 
@@ -43,48 +46,63 @@ export async function POST(req) {
             throw new Error("Cart is empty");
         }
 
-        // 1️⃣ Get cart summary including subtotal, discount, tax, shipping
+        // Get cart totals
         const summary = await getCartSummary(userId, couponCode);
-
-        if (!summary || summary.items.length === 0) {
+        if (!summary?.items?.length) {
             throw new Error("Cart is empty");
         }
 
         // Prepare order items
-        const orderItems = summary.items.map((i) => ({
-            product: i.product._id,
-            title: i.product.title,
-            price: i.product.price,
-            quantity: i.quantity,
+        const orderItems = summary.items.map((item) => ({
+            product: item.product._id,
+            name: item.product.title,
+            price: item.product.price,
+            quantity: item.quantity,
         }));
 
-        // 2️⃣ Reduce stock
+        // Validate & update stock
         for (const item of summary.items) {
             const product = await Product.findById(item.product._id).session(session);
-            if (!product) throw new Error(`Product ${item.product.title} not found`);
-            if (product.stock < item.quantity)
-                throw new Error(`Insufficient stock for ${item.product.title}`);
+
+            if (!product) {
+                throw new Error(`Product not found`);
+            }
+
+            if (product.stock < item.quantity) {
+                throw new Error(`Insufficient stock for ${product.title}`);
+            }
+
             product.stock -= item.quantity;
             await product.save({ session });
         }
 
-        // 3️⃣ Use summary totals
         const { total, discount, tax, shipping } = summary;
 
+        // Generate Order ID
+        const lastOrder = await Order.findOne()
+            .sort({ createdAt: -1 })
+            .select("id")
+            .session(session);
 
-        // 3️⃣ Create order
-        const order = await Order.create(
+        const orderId = generateNextOrderId(lastOrder?.id);
+
+        const paymentStatus =
+            paymentMethod === "COD" ? "PENDING" : "PAID";
+
+        const [order] = await Order.create(
             [
                 {
                     user: userId,
                     items: orderItems,
                     shippingAddress,
+                    paymentMethod,
+                    paymentStatus,
                     totalAmount: total,
                     discountAmount: discount,
                     taxAmount: tax,
                     shippingAmount: shipping,
-                    paymentMethod: "COD",
-                    // orderStatus: "Pending",
+                    id: orderId,
+                    statusHistory: [{ status: "PLACED" }],
                 },
             ],
             { session }
@@ -97,7 +115,7 @@ export async function POST(req) {
         await session.commitTransaction();
         session.endSession();
 
-        return NextResponse.json(order[0]);
+        return NextResponse.json(order);
 
     } catch (error) {
         await session.abortTransaction();
@@ -110,7 +128,6 @@ export async function POST(req) {
     }
 }
 
-// GET USER ORDERS
 export async function GET(req) {
     const userId = await getUserId(req);
 
@@ -119,10 +136,9 @@ export async function GET(req) {
 
     await connectDB();
 
-    const orders = await Order.find({ user: userId }).sort({
-        createdAt: -1,
-    });
+    const orders = await Order.find({ user: userId })
+        .sort({ createdAt: -1 })
+        .lean();
 
     return NextResponse.json(orders);
 }
-

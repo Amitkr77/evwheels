@@ -237,7 +237,16 @@ export default function Home() {
         </section>
 
         {/* ─── Featured Products ─── */}
-        <section id="cycles" className="py-24 md:py-40 bg-white">
+        <section id="cycles" className="pt-24 md:pt-40 bg-white">
+          <motion.h2
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-center mb-16 md:mb-20"
+          >
+            Featured Cycles
+          </motion.h2>
           <div className="max-w-6xl mx-auto px-6 lg:px-12 space-y-32 md:space-y-48">
             {loading ? (
               <div className="text-center py-20 text-neutral-500">
@@ -300,7 +309,7 @@ export default function Home() {
         {/* ─── Accessories Section ─── */}
         <section
           id="accessories"
-          className="py-20 md:py-28 bg-white border-t border-neutral-200/60"
+          className="pt-20 md:pt-28  bg-white border-neutral-200/60"
         >
           <div className="max-w-6xl mx-auto px-6 lg:px-12">
             <motion.h2
@@ -359,7 +368,7 @@ export default function Home() {
         </section>
 
         {/* ─── Why Us – thin & airy ─── */}
-        <section id="why-us" className="py-32 md:py-48 bg-white">
+        <section id="why-us" className="py-32 md:py-48  bg-white">
           <div className="max-w-5xl mx-auto px-8 lg:px-16 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 50 }}

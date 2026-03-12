@@ -11,6 +11,7 @@ const orderSchema = new mongoose.Schema(
 
     items: [
       {
+        _id: false,
         product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
@@ -23,10 +24,9 @@ const orderSchema = new mongoose.Schema(
     ],
 
     shippingAddress: {
-      name: String,
+      fullName: String,
       phone: String,
-      addressLine1: String,
-      addressLine2: String,
+      street: String,
       city: String,
       state: String,
       postalCode: String,
@@ -35,14 +35,16 @@ const orderSchema = new mongoose.Schema(
 
     paymentMethod: {
       type: String,
-      enum: ["COD", "ONLINE"],
-      default: "COD",
+      enum: ["COD", "CARD"],
     },
 
     paymentStatus: {
       type: String,
       enum: ["PENDING", "PAID", "FAILED"],
       default: "PENDING",
+    },
+    id: {
+      type: String
     },
 
     orderStatus: {
@@ -59,6 +61,7 @@ const orderSchema = new mongoose.Schema(
 
     statusHistory: [
       {
+        _id: false,
         status: String,
         date: {
           type: Date,
@@ -71,6 +74,9 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    discountAmount: Number,
+    taxAmount: Number,
+    shippingAmount: Number,
   },
   { timestamps: true }
 );
