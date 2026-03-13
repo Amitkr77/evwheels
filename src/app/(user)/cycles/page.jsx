@@ -278,7 +278,7 @@ export default function CyclesPage() {
                   </div>
 
                   <Link
-                    href={`/shop/${product.slug}` || "#"}
+                    href={`/cycles/${product.slug}` || "#"}
                     className="inline-flex items-center gap-2 text-neutral-900 font-medium hover:text-emerald-800 transition-colors"
                   >
                     View Details

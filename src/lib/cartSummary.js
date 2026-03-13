@@ -3,12 +3,14 @@ import Product from "@/models/Product";
 import Coupon from "@/models/Coupon";
 
 // Example tax rate & shipping calculation
-const TAX_RATE = 0.08; // 8%
-const FLAT_SHIPPING = 10; // flat $10 shipping
+const TAX_RATE = 0.08;
+const FLAT_SHIPPING = 10;
 
 export async function getCartSummary(userId, couponCode) {
     const cart = await Cart.findOne({ user: userId }).populate("items.product");
     if (!cart || cart.items.length === 0) return null;
+
+    const appliedCouponCode = cart.coupon
 
     // 1️⃣ Subtotal
     let subtotal = 0;
@@ -18,15 +20,18 @@ export async function getCartSummary(userId, couponCode) {
 
     // 2️⃣ Discount
     let discount = 0;
-    if (couponCode) {
-        const coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
+
+    if (appliedCouponCode) {
+        const coupon = await Coupon.findOne({ code: appliedCouponCode.toUpperCase() });
         if (coupon && coupon.isActive && coupon.expiryDate > new Date()) {
             if (coupon.discountType === "percentage") {
                 discount = (subtotal * coupon.discountValue) / 100;
             } else {
                 discount = coupon.discountValue;
             }
-            // You could add min order amount & usage limit checks here
+
+            // Ensure discount does not exceed subtotal
+            discount = Math.min(discount, subtotal);
         }
     }
 
@@ -44,5 +49,6 @@ export async function getCartSummary(userId, couponCode) {
         tax,
         shipping,
         total,
+        couponApplied: appliedCouponCode || null,
     };
 }

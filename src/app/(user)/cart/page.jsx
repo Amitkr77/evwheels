@@ -37,7 +37,32 @@ export default function CartPage() {
   }, []);
 
   const applyCoupon = async () => {
-    await fetchSummary(coupon);
+    if (!coupon) return;
+
+    try {
+      const res = await fetch("/api/cart/apply-coupon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ couponCode: coupon }),
+        credentials: "include", // send cookies for JWT
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Failed to apply coupon");
+        return;
+      }
+
+      // Coupon applied, now fetch updated summary
+      await fetchSummary(coupon);
+      alert(data.message); // optional success message
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    }
   };
 
   return (
@@ -70,31 +95,35 @@ export default function CartPage() {
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           {/* Left: Cart Items */}
           <div className="flex-1 flex flex-col gap-8">
-            {/* Free Shipping Alert */}
-            <div className="flex items-center gap-3 p-5 bg-emerald-50/60 border border-emerald-100 rounded-xl text-sm text-neutral-700">
-              <span className="text-emerald-800">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </span>
-              <span className="font-medium">
-                You've qualified for{" "}
-                <span className="text-emerald-800 font-semibold">
-                  Free Shipping
-                </span>{" "}
-                on this order!
-              </span>
-            </div>
+            {summary?.shipping === 0 && (
+              <div className="flex items-center gap-3 p-5 bg-emerald-50/60 border border-emerald-100 rounded-xl text-sm text-neutral-700">
+                {/* Free Shipping Alert */}
+
+                <span className="text-emerald-800">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </span>
+
+                <span className="font-medium">
+                  You've qualified for{" "}
+                  <span className="text-emerald-800 font-semibold">
+                    Free Shipping
+                  </span>{" "}
+                  on this order!
+                </span>
+              </div>
+            )}
 
             {items.map((item) => {
               const { product, quantity } = item;
@@ -188,6 +217,11 @@ export default function CartPage() {
                 </h2>
 
                 <div className="space-y-4 mb-8 pb-8 border-b border-neutral-200/60">
+                  {summary?.couponApplied && (
+                    <div className="text-sm text-emerald-700 font-medium mb-2">
+                      Coupon "{summary.couponApplied}" applied!
+                    </div>
+                  )}
                   <div className="flex justify-between text-neutral-600">
                     <span>Subtotal</span>
                     <span className="text-neutral-900 font-medium">

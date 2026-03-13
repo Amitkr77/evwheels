@@ -4,15 +4,24 @@ import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Star, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-export default function ProductDetailPage({ params }) {
+export default function ProductDetailPage() {
+  const params = useParams();
   const { slug } = params;
+
+  const router = useRouter();
   const addToCart = useCartStore((state) => state.addToCart);
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [reviews, setReviews] = useState([]);
+  const [loadingReviews, setLoadingReviews] = useState(true);
 
   useEffect(() => {
     async function fetchProduct() {
@@ -34,9 +43,26 @@ export default function ProductDetailPage({ params }) {
         setLoading(false);
       }
     }
-
     fetchProduct();
   }, [slug]);
+
+  useEffect(() => {
+    if (!product?._id) return; 
+
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch(`/api/reviews?id=${product._id}`);
+        const data = await res.json();
+        setReviews(data);
+      } catch (err) {
+        console.error("Failed to fetch reviews", err);
+      } finally {
+        setLoadingReviews(false);
+      }
+    };
+
+    fetchReviews();
+  }, [product]);
 
   if (loading) {
     return <div className="pt-32 text-center">Loading...</div>;
@@ -86,21 +112,29 @@ export default function ProductDetailPage({ params }) {
     },
   ];
 
+  const handleBuyNow = () => {
+    if (!product) return;
+
+    addToCart(product, 1);
+    router.push("/checkout");
+  };
+
   return (
     <div className="min-h-screen bg-[#fdfcf9] pt-20 pb-20">
       <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
         <div className="absolute inset-0 subtle-gradient"></div>
       </div>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        
         {/* Breadcrumb */}
-        <nav className="mb-10 text-sm text-neutral-600">
+        <nav className="mb-10 mt-4 text-sm text-neutral-600">
           <ol className="flex items-center gap-3">
             <li>
               <Link href="/">Home</Link>
             </li>
             <li>/</li>
             <li>
-              <Link href="/shop">Cycles</Link>
+              <Link href="/cycles">Cycles</Link>
             </li>
             <li>/</li>
             <li className="text-neutral-900 font-medium">{product.title}</li>
@@ -113,9 +147,11 @@ export default function ProductDetailPage({ params }) {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <img
+            <Image
               src={product.image || "/placeholder.png"}
               alt={product.title}
+              width={400}
+              height={400}
               className="w-full rounded-xl"
             />
           </motion.div>
@@ -147,7 +183,12 @@ export default function ProductDetailPage({ params }) {
                 Add to Cart
               </button>
 
-              <button className="px-8 py-4 border rounded-full">Buy Now</button>
+              <button
+                onClick={handleBuyNow}
+                className="px-8 py-4 bg-emerald-800 text-white rounded-full cursor-pointer"
+              >
+                Buy Now
+              </button>
             </div>
           </motion.div>
         </div>
@@ -167,25 +208,34 @@ export default function ProductDetailPage({ params }) {
         </div>
 
         {/* Reviews */}
-        <section className="mb-24">
-          <div className="flex items-center gap-4 mb-6">
-            <h2 className="text-3xl font-semibold">Reviews</h2>
-
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={20}
-                  className="fill-emerald-700 text-emerald-700"
-                />
+        <div className="mt-16">
+          <h2 className="text-3xl font-medium mb-6">Customer Reviews</h2>
+          {loadingReviews ? (
+            <p>Loading reviews...</p>
+          ) : reviews.length === 0 ? (
+            <p>No reviews yet. Be the first to review this product!</p>
+          ) : (
+            <div className="space-y-6">
+              {reviews.map((review) => (
+                <div
+                  key={review._id}
+                  className="border p-4 rounded-lg shadow-sm"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-medium">{review.user.name}</span>
+                    <span className="text-yellow-500">
+                      {"⭐".repeat(review.rating)}
+                    </span>
+                  </div>
+                  <p className="text-neutral-700">{review.comment}</p>
+                  <small className="text-neutral-400">
+                    {new Date(review.createdAt).toLocaleDateString()}
+                  </small>
+                </div>
               ))}
             </div>
-          </div>
-
-          <p className="text-neutral-600">
-            No reviews yet. Be the first to review!
-          </p>
-        </section>
+          )}
+        </div>
       </div>
 
       {/* WhatsApp Button */}

@@ -14,8 +14,7 @@ import {
   Truck,
   IndianRupee,
   MessageCircle,
-  ShoppingBag,
-  User,
+  
   Bike,
   Headphones,
   Lock,
@@ -79,64 +78,6 @@ export default function Home() {
       />
 
       <div className="bg-[#fdfcf9] text-neutral-900 min-h-screen font-['Inter']">
-        {/* ─── Improved Navbar ─── */}
-        {/* <nav
-          className={`fixed top-0 inset-x-0 z-50 transition-all duration-400 ${
-            scrolled
-              ? "bg-[#fdfcf9]/98 backdrop-blur-xl border-b border-neutral-200/60 shadow-sm"
-              : "bg-transparent"
-          }`}
-        >
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between h-20">
-            <Link
-              href="/"
-              className={`text-2xl font-['Playfair_Display'] font-bold tracking-wide transition-colors ${scrolled ? "text-neutral-900" : "text-white"}`}
-            >
-              EVWheels
-            </Link>
-
-            <div className="hidden md:flex items-center gap-10">
-              <Link
-                href="/shop"
-                className={`text-sm font-medium tracking-wide  hover:text-neutral-900 transition-colors relative group ${scrolled ? "text-neutral-900" : "text-white hover:text-white "}`}
-              >
-                Cycles
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-neutral-900 transition-all group-hover:w-full" />
-              </Link>
-              <Link
-                href="#accessories"
-                className={`text-sm font-medium tracking-wide  hover:text-neutral-900 transition-colors relative group ${scrolled ? "text-neutral-900" : "text-white hover:text-white "}`}
-              >
-                Accessories
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-neutral-900 transition-all group-hover:w-full" />
-              </Link>
-              <Link
-                href="/why-us"
-                className={`text-sm font-medium tracking-wide  hover:text-neutral-900 transition-colors relative group ${scrolled ? "text-neutral-900" : "text-white hover:text-white "}`}
-              >
-                Why Us
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-neutral-900 transition-all group-hover:w-full" />
-              </Link>
-            </div>
-
-            <div className="flex items-center gap-6">
-              <Link
-                href="/cart"
-                className={`transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}
-              >
-                <ShoppingBag size={22} strokeWidth={1.6} />
-              </Link>
-              <Link
-                href="/login"
-                className={`text-sm font-medium transition-colors flex items-center gap-2 ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}
-              >
-                <User size={18} strokeWidth={1.6} />
-                Login
-              </Link>
-            </div>
-          </div>
-        </nav> */}
-
         {/* ─── hero section ─── */}
         <section className="relative h-[85vh] md:h-screen flex items-center pt-20 pb-16 md:pb-0">
           <div className="absolute inset-0">
@@ -187,7 +128,7 @@ export default function Home() {
               </Link>
 
               <Link
-                href="#why-us"
+                href="'/why-us"
                 className="inline-flex items-center gap-3 px-10 py-4 border border-neutral-400 text-white hover:text-neutral-800 rounded-full text-lg font-light hover:bg-neutral-100 transition-colors"
               >
                 Why EVWheels
@@ -247,6 +188,7 @@ export default function Home() {
           >
             Featured Cycles
           </motion.h2>
+
           <div className="max-w-6xl mx-auto px-6 lg:px-12 space-y-32 md:space-y-48">
             {loading ? (
               <div className="text-center py-20 text-neutral-500">
@@ -258,48 +200,52 @@ export default function Home() {
               </div>
             ) : (
               featuredProducts.map((product, index) => {
-                // Alternate image left / right layout
                 const isEven = index % 2 === 0;
 
                 return (
-                  <motion.div
+                  <Link
                     key={product._id}
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true, margin: "-150px" }}
-                    transition={{ duration: 1.4 }}
-                    className={`grid md:grid-cols-2 gap-16 lg:gap-24 items-center ${
-                      !isEven ? "md:flex-row-reverse" : ""
-                    }`}
+                    href={`/cycles/${product.slug}`}
+                    className={`block`}
                   >
-                    <div className={isEven ? "" : "order-2 md:order-1"}>
-                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-light leading-tight mb-10">
-                        {product.title}
-                      </h2>
-                      <div className="space-y-5 text-lg md:text-xl font-light text-neutral-700">
-                        <div className="text-3xl font-medium text-neutral-900">
-                          ₹ {product.price.toLocaleString("en-IN")}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true, margin: "-150px" }}
+                      transition={{ duration: 1.4 }}
+                      className={`grid md:grid-cols-2 gap-16 lg:gap-24 items-center cursor-pointer ${
+                        !isEven ? "md:flex-row-reverse" : ""
+                      }`}
+                    >
+                      <div className={isEven ? "" : "order-2 md:order-1"}>
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-light leading-tight mb-10">
+                          {product.title}
+                        </h2>
+                        <div className="space-y-5 text-lg md:text-xl font-light text-neutral-700">
+                          <div className="text-3xl font-medium text-neutral-900">
+                            ₹ {product.price.toLocaleString("en-IN")}
+                          </div>
+                          <div>
+                            {product.specs?.battery?.range || "?"} km real range
+                          </div>
+                          <div>{product.specs?.physical?.weight || "?"} kg</div>
+                          {product.description && (
+                            <p className="text-base text-neutral-600 mt-4">
+                              {product.description}
+                            </p>
+                          )}
                         </div>
-                        <div>
-                          {product.specs?.battery?.range || "?"} km real range
-                        </div>
-                        <div>{product.specs?.physical?.weight || "?"} kg</div>
-                        {product.description && (
-                          <p className="text-base text-neutral-600 mt-4">
-                            {product.description}
-                          </p>
-                        )}
                       </div>
-                    </div>
 
-                    <div className={isEven ? "" : "order-1 md:order-2"}>
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="w-full h-auto object-cover rounded-none shadow-xl"
-                      />
-                    </div>
-                  </motion.div>
+                      <div className={isEven ? "" : "order-1 md:order-2"}>
+                        <img
+                          src={product.image}
+                          alt={product.title}
+                          className="w-full h-auto object-cover rounded-none shadow-xl"
+                        />
+                      </div>
+                    </motion.div>
+                  </Link>
                 );
               })
             )}

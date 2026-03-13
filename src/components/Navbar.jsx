@@ -42,7 +42,7 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center gap-10">
             <Link
-              href="/shop"
+              href="/cycles"
               className={`text-sm font-medium tracking-wide  hover:text-neutral-900 transition-colors relative group ${scrolled ? "text-neutral-900" : "text-white hover:text-white "}`}
             >
               Cycles
@@ -68,76 +68,31 @@ export default function Navbar() {
             {/* <div>Cart ({totalQuantity})</div> */}
             <Link
               href="/cart"
-              className={`transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}
+              className={`relative transition-colors ${
+                scrolled
+                  ? "text-neutral-700 hover:text-neutral-900"
+                  : "text-white hover:text-white"
+              }`}
             >
               <ShoppingBag size={22} strokeWidth={1.6} />
+
+              {totalQuantity > 0 && (
+                <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-medium text-white bg-emerald-700 rounded-full">
+                  {totalQuantity}
+                </span>
+              )}
             </Link>
-
-            {/* {isAuthenticated ? (
-              <div className="relative">
-                <button
-                  className="
-                    flex items-center gap-1 px-3 py-1.5 rounded-lg
-                     dark:hover:bg-[#22301d] transition-colors border border-primary/20 hover:border-primary/40
-                  "
-                  onClick={() => toggleDropdown("user")}
-                >
-                  <User className="w-4 h-4" />
-                  <span className="text-sm font-medium hidden xl:block">
-                    {user?.name?.split(" ")[0] || "Account"}
-                  </span>
-                </button>
-
-                {activeDropdown === "user" && (
-                  <div
-                    className="
-                      absolute right-0 top-full mt-2 w-56
-                      bg-white dark:bg-[#1a2c15] shadow-xl rounded-xl
-                      border dark:border-[#2a3825] py-2
-                    "
-                  >
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]"
-                    >
-                      Profile
-                    </Link>
-                    <Link
-                      href="/orders"
-                      className="block px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]"
-                    >
-                      My Orders
-                    </Link>
-                    <button
-                      onClick={logout}
-                      className="
-                        w-full text-left px-4 py-2.5 text-sm text-red-600
-                        dark:text-red-400 hover:bg-gray-50 dark:hover:bg-[#22301d]
-                      "
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                href="/account/login"
-                className={`text-sm font-medium transition-colors flex items-center gap-2 ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}
-              >
-                <User size={18} strokeWidth={1.6} />
-                Login
-              </Link>
-            )} */}
 
             {!isLoading &&
               (isAuthenticated ? (
                 <div className="relative">
                   <button
-                    className={`  flex items-center gap-1 px-3 py-1.5 rounded-lg ${scrolled ? "":" bg-black/50"}`}
+                    className={`  flex items-center gap-1 px-3 py-1.5 rounded-lg ${scrolled ? "" : " bg-black/50"}`}
                     onClick={() => toggleDropdown("user")}
                   >
-                    <User className={`w-4 h-4 transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`} />
+                    <User
+                      className={`w-4 h-4 transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}
+                    />
                     <span
                       className={`text-sm font-medium hidden xl:block transition-colors ${scrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white"}`}
                     >

@@ -60,7 +60,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-6">
             <nav className="flex items-center gap-7">
               <Link
-                href="/shop"
+                href="/cycles"
                 className="text-sm font-medium hover:text-primary transition-colors"
               >
                 E-Bikes
@@ -283,7 +283,7 @@ export default function Header() {
 
             <nav className="p-5 space-y-2">
               <Link
-                href="/shop"
+                href="/cycles"
                 className="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-[#22301d]"
                 onClick={() => setMobileMenuOpen(false)}
               >

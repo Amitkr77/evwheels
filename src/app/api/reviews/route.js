@@ -53,3 +53,19 @@ export async function POST(req) {
   return NextResponse.json(review);
 }
 
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const productId = searchParams.get("id");
+  console.log(productId);
+  
+
+  if (!productId)
+    return NextResponse.json({ error: "Product ID required" }, { status: 400 });
+
+  await connectDB();
+  const reviews = await Review.find({ product: productId, status: "Approved" })
+    .populate("user", "name") 
+    .sort({ createdAt: -1 }); 
+
+  return NextResponse.json(reviews);
+}
