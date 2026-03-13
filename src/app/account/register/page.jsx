@@ -106,7 +106,7 @@ export default function RegisterPage() {
         } else {
           setServerMessage("Account created successfully! Redirecting to login...");
           setIsSuccess(true);
-          setTimeout(() => router.push("/login"), 1500);
+          setTimeout(() => router.push("/account/login"), 1500);
 
           setForm({ name: "", email: "", phone: "", password: "" });
           setErrors({ name: "", email: "", phone: "", password: "" });

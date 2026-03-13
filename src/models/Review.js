@@ -25,10 +25,17 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    status: {
+      type: String,
+      enum: ["Pending", "Approved", "Rejected"], 
+      default: "Pending", 
+    },
   },
   { timestamps: true }
 );
 
+// Ensure one review per user per product
 reviewSchema.index({ user: 1, product: 1 }, { unique: true });
 
 export default mongoose.models.Review ||

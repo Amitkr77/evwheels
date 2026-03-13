@@ -10,12 +10,12 @@ import Link from "next/link";
 export default function LoginPage() {
   const { login, checkAuth } = useAuthStore();
   const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isPending, startTransition] = useTransition();
-  const [isSignup, setIsSignup] = useState(false);
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
@@ -63,12 +63,10 @@ export default function LoginPage() {
         {/* Heading */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-3">
-            {isSignup ? "Create Account" : "Welcome Back"}
+            Welcome Back
           </h1>
           <p className="text-lg text-neutral-600 font-light">
-            {isSignup
-              ? "Join the quiet movement"
-              : "Sign in to your EVWheels account"}
+            Sign in to your EVWheels account
           </p>
         </div>
 
@@ -80,25 +78,16 @@ export default function LoginPage() {
             </div>
           )}
 
-          {isSignup && (
-            <div>
-              <label className="block text-sm font-medium text-neutral-600 mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
-                placeholder="Amit Sharma"
-              />
-            </div>
-          )}
-
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-neutral-600 mb-2">
               Email
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" size={20} />
+              <Mail
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500"
+                size={20}
+              />
               <input
                 type="email"
                 value={email}
@@ -111,12 +100,16 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-neutral-600 mb-2">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" size={20} />
+              <Lock
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500"
+                size={20}
+              />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -161,23 +154,19 @@ export default function LoginPage() {
             disabled={isPending}
             className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-4"
           >
-            {isPending
-              ? "Signing in..."
-              : isSignup
-              ? "Create Account"
-              : "Sign In"}
+            {isPending ? "Signing in..." : "Sign In"}
           </motion.button>
         </form>
 
-        {/* Switch to Signup/Login */}
+        {/* Register Link */}
         <div className="mt-10 text-center text-neutral-600">
-          {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
-          <button
-            onClick={() => setIsSignup(!isSignup)}
+          Don't have an account?{" "}
+          <Link
+            href="/account/register"
             className="text-emerald-800 font-medium hover:underline"
           >
-            {isSignup ? "Sign in" : "Create one"}
-          </button>
+            Create one
+          </Link>
         </div>
       </motion.div>
     </div>
