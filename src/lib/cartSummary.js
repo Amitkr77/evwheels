@@ -6,12 +6,11 @@ import Coupon from "@/models/Coupon";
 const TAX_RATE = 0.08;
 const FLAT_SHIPPING = 10;
 
-export async function getCartSummary(userId, couponCode) {
+export async function getCartSummary(userId) {
     const cart = await Cart.findOne({ user: userId }).populate("items.product");
     if (!cart || cart.items.length === 0) return null;
 
-    const appliedCouponCode = cart.coupon
-
+    const appliedCouponCode = cart.couponCode
     // 1️⃣ Subtotal
     let subtotal = 0;
     for (const item of cart.items) {

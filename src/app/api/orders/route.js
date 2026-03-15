@@ -6,6 +6,9 @@ import Cart from "@/models/Cart";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import { getCartSummary } from "@/lib/cartSummary";
+import { sendEmail } from "@/lib/email/sendMail";
+import User from "@/models/User";
+import { orderConfirmationTemplate } from "@/lib/email/templates/orderConfirmation";
 
 async function getUserId(req) {
     const token = req.cookies.get("token")?.value;
@@ -30,9 +33,16 @@ export async function POST(req) {
     if (!userId)
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+
     const { shippingAddress, couponCode, paymentMethod } = await req.json();
 
     await connectDB();
+
+    const user = await User.findById(userId).select("email name");
+
+    if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -110,7 +120,14 @@ export async function POST(req) {
 
         // Clear cart
         cart.items = [];
+        cart.couponCode = null
         await cart.save({ session });
+
+        await sendEmail({
+            to: user.email,
+            subject: "Order Confirmation",
+            html: orderConfirmationTemplate(order.id, orderItems, total),
+        });
 
         await session.commitTransaction();
         session.endSession();

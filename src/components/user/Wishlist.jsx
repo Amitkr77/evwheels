@@ -22,8 +22,6 @@ export default function Wishlist() {
     );
   }
 
-  console.log(items);
-
   if (items.length === 0) {
     return (
       <div className="text-center py-16">

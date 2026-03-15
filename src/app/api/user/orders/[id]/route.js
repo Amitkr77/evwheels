@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 async function getUserId(req) {
     // Attempt to get the token from cookies
     const token = req.cookies.get("token")?.value;
-    console.log("Token from cookie:", token);
 
     if (!token) {
         console.warn("No token found in request cookies.");
@@ -17,7 +16,6 @@ async function getUserId(req) {
     try {
         // Verify the JWT
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Decoded JWT payload:", decoded);
 
         // Check common payload keys
         if (decoded.id) return decoded.id;
@@ -31,42 +29,48 @@ async function getUserId(req) {
     }
 }
 
-export async function GET(req, context) {
-    const { params } = await context;
+export async function GET(req, { params }) {
     const userId = await getUserId(req);
 
-    if (!userId)
+    if (!userId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     await connectDB();
 
+    const { id } = await params;
+
     const order = await Order.findOne({
-        _id: params.id,
+        _id: id,
         user: userId,
     }).populate("items.product");
 
-    if (!order)
+    if (!order) {
         return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
 
     return NextResponse.json(order);
 }
 
-export async function PATCH(req, context) {
-    const { params } = await context;
+export async function PATCH(req, { params }) {
     const userId = await getUserId(req);
 
-    if (!userId)
+    if (!userId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     await connectDB();
 
+    const { id } = await params;
+
     const order = await Order.findOne({
-        _id: params.id,
+        _id: id,
         user: userId,
     });
 
-    if (!order)
+    if (!order) {
         return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
 
     if (!["PLACED", "CONFIRMED"].includes(order.orderStatus)) {
         return NextResponse.json(

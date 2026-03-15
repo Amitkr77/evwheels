@@ -26,9 +26,6 @@ export async function POST(req) {
   const { productId, rating, comment } = await req.json();
   await connectDB();
 
-  console.log(userId);
-
-
   // Check if user purchased product
   const hasPurchased = await Order.findOne({
     user: userId,
@@ -56,8 +53,6 @@ export async function POST(req) {
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const productId = searchParams.get("id");
-  console.log(productId);
-  
 
   if (!productId)
     return NextResponse.json({ error: "Product ID required" }, { status: 400 });

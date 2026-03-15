@@ -45,6 +45,10 @@ export default function CheckoutPage() {
   useEffect(() => {
     fetchSummary();
   }, []);
+  
+  useEffect(() => {
+  fetchSummary(); 
+}, [items]);
 
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
@@ -106,6 +110,42 @@ export default function CheckoutPage() {
   if (error && !summary) {
     return <div className="text-center py-20 text-red-600">{error}</div>;
   }
+
+  const PAYMENT_METHODS = {
+    CARD: "CARD",
+    COD: "COD",
+  };
+
+  const availableMethods = ["COD"];
+
+  const INDIAN_STATES = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
+  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+  "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+];
+
+  if (items.length === 0) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-center px-6">
+      <div>
+        <h2 className="text-3xl font-medium mb-4">Your cart is empty</h2>
+        <p className="text-neutral-600 mb-8">Add some cycles to proceed to checkout.</p>
+        <Link
+          href="/cycles"
+          className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-full hover:bg-neutral-800"
+        >
+          Browse Cycles
+          <ArrowRight size={18} />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
   return (
     <main className="flex-grow bg-[#fdfcf9] min-h-screen font-['Inter'] pt-20 pb-20">
       <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
@@ -213,12 +253,9 @@ export default function CheckoutPage() {
                     required
                   >
                     <option value="">Select State</option>
-                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                    <option value="Delhi">Delhi</option>
-                    <option value="Bihar">Bihar</option>
-                    {/* Add all Indian states – or use a library like country-state-city */}
-                    <option value="Maharashtra">Maharashtra</option>
-                    {/* ... more options ... */}
+                   {INDIAN_STATES.map(s => (
+    <option key={s} value={s}>{s}</option>
+  ))}
                   </select>
                 </div>
 
@@ -259,7 +296,7 @@ export default function CheckoutPage() {
             </section>
 
             {/* Delivery Method */}
-            <section>
+            {/* <section>
               <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
                 Delivery Method
               </h2>
@@ -318,55 +355,83 @@ export default function CheckoutPage() {
                   </div>
                 </label>
               </div>
-            </section>
+            </section> */}
 
             {/* Payment */}
+
             <section>
               <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
                 Payment
               </h2>
+
               <div className="bg-white border border-neutral-200/70 rounded-xl overflow-hidden">
-                <div className="flex border-b border-neutral-200/70">
+                {/* Payment Tabs */}
+                <div className="grid grid-cols-2 border-b border-neutral-200/70">
+                  {/* Credit Card */}
                   <button
                     type="button"
-                    onClick={() => setPaymentMethod("Credit Card")}
-                    className={`flex-1 py-4 text-sm md:text-base font-medium transition-colors border-b-2 ${
-                      paymentMethod === "Credit Card"
-                        ? "bg-emerald-50/50 text-emerald-800 border-emerald-600"
-                        : "text-neutral-600 hover:text-neutral-900"
+                    disabled={!availableMethods.includes(PAYMENT_METHODS.CARD)}
+                    onClick={() => setPaymentMethod(PAYMENT_METHODS.CARD)}
+                    className={`flex items-center justify-center gap-2 py-4 text-sm md:text-base font-medium transition-all border-b-2 ${
+                      paymentMethod === PAYMENT_METHODS.CARD
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-600"
+                        : "text-neutral-600 hover:text-neutral-900 border-transparent"
                     }`}
                   >
-                    Credit Card
+                    💳 Credit / Debit Card
                   </button>
+
+                  {/* COD */}
                   <button
                     type="button"
-                    onClick={() => setPaymentMethod("COD")}
-                    className={`flex-1 py-4 text-sm md:text-base font-medium transition-colors border-b-2 ${
-                      paymentMethod === "COD"
-                        ? "bg-emerald-50/50 text-emerald-800 border-emerald-600"
-                        : "text-neutral-600 hover:text-neutral-900"
+                    onClick={() => setPaymentMethod(PAYMENT_METHODS.COD)}
+                    className={`flex items-center justify-center gap-2 py-4 text-sm md:text-base font-medium transition-all border-b-2 ${
+                      paymentMethod === PAYMENT_METHODS.COD
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-600"
+                        : "text-neutral-600 hover:text-neutral-900 border-transparent"
                     }`}
                   >
-                    COD
+                    💵 Cash on Delivery
                   </button>
                 </div>
 
-                {/* Conditional card form – hide when COD */}
-                {paymentMethod === "Credit Card" && (
-                  <div className="p-6 md:p-8 space-y-6">
-                    {/* Keep your card number, expiry, CVC, name fields */}
-                    <h1 className="p-8 text-center text-neutral-600">
-                      will be avail soon
-                    </h1>
-                    {/* ... existing code ... */}
-                  </div>
-                )}
+                {/* Payment Content */}
+                <div className="p-6 md:p-8">
+                  {/* CARD PAYMENT */}
+                  {paymentMethod === PAYMENT_METHODS.CARD && (
+                    <div className="flex flex-col items-center justify-center py-10 text-center text-neutral-600 space-y-4">
+                      <div className="text-4xl">💳</div>
 
-                {paymentMethod === "COD" && (
-                  <div className="p-8 text-center text-neutral-600">
-                    Cash on Delivery – Pay when your order arrives.
-                  </div>
-                )}
+                      <p className="text-lg font-medium text-neutral-800">
+                        Card Payments Coming Soon
+                      </p>
+
+                      <p className="text-sm text-neutral-500 max-w-sm">
+                        Secure payments with Visa, Mastercard and more will be
+                        available soon.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* COD PAYMENT */}
+                  {paymentMethod === PAYMENT_METHODS.COD && (
+                    <div className="flex flex-col items-center text-center space-y-4 py-8">
+                      <div className="text-4xl">📦</div>
+
+                      <p className="text-lg font-medium text-neutral-800">
+                        Cash on Delivery
+                      </p>
+
+                      <p className="text-sm text-neutral-500 max-w-sm">
+                        Pay with cash when your order arrives at your doorstep.
+                      </p>
+
+                      <div className="text-xs text-neutral-500 bg-neutral-50 px-4 py-2 rounded-lg">
+                        Additional COD charges may apply depending on location.
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
@@ -493,6 +558,18 @@ export default function CheckoutPage() {
                       }).format(summary?.tax || 0)}
                     </span>
                   </div>
+                  {summary?.discount > 0 && (
+                    <div className="flex justify-between text-neutral-600">
+                      <span>Discount</span>
+                      <span className="text-emerald-700 font-medium">
+                        -
+                        {new Intl.NumberFormat("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        }).format(summary?.discount)}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <hr className="border-neutral-200/60 my-8" />
