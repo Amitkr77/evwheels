@@ -14,13 +14,19 @@ import {
   Truck,
   IndianRupee,
   MessageCircle,
-  
   Bike,
   Headphones,
   Lock,
   Lightbulb,
   Zap,
 } from "lucide-react";
+import HeroSlider from "@/components/home/HeroSlider";
+import UpgradeYourRide from "@/components/home/UpgradeYourRide";
+import ShopByCategory from "@/components/home/ShopBycategory";
+import BestSellersShimano from "@/components/home/BestSellersShimano";
+import SafetyFirst from "@/components/home/SafetyFirst";
+import MechanicsChoice from "@/components/home/MechanicsChoice";
+import BudgetEssentials from "@/components/home/BudgetEssentials";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 30 },
@@ -89,7 +95,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#fdfcf9] via-transparent/40 to-transparent/70" />
           </div>
 
-          <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-12 w-full">
+          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full">
             <motion.h1
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
@@ -177,8 +183,29 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ─── HeroSlider ─── */}
+        {/* <HeroSlider /> */}
+
+        {/* upgrade your ride */}
+        <UpgradeYourRide />
+
+        {/* Shop by Category */}
+        <ShopByCategory />
+
+        {/* Best seller */}
+        <BestSellersShimano />
+
+        {/* Safety first  */}
+        <SafetyFirst />
+
+        {/* ─── MechanicsChoice ─── */}
+        <MechanicsChoice />
+
+        {/* Budget Essentials */}
+        <BudgetEssentials />
+
         {/* ─── Featured Products ─── */}
-        <section id="cycles" className="pt-24 md:pt-40 bg-white">
+        {/* <section id="cycles" className="pt-24 md:pt-40 bg-white">
           <motion.h2
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -250,7 +277,7 @@ export default function Home() {
               })
             )}
           </div>
-        </section>
+        </section> */}
 
         {/* ─── Accessories Section ─── */}
         <section
@@ -445,11 +472,7 @@ export default function Home() {
           <MessageCircle size={24} className="text-white" />
         </a>
 
-        {/* <footer className="py-16 text-center text-neutral-500 border-t border-neutral-200/60 bg-white">
-          <p className="text-base font-light tracking-wider">
-            EVWheels • Patna • 2026
-          </p>
-        </footer> */}
+        
       </div>
     </>
   );

@@ -8,6 +8,10 @@ import {
     Star,
     Bell,
     LogOut,
+    LayoutGrid,
+    BarChart3,
+    Warehouse,
+    Layers,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
@@ -22,8 +26,12 @@ export default function AdminDashboardLayout({ children }) {
         { icon: Home, label: "Dashboard", path: "/admin/dashboard" },
         { icon: ShoppingCart, label: "Orders", path: "/admin/dashboard/orders", },
         { icon: Package, label: "Products", path: "/admin/dashboard/products" },
+        { icon: LayoutGrid, label: "Categories", path: "/admin/dashboard/categories" },
+        { icon: Layers, label: "Subcategories", path: "/admin/dashboard/subcategories" },
         { icon: Ticket, label: "Coupons", path: "/admin/dashboard/coupons" },
         { icon: Star, label: "Reviews", path: "/admin/dashboard/reviews", },
+        { icon: Warehouse, label: "Inventory", path: "/admin/dashboard/inventory" },
+        { icon: BarChart3, label: "Reports", path: "/admin/dashboard/reports" },
     ];
 
     const currentPath = router.pathname;

@@ -3,7 +3,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, User, Menu, X } from "lucide-react";
+import {
+  ShoppingBag,
+  User,
+  Menu,
+  X,
+  ChevronDown,
+  ChevronRight,
+  Bike,
+  Wrench,
+  Package,
+  ShieldCheck,
+  Zap,
+} from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 
@@ -17,7 +29,140 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
+  // Mobile Accordion State
+  const [mobileOpenCategory, setMobileOpenCategory] = useState(null);
+
   const dropdownRef = useRef(null);
+
+  // Navigation Data Structure based on Strategy
+  const navItems = [
+    {
+      label: "Electric Mobility",
+      icon: <Zap className="w-4 h-4" />, // Assuming Zap is imported or using Bike icon as fallback
+      subMenu: [
+        {
+          title: "E-Cycles",
+          links: [
+            { label: "Mountain E-Bikes", href: "/cycles/mtb" },
+            { label: "City E-Bikes", href: "/cycles/city" },
+          ],
+        },
+        {
+          title: "E-Scooty",
+          links: [
+            { label: "High Speed", href: "/scooty/high-speed" },
+            { label: "Commuter", href: "/scooty/commuter" },
+          ],
+        },
+        {
+          title: "EV Parts",
+          links: [
+            { label: "Batteries", href: "/parts/batteries" },
+            { label: "Controllers", href: "/parts/controllers" },
+          ],
+        },
+      ],
+    },
+    {
+      label: "Cycles",
+      href: "/cycles",
+    },
+    {
+      label: "Parts",
+      icon: <Wrench className="w-4 h-4" />,
+      subMenu: [
+        {
+          title: "Drivetrain",
+          links: [
+            { label: "Chains", href: "/parts/chains" },
+            { label: "Freewheels", href: "/parts/freewheels" },
+            { label: "Cranksets", href: "/parts/cranksets" },
+            { label: "Pedals", href: "/parts/pedals" },
+          ],
+        },
+        {
+          title: "Braking System",
+          links: [
+            { label: "Disc Brakes", href: "/parts/disc-brakes" },
+            { label: "V-Brakes", href: "/parts/v-brakes" },
+            { label: "Brake Pads", href: "/parts/brake-pads" },
+          ],
+        },
+        {
+          title: "Controls & Cockpit",
+          links: [
+            { label: "Handlebars", href: "/parts/handlebars" },
+            { label: "Gear Shifters", href: "/parts/gear-shifters" },
+            { label: "Stems", href: "/parts/stems" },
+          ],
+        },
+        {
+          title: "Wheels & Suspension",
+          links: [
+            { label: "Hubs & Rims", href: "/parts/wheels" },
+            { label: "Forks", href: "/parts/forks" },
+            { label: "Spokes", href: "/parts/spokes" },
+          ],
+        },
+      ],
+    },
+    {
+      label: "Accessories",
+      icon: <Package className="w-4 h-4" />,
+      subMenu: [
+        {
+          title: "Safety & Visibility",
+          links: [
+            { label: "Helmets", href: "/accessories/helmets" },
+            { label: "Lights", href: "/accessories/lights" },
+            { label: "Locks", href: "/accessories/locks" },
+          ],
+        },
+        {
+          title: "Comfort & Utility",
+          links: [
+            { label: "Saddles", href: "/accessories/saddles" },
+            { label: "Bottle Cages", href: "/accessories/bottles" },
+            { label: "Mobile Holders", href: "/accessories/holders" },
+          ],
+        },
+        {
+          title: "Maintenance",
+          links: [
+            { label: "Tools", href: "/accessories/tools" },
+            { label: "Pumps", href: "/accessories/pumps" },
+            { label: "Stands", href: "/accessories/stands" },
+          ],
+        },
+      ],
+    },
+    {
+      label: "Brands",
+      subMenu: [
+        {
+          title: "Premium",
+          links: [
+            { label: "Shimano", href: "/brand/shimano" },
+            { label: "Neco", href: "/brand/neco" },
+            { label: "Prowheel", href: "/brand/prowheel" },
+          ],
+        },
+        {
+          title: "All Brands",
+          links: [
+            { label: "KMC / Maya", href: "/brand/kmc" },
+            { label: "Beto", href: "/brand/beto" },
+            { label: "View All", href: "/brands" },
+          ],
+        },
+      ],
+    },
+    {
+      label: "Wholesale",
+      href: "/wholesale",
+      isSpecial: true, // Optional flag for styling
+    },
+  ];
 
   // Scroll handler
   useEffect(() => {
@@ -30,6 +175,7 @@ export default function Navbar() {
   useEffect(() => {
     setMobileMenuOpen(false);
     setUserDropdownOpen(false);
+    setMobileOpenCategory(null);
   }, [pathname]);
 
   // Body overflow for mobile menu
@@ -66,8 +212,8 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#fdfcf9]/95 backdrop-blur-xl border-b border-neutral-200/70 shadow-sm"
-          : "bg-transparent"
+          ? "bg-[#fdfcf9]/95 backdrop-blur-xl shadow-sm"
+          : " max-w-7xl mx-auto px-5  mt-2 bg-black/30 backdrop-blur-sm rounded-2xl"
       }`}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
@@ -82,26 +228,65 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-10 lg:gap-12">
-            <NavLink
-              href="/cycles"
-              label="Cycles"
-              textColor={textColor}
-              hoverColor={hoverColor}
-            />
-            <NavLink
-              href="#accessories"
-              label="Accessories"
-              textColor={textColor}
-              hoverColor={hoverColor}
-            />{" "}
-            {/* changed from # */}
-            <NavLink
-              href="/why-us"
-              label="Why Us"
-              textColor={textColor}
-              hoverColor={hoverColor}
-            />
+          <div className="hidden lg:flex items-center gap-8">
+            {navItems.map((item) => (
+              <div
+                key={item.label}
+                className="relative group h-20 flex items-center"
+              >
+                {item.href ? (
+                  <NavLink
+                    href={item.href}
+                    label={item.label}
+                    textColor={textColor}
+                    hoverColor={hoverColor}
+                    isSpecial={item.isSpecial}
+                  />
+                ) : (
+                  // Dropdown Trigger
+                  <button
+                    className={`flex items-center gap-1 text-sm lg:text-base font-medium tracking-wide transition-colors ${textColor} ${hoverColor}`}
+                  >
+                    {item.label}
+                    <ChevronDown
+                      size={14}
+                      className="opacity-70 group-hover:rotate-180 transition-transform duration-200"
+                    />
+                  </button>
+                )}
+
+                {/* Mega Dropdown Content */}
+                {item.subMenu && (
+                  <div
+                    className="
+                      absolute left-1/2 -translate-x-1/2 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300
+                      w-[650px]
+                    "
+                  >
+                    <div className="bg-[#fdfcf9] shadow-2xl rounded-2xl border border-neutral-200/50 overflow-hidden p-6 grid grid-cols-2 gap-8">
+                      {item.subMenu.map((group) => (
+                        <div key={group.title}>
+                          <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3">
+                            {group.title}
+                          </h4>
+                          <div className="space-y-2">
+                            {group.links.map((link) => (
+                              <Link
+                                key={link.href}
+                                href={link.href}
+                                className="block text-sm text-neutral-800 hover:text-emerald-700 hover:translate-x-1 transition-all duration-200"
+                              >
+                                {link.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
           {/* Actions */}
@@ -201,12 +386,13 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(false)}
           />
           <div
-            className={`fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+            className={`fixed top-0 right-0 h-full w-4/5 max-w-xs bg-[#fdfcf9] shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
               mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-            } md:hidden`}
+            } md:hidden overflow-y-auto`}
           >
-            <div className="flex flex-col h-full p-6">
-              <div className="flex justify-between items-center mb-10">
+            <div className="flex flex-col h-full">
+              {/* Mobile Header */}
+              <div className="flex justify-between items-center p-6 border-b border-neutral-200">
                 <span className="text-xl font-semibold text-neutral-900">
                   Menu
                 </span>
@@ -218,27 +404,74 @@ export default function Navbar() {
                 </button>
               </div>
 
-              <div className="flex flex-col gap-6 text-lg font-medium mb-10">
-                <MobileNavLink
-                  href="/cycles"
-                  label="Cycles"
-                  onClick={() => setMobileMenuOpen(false)}
-                />
-                <MobileNavLink
-                  href="/accessories"
-                  label="Accessories"
-                  onClick={() => setMobileMenuOpen(false)}
-                />
-                <MobileNavLink
-                  href="/why-us"
-                  label="Why Us"
-                  onClick={() => setMobileMenuOpen(false)}
-                />
+              {/* Mobile Navigation Links */}
+              <div className="flex-1 p-6 space-y-1">
+                {navItems.map((item) => (
+                  <div
+                    key={item.label}
+                    className="border-b border-neutral-100 last:border-0"
+                  >
+                    {item.href ? (
+                      <MobileNavLink
+                        href={item.href}
+                        label={item.label}
+                        isSpecial={item.isSpecial}
+                        onClick={() => setMobileMenuOpen(false)}
+                      />
+                    ) : (
+                      // Accordion Item
+                      <div>
+                        <button
+                          onClick={() =>
+                            setMobileOpenCategory(
+                              mobileOpenCategory === item.label
+                                ? null
+                                : item.label,
+                            )
+                          }
+                          className="w-full flex items-center justify-between py-4 text-lg font-medium text-neutral-900"
+                        >
+                          {item.label}
+                          {mobileOpenCategory === item.label ? (
+                            <ChevronDown size={18} />
+                          ) : (
+                            <ChevronRight size={18} />
+                          )}
+                        </button>
+
+                        {mobileOpenCategory === item.label && (
+                          <div className="pl-4 pb-4 space-y-4 animate-fade-in">
+                            {item.subMenu.map((group) => (
+                              <div key={group.title}>
+                                <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 mt-2">
+                                  {group.title}
+                                </p>
+                                <div className="space-y-1">
+                                  {group.links.map((link) => (
+                                    <Link
+                                      key={link.href}
+                                      href={link.href}
+                                      onClick={() => setMobileMenuOpen(false)}
+                                      className="block py-2 text-sm text-neutral-600 hover:text-emerald-700"
+                                    >
+                                      {link.label}
+                                    </Link>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
 
-              <div className="mt-auto pt-8 border-t border-neutral-200">
+              {/* Mobile Auth Section */}
+              <div className="p-6 border-t border-neutral-200 bg-neutral-50/50">
                 {isAuthenticated ? (
-                  <div className="flex flex-col gap-5 text-lg">
+                  <div className="flex flex-col gap-4">
                     <MobileNavLink
                       href="/profile"
                       label="Profile"
@@ -254,7 +487,7 @@ export default function Navbar() {
                         logout();
                         setMobileMenuOpen(false);
                       }}
-                      className="text-left text-red-600 font-medium text-lg hover:text-red-700 transition-colors"
+                      className="w-full text-left py-3 text-red-600 font-medium text-lg hover:text-red-700 transition-colors"
                     >
                       Logout
                     </button>
@@ -262,10 +495,10 @@ export default function Navbar() {
                 ) : (
                   <Link
                     href="/account/login"
-                    className="flex items-center gap-3 text-lg font-medium text-neutral-900 hover:text-emerald-700 transition-colors"
+                    className="flex items-center justify-center gap-3 py-3 bg-emerald-700 text-white rounded-lg font-medium hover:bg-emerald-800 transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <User size={24} />
+                    <User size={20} />
                     Login / Register
                   </Link>
                 )}
@@ -279,11 +512,11 @@ export default function Navbar() {
 }
 
 // ─── Helpers ───
-function NavLink({ href, label, textColor, hoverColor }) {
+function NavLink({ href, label, textColor, hoverColor, isSpecial }) {
   return (
     <Link
       href={href}
-      className={`text-sm lg:text-base font-medium tracking-wide relative group ${textColor} ${hoverColor}`}
+      className={`text-sm lg:text-base font-medium tracking-wide relative group ${textColor} ${hoverColor} ${isSpecial ? "text-emerald-700 hover:text-emerald-600" : ""}`}
     >
       {label}
       <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full" />
@@ -291,12 +524,12 @@ function NavLink({ href, label, textColor, hoverColor }) {
   );
 }
 
-function MobileNavLink({ href, label, onClick }) {
+function MobileNavLink({ href, label, isSpecial, onClick }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="block py-3 text-neutral-800 hover:text-emerald-700 transition-colors"
+      className={`block py-3 text-lg font-medium ${isSpecial ? "text-emerald-700" : "text-neutral-900"} hover:text-emerald-700 transition-colors`}
     >
       {label}
     </Link>

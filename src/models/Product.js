@@ -1,11 +1,32 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
 
-const productSchema = new mongoose.Schema(
+
+const SpecificationSchema = new mongoose.Schema(
+  {
+    key: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    value: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  {
+    _id: false,
+  }
+);
+
+const ProductSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
+      trim: true,
     },
 
     slug: {
@@ -24,21 +45,33 @@ const productSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+      min: 0,
     },
 
-    image: {
-      type: String,
-      required: true,
-    },
+    images: [
+      {
+        type: String,
+      },
+    ],
+
+    //     images: {
+    //   type: [String],
+    //   validate: {
+    //     validator: (arr) => arr.length > 0,
+    //     message: "At least one image is required",
+    //   },
+    // },
 
     isActive: {
       type: Boolean,
       default: true,
+      index: true,
     },
 
     featured: {
       type: Boolean,
       default: false,
+      index: true,
     },
 
     stock: {
@@ -50,58 +83,62 @@ const productSchema = new mongoose.Schema(
     brand: {
       type: String,
       required: true,
+      trim: true,
     },
 
     category: {
-      type: String,
-      default: "electric-cycle",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+      index: true,
     },
 
-    color: String,
+    subcategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subcategory",
+      // required: true,
+      index: true,
+    },
 
-    warranty: Number,
+    colors: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
 
-    specs: {
-      battery: {
-        capacity: { type: Number },
-        range: { type: Number },
-        chargingTime: { type: Number },
-        type: { type: String },
-      },
-      motor: {
-        power: { type: Number },
-        type: { type: String },
-        topSpeed: { type: Number },
-        pedalAssistLevels: { type: Number },
-      },
-      physical: {
-        weight: { type: Number },
-        frameMaterial: { type: String },
-        wheelSize: { type: Number },
-        maxLoad: { type: Number },
-      },
-      components: {
-        brakeType: { type: String },
-        suspension: { type: String },
-        gearSystem: { type: String },
-      },
-      smartFeatures: {
-        displayType: { type: String },
-        mobileAppSupport: { type: Boolean, default: false },
-        gps: { type: Boolean, default: false },
-      },
+    warranty: {
+      type: Number,
+      default: 0,
+    },
+    specifications: {
+      type: [SpecificationSchema],
+      default: [],
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
+// Useful indexes
+ProductSchema.index({ category: 1 });
+ProductSchema.index({ subcategory: 1 });
+ProductSchema.index({ featured: 1 });
+ProductSchema.index({ isActive: 1 });
+ProductSchema.index({ price: 1 });
 
-// 👇 ADD MIDDLEWARE HERE
-productSchema.pre("save", function () {
-  if (!this.slug) {
-    this.slug = slugify(this.title, { lower: true, strict: true });
+// Auto-generate slug
+ProductSchema.pre("validate", function (next) {
+  if (!this.slug && this.title) {
+    this.slug = slugify(this.title, {
+      lower: true,
+      strict: true,
+    });
   }
+
+  next();
 });
 
-
-export default mongoose.models.Product || mongoose.model("Product", productSchema);
+export default mongoose.models.Product ||
+  mongoose.model("Product", ProductSchema);

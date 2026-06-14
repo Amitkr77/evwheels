@@ -1,28 +1,27 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
 import Cart from "@/models/Cart";
 import Product from "@/models/Product";
+import User from "@/models/User";
+import { getUserId } from "@/lib/auth";
 
-async function getUserId(req) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return null;
-
+// Helper to update lastCartActivity on user
+async function updateCartActivity(userId) {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded.id;
+    await User.updateOne(
+      { _id: userId },
+      { $set: { lastCartActivity: new Date() } }
+    );
   } catch {
-    return null;
+    // Non-critical, ignore errors
   }
 }
 
 // GET → Get Cart
 export async function GET(req) {
   const userId = await getUserId(req);
-
-  if (!userId) {
+  if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   await connectDB();
 
@@ -31,30 +30,41 @@ export async function GET(req) {
   return NextResponse.json({ items: cart?.items || [] });
 }
 
-// POST → Add to Cart
+// POST → Add to Cart (with stock validation)
 export async function POST(req) {
   const userId = await getUserId(req);
-
-  if (!userId) {
+  if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   const { productId, quantity } = await req.json();
+  const numQty = Number(quantity) || 1;
+
+  if (numQty <= 0)
+    return NextResponse.json({ error: "Quantity must be positive" }, { status: 400 });
 
   await connectDB();
 
   const product = await Product.findById(productId);
-
-  if (!product) {
+  if (!product)
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
-  }
+
+  if (!product.isActive || product.isArchived)
+    return NextResponse.json({ error: "Product is not available" }, { status: 400 });
+
+  // Stock validation
+  const availableStock = product.inventory?.stock ?? 0;
+  if (availableStock < numQty)
+    return NextResponse.json(
+      { error: `Only ${availableStock} units available` },
+      { status: 400 }
+    );
 
   let cart = await Cart.findOne({ user: userId });
 
   if (!cart) {
     cart = await Cart.create({
       user: userId,
-      items: [{ product: productId, quantity }],
+      items: [{ product: productId, quantity: numQty }],
     });
   } else {
     const itemIndex = cart.items.findIndex(
@@ -62,86 +72,94 @@ export async function POST(req) {
     );
 
     if (itemIndex > -1) {
-      cart.items[itemIndex].quantity += quantity;
+      const newQty = cart.items[itemIndex].quantity + numQty;
+      // Validate total quantity against stock
+      if (newQty > availableStock) {
+        return NextResponse.json(
+          { error: `Only ${availableStock} units available. You already have ${cart.items[itemIndex].quantity} in cart.` },
+          { status: 400 }
+        );
+      }
+      cart.items[itemIndex].quantity = newQty;
     } else {
-      cart.items.push({ product: productId, quantity });
+      cart.items.push({ product: productId, quantity: numQty });
     }
 
     await cart.save();
   }
 
-  // return updated cart
-  const updatedCart = await Cart.findOne({ user: userId }).populate(
-    "items.product"
-  );
+  await updateCartActivity(userId);
 
+  const updatedCart = await Cart.findOne({ user: userId }).populate("items.product");
   return NextResponse.json({ items: updatedCart.items });
 }
 
 // PUT → Update Quantity
 export async function PUT(req) {
   const userId = await getUserId(req);
-
-  if (!userId) {
+  if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   const { productId, quantity } = await req.json();
+  const numQty = Number(quantity) || 0;
+
+  if (numQty <= 0)
+    return NextResponse.json({ error: "Quantity must be positive" }, { status: 400 });
 
   await connectDB();
 
-  const cart = await Cart.findOne({ user: userId });
-
-  if (!cart) {
-    return NextResponse.json({ error: "Cart not found" }, { status: 404 });
+  // Validate against stock
+  const product = await Product.findById(productId);
+  if (product) {
+    const availableStock = product.inventory?.stock ?? 0;
+    if (numQty > availableStock) {
+      return NextResponse.json(
+        { error: `Only ${availableStock} units available` },
+        { status: 400 }
+      );
+    }
   }
+
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart)
+    return NextResponse.json({ error: "Cart not found" }, { status: 404 });
 
   const item = cart.items.find(
     (item) => item.product.toString() === productId
   );
-
-  if (!item) {
+  if (!item)
     return NextResponse.json({ error: "Item not in cart" }, { status: 404 });
-  }
 
-  item.quantity = quantity;
-
+  item.quantity = numQty;
   await cart.save();
 
-  const updatedCart = await Cart.findOne({ user: userId }).populate(
-    "items.product"
-  );
+  await updateCartActivity(userId);
 
+  const updatedCart = await Cart.findOne({ user: userId }).populate("items.product");
   return NextResponse.json({ items: updatedCart.items });
 }
 
 // DELETE → Remove Item
 export async function DELETE(req) {
   const userId = await getUserId(req);
-
-  if (!userId) {
+  if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   const { productId } = await req.json();
 
   await connectDB();
 
   const cart = await Cart.findOne({ user: userId });
-
-  if (!cart) {
+  if (!cart)
     return NextResponse.json({ error: "Cart not found" }, { status: 404 });
-  }
 
   cart.items = cart.items.filter(
     (item) => item.product.toString() !== productId
   );
-
   await cart.save();
 
-  const updatedCart = await Cart.findOne({ user: userId }).populate(
-    "items.product"
-  );
+  await updateCartActivity(userId);
 
+  const updatedCart = await Cart.findOne({ user: userId }).populate("items.product");
   return NextResponse.json({ items: updatedCart.items });
 }

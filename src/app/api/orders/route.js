@@ -9,18 +9,10 @@ import { getCartSummary } from "@/lib/cartSummary";
 import { sendEmail } from "@/lib/email/sendMail";
 import User from "@/models/User";
 import { orderConfirmationTemplate } from "@/lib/email/templates/orderConfirmation";
+import { sendEmail } from "@/lib/email/sendMail";
 
-async function getUserId(req) {
-    const token = req.cookies.get("token")?.value;
-    if (!token) return null;
+import { getUserId } from "@/lib/auth";
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return decoded.id;
-    } catch {
-        return null;
-    }
-}
 
 function generateNextOrderId(lastId) {
     if (!lastId) return "#ORD-1000";
@@ -131,6 +123,47 @@ export async function POST(req) {
 
         await session.commitTransaction();
         session.endSession();
+
+        // 1. Customer order confirmation email
+        sendEmail({
+            to: user.email,
+            subject: `Order Confirmed — #${orderId}`,
+            html: orderConfirmationTemplate({
+                orderId,
+                items: orderItems,
+                subtotal: total - discount - tax - shipping,
+                discount,
+                tax,
+                shipping,
+                total,
+                paymentMethod,
+                shippingAddress,
+            }),
+            type: "order_confirmation",
+            userId: user._id,
+            metadata: { orderId },
+        }).catch((err) => console.error("Order confirmation email failed:", err.message));
+
+        // 2. Admin new order notification email
+        const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+        sendEmail({
+            to: adminEmail,
+            subject: `New Order #${orderId} — ₹${Number(total).toLocaleString("en-IN")}`,
+            html: newOrderAdminTemplate({
+                orderId,
+                customerName: user.name,
+                customerEmail: user.email,
+                customerPhone: user.phone,
+                items: orderItems,
+                total,
+                paymentMethod,
+                paymentStatus,
+                shippingAddress,
+            }),
+            type: "new_order_admin",
+            metadata: { orderId, userId: user._id.toString() },
+        }).catch((err) => console.error("Admin notification email failed:", err.message));
+
 
         return NextResponse.json(order);
 

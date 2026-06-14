@@ -8,10 +8,18 @@ export async function POST(req) {
   try {
     const { email, password } = await req.json();
 
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: "Email and password are required" },
+        { status: 400 }
+      );
+    }
+
     await connectDB();
 
     const user = await User.findOne({ email });
 
+    // Generic error to prevent user enumeration
     if (!user) {
       return NextResponse.json(
         { error: "Invalid credentials" },
@@ -34,6 +42,7 @@ export async function POST(req) {
       { expiresIn: "7d" }
     );
 
+    // Strip password and sensitive fields from response
     const response = NextResponse.json({
       message: "Login successful",
       user: {
@@ -41,6 +50,7 @@ export async function POST(req) {
         name: user.name,
         email: user.email,
         role: user.role,
+        isEmailVerified: user.isEmailVerified,
       },
     });
 
@@ -53,6 +63,9 @@ export async function POST(req) {
 
     return response;
   } catch (error) {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Server error. Please try again later." },
+      { status: 500 }
+    );
   }
 }

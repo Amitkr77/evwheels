@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
+import { sendEmail } from "@/lib/email/sendMail";
+import { welcomeTemplate } from "@/lib/email/templates/welcome";
+import { emailVerificationTemplate } from "@/lib/email/templates/emailVerification";
 
 export async function POST(req) {
   try {
@@ -15,15 +18,23 @@ export async function POST(req) {
       );
     }
 
+    if (password.length < 6) {
+      return NextResponse.json(
+        { error: "Password must be at least 6 characters" },
+        { status: 400 }
+      );
+    }
+
     await connectDB();
 
     const existingUser = await User.findOne({
       $or: [{ email }, { phone }],
     });
 
+    // Generic message to prevent user enumeration
     if (existingUser) {
       return NextResponse.json(
-        { error: "Email or phone already exists" },
+        { error: "Unable to create account with provided details" },
         { status: 400 }
       );
     }
@@ -37,6 +48,22 @@ export async function POST(req) {
       password: hashedPassword,
     });
 
+    // Generate email verification token
+    const verifyToken = user.generateEmailVerificationToken();
+    await user.save({ validateBeforeSave: false });
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const verifyLink = `${baseUrl}/api/auth/verify-email?token=${verifyToken}`;
+
+    // Send welcome + verification email (non-blocking)
+    sendEmail({
+      to: user.email,
+      subject: "Welcome to EV Wheels! Verify Your Email",
+      html: welcomeTemplate({ name: user.name, verifyLink }),
+      type: "welcome",
+      userId: user._id,
+    }).catch((err) => console.error("Welcome email failed:", err.message));
+
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
@@ -45,6 +72,13 @@ export async function POST(req) {
 
     const response = NextResponse.json({
       message: "User created successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isEmailVerified: user.isEmailVerified,
+      },
     });
 
     response.cookies.set("token", token, {
@@ -57,7 +91,7 @@ export async function POST(req) {
     return response;
   } catch (error) {
     return NextResponse.json(
-      { error: "Server error", message: error.message },
+      { error: "Server error. Please try again later." },
       { status: 500 }
     );
   }

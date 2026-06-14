@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, ShoppingCart, User, Zap, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, User, Zap, Menu, X, ChevronRight, ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
@@ -9,13 +9,110 @@ export default function Header() {
   const { isAuthenticated, user, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  
+  // Mobile Accordion State
+  const [openMobileCategory, setOpenMobileCategory] = useState(null);
 
-  // Optional: cart item count (you can pull from zustand/cart store)
   const cartCount = 3; // ← placeholder – replace with real value
 
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
+
+  // Navigation Data Structure based on Strategy
+  const navData = [
+    {
+      label: "Electric Mobility",
+      key: "electric-mobility",
+      subMenu: [
+        { title: "E-Cycles", links: [{ label: "Mountain E-Bikes", href: "/cycles/mtb" }, { label: "City E-Bikes", href: "/cycles/city" }] },
+        { title: "E-Scooty", links: [{ label: "High Speed", href: "/scooty/high-speed" }, { label: "Commuter", href: "/scooty/commuter" }] },
+        { title: "EV Parts", links: [{ label: "Batteries", href: "/parts/batteries" }, { label: "Controllers", href: "/parts/controllers" }, { label: "Smart Displays", href: "/parts/displays" }] },
+      ],
+    },
+    {
+      label: "Cycles",
+      key: "cycles",
+      href: "/cycles", // Direct link to listing
+    },
+    {
+      label: "Parts",
+      key: "parts",
+      subMenu: [
+        { 
+          title: "Drivetrain", 
+          links: [
+            { label: "Chains", href: "/parts/chains" }, 
+            { label: "Freewheels", href: "/parts/freewheels" },
+            { label: "Cranksets", href: "/parts/cranksets" },
+            { label: "Pedals", href: "/parts/pedals" }
+          ] 
+        },
+        { 
+          title: "Braking System", 
+          links: [
+            { label: "Disc Brakes", href: "/parts/disc-brakes" }, 
+            { label: "V-Brakes", href: "/parts/v-brakes" },
+            { label: "Brake Pads", href: "/parts/brake-pads" }
+          ] 
+        },
+        { 
+          title: "Controls", 
+          links: [
+            { label: "Handlebars", href: "/parts/handlebars" }, 
+            { label: "Gear Shifters", href: "/parts/gear-shifters" },
+            { label: "Stems", href: "/parts/stems" }
+          ] 
+        },
+        { 
+          title: "Wheels & Suspension", 
+          links: [
+            { label: "Hubs & Rims", href: "/parts/wheels" }, 
+            { label: "Forks", href: "/parts/forks" },
+            { label: "Spokes", href: "/parts/spokes" }
+          ] 
+        },
+      ],
+    },
+    {
+      label: "Accessories",
+      key: "accessories",
+      subMenu: [
+        { title: "Safety & Visibility", links: [{ label: "Helmets", href: "/accessories/helmets" }, { label: "Lights", href: "/accessories/lights" }, { label: "Locks", href: "/accessories/locks" }] },
+        { title: "Comfort & Utility", links: [{ label: "Saddles", href: "/accessories/saddles" }, { label: "Bottle Cages", href: "/accessories/bottles" }, { label: "Mobile Holders", href: "/accessories/holders" }] },
+        { title: "Maintenance", links: [{ label: "Tools", href: "/accessories/tools" }, { label: "Pumps", href: "/accessories/pumps" }, { label: "Stands", href: "/accessories/stands" }] },
+      ],
+    },
+    {
+      label: "Brands",
+      key: "brands",
+      subMenu: [
+        { 
+          title: "Premium Brands", 
+          links: [
+            { label: "Shimano", href: "/brand/shimano" }, 
+            { label: "Neco", href: "/brand/neco" },
+            { label: "Prowheel", href: "/brand/prowheel" }
+          ] 
+        },
+        { 
+          title: "All Brands", 
+          links: [
+            { label: "KMC / Maya", href: "/brand/kmc" }, 
+            { label: "Beto", href: "/brand/beto" },
+            { label: "Giant", href: "/brand/giant" },
+            { label: "View All", href: "/brands" }
+          ] 
+        },
+      ],
+    },
+    {
+      label: "Wholesale / B2B",
+      key: "wholesale",
+      href: "/wholesale",
+      isSpecial: true, // Optional flag for styling
+    },
+  ];
 
   return (
     <header
@@ -44,7 +141,7 @@ export default function Header() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-text-muted dark:text-gray-400" />
               <input
                 type="search"
-                placeholder="Search e-bikes, batteries, accessories..."
+                placeholder="Search e-bikes, parts, Shimano..."
                 className="
                   w-full rounded-full bg-[#f1f5f0] dark:bg-[#22301d]
                   border-none py-2.5 pl-10 pr-4 text-sm
@@ -56,112 +153,81 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Desktop Nav + Actions */}
-          <div className="hidden lg:flex items-center gap-6">
-            <nav className="flex items-center gap-7">
-              <Link
-                href="/cycles"
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                E-Bikes
-              </Link>
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-6">
+            {navData.map((item) => (
+              <div key={item.key} className="relative group">
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className={`text-sm font-medium hover:text-primary transition-colors ${
+                      item.isSpecial ? "text-primary" : ""
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1"
+                    onMouseEnter={() => setActiveDropdown(item.key)}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    {item.label}
+                    <ChevronDown className="w-3 h-3 opacity-50" />
+                  </button>
+                )}
 
-              {/* Accessories Dropdown */}
-              <div className="relative">
-                <button
-                  className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1"
-                  onMouseEnter={() => setActiveDropdown("accessories")}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                  aria-expanded={activeDropdown === "accessories"}
-                >
-                  Accessories
-                </button>
-
-                {activeDropdown === "accessories" && (
+                {/* Mega Dropdown */}
+                {item.subMenu && activeDropdown === item.key && (
                   <div
                     className="
-                      absolute left-0 top-full mt-2 w-56
-                      bg-white dark:bg-[#1a2c15] shadow-xl rounded-xl
+                      absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[600px]
+                      bg-white dark:bg-[#1a2c15] shadow-2xl rounded-2xl
                       border dark:border-[#2a3825] overflow-hidden
+                      grid grid-cols-2 gap-0
                       animate-fade-in
+                      z-50
                     "
-                    onMouseEnter={() => setActiveDropdown("accessories")}
+                    onMouseEnter={() => setActiveDropdown(item.key)}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <div className="py-2">
-                      {["Helmets", "Batteries", "Chargers", "Spare Parts", "Locks & Security"].map(
-                        (item) => (
-                          <Link
-                            key={item}
-                            href={`/accessories/${item.toLowerCase().replace(/ & /g, "-")}`}
-                            className="
-                              block px-4 py-2.5 text-sm
-                              hover:bg-gray-50 dark:hover:bg-[#22301d]
-                              transition-colors
-                            "
-                          >
-                            {item}
-                          </Link>
-                        )
-                      )}
-                    </div>
+                    {item.subMenu.map((group) => (
+                      <div key={group.title} className="p-4 even:bg-gray-50/50 dark:even:bg-white/5">
+                        <h4 className="text-xs font-bold text-text-muted dark:text-gray-400 uppercase tracking-wider mb-3 px-2">
+                          {group.title}
+                        </h4>
+                        <div className="space-y-1">
+                          {group.links.map((link) => (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              className="
+                                block px-2 py-2 text-sm text-text-main dark:text-gray-200
+                                hover:text-primary hover:translate-x-1
+                                transition-all duration-200
+                              "
+                            >
+                              {link.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
+            ))}
+          </nav>
 
-              {/* Support Dropdown */}
-              <div className="relative">
-                <button
-                  className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1"
-                  onMouseEnter={() => setActiveDropdown("support")}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                  aria-expanded={activeDropdown === "support"}
-                >
-                  Support
-                </button>
-
-                {activeDropdown === "support" && (
-                  <div
-                    className="
-                      absolute left-0 top-full mt-2 w-56
-                      bg-white dark:bg-[#1a2c15] shadow-xl rounded-xl
-                      border dark:border-[#2a3825] overflow-hidden
-                    "
-                    onMouseEnter={() => setActiveDropdown("support")}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
-                    <div className="py-2">
-                      <Link
-                        href="/support"
-                        className="block px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]"
-                      >
-                        Help Center
-                      </Link>
-                      <Link
-                        href="/support/warranty"
-                        className="block px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]"
-                      >
-                        Warranty Information
-                      </Link>
-                      <Link
-                        href="/support/contact"
-                        className="block px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]"
-                      >
-                        Contact Us
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </nav>
-
-            {/* Auth / User Menu */}
+          {/* Actions */}
+          <div className="hidden lg:flex items-center gap-4 ml-4">
+            {/* Auth */}
             {isAuthenticated ? (
               <div className="relative">
                 <button
                   className="
-                    flex items-center gap-1 px-3 py-1.5 rounded-lg
-                     dark:hover:bg-[#22301d] transition-colors border border-primary/20 hover:border-primary/40
+                    flex items-center gap-2 px-3 py-1.5 rounded-lg
+                    hover:bg-gray-100 dark:hover:bg-[#22301d] transition-colors border border-primary/20
                   "
                   onClick={() => toggleDropdown("user")}
                 >
@@ -174,29 +240,20 @@ export default function Header() {
                 {activeDropdown === "user" && (
                   <div
                     className="
-                      absolute right-0 top-full mt-2 w-56
+                      absolute right-0 top-full mt-2 w-48
                       bg-white dark:bg-[#1a2c15] shadow-xl rounded-xl
-                      border dark:border-[#2a3825] py-2
+                      border dark:border-[#2a3825] py-2 z-50
                     "
                   >
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]"
-                    >
+                    <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]">
                       Profile
                     </Link>
-                    <Link
-                      href="/orders"
-                      className="block px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]"
-                    >
+                    <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]">
                       My Orders
                     </Link>
                     <button
                       onClick={logout}
-                      className="
-                        w-full text-left px-4 py-2.5 text-sm text-red-600
-                        dark:text-red-400 hover:bg-gray-50 dark:hover:bg-[#22301d]
-                      "
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-50 dark:hover:bg-[#22301d]"
                     >
                       Logout
                     </button>
@@ -208,7 +265,7 @@ export default function Header() {
                 href="/account/login"
                 className="
                   text-sm font-medium text-primary hover:text-primary/80
-                  transition-colors border border-primary/20 hover:border-primary/40 rounded-lg px-3 py-1.5
+                  transition-colors border border-primary/20 hover:border-primary/40 rounded-lg px-4 py-1.5
                 "
               >
                 Sign in
@@ -223,134 +280,125 @@ export default function Header() {
             >
               <ShoppingCart className="w-5 h-5 group-hover:text-primary transition-colors" />
               {cartCount > 0 && (
-                <span
-                  className="
-                    absolute -top-1 -right-1 min-w-[18px] h-5
-                    bg-primary text-primary-content text-[10px] font-bold
-                    rounded-full flex items-center justify-center px-1.5
-                  "
-                >
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-5 bg-primary text-primary-content text-[10px] font-bold rounded-full flex items-center justify-center px-1.5">
                   {cartCount}
                 </span>
               )}
             </Link>
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* Mobile Toggle */}
           <button
             className="lg:hidden p-2 -mr-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
-            aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div
-          className="
-            lg:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm
-            animate-fade-in
-          "
-          onClick={() => setMobileMenuOpen(false)}
-        >
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm animate-fade-in">
           <div
-            className="
-              absolute right-0 top-0 h-full w-4/5 max-w-xs
-              bg-white dark:bg-[#13200f] shadow-2xl
-              animate-slide-in-right
-            "
+            className="absolute right-0 top-0 h-full w-4/5 max-w-xs bg-white dark:bg-[#13200f] shadow-2xl overflow-y-auto animate-slide-in-right"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-5 border-b dark:border-[#2a3825]">
-              <div className="flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2.5">
-                  <Zap className="w-6 h-6 text-primary fill-current" />
-                  <span className="text-lg font-bold">EvWheels</span>
-                </Link>
-                <button onClick={() => setMobileMenuOpen(false)}>
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+            <div className="p-5 border-b dark:border-[#2a3825] flex justify-between items-center">
+              <Link href="/" className="flex items-center gap-2.5" onClick={() => setMobileMenuOpen(false)}>
+                <Zap className="w-6 h-6 text-primary fill-current" />
+                <span className="text-lg font-bold">EvWheels</span>
+              </Link>
+              <button onClick={() => setMobileMenuOpen(false)}>
+                <X className="w-6 h-6" />
+              </button>
             </div>
 
-            <nav className="p-5 space-y-2">
-              <Link
-                href="/cycles"
-                className="block py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-[#22301d]"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                E-Bikes
-              </Link>
-
-              <div>
-                <button
-                  className="w-full text-left py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-[#22301d] flex justify-between items-center"
-                  onClick={() => toggleDropdown("mobile-accessories")}
-                >
-                  Accessories
-                  <span>{activeDropdown === "mobile-accessories" ? "−" : "+"}</span>
-                </button>
-                {activeDropdown === "mobile-accessories" && (
-                  <div className="pl-6 space-y-2 mt-1 animate-fade-in">
-                    {["Helmets", "Batteries", "Chargers", "Spare Parts"].map((item) => (
-                      <Link
-                        key={item}
-                        href="#"
-                        className="block py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary"
-                        onClick={() => setMobileMenuOpen(false)}
+            <nav className="p-5">
+              {navData.map((item) => (
+                <div key={item.key} className="border-b dark:border-[#2a3825] last:border-0">
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      className="block py-4 font-medium text-text-main dark:text-white flex items-center justify-between"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    // Accordion Item
+                    <div>
+                      <button
+                        className="w-full text-left py-4 font-medium text-text-main dark:text-white flex items-center justify-between"
+                        onClick={() => setOpenMobileCategory(openMobileCategory === item.key ? null : item.key)}
                       >
-                        {item}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+                        {item.label}
+                        {openMobileCategory === item.key ? (
+                          <ChevronDown className="w-4 h-4" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
+                      </button>
+                      
+                      {openMobileCategory === item.key && (
+                        <div className="pb-4 pl-4 space-y-4 animate-fade-in">
+                          {item.subMenu.map((group) => (
+                            <div key={group.title}>
+                              <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">
+                                {group.title}
+                              </p>
+                              <div className="space-y-2">
+                                {group.links.map((link) => (
+                                  <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="block py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-primary pl-2 border-l-2 border-transparent hover:border-primary transition-all"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                  >
+                                    {link.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
 
-              {/* Similar for Support... */}
-
-              <div className="pt-6 border-t dark:border-[#2a3825]">
+              {/* Mobile Auth Section */}
+              <div className="pt-6 mt-4 border-t dark:border-[#2a3825]">
                 {isAuthenticated ? (
                   <>
-                    <div className="py-3 px-4 font-medium">{user?.name}</div>
-                    <Link
-                      href="/profile"
-                      className="block py-3 px-4 hover:bg-gray-100 dark:hover:bg-[#22301d]"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Profile
-                    </Link>
-                    <Link
-                      href="/orders"
-                      className="block py-3 px-4 hover:bg-gray-100 dark:hover:bg-[#22301d]"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Orders
-                    </Link>
+                    <div className="flex items-center gap-3 mb-4 px-1">
+                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                        {user?.name?.[0] || "U"}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">{user?.name}</p>
+                        <p className="text-xs text-gray-500">{user?.email}</p>
+                      </div>
+                    </div>
                     <button
                       onClick={() => {
                         logout();
                         setMobileMenuOpen(false);
                       }}
-                      className="w-full text-left py-3 px-4 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-[#22301d]"
+                      className="w-full py-3 text-left text-sm text-red-600 dark:text-red-400 font-medium pl-2"
                     >
                       Logout
                     </button>
                   </>
                 ) : (
                   <Link
-                    href="/auth/login"
-                    className="block py-3 px-4 bg-primary text-primary-content rounded-lg text-center font-medium"
+                    href="/account/login"
+                    className="block w-full py-3 text-center bg-primary text-primary-content rounded-lg font-medium"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Sign In
+                    Sign In / Register
                   </Link>
                 )}
               </div>

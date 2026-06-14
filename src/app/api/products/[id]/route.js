@@ -1,22 +1,30 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
+import { verifyAdmin } from "@/lib/auth";
 import Product from "@/models/Product";
+import Category from "@/models/Category";
+import Subcategory from "@/models/Subcategory";
 
+// GET /api/products/[id] — get product by ID or slug
 export async function GET(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params;
+    const { id } = params;
 
     let product;
 
-    // Check if param is a valid MongoDB ObjectId
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      product = await Product.findById(id);
+    const isObjectId = mongoose.Types.ObjectId.isValid(id);
+
+    if (isObjectId) {
+      product = await Product.findById(id)
+        .populate("category", "name slug")
+        .populate("subcategory", "name slug");
     } else {
-      // Otherwise search by slug
-      product = await Product.findOne({ slug: id });
+      product = await Product.findOne({ slug: id })
+        .populate("category", "name slug")
+        .populate("subcategory", "name slug");
     }
 
     if (!product) {
@@ -26,12 +34,228 @@ export async function GET(req, { params }) {
       );
     }
 
-    return NextResponse.json(product);
-
+    return NextResponse.json({
+      success: true,
+      product,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       { error: "Server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT /api/products/[id] — update product (admin only)
+export async function PUT(req, { params }) {
+  try {
+    const admin = await verifyAdmin(req);
+    if (!admin) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    await connectDB();
+
+    const { id } = params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: "Invalid product ID" },
+        { status: 400 }
+      );
+    }
+
+    const body = await req.json();
+
+    const updateData = {};
+
+    // Title
+    if (body.title !== undefined) {
+      updateData.title = body.title.trim();
+    }
+
+    // Description
+    if (body.description !== undefined) {
+      updateData.description = body.description;
+    }
+
+    // Price
+    if (body.price !== undefined) {
+      const price = Number(body.price);
+      if (isNaN(price) || price < 0) {
+        return NextResponse.json(
+          { error: "Invalid price" },
+          { status: 400 }
+        );
+      }
+      updateData.price = price;
+    }
+
+    // Stock
+    if (body.stock !== undefined) {
+      const stock = Number(body.stock);
+      if (isNaN(stock) || stock < 0) {
+        return NextResponse.json(
+          { error: "Invalid stock" },
+          { status: 400 }
+        );
+      }
+      updateData.stock = stock;
+    }
+
+    // Brand
+    if (body.brand !== undefined) {
+      updateData.brand = body.brand;
+    }
+
+    // Category validation
+    if (body.category !== undefined) {
+      const category = await Category.findById(body.category);
+      if (!category) {
+        return NextResponse.json(
+          { error: "Category not found" },
+          { status: 404 }
+        );
+      }
+      updateData.category = body.category;
+    }
+
+    // Subcategory validation
+    if (body.subcategory !== undefined) {
+      const catId = body.category;
+
+      const productDoc = await Product.findById(id);
+      const finalCategory = catId || productDoc?.category;
+
+      const subcategory = await Subcategory.findOne({
+        _id: body.subcategory,
+        category: finalCategory,
+      });
+
+      if (!subcategory) {
+        return NextResponse.json(
+          {
+            error:
+              "Subcategory not found or does not belong to category",
+          },
+          { status: 404 }
+        );
+      }
+
+      updateData.subcategory = body.subcategory;
+    }
+
+    // Images
+    if (body.images !== undefined) {
+      updateData.images = body.images;
+    }
+
+    // Specifications (dynamic)
+    if (body.specifications !== undefined) {
+      updateData.specifications = body.specifications;
+    }
+
+    // Color
+    if (body.color !== undefined) {
+      updateData.color = body.color;
+    }
+
+    // Warranty
+    if (body.warranty !== undefined) {
+      updateData.warranty = Number(body.warranty) || 0;
+    }
+
+    // Featured
+    if (
+      body.featured !== undefined ||
+      body.isFeatured !== undefined
+    ) {
+      updateData.featured =
+        body.featured ?? body.isFeatured;
+    }
+
+    // Active
+    if (body.isActive !== undefined) {
+      updateData.isActive = body.isActive;
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      id,
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    )
+      .populate("category", "name slug")
+      .populate("subcategory", "name slug");
+
+    if (!product) {
+      return NextResponse.json(
+        { error: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Product updated successfully",
+      product,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { error: "Failed to update product" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/products/[id]
+export async function DELETE(req, { params }) {
+  try {
+    const admin = await verifyAdmin(req);
+    if (!admin) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    await connectDB();
+
+    const { id } = params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { error: "Invalid product ID" },
+        { status: 400 }
+      );
+    }
+
+    const product = await Product.findByIdAndDelete(id);
+
+    if (!product) {
+      return NextResponse.json(
+        { error: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { error: "Failed to delete product" },
       { status: 500 }
     );
   }

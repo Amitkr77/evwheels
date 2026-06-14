@@ -1,95 +1,168 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
 import Product from "@/models/Product";
+import Category from "@/models/Category";
+import Subcategory from "@/models/Subcategory";
 
-function verifyAdmin(req) {
-  const token = req.cookies.get("token")?.value;
-
-  if (!token) {
-    throw new Error("Unauthorized");
-  }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  if (decoded.role !== "admin") {
-    throw new Error("Forbidden");
-  }
-
-  return decoded;
-}
-
-export async function POST(req) {
-  try {
-    verifyAdmin(req);
-
-    await connectDB();
-
-    const body = await req.json();
-
-    const { title, description, price, image, brand, stock } = body;
-
-    // Basic validation
-    if (!title || !description || !price || !image || !brand || stock === undefined) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    const product = await Product.create(body);
-
-    return NextResponse.json(
-      {
-        message: "Product created successfully",
-        product,
-      },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error(error);
-
-    if (error.message === "Unauthorized") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    if (error.message === "Forbidden") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
-  }
-}
-
+// GET /api/products
 export async function GET(req) {
   try {
     await connectDB();
-
+    
     const { searchParams } = new URL(req.url);
 
     const page = Number(searchParams.get("page")) || 1;
     const limit = Number(searchParams.get("limit")) || 10;
-    const featured = searchParams.get("featured");
-    const brand = searchParams.get("brand");
-    const category = searchParams.get("category");
-
     const skip = (page - 1) * limit;
 
-    const filter = { isActive: true };
+    const categorySlug = searchParams.get("category");
+    const categoryId = searchParams.get("categoryId");
+    const subcategoryId = searchParams.get("subcategory");
+    const featured = searchParams.get("featured");
+    const brand = searchParams.get("brand");
+    const search = searchParams.get("search");
+    const inStock = searchParams.get("inStock") === "true";
 
-    if (featured) filter.featured = true;
-    if (brand) filter.brand = brand;
-    if (category) filter.category = category;
+    const minPrice = Number(searchParams.get("minPrice")) || 0;
+    const maxPrice = Number(searchParams.get("maxPrice")) || 0;
+
+    const sortBy = searchParams.get("sort") || "createdAt";
+    const sortOrder = searchParams.get("order") === "asc" ? 1 : -1;
+
+    const filter = {
+      isActive: true,
+    };
+
+    // Category filter by slug
+    if (categorySlug) {
+      const category = await Category.findOne({
+        slug: categorySlug,
+      });
+
+      if (!category) {
+        return NextResponse.json(
+          { error: "Category not found" },
+          { status: 404 }
+        );
+      }
+
+      filter.category = category._id;
+    }
+
+    // Category filter by id
+    if (categoryId) {
+      filter.category = categoryId;
+    }
+
+    // Subcategory filter
+    if (subcategoryId) {
+      filter.subcategory = subcategoryId;
+    }
+
+    // Featured filter
+    if (featured === "true") {
+      filter.featured = true;
+    }
+
+    // Brand filter
+    if (brand) {
+      filter.brand = {
+        $regex: brand,
+        $options: "i",
+      };
+    }
+
+    // Stock filter
+    if (inStock) {
+      filter.stock = {
+        $gt: 0,
+      };
+    }
+
+    // Price filter
+    if (minPrice > 0 || maxPrice > 0) {
+      filter.price = {};
+
+      if (minPrice > 0) {
+        filter.price.$gte = minPrice;
+      }
+
+      if (maxPrice > 0) {
+        filter.price.$lte = maxPrice;
+      }
+    }
+
+    // Text search
+    if (search) {
+      filter.$text = {
+        $search: search,
+      };
+    }
+
+    let sort = {};
+
+    if (search) {
+      sort = {
+        score: {
+          $meta: "textScore",
+        },
+      };
+    } else {
+      sort[sortBy] = sortOrder;
+    }
 
     const products = await Product.find(filter)
-      .sort({ createdAt: -1 })
+      .populate("category", "name slug")
+      .populate("subcategory", "name slug")
+      .sort(sort)
       .skip(skip)
       .limit(limit);
 
     const total = await Product.countDocuments(filter);
 
+    const statsAgg = await Product.aggregate([
+      {
+        $match: filter,
+      },
+      {
+        $group: {
+          _id: null,
+          minPrice: {
+            $min: "$price",
+          },
+          maxPrice: {
+            $max: "$price",
+          },
+          avgPrice: {
+            $avg: "$price",
+          },
+          totalStock: {
+            $sum: "$stock",
+          },
+        },
+      },
+    ]);
+
+    const stats = statsAgg[0]
+      ? {
+        total,
+        minPrice: statsAgg[0].minPrice,
+        maxPrice: statsAgg[0].maxPrice,
+        avgPrice: Math.round(statsAgg[0].avgPrice),
+        totalStock: statsAgg[0].totalStock,
+      }
+      : {
+        total,
+        minPrice: 0,
+        maxPrice: 0,
+        avgPrice: 0,
+        totalStock: 0,
+      };
+
     return NextResponse.json({
+      success: true,
       products,
+      stats,
       pagination: {
         total,
         page,
@@ -97,8 +170,213 @@ export async function GET(req) {
         pages: Math.ceil(total / limit),
       },
     });
+
+
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to fetch products",
+      },
+      {
+        status: 500,
+      }
+    );
+
+
+  }
+}
+
+// POST /api/products
+export async function POST(req) {
+  try {
+    await connectDB();
+
+
+    const body = await req.json();
+
+    const title = body.title?.trim();
+
+    if (!title) {
+      return NextResponse.json(
+        {
+          error: "Title is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!body.description?.trim()) {
+      return NextResponse.json(
+        {
+          error: "Description is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!body.category) {
+      return NextResponse.json(
+        {
+          error: "Category is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!body.subcategory) {
+      return NextResponse.json(
+        {
+          error: "Subcategory is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!body.brand?.trim()) {
+      return NextResponse.json(
+        {
+          error: "Brand is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const price = Number(body.price);
+
+    if (isNaN(price) || price <= 0) {
+      return NextResponse.json(
+        {
+          error: "Valid price is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const stock = Number(body.stock);
+
+    if (isNaN(stock) || stock < 0) {
+      return NextResponse.json(
+        {
+          error: "Valid stock is required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const category = await Category.findById(body.category);
+
+    if (!category) {
+      return NextResponse.json(
+        {
+          error: "Category not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    const subcategory = await Subcategory.findOne({
+      _id: body.subcategory,
+      category: body.category,
+    });
+
+    if (!subcategory) {
+      return NextResponse.json(
+        {
+          error:
+            "Subcategory does not belong to selected category",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const images = Array.isArray(body.images)
+      ? body.images
+      : [];
+
+    const specifications = Array.isArray(
+      body.specifications
+    )
+      ? body.specifications
+      : [];
+
+    const product = await Product.create({
+      title,
+      description: body.description.trim(),
+      price,
+      stock,
+      brand: body.brand.trim(),
+
+      category: body.category,
+      subcategory: body.subcategory,
+
+      images,
+      specifications,
+
+      warranty: Number(body.warranty) || 0,
+
+      color: body.color || "",
+
+      featured: body.featured ?? false,
+      isActive: body.isActive ?? true,
+    });
+
+    await product.populate(
+      "category",
+      "name slug"
+    );
+
+    await product.populate(
+      "subcategory",
+      "name slug"
+    );
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Product created successfully",
+        product,
+      },
+      {
+        status: 201,
+      }
+    );
+
+  } catch (error) {
+    console.error(error);
+
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to create product",
+      },
+      {
+        status: 500,
+      }
+    );
+
+
   }
 }

@@ -1,42 +1,42 @@
 import { wrapEmailLayout } from "../sendMail";
 
 /**
- * Password reset email — sent when user requests a password reset.
+ * Email verification email — sent after registration to verify email address.
  */
-export function resetPasswordTemplate({ resetLink, name }) {
+export function emailVerificationTemplate({ verifyLink, name }) {
   const content = `
     <div style="text-align:center; margin-bottom:20px;">
-      <span style="font-size:40px;">🔐</span>
+      <span style="font-size:40px;">✉️</span>
     </div>
 
     <h2 style="margin:0 0 8px; font-size:22px; color:#111827; text-align:center;">
-      Reset Your Password
+      Verify Your Email Address
     </h2>
     <p style="margin:0 0 20px; font-size:15px; color:#374151; line-height:1.6; text-align:center;">
-      Hi ${name || "there"}, we received a request to reset the password for your EV Wheels account.
+      Hi ${name}, thanks for signing up! Please verify your email address to activate your account and access all features.
     </p>
 
     <div style="text-align:center; margin:24px 0;">
-      <a href="${resetLink}"
+      <a href="${verifyLink}"
          style="display:inline-block; padding:14px 32px; background:#059669; color:#ffffff; text-decoration:none; border-radius:8px; font-weight:600; font-size:15px;">
-        Reset Password
+        Verify Email
       </a>
     </div>
 
     <p style="font-size:13px; color:#6b7280; text-align:center; line-height:1.6;">
-      This link expires in <strong>15 minutes</strong>. If you didn't request a password reset, you can safely ignore this email — your password will remain unchanged.
+      This link expires in <strong>24 hours</strong>. If you didn't create an account with EV Wheels, you can safely ignore this email.
     </p>
 
     <div style="background:#f9fafb; border-radius:8px; padding:16px; margin-top:20px;">
       <p style="margin:0; font-size:13px; color:#6b7280; line-height:1.6;">
         <strong>Having trouble with the button?</strong> Copy and paste the following link into your browser:<br/>
-        <a href="${resetLink}" style="color:#059669; word-break:break-all;">${resetLink}</a>
+        <a href="${verifyLink}" style="color:#059669; word-break:break-all;">${verifyLink}</a>
       </p>
     </div>
   `;
 
   return wrapEmailLayout(content, {
-    title: "Password Reset Request",
-    previewText: "Reset your EV Wheels password. This link expires in 15 minutes.",
+    title: "Verify Your Email",
+    previewText: "Please verify your email address to activate your EV Wheels account.",
   });
 }
