@@ -69,10 +69,9 @@ export default function CartPage() {
     }
   };
 
-  const handleQuantityChange = async (productId, newQty) => {
-    if (newQty < 1) return;
+  const handleQuantityChange = async (productId, newQty, moq = 1) => {
+    if (newQty < moq) return;
     await updateQuantity(productId, newQty);
-    // fetchSummary will be triggered by items change via useEffect
   };
 
   if (items.length === 0) {
@@ -170,23 +169,30 @@ export default function CartPage() {
 
                       <div className="flex items-center justify-between mt-5 sm:mt-6">
                         <div className="flex items-center gap-5">
-                          <div className="flex items-center border border-neutral-300 rounded-lg overflow-hidden">
-                            <button
-                              onClick={() => handleQuantityChange(product._id, quantity - 1)}
-                              disabled={quantity <= 1}
-                              aria-label="Decrease quantity"
-                              className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed"
-                            >
-                              <Minus size={16} />
-                            </button>
-                            <span className="w-12 text-center text-sm font-medium">{quantity}</span>
-                            <button
-                              onClick={() => handleQuantityChange(product._id, quantity + 1)}
-                              aria-label="Increase quantity"
-                              className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100"
-                            >
-                              <Plus size={16} />
-                            </button>
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center border border-neutral-300 rounded-lg overflow-hidden">
+                              <button
+                                onClick={() => handleQuantityChange(product._id, quantity - 1, product.moq || 1)}
+                                disabled={quantity <= (product.moq || 1)}
+                                aria-label="Decrease quantity"
+                                className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                              >
+                                <Minus size={16} />
+                              </button>
+                              <span className="w-12 text-center text-sm font-medium">{quantity}</span>
+                              <button
+                                onClick={() => handleQuantityChange(product._id, quantity + 1, product.moq || 1)}
+                                aria-label="Increase quantity"
+                                className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100"
+                              >
+                                <Plus size={16} />
+                              </button>
+                            </div>
+                            {(product.moq || 1) > 1 && (
+                              <span className="text-xs text-[#19B5D8] font-medium text-center">
+                                Min. {product.moq} pcs
+                              </span>
+                            )}
                           </div>
 
                           <button

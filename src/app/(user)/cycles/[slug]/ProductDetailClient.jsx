@@ -88,7 +88,7 @@ export default function ProductDetailClient() {
 
   const handleBuyNow = async () => {
     if (!product) return;
-    await addToCart(product, 1);
+    await addToCart(product, product.moq || 1);
     router.push("/checkout");
   };
 
@@ -170,17 +170,22 @@ export default function ProductDetailClient() {
               <p className={`font-medium ${product.stock > 0 ? "text-[#22C55E]" : "text-red-600"}`}>
                 {product.stock > 0 ? `In Stock (${product.stock} available)` : "Out of Stock"}
               </p>
+              {(product.moq || 1) > 1 && (
+                <p className="text-[#19B5D8] font-medium">
+                  Min. Order: {product.moq} pcs
+                </p>
+              )}
             </div>
 
             <p className="text-neutral-600 mb-8 leading-relaxed">{product.description}</p>
 
             <div className="flex gap-4">
               <button
-                onClick={() => addToCart(product, 1)}
+                onClick={() => addToCart(product, product.moq || 1)}
                 disabled={product.stock === 0}
                 className="px-8 py-4 bg-black text-white rounded-full cursor-pointer hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Add to Cart
+                {(product.moq || 1) > 1 ? `Add ${product.moq} to Cart` : "Add to Cart"}
               </button>
 
               <button

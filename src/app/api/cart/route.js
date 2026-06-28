@@ -59,9 +59,16 @@ export async function POST(req) {
       { status: 400 }
     );
 
+  const moq = product.moq || 1;
+
   let cart = await Cart.findOne({ user: userId });
 
   if (!cart) {
+    if (numQty < moq)
+      return NextResponse.json(
+        { error: `Minimum order quantity is ${moq} units` },
+        { status: 400 }
+      );
     cart = await Cart.create({
       user: userId,
       items: [{ product: productId, quantity: numQty }],
@@ -73,7 +80,6 @@ export async function POST(req) {
 
     if (itemIndex > -1) {
       const newQty = cart.items[itemIndex].quantity + numQty;
-      // Validate total quantity against stock
       if (newQty > availableStock) {
         return NextResponse.json(
           { error: `Only ${availableStock} units available. You already have ${cart.items[itemIndex].quantity} in cart.` },
@@ -82,6 +88,11 @@ export async function POST(req) {
       }
       cart.items[itemIndex].quantity = newQty;
     } else {
+      if (numQty < moq)
+        return NextResponse.json(
+          { error: `Minimum order quantity is ${moq} units` },
+          { status: 400 }
+        );
       cart.items.push({ product: productId, quantity: numQty });
     }
 
@@ -108,16 +119,20 @@ export async function PUT(req) {
 
   await connectDB();
 
-  // Validate against stock
   const product = await Product.findById(productId);
   if (product) {
     const availableStock = product.stock ?? 0;
-    if (numQty > availableStock) {
+    if (numQty > availableStock)
       return NextResponse.json(
         { error: `Only ${availableStock} units available` },
         { status: 400 }
       );
-    }
+    const moq = product.moq || 1;
+    if (numQty < moq)
+      return NextResponse.json(
+        { error: `Minimum order quantity is ${moq} units` },
+        { status: 400 }
+      );
   }
 
   const cart = await Cart.findOne({ user: userId });

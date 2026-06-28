@@ -56,12 +56,16 @@ export const useCartStore = create((set, get) => ({
     const { isAuthenticated } = useAuthStore.getState();
     const { items } = get();
 
+    // Enforce MOQ — never add less than the minimum order quantity
+    const moq = product.moq || 1;
+    const effectiveQty = Math.max(quantity, moq);
+
     if (isAuthenticated) {
       try {
         const res = await fetch("/api/cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productId: product._id, quantity }),
+          body: JSON.stringify({ productId: product._id, quantity: effectiveQty }),
           credentials: "include",
         });
 
@@ -85,7 +89,7 @@ export const useCartStore = create((set, get) => ({
       if (existing) {
         updatedCart = items.map((item) =>
           item.productId === product._id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: item.quantity + effectiveQty }
             : item
         );
       } else {
@@ -94,7 +98,7 @@ export const useCartStore = create((set, get) => ({
           {
             productId: product._id,
             product,
-            quantity,
+            quantity: effectiveQty,
           },
         ];
       }
@@ -111,12 +115,17 @@ export const useCartStore = create((set, get) => ({
   },
 
   // Update quantity
-  // Update quantity
   updateQuantity: async (productId, quantity) => {
     const { isAuthenticated } = useAuthStore.getState();
     const { items } = get();
 
+    const cartItem = items.find(
+      (i) => i.product?._id?.toString() === productId || i.productId === productId
+    );
+    const moq = cartItem?.product?.moq || 1;
+
     if (quantity <= 0) return get().removeFromCart(productId);
+    if (quantity < moq) return; // block going below MOQ
 
     if (isAuthenticated) {
       try {

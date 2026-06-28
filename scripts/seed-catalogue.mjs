@@ -91,6 +91,8 @@ const ProductSchema = new mongoose.Schema(
     category:         { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     subcategory:      { type: mongoose.Schema.Types.ObjectId, ref: "Subcategory" },
     colors:           [{ type: String, trim: true }],
+    moq:              { type: Number, default: 1, min: 1 },
+    boxQty:           { type: Number, default: 1, min: 1 },
     warranty:         { type: Number, default: 0 },
     specifications:   { type: Array, default: [] },
   },
@@ -188,6 +190,8 @@ for (const item of catalogue) {
     featured:         false,
     images:           [],
     colors:           [],
+    moq:              item.moq || 1,
+    boxQty:           item.boxQty || 1,
     warranty:         0,
     specifications:   [],
   };

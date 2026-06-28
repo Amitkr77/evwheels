@@ -108,6 +108,18 @@ const ProductSchema = new mongoose.Schema(
       },
     ],
 
+    moq: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
+
+    boxQty: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
+
     warranty: {
       type: Number,
       default: 0,
