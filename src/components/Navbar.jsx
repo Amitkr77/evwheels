@@ -10,11 +10,6 @@ import {
   X,
   ChevronDown,
   ChevronRight,
-  Bike,
-  Wrench,
-  Package,
-  ShieldCheck,
-  Zap,
 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
@@ -34,134 +29,11 @@ export default function Navbar() {
 
   const dropdownRef = useRef(null);
 
-  // Navigation Data Structure based on Strategy
   const navItems = [
-    {
-      label: "Electric Mobility",
-      icon: <Zap className="w-4 h-4" />, // Assuming Zap is imported or using Bike icon as fallback
-      subMenu: [
-        {
-          title: "E-Cycles",
-          links: [
-            { label: "Mountain E-Bikes", href: "/cycles/mtb" },
-            { label: "City E-Bikes", href: "/cycles/city" },
-          ],
-        },
-        {
-          title: "E-Scooty",
-          links: [
-            { label: "High Speed", href: "/scooty/high-speed" },
-            { label: "Commuter", href: "/scooty/commuter" },
-          ],
-        },
-        {
-          title: "EV Parts",
-          links: [
-            { label: "Batteries", href: "/parts/batteries" },
-            { label: "Controllers", href: "/parts/controllers" },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Cycles",
-      href: "/cycles",
-    },
-    {
-      label: "Parts",
-      icon: <Wrench className="w-4 h-4" />,
-      subMenu: [
-        {
-          title: "Drivetrain",
-          links: [
-            { label: "Chains", href: "/parts/chains" },
-            { label: "Freewheels", href: "/parts/freewheels" },
-            { label: "Cranksets", href: "/parts/cranksets" },
-            { label: "Pedals", href: "/parts/pedals" },
-          ],
-        },
-        {
-          title: "Braking System",
-          links: [
-            { label: "Disc Brakes", href: "/parts/disc-brakes" },
-            { label: "V-Brakes", href: "/parts/v-brakes" },
-            { label: "Brake Pads", href: "/parts/brake-pads" },
-          ],
-        },
-        {
-          title: "Controls & Cockpit",
-          links: [
-            { label: "Handlebars", href: "/parts/handlebars" },
-            { label: "Gear Shifters", href: "/parts/gear-shifters" },
-            { label: "Stems", href: "/parts/stems" },
-          ],
-        },
-        {
-          title: "Wheels & Suspension",
-          links: [
-            { label: "Hubs & Rims", href: "/parts/wheels" },
-            { label: "Forks", href: "/parts/forks" },
-            { label: "Spokes", href: "/parts/spokes" },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Accessories",
-      icon: <Package className="w-4 h-4" />,
-      subMenu: [
-        {
-          title: "Safety & Visibility",
-          links: [
-            { label: "Helmets", href: "/accessories/helmets" },
-            { label: "Lights", href: "/accessories/lights" },
-            { label: "Locks", href: "/accessories/locks" },
-          ],
-        },
-        {
-          title: "Comfort & Utility",
-          links: [
-            { label: "Saddles", href: "/accessories/saddles" },
-            { label: "Bottle Cages", href: "/accessories/bottles" },
-            { label: "Mobile Holders", href: "/accessories/holders" },
-          ],
-        },
-        {
-          title: "Maintenance",
-          links: [
-            { label: "Tools", href: "/accessories/tools" },
-            { label: "Pumps", href: "/accessories/pumps" },
-            { label: "Stands", href: "/accessories/stands" },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Brands",
-      subMenu: [
-        {
-          title: "Premium",
-          links: [
-            { label: "Shimano", href: "/brand/shimano" },
-            { label: "Neco", href: "/brand/neco" },
-            { label: "Prowheel", href: "/brand/prowheel" },
-          ],
-        },
-        {
-          title: "All Brands",
-          links: [
-            { label: "KMC / Maya", href: "/brand/kmc" },
-            { label: "Beto", href: "/brand/beto" },
-            { label: "View All", href: "/brands" },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Wholesale",
-      href: "/wholesale",
-      isSpecial: true, // Optional flag for styling
-    },
+    { label: "Cycles", href: "/cycles" },
+    { label: "Why EVWheels", href: "/why-us" },
+    { label: "Support", href: "/support" },
+    { label: "Contact", href: "/contact" },
   ];
 
   // Scroll handler
@@ -325,19 +197,23 @@ export default function Navbar() {
 
                   {userDropdownOpen && (
                     <div className="absolute right-0 top-full mt-2 w-56 bg-white shadow-xl rounded-xl border border-neutral-200 py-2 text-sm z-50">
+                      <div className="px-5 py-3 border-b border-neutral-100">
+                        <p className="font-medium text-neutral-900 truncate">{user?.name}</p>
+                        <p className="text-xs text-neutral-500 truncate">{user?.email}</p>
+                      </div>
                       <Link
                         href="/profile"
-                        className="block px-5 py-2.5 hover:bg-neutral-50"
+                        className="block px-5 py-2.5 hover:bg-neutral-50 transition-colors"
                         onClick={() => setUserDropdownOpen(false)}
                       >
-                        Profile
+                        My Profile
                       </Link>
                       <Link
-                        href="/profile"
-                        className="block px-5 py-2.5 hover:bg-neutral-50"
+                        href="/cart"
+                        className="block px-5 py-2.5 hover:bg-neutral-50 transition-colors"
                         onClick={() => setUserDropdownOpen(false)}
                       >
-                        My Orders
+                        My Cart
                       </Link>
                       <hr className="my-1 border-neutral-200" />
                       <button
@@ -345,7 +221,7 @@ export default function Navbar() {
                           logout();
                           setUserDropdownOpen(false);
                         }}
-                        className="w-full text-left px-5 py-2.5 text-red-600 hover:bg-red-50"
+                        className="w-full text-left px-5 py-2.5 text-red-600 hover:bg-red-50 transition-colors"
                       >
                         Logout
                       </button>
@@ -474,12 +350,12 @@ export default function Navbar() {
                   <div className="flex flex-col gap-4">
                     <MobileNavLink
                       href="/profile"
-                      label="Profile"
+                      label="My Profile"
                       onClick={() => setMobileMenuOpen(false)}
                     />
                     <MobileNavLink
-                      href="/profile"
-                      label="My Orders"
+                      href="/cart"
+                      label="My Cart"
                       onClick={() => setMobileMenuOpen(false)}
                     />
                     <button

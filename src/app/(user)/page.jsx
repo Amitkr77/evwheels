@@ -20,7 +20,6 @@ import {
   Lightbulb,
   Zap,
 } from "lucide-react";
-import HeroSlider from "@/components/home/HeroSlider";
 import UpgradeYourRide from "@/components/home/UpgradeYourRide";
 import ShopByCategory from "@/components/home/ShopBycategory";
 import BestSellersShimano from "@/components/home/BestSellersShimano";
@@ -84,7 +83,7 @@ export default function Home() {
               className="mt-12 flex flex-col sm:flex-row gap-6"
             >
               <Link
-                href="#cycles"
+                href="/cycles"
                 className="inline-flex items-center gap-3 px-10 py-4 bg-neutral-900 text-white rounded-full text-lg font-light hover:bg-neutral-800 transition-colors"
               >
                 Explore Cycles
@@ -141,9 +140,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ─── HeroSlider ─── */}
-        {/* <HeroSlider /> */}
-
         {/* upgrade your ride */}
         <UpgradeYourRide />
 
@@ -161,81 +157,6 @@ export default function Home() {
 
         {/* Budget Essentials */}
         <BudgetEssentials />
-
-        {/* ─── Featured Products ─── */}
-        {/* <section id="cycles" className="pt-24 md:pt-40 bg-white">
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-center mb-16 md:mb-20"
-          >
-            Featured Cycles
-          </motion.h2>
-
-          <div className="max-w-6xl mx-auto px-6 lg:px-12 space-y-32 md:space-y-48">
-            {loading ? (
-              <div className="text-center py-20 text-neutral-500">
-                Loading featured cycles...
-              </div>
-            ) : featuredProducts.length === 0 ? (
-              <div className="text-center py-20 text-neutral-500">
-                No featured products available at the moment.
-              </div>
-            ) : (
-              featuredProducts.map((product, index) => {
-                const isEven = index % 2 === 0;
-
-                return (
-                  <Link
-                    key={product._id}
-                    href={`/cycles/${product.slug}`}
-                    className={`block`}
-                  >
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true, margin: "-150px" }}
-                      transition={{ duration: 1.4 }}
-                      className={`grid md:grid-cols-2 gap-16 lg:gap-24 items-center cursor-pointer ${
-                        !isEven ? "md:flex-row-reverse" : ""
-                      }`}
-                    >
-                      <div className={isEven ? "" : "order-2 md:order-1"}>
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-light leading-tight mb-10">
-                          {product.title}
-                        </h2>
-                        <div className="space-y-5 text-lg md:text-xl font-light text-neutral-700">
-                          <div className="text-3xl font-medium text-neutral-900">
-                            ₹ {product.price.toLocaleString("en-IN")}
-                          </div>
-                          <div>
-                            {product.specs?.battery?.range || "?"} km real range
-                          </div>
-                          <div>{product.specs?.physical?.weight || "?"} kg</div>
-                          {product.description && (
-                            <p className="text-base text-neutral-600 mt-4">
-                              {product.description}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className={isEven ? "" : "order-1 md:order-2"}>
-                        <img
-                          src={product.image}
-                          alt={product.title}
-                          className="w-full h-auto object-cover rounded-none shadow-xl"
-                        />
-                      </div>
-                    </motion.div>
-                  </Link>
-                );
-              })
-            )}
-          </div>
-        </section> */}
 
         {/* ─── Accessories Section ─── */}
         <section
@@ -362,31 +283,6 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
-
-        {/* ─── Final CTA ─── */}
-        {/* <section className="py-32 md:py-48 bg-[#fdfcf9] text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2 }}
-            className="max-w-4xl mx-auto px-8 lg:px-16"
-          >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-thin leading-tight mb-12">
-              Move gently.
-              <br />
-              Arrive clearly.
-            </h2>
-
-            <Link
-              href="#cycles"
-              className="inline-flex items-center gap-3 px-10 py-4 bg-neutral-900 text-white rounded-full text-lg font-light hover:bg-neutral-800 transition-colors"
-            >
-              View Cycles
-              <ArrowRight size={20} />
-            </Link>
-          </motion.div>
-        </section> */}
 
         <section className="relative h-screen flex items-center justify-center border-t border-neutral-200">
           <img

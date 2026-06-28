@@ -138,6 +138,13 @@ export default function RegisterPage() {
         transition={{ duration: 0.9 }}
         className="w-full max-w-lg"
       >
+        {/* Back link */}
+        <div className="mb-8 text-center">
+          <Link href="/" className="text-sm text-neutral-500 hover:text-emerald-800 transition-colors">
+            ← Back to EVWheels
+          </Link>
+        </div>
+
         {/* Heading */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-3">
@@ -301,11 +308,11 @@ export default function RegisterPage() {
               className="text-sm text-neutral-600 leading-relaxed cursor-pointer"
             >
               I agree to the{" "}
-              <Link href="#" className="text-emerald-800 hover:underline">
-                Terms
+              <Link href="/terms" className="text-emerald-800 hover:underline">
+                Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="#" className="text-emerald-800 hover:underline">
+              <Link href="/privacy-policy" className="text-emerald-800 hover:underline">
                 Privacy Policy
               </Link>
             </label>

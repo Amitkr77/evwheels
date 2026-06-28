@@ -67,29 +67,47 @@ export default function Footer() {
             {/* Social Icons */}
             <div className="flex gap-5">
               <a
-                href="#"
+                href="https://facebook.com/evwheels"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="EVWheels on Facebook"
                 className="text-neutral-500 hover:text-emerald-800 transition-colors"
               >
                 <Facebook size={20} />
               </a>
               <a
-                href="#"
+                href="https://instagram.com/evwheels"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="EVWheels on Instagram"
                 className="text-neutral-500 hover:text-emerald-800 transition-colors"
               >
                 <Instagram size={20} />
               </a>
               <a
-                href="#"
+                href="https://twitter.com/evwheels"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="EVWheels on Twitter"
                 className="text-neutral-500 hover:text-emerald-800 transition-colors"
               >
                 <Twitter size={20} />
               </a>
               <a
-                href="#"
+                href="https://youtube.com/@evwheels"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="EVWheels on YouTube"
                 className="text-neutral-500 hover:text-emerald-800 transition-colors"
               >
                 <Youtube size={20} />
               </a>
+            </div>
+
+            {/* Address */}
+            <div className="flex items-start gap-2 text-sm text-neutral-500">
+              <MapPin size={16} className="text-emerald-800 mt-0.5 shrink-0" />
+              <span>Boring Road Crossing, Patna, Bihar 800001</span>
             </div>
           </div>
 
@@ -109,18 +127,18 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/accessories"
-                  className="hover:text-emerald-800 transition-colors"
-                >
-                  Accessories
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/why-us"
                   className="hover:text-emerald-800 transition-colors"
                 >
                   Why EVWheels
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/support"
+                  className="hover:text-emerald-800 transition-colors"
+                >
+                  Support
                 </Link>
               </li>
               <li>
@@ -133,7 +151,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/login"
+                  href="/account/login"
                   className="hover:text-emerald-800 transition-colors"
                 >
                   My Account
@@ -149,43 +167,43 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3 text-sm text-neutral-600">
               <li className="flex items-center gap-2">
-                <Truck size={16} className="text-emerald-800" />
+                <Truck size={16} className="text-emerald-800 shrink-0" />
                 <Link
-                  href="#"
+                  href="/shipping-policy"
                   className="hover:text-emerald-800 transition-colors"
                 >
                   Shipping & Delivery
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <ShieldCheck size={16} className="text-emerald-800" />
+                <ShieldCheck size={16} className="text-emerald-800 shrink-0" />
                 <Link
-                  href="#"
+                  href="/returns"
                   className="hover:text-emerald-800 transition-colors"
                 >
-                  Warranty & Returns
+                  Returns & Refunds
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <Battery size={16} className="text-emerald-800" />
+                <Battery size={16} className="text-emerald-800 shrink-0" />
                 <Link
-                  href="#"
+                  href="/support"
                   className="hover:text-emerald-800 transition-colors"
                 >
                   Battery Care
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <Wrench size={16} className="text-emerald-800" />
+                <Wrench size={16} className="text-emerald-800 shrink-0" />
                 <Link
-                  href="#"
+                  href="/support"
                   className="hover:text-emerald-800 transition-colors"
                 >
                   Service Centers
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <Phone size={16} className="text-emerald-800" />
+                <Phone size={16} className="text-emerald-800 shrink-0" />
                 <Link
                   href="tel:+919876543210"
                   className="hover:text-emerald-800 transition-colors"
@@ -251,15 +269,18 @@ export default function Footer() {
             © {new Date().getFullYear()} EVWheels. Crafted with care in Patna.
           </p>
 
-          <div className="flex gap-6">
-            <Link href="#" className="hover:text-neutral-900 transition-colors">
+          <div className="flex flex-wrap gap-6">
+            <Link href="/privacy-policy" className="hover:text-neutral-900 transition-colors">
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-neutral-900 transition-colors">
+            <Link href="/terms" className="hover:text-neutral-900 transition-colors">
               Terms of Service
             </Link>
-            <Link href="#" className="hover:text-neutral-900 transition-colors">
-              Warranty
+            <Link href="/returns" className="hover:text-neutral-900 transition-colors">
+              Returns Policy
+            </Link>
+            <Link href="/shipping-policy" className="hover:text-neutral-900 transition-colors">
+              Shipping
             </Link>
           </div>
         </div>

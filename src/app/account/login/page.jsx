@@ -63,6 +63,13 @@ function LoginForm() {
         transition={{ duration: 0.9 }}
         className="w-full max-w-lg"
       >
+        {/* Back link */}
+        <div className="mb-8 text-center">
+          <Link href="/" className="text-sm text-neutral-500 hover:text-emerald-800 transition-colors">
+            ← Back to EVWheels
+          </Link>
+        </div>
+
         {/* Heading */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-3">
