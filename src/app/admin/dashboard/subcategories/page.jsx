@@ -135,9 +135,9 @@ export default function SubcategoriesPage() {
     if (sortField !== field)
       return <ArrowUpDown size={14} className="text-neutral-400" />;
     return sortDir === "asc" ? (
-      <ChevronUp size={14} className="text-emerald-700" />
+      <ChevronUp size={14} className="text-[#19B5D8]" />
     ) : (
-      <ChevronDown size={14} className="text-emerald-700" />
+      <ChevronDown size={14} className="text-[#19B5D8]" />
     );
   };
 
@@ -309,7 +309,7 @@ export default function SubcategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, name: e.target.value })
           }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="e.g. Mountain Bikes"
         />
       </div>
@@ -324,7 +324,7 @@ export default function SubcategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, category: e.target.value })
           }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
         >
           <option value="">Select Category</option>
           {categories.map((cat) => (
@@ -345,7 +345,7 @@ export default function SubcategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
           }
-          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors resize-none"
+          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
           placeholder="Optional description..."
         />
       </div>
@@ -361,7 +361,7 @@ export default function SubcategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, image: e.target.value })
           }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="https://..."
         />
         {formData.image && (
@@ -387,7 +387,7 @@ export default function SubcategoriesPage() {
               sortOrder: e.target.value,
             })
           }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="0"
         />
       </div>
@@ -401,8 +401,8 @@ export default function SubcategoriesPage() {
           onClick={() =>
             setFormData({ ...formData, isActive: !formData.isActive })
           }
-          className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
-            formData.isActive ? "bg-emerald-700" : "bg-neutral-300"
+          className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
+            formData.isActive ? "bg-[#19B5D8]" : "bg-neutral-300"
           }`}
         >
           <span
@@ -431,7 +431,7 @@ export default function SubcategoriesPage() {
         <button
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-4 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting ? "Saving..." : submitLabel}
         </button>
@@ -556,7 +556,7 @@ export default function SubcategoriesPage() {
 
                   {/* Category */}
                   <td className="py-6 px-6">
-                    <span className="px-3 py-1 text-xs font-medium bg-emerald-50 text-emerald-800 rounded-full">
+                    <span className="px-3 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-full">
                       {getCategoryName(sub)}
                     </span>
                   </td>
@@ -574,9 +574,9 @@ export default function SubcategoriesPage() {
                       aria-checked={sub.isActive ?? true}
                       aria-label={`Toggle ${sub.name} active status`}
                       onClick={() => handleToggleActive(sub)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
                         sub.isActive !== false
-                          ? "bg-emerald-700"
+                          ? "bg-[#19B5D8]"
                           : "bg-neutral-300"
                       }`}
                     >
@@ -600,7 +600,7 @@ export default function SubcategoriesPage() {
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => openEdit(sub)}
-                        className="text-emerald-700 hover:text-emerald-900 transition-colors"
+                        className="text-[#19B5D8] hover:text-[#19B5D8] transition-colors"
                         aria-label={`Edit ${sub.name}`}
                       >
                         <Edit2 size={18} />
@@ -648,7 +648,7 @@ export default function SubcategoriesPage() {
               setFormData({ ...EMPTY_FORM });
               setShowCreateModal(true);
             }}
-            className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Add Subcategory
@@ -668,7 +668,7 @@ export default function SubcategoriesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search subcategories..."
-              className="w-full pl-11 pr-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-emerald-600 transition-colors text-sm"
+              className="w-full pl-11 pr-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
             />
           </div>
 
@@ -676,7 +676,7 @@ export default function SubcategoriesPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-emerald-600 transition-colors text-sm min-w-[200px]"
+            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[200px]"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (

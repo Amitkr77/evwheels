@@ -37,12 +37,12 @@ export default function AdminDashboardLayout({ children }) {
 
 
     return (
-        <div className="min-h-screen bg-[#fdfcf9] font-['Inter'] flex">
+        <div className="min-h-screen bg-[#F8FAFC] font-['Inter'] flex">
             {/* ─── Sidebar ─── */}
             <aside className="fixed inset-y-0 left-0 w-72 bg-white border-r border-neutral-200/70 overflow-y-auto hidden lg:flex flex-col">
                 <div className="p-8 border-b border-neutral-200/60">
                     <div className="flex items-center gap-3.5">
-                        <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
                             E
                         </div>
                         <span className="text-2xl font-['Playfair_Display'] font-medium tracking-tight text-neutral-900">
@@ -60,14 +60,14 @@ export default function AdminDashboardLayout({ children }) {
                                 key={item.path}
                                 onClick={() => router.push(item.path)}
                                 className={`w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium rounded-lg transition-colors ${isActive
-                                    ? "bg-emerald-50/60 text-emerald-800"
+                                    ? "bg-[#DDF8FD]/60 text-[#19B5D8]"
                                     : "text-neutral-700 hover:bg-neutral-50/80"
                                     }`}
                             >
                                 <item.icon size={20} strokeWidth={1.6} />
                                 {item.label}
                                 {item.badge && (
-                                    <span className="ml-auto px-2.5 py-1 text-xs font-medium bg-emerald-50 text-emerald-800 rounded-full">
+                                    <span className="ml-auto px-2.5 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-full">
                                         {item.badge}
                                     </span>
                                 )}
@@ -78,15 +78,15 @@ export default function AdminDashboardLayout({ children }) {
 
                 <div className="p-6 border-t border-neutral-200/60">
                     <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 bg-emerald-700 rounded-full flex items-center justify-center text-white font-semibold text-base shrink-0">
+                        <div className="w-11 h-11 bg-[#19B5D8] rounded-full flex items-center justify-center text-white font-semibold text-base shrink-0">
                             {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
                         </div>
                         <div className="flex-1 min-w-0">
                             <div className="font-medium text-neutral-900 truncate">
                                 {user?.name || "Admin"}
                             </div>
-                            <div className="text-xs text-emerald-700 flex items-center gap-1.5">
-                                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                            <div className="text-xs text-[#19B5D8] flex items-center gap-1.5">
+                                <span className="w-2 h-2 bg-[#19B5D8] rounded-full animate-pulse" />
                                 Online
                             </div>
                         </div>
@@ -123,7 +123,7 @@ export default function AdminDashboardLayout({ children }) {
                                         {user?.email || "admin"}
                                     </div>
                                 </div>
-                                <div className="w-9 h-9 bg-emerald-700 rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0">
+                                <div className="w-9 h-9 bg-[#19B5D8] rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0">
                                     {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
                                 </div>
                             </div>

@@ -9,7 +9,7 @@ const STATUS_COLORS = {
   PLACED: "bg-amber-50 text-amber-700",
   CONFIRMED: "bg-blue-50 text-blue-700",
   SHIPPED: "bg-indigo-50 text-indigo-700",
-  DELIVERED: "bg-emerald-50 text-emerald-800",
+  DELIVERED: "bg-[#DDF8FD] text-[#19B5D8]",
   CANCELLED: "bg-red-50 text-red-700",
 };
 
@@ -100,12 +100,12 @@ export default function OrdersPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by order ID or customer..."
-          className="flex-1 sm:max-w-sm px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm"
+          className="flex-1 sm:max-w-sm px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm"
+          className="px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
         >
           <option value="">All Statuses</option>
           {STATUS_OPTIONS.map((s) => (
@@ -171,7 +171,7 @@ export default function OrdersPage() {
                     <td className="py-5 px-6">
                       <button
                         onClick={() => openDetail(order)}
-                        className="text-emerald-700 hover:text-emerald-900 transition-colors"
+                        className="text-[#19B5D8] hover:text-[#19B5D8] transition-colors"
                         title="View order details"
                       >
                         <Eye size={18} />
@@ -281,7 +281,7 @@ export default function OrdersPage() {
                     <span className="font-medium text-neutral-900">{selectedOrder.paymentMethod || "—"}</span>
                   </div>
                   {selectedOrder.discountAmount > 0 && (
-                    <div className="flex justify-between text-sm text-emerald-700">
+                    <div className="flex justify-between text-sm text-[#19B5D8]">
                       <span>Discount</span>
                       <span>-₹{selectedOrder.discountAmount.toLocaleString("en-IN")}</span>
                     </div>
@@ -305,7 +305,7 @@ export default function OrdersPage() {
                   <select
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value)}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm mb-3"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm mb-3"
                   >
                     {STATUS_OPTIONS.map((s) => (
                       <option key={s} value={s}>{s}</option>
@@ -317,7 +317,7 @@ export default function OrdersPage() {
                     value={statusNote}
                     onChange={(e) => setStatusNote(e.target.value)}
                     placeholder="Optional note (e.g. tracking number)"
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm mb-4"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm mb-4"
                   />
 
                   {statusError && (
@@ -327,7 +327,7 @@ export default function OrdersPage() {
                   <button
                     onClick={handleStatusUpdate}
                     disabled={updatingStatus || newStatus === selectedOrder.orderStatus}
-                    className="w-full py-3.5 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {updatingStatus && <Loader2 size={16} className="animate-spin" />}
                     {updatingStatus ? "Updating..." : "Update Status"}

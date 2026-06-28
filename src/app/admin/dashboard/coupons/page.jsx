@@ -153,7 +153,7 @@ export default function CouponsPage() {
           type="text"
           value={formData.code}
           onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors uppercase font-mono"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors uppercase font-mono"
           placeholder="SAVE10"
         />
       </div>
@@ -164,7 +164,7 @@ export default function CouponsPage() {
           <select
             value={formData.discountType}
             onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
           >
             <option value="percentage">Percentage (%)</option>
             <option value="fixed">Fixed (₹)</option>
@@ -176,7 +176,7 @@ export default function CouponsPage() {
             type="number"
             value={formData.discountValue}
             onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="20"
             min="0"
           />
@@ -190,7 +190,7 @@ export default function CouponsPage() {
             type="number"
             value={formData.minOrderAmount}
             onChange={(e) => setFormData({ ...formData, minOrderAmount: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="1000"
             min="0"
           />
@@ -201,7 +201,7 @@ export default function CouponsPage() {
             type="number"
             value={formData.usageLimit}
             onChange={(e) => setFormData({ ...formData, usageLimit: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="Unlimited"
             min="1"
           />
@@ -216,7 +216,7 @@ export default function CouponsPage() {
           type="date"
           value={formData.expiryDate}
           onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
         />
       </div>
 
@@ -227,7 +227,7 @@ export default function CouponsPage() {
           aria-checked={formData.isActive}
           onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
           className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none ${
-            formData.isActive ? "bg-emerald-700" : "bg-neutral-300"
+            formData.isActive ? "bg-[#19B5D8]" : "bg-neutral-300"
           }`}
         >
           <span
@@ -252,7 +252,7 @@ export default function CouponsPage() {
         <button
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-4 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {submitting ? "Saving..." : submitLabel}
@@ -268,7 +268,7 @@ export default function CouponsPage() {
           <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">Coupons</h1>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Create Coupon
@@ -331,7 +331,7 @@ export default function CouponsPage() {
                         <span
                           className={`px-3 py-1 text-xs font-medium rounded-full ${
                             coupon.isActive
-                              ? "bg-emerald-50 text-emerald-800"
+                              ? "bg-[#DDF8FD] text-[#19B5D8]"
                               : "bg-neutral-100 text-neutral-500"
                           }`}
                         >
@@ -342,7 +342,7 @@ export default function CouponsPage() {
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => openEdit(coupon)}
-                            className="text-neutral-500 hover:text-emerald-700 transition-colors"
+                            className="text-neutral-500 hover:text-[#19B5D8] transition-colors"
                             title="Edit coupon"
                           >
                             <Edit2 size={17} />

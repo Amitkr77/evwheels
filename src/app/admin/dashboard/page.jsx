@@ -142,7 +142,7 @@ export default function page() {
         <td className="py-4 px-6">{order.name}</td>
         <td className="py-4 px-6">₹{order.amount.toLocaleString("en-IN")}</td>
         <td className="py-4 px-6">
-          <span className="px-3 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700">
+          <span className="px-3 py-1 text-xs rounded-full bg-[#DDF8FD] text-[#19B5D8]">
             {order.status}
           </span>
         </td>
@@ -171,7 +171,7 @@ export default function page() {
           <motion.div
             key={i}
             // variants={fadeIn}
-            className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors"
+            className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
           >
             <div className="text-sm font-light text-neutral-600">
               {stat.title}
@@ -186,7 +186,7 @@ export default function page() {
               {stat.value}
             </div>
             <div
-              className={`mt-4 text-sm font-light ${stat.color === "emerald" ? "text-emerald-700" : stat.color === "blue" ? "text-blue-700" : stat.color === "amber" ? "text-amber-700" : "text-yellow-700"}`}
+              className={`mt-4 text-sm font-light ${stat.color === "emerald" ? "text-[#19B5D8]" : stat.color === "blue" ? "text-blue-700" : stat.color === "amber" ? "text-amber-700" : "text-yellow-700"}`}
             >
               {stat.change}
             </div>
@@ -203,7 +203,7 @@ export default function page() {
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
-            className="px-4 py-2 border border-neutral-300 rounded-lg text-sm font-light focus:outline-none focus:border-emerald-600"
+            className="px-4 py-2 border border-neutral-300 rounded-lg text-sm font-light focus:outline-none focus:border-[#19B5D8]"
           >
             <option value="7d">Last 7 days</option>
             <option value="30d">Last 30 days</option>

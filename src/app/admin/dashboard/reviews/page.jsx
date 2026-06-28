@@ -117,7 +117,7 @@ export default function ReviewsPage() {
                   <span
                     className={`px-4 py-1 text-xs font-medium rounded-full ${
                       review.status?.toLowerCase() === "approved"
-                        ? "bg-emerald-50 text-emerald-800"
+                        ? "bg-[#DDF8FD] text-[#19B5D8]"
                         : review.status?.toLowerCase() === "rejected"
                           ? "bg-red-50 text-red-700"
                           : "bg-amber-50 text-amber-700"
@@ -131,7 +131,7 @@ export default function ReviewsPage() {
                     <>
                       <button
                         onClick={() => approveReview(review._id)}
-                        className="px-4 py-1.5 bg-emerald-600 text-white text-xs rounded-lg hover:bg-emerald-700 transition-colors"
+                        className="px-4 py-1.5 bg-[#19B5D8] text-white text-xs rounded-lg hover:bg-[#1297B5] transition-colors"
                       >
                         Approve
                       </button>

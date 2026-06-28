@@ -277,7 +277,7 @@ export default function CategoriesPage() {
       size={14}
       className={`inline ml-1 ${
         sortField === field
-          ? "text-emerald-700"
+          ? "text-[#19B5D8]"
           : "text-neutral-400"
       }`}
     />
@@ -294,7 +294,7 @@ export default function CategoriesPage() {
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="e.g. Electric Scooters"
         />
       </div>
@@ -308,7 +308,7 @@ export default function CategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
           }
-          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors resize-none"
+          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
           placeholder="Brief description of this category..."
         />
       </div>
@@ -321,7 +321,7 @@ export default function CategoriesPage() {
           type="text"
           value={formData.image}
           onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="https://example.com/image.jpg"
         />
         {formData.image && (
@@ -350,7 +350,7 @@ export default function CategoriesPage() {
                 sortOrder: e.target.value,
               })
             }
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="0"
           />
         </div>
@@ -370,9 +370,9 @@ export default function CategoriesPage() {
               <>
                 <ToggleRight
                   size={36}
-                  className="text-emerald-600 transition-colors"
+                  className="text-[#19B5D8] transition-colors"
                 />
-                <span className="text-sm font-medium text-emerald-700">
+                <span className="text-sm font-medium text-[#19B5D8]">
                   Active
                 </span>
               </>
@@ -406,7 +406,7 @@ export default function CategoriesPage() {
         <button
           onClick={editCategory ? handleUpdate : handleCreate}
           disabled={submitting}
-          className="flex-1 py-4 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {editCategory
@@ -471,7 +471,7 @@ export default function CategoriesPage() {
           setFormData({ ...emptyForm });
           setShowCreateModal(true);
         }}
-        className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+        className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
       >
         <Plus size={18} />
         Create Category
@@ -581,9 +581,9 @@ export default function CategoriesPage() {
                       <>
                         <ToggleRight
                           size={28}
-                          className="text-emerald-600 group-hover:text-emerald-700 transition-colors"
+                          className="text-[#19B5D8] group-hover:text-[#19B5D8] transition-colors"
                         />
-                        <span className="text-xs font-medium text-emerald-700 group-hover:text-emerald-800">
+                        <span className="text-xs font-medium text-[#19B5D8] group-hover:text-[#19B5D8]">
                           Active
                         </span>
                       </>
@@ -607,7 +607,7 @@ export default function CategoriesPage() {
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => openEdit(category)}
-                      className="text-neutral-500 hover:text-emerald-700 transition-colors"
+                      className="text-neutral-500 hover:text-[#19B5D8] transition-colors"
                       title="Edit category"
                     >
                       <Edit2 size={17} />
@@ -642,7 +642,7 @@ export default function CategoriesPage() {
               setFormData({ ...emptyForm });
               setShowCreateModal(true);
             }}
-            className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Create Category
@@ -662,7 +662,7 @@ export default function CategoriesPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search categories..."
-                className="w-full pl-11 pr-5 py-3 border border-neutral-200/70 rounded-lg bg-white focus:outline-none focus:border-emerald-600 transition-colors text-sm"
+                className="w-full pl-11 pr-5 py-3 border border-neutral-200/70 rounded-lg bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
               />
             </div>
             <p className="text-sm text-neutral-500">

@@ -64,7 +64,7 @@ function ProductForm({
   submitLabel,
 }) {
   const inp =
-    "w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/20 transition-colors text-sm";
+    "w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20 transition-colors text-sm";
   const sel = `${inp} bg-white`;
 
   const set = (key, val) => setFormData((p) => ({ ...p, [key]: val }));
@@ -275,7 +275,7 @@ function ProductForm({
           <button
             type="button"
             onClick={addSpec}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 border border-emerald-200 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#19B5D8] border border-[#19B5D8]/20 bg-[#DDF8FD] rounded-lg hover:bg-[#DDF8FD] transition-colors"
           >
             <Plus size={13} /> Add Spec
           </button>
@@ -284,7 +284,7 @@ function ProductForm({
           <button
             type="button"
             onClick={addSpec}
-            className="w-full text-center py-5 border border-dashed border-neutral-200 rounded-xl text-neutral-400 text-sm hover:border-emerald-300 hover:text-emerald-600 transition-colors"
+            className="w-full text-center py-5 border border-dashed border-neutral-200 rounded-xl text-neutral-400 text-sm hover:border-[#19B5D8]/30 hover:text-[#19B5D8] transition-colors"
           >
             Click to add specifications (battery, range, motor power…)
           </button>
@@ -327,13 +327,13 @@ function ProductForm({
           className="flex items-center gap-2"
         >
           {formData.featured ? (
-            <ToggleRight size={30} className="text-emerald-600" />
+            <ToggleRight size={30} className="text-[#19B5D8]" />
           ) : (
             <ToggleLeft size={30} className="text-neutral-300" />
           )}
           <span
             className={`text-sm font-medium ${
-              formData.featured ? "text-emerald-700" : "text-neutral-500"
+              formData.featured ? "text-[#19B5D8]" : "text-neutral-500"
             }`}
           >
             Featured
@@ -346,13 +346,13 @@ function ProductForm({
           className="flex items-center gap-2"
         >
           {formData.isActive ? (
-            <ToggleRight size={30} className="text-emerald-600" />
+            <ToggleRight size={30} className="text-[#19B5D8]" />
           ) : (
             <ToggleLeft size={30} className="text-neutral-300" />
           )}
           <span
             className={`text-sm font-medium ${
-              formData.isActive ? "text-emerald-700" : "text-neutral-500"
+              formData.isActive ? "text-[#19B5D8]" : "text-neutral-500"
             }`}
           >
             Active
@@ -374,7 +374,7 @@ function ProductForm({
           type="button"
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-4 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {submitting
@@ -614,9 +614,9 @@ export default function ProductsPage() {
     if (sortField !== field)
       return <ArrowUpDown size={14} className="text-neutral-400" />;
     return sortDir === "asc" ? (
-      <ChevronUp size={14} className="text-emerald-700" />
+      <ChevronUp size={14} className="text-[#19B5D8]" />
     ) : (
-      <ChevronDown size={14} className="text-emerald-700" />
+      <ChevronDown size={14} className="text-[#19B5D8]" />
     );
   };
 
@@ -996,9 +996,9 @@ export default function ProductsPage() {
   );
 
   const inputClass =
-    "w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm";
+    "w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm";
   const selectClass =
-    "w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm bg-white";
+    "w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm bg-white";
 
   // ─── Product form (shared for create & edit) ────────────────
   const renderForm = (onSubmit, submitLabel) => (
@@ -1131,13 +1131,13 @@ export default function ProductsPage() {
           className="flex items-center gap-2 cursor-pointer"
         >
           {formData.featured ? (
-            <ToggleRight size={32} className="text-emerald-600" />
+            <ToggleRight size={32} className="text-[#19B5D8]" />
           ) : (
             <ToggleLeft size={32} className="text-neutral-400" />
           )}
           <span
             className={`text-sm font-medium ${
-              formData.featured ? "text-emerald-700" : "text-neutral-500"
+              formData.featured ? "text-[#19B5D8]" : "text-neutral-500"
             }`}
           >
             Featured
@@ -1152,13 +1152,13 @@ export default function ProductsPage() {
           className="flex items-center gap-2 cursor-pointer"
         >
           {formData.isActive ? (
-            <ToggleRight size={32} className="text-emerald-600" />
+            <ToggleRight size={32} className="text-[#19B5D8]" />
           ) : (
             <ToggleLeft size={32} className="text-neutral-400" />
           )}
           <span
             className={`text-sm font-medium ${
-              formData.isActive ? "text-emerald-700" : "text-neutral-500"
+              formData.isActive ? "text-[#19B5D8]" : "text-neutral-500"
             }`}
           >
             Active
@@ -1181,7 +1181,7 @@ export default function ProductsPage() {
         <button
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-4 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {submitting
@@ -1256,7 +1256,7 @@ export default function ProductsPage() {
       {!searchQuery && !categoryFilter && statusFilter === "all" && (
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+          className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
         >
           <Plus size={18} />
           Add Product
@@ -1269,7 +1269,7 @@ export default function ProductsPage() {
   const StatusBadge = ({ product }) => {
     const status = getStatus(product);
     const styles = {
-      active: "bg-emerald-50 text-emerald-800 border-emerald-200/60",
+      active: "bg-[#DDF8FD] text-[#19B5D8] border-[#19B5D8]/20",
       inactive: "bg-amber-50 text-amber-700 border-amber-200/60",
       archived: "bg-neutral-100 text-neutral-600 border-neutral-200/60",
     };
@@ -1295,11 +1295,11 @@ export default function ProductsPage() {
                 <th className="py-5 px-4 w-10">
                   <button
                     onClick={toggleSelectAll}
-                    className="text-neutral-400 hover:text-emerald-700 transition-colors"
+                    className="text-neutral-400 hover:text-[#19B5D8] transition-colors"
                   >
                     {selectedIds.size === products.length &&
                     products.length > 0 ? (
-                      <CheckSquare size={18} className="text-emerald-700" />
+                      <CheckSquare size={18} className="text-[#19B5D8]" />
                     ) : (
                       <Square size={18} />
                     )}
@@ -1360,19 +1360,19 @@ export default function ProductsPage() {
                   <tr
                     key={product._id}
                     className={`hover:bg-neutral-50/50 transition-colors ${
-                      isSelected ? "bg-emerald-50/30" : ""
+                      isSelected ? "bg-[#DDF8FD]/30" : ""
                     }`}
                   >
                     {/* Checkbox */}
                     <td className="py-4 px-4">
                       <button
                         onClick={() => toggleSelect(product._id)}
-                        className="text-neutral-400 hover:text-emerald-700 transition-colors"
+                        className="text-neutral-400 hover:text-[#19B5D8] transition-colors"
                       >
                         {isSelected ? (
                           <CheckSquare
                             size={18}
-                            className="text-emerald-700"
+                            className="text-[#19B5D8]"
                           />
                         ) : (
                           <Square size={18} />
@@ -1414,7 +1414,7 @@ export default function ProductsPage() {
 
                     {/* Category */}
                     <td className="py-4 px-4">
-                      <span className="px-2.5 py-1 text-xs font-medium bg-emerald-50 text-emerald-800 rounded-full">
+                      <span className="px-2.5 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-full">
                         {getCategoryName(product)}
                       </span>
                     </td>
@@ -1431,7 +1431,7 @@ export default function ProductsPage() {
 
                     {/* Price */}
                     <td className="py-4 px-4">
-                      <span className="font-medium text-emerald-800">
+                      <span className="font-medium text-[#19B5D8]">
                         ₹{getPrice(product).toLocaleString("en-IN")}
                       </span>
                     </td>
@@ -1447,7 +1447,7 @@ export default function ProductsPage() {
                           className={
                             stock < 10
                               ? "text-red-700 font-medium"
-                              : "text-emerald-700 font-medium"
+                              : "text-[#19B5D8] font-medium"
                           }
                         >
                           {stock}
@@ -1492,7 +1492,7 @@ export default function ProductsPage() {
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => openEdit(product)}
-                          className="p-2 text-neutral-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors"
+                          className="p-2 text-neutral-500 hover:text-[#19B5D8] hover:bg-[#DDF8FD] rounded-lg transition-colors"
                           title="Edit product"
                         >
                           <Edit2 size={16} />
@@ -1636,7 +1636,7 @@ export default function ProductsPage() {
               onClick={() => setCurrentPage(page)}
               className={`w-10 h-10 text-sm font-medium rounded-lg transition-colors ${
                 page === currentPage
-                  ? "bg-emerald-800 text-white"
+                  ? "bg-[#19B5D8] text-white"
                   : "hover:bg-neutral-100 text-neutral-700"
               }`}
             >
@@ -1692,7 +1692,7 @@ export default function ProductsPage() {
           <select
             value={bulkAction}
             onChange={(e) => setBulkAction(e.target.value)}
-            className="px-3 py-2 border border-neutral-200 rounded-lg text-sm bg-white focus:outline-none focus:border-emerald-600"
+            className="px-3 py-2 border border-neutral-200 rounded-lg text-sm bg-white focus:outline-none focus:border-[#19B5D8]"
           >
             <option value="">Choose action...</option>
             <option value="activate">Activate</option>
@@ -1710,7 +1710,7 @@ export default function ProductsPage() {
             className={`px-5 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
               bulkAction === "delete"
                 ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-emerald-800 text-white hover:bg-emerald-900"
+                : "bg-[#19B5D8] text-white hover:bg-[#1297B5]"
             }`}
           >
             {bulkSubmitting && <Loader2 size={16} className="animate-spin" />}
@@ -1740,7 +1740,7 @@ export default function ProductsPage() {
           className={`fixed top-6 right-6 z-[100] px-6 py-3.5 rounded-xl shadow-lg text-sm font-medium flex items-center gap-3 ${
             toast.type === "error"
               ? "bg-red-600 text-white"
-              : "bg-emerald-800 text-white"
+              : "bg-[#19B5D8] text-white"
           }`}
         >
           {toast.type === "error" ? (
@@ -1770,7 +1770,7 @@ export default function ProductsPage() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Add Product
@@ -1790,7 +1790,7 @@ export default function ProductsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..."
-              className="w-full pl-11 pr-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-emerald-600 transition-colors text-sm"
+              className="w-full pl-11 pr-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
             />
           </div>
 
@@ -1801,7 +1801,7 @@ export default function ProductsPage() {
               setCategoryFilter(e.target.value);
               setSubcategoryFilter("");
             }}
-            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-emerald-600 transition-colors text-sm min-w-[180px]"
+            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[180px]"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -1816,7 +1816,7 @@ export default function ProductsPage() {
             <select
               value={subcategoryFilter}
               onChange={(e) => setSubcategoryFilter(e.target.value)}
-              className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-emerald-600 transition-colors text-sm min-w-[180px]"
+              className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[180px]"
             >
               <option value="">All Subcategories</option>
               {subcategories.map((sub) => (
@@ -1831,7 +1831,7 @@ export default function ProductsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-emerald-600 transition-colors text-sm min-w-[150px]"
+            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[150px]"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -1843,7 +1843,7 @@ export default function ProductsPage() {
           <select
             value={priceRangeFilter}
             onChange={(e) => setPriceRangeFilter(e.target.value)}
-            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-emerald-600 transition-colors text-sm min-w-[150px]"
+            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[150px]"
           >
             <option value="">All Prices</option>
             <option value="under-10000">Under ₹10,000</option>
@@ -1869,13 +1869,13 @@ export default function ProductsPage() {
               </span>
             )}
             {categoryFilter && (
-              <span className="px-3 py-1 bg-emerald-50 text-emerald-800 text-xs rounded-full">
+              <span className="px-3 py-1 bg-[#DDF8FD] text-[#19B5D8] text-xs rounded-full">
                 Category:{" "}
                 {categories.find((c) => c._id === categoryFilter)?.name || "..."}
               </span>
             )}
             {subcategoryFilter && (
-              <span className="px-3 py-1 bg-emerald-50 text-emerald-800 text-xs rounded-full">
+              <span className="px-3 py-1 bg-[#DDF8FD] text-[#19B5D8] text-xs rounded-full">
                 Subcategory:{" "}
                 {subcategories.find((s) => s._id === subcategoryFilter)?.name ||
                   "..."}
@@ -2088,7 +2088,7 @@ export default function ProductsPage() {
               </p>
               <p className="text-sm text-neutral-500 mb-6">
                 Current stock:{" "}
-                <span className="font-semibold text-emerald-800">
+                <span className="font-semibold text-[#19B5D8]">
                   {stockModal.currentStock}
                 </span>
               </p>
@@ -2113,7 +2113,7 @@ export default function ProductsPage() {
                         }
                         className={`flex items-center gap-2 px-4 py-3 border rounded-lg text-sm font-medium transition-colors ${
                           stockModal.type === value
-                            ? "border-emerald-600 bg-emerald-50 text-emerald-800"
+                            ? "border-[#19B5D8] bg-[#DDF8FD] text-[#19B5D8]"
                             : "border-neutral-200 text-neutral-600 hover:bg-neutral-50"
                         }`}
                       >
@@ -2170,7 +2170,7 @@ export default function ProductsPage() {
                 </button>
                 <button
                   onClick={handleStockAdjust}
-                  className="flex-1 py-3.5 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors"
+                  className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors"
                 >
                   Update Stock
                 </button>

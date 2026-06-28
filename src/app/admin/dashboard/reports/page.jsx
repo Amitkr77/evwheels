@@ -87,7 +87,7 @@ export default function ReportsPage() {
   // ─── Shared stat card ───
   const StatCard = ({ icon: Icon, title, value, subtitle, color = "emerald" }) => {
     const colorMap = {
-      emerald: "bg-emerald-50 text-emerald-700",
+      emerald: "bg-[#DDF8FD] text-[#19B5D8]",
       amber: "bg-amber-50 text-amber-700",
       red: "bg-red-50 text-red-700",
       blue: "bg-blue-50 text-blue-700",
@@ -99,7 +99,7 @@ export default function ReportsPage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors"
+        className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
       >
         <div className="flex items-start justify-between mb-3">
           <span className="text-sm font-light text-neutral-600">{title}</span>
@@ -146,7 +146,7 @@ export default function ReportsPage() {
                   initial={{ height: 0 }}
                   animate={{ height: `${pct}%` }}
                   transition={{ duration: 0.5, delay: i * 0.03 }}
-                  className="absolute bottom-0 left-0 right-0 bg-emerald-500/80 hover:bg-emerald-600 rounded-t transition-colors"
+                  className="absolute bottom-0 left-0 right-0 bg-[#19B5D8]/80 hover:bg-[#1297B5] rounded-t transition-colors"
                 />
               </div>
               <span className="text-[10px] text-neutral-500 truncate w-full text-center">
@@ -246,7 +246,7 @@ export default function ReportsPage() {
                       <td className="py-4 px-6 font-medium">{cat.name}</td>
                       <td className="py-4 px-6">{cat.count}</td>
                       <td className="py-4 px-6">{formatNumber(cat.totalStock)}</td>
-                      <td className="py-4 px-6 text-emerald-700 font-medium">
+                      <td className="py-4 px-6 text-[#19B5D8] font-medium">
                         {formatCurrency(cat.avgPrice)}
                       </td>
                     </tr>
@@ -276,12 +276,12 @@ export default function ReportsPage() {
               {d.priceDistribution.map((range, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between px-4 py-3 bg-neutral-50/60 rounded-lg hover:bg-emerald-50/40 transition-colors"
+                  className="flex items-center justify-between px-4 py-3 bg-neutral-50/60 rounded-lg hover:bg-[#DDF8FD]/40 transition-colors"
                 >
                   <span className="text-sm font-medium text-neutral-800">
                     {range._id}
                   </span>
-                  <span className="px-3 py-1 text-xs font-medium bg-emerald-100 text-emerald-800 rounded-full">
+                  <span className="px-3 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-full">
                     {range.count} product{range.count !== 1 ? "s" : ""}
                   </span>
                 </div>
@@ -348,7 +348,7 @@ export default function ReportsPage() {
             <div className="space-y-3">
               {d.byStatus.map((s, i) => {
                 const statusColorMap = {
-                  Delivered: "bg-emerald-100 text-emerald-800",
+                  Delivered: "bg-[#DDF8FD] text-[#19B5D8]",
                   Shipped: "bg-blue-100 text-blue-700",
                   Processing: "bg-amber-100 text-amber-700",
                   Pending: "bg-neutral-100 text-neutral-700",
@@ -373,7 +373,7 @@ export default function ReportsPage() {
                       <span className="text-sm text-neutral-600">
                         {s.count} order{s.count !== 1 ? "s" : ""}
                       </span>
-                      <span className="text-sm font-medium text-emerald-700">
+                      <span className="text-sm font-medium text-[#19B5D8]">
                         {formatCurrency(s.revenue)}
                       </span>
                     </div>
@@ -432,11 +432,11 @@ export default function ReportsPage() {
                       {p.name || "Unknown Product"}
                     </td>
                     <td className="py-5 px-6">
-                      <span className="text-emerald-700 font-medium">
+                      <span className="text-[#19B5D8] font-medium">
                         {p.totalSold}
                       </span>
                     </td>
-                    <td className="py-5 px-6 text-emerald-700 font-medium">
+                    <td className="py-5 px-6 text-[#19B5D8] font-medium">
                       {formatCurrency(p.revenue)}
                     </td>
                     <td className="py-5 px-6">{p.orderCount}</td>
@@ -518,17 +518,17 @@ export default function ReportsPage() {
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.35, delay: i * 0.05 }}
-                  className="bg-white border border-neutral-200/70 rounded-xl p-5 hover:border-emerald-200/60 transition-colors"
+                  className="bg-white border border-neutral-200/70 rounded-xl p-5 hover:border-[#19B5D8]/20 transition-colors"
                 >
                   <div className="flex items-center gap-4 mb-3">
                     <span
                       className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold ${
                         i === 0
-                          ? "bg-emerald-800 text-white"
+                          ? "bg-[#19B5D8] text-white"
                           : i === 1
-                          ? "bg-emerald-600 text-white"
+                          ? "bg-[#1297B5] text-white"
                           : i === 2
-                          ? "bg-emerald-400 text-white"
+                          ? "bg-[#5CC8E8] text-white"
                           : "bg-neutral-100 text-neutral-600"
                       }`}
                     >
@@ -540,7 +540,7 @@ export default function ReportsPage() {
                       </div>
                       <div className="text-sm text-neutral-500 mt-0.5">
                         {p.totalSold} units sold &middot;{" "}
-                        <span className="text-emerald-700 font-medium">
+                        <span className="text-[#19B5D8] font-medium">
                           {formatCurrency(p.revenue)}
                         </span>
                       </div>
@@ -554,12 +554,12 @@ export default function ReportsPage() {
                       transition={{ duration: 0.6, delay: i * 0.06 }}
                       className={`h-full rounded-full ${
                         i === 0
-                          ? "bg-emerald-800"
+                          ? "bg-[#19B5D8]"
                           : i === 1
-                          ? "bg-emerald-600"
+                          ? "bg-[#1297B5]"
                           : i === 2
-                          ? "bg-emerald-400"
-                          : "bg-emerald-300"
+                          ? "bg-[#5CC8E8]"
+                          : "bg-[#85D9F0]"
                       }`}
                     />
                   </div>
@@ -653,7 +653,7 @@ export default function ReportsPage() {
                         {monthNames[m._id?.month] || m._id?.month}{" "}
                         {m._id?.year}
                       </td>
-                      <td className="py-4 px-6 text-emerald-700 font-medium">
+                      <td className="py-4 px-6 text-[#19B5D8] font-medium">
                         {formatCurrency(m.revenue)}
                       </td>
                       <td className="py-4 px-6">{m.orders}</td>
@@ -688,7 +688,7 @@ export default function ReportsPage() {
       return (
         <div className="flex items-center justify-center py-24">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-8 h-8 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-[#19B5D8] border-t-transparent rounded-full animate-spin" />
             <span className="text-sm text-neutral-500">Loading report...</span>
           </div>
         </div>
@@ -739,7 +739,7 @@ export default function ReportsPage() {
                 }}
                 className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   isActive
-                    ? "bg-emerald-800 text-white shadow-sm"
+                    ? "bg-[#19B5D8] text-white shadow-sm"
                     : "text-neutral-600 hover:bg-neutral-100"
                 }`}
               >
@@ -761,7 +761,7 @@ export default function ReportsPage() {
               onClick={() => setPeriod(p.key)}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                 period === p.key
-                  ? "bg-white text-emerald-800 shadow-sm"
+                  ? "bg-white text-[#19B5D8] shadow-sm"
                   : "text-neutral-600 hover:text-neutral-800"
               }`}
             >
