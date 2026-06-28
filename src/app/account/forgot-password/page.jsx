@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fdfcf9] flex items-center justify-center px-5 py-16 font-['Inter']">
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-5 py-16 font-['Inter']">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value.trim())}
-                  className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                  className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                   placeholder="amit@evwheels.in"
                   required
                   disabled={loading}
@@ -102,8 +102,8 @@ export default function ForgotPasswordPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-8"
           >
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-emerald-50 flex items-center justify-center">
-              <Mail size={28} className="text-emerald-800" />
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#DDF8FD] flex items-center justify-center">
+              <Mail size={28} className="text-[#19B5D8]" />
             </div>
             <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium mb-4">
               Check Your Email
@@ -116,7 +116,7 @@ export default function ForgotPasswordPage() {
               Didn't receive it? Check spam or{' '}
               <button
                 onClick={() => setSubmitted(false)}
-                className="text-emerald-800 hover:underline font-medium"
+                className="text-[#19B5D8] hover:underline font-medium"
               >
                 try again
               </button>

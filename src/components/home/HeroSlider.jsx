@@ -96,7 +96,7 @@ export default function HeroSlider() {
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Link
                     href={slide.primaryBtn}
-                    className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-white font-semibold transition-all duration-300 hover:bg-emerald-700 hover:scale-105"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#19B5D8] px-8 py-4 text-white font-semibold transition-all duration-300 hover:bg-[#1297B5] hover:scale-105"
                   >
                     Explore Collection
                     <ArrowRight size={18} />
@@ -122,7 +122,7 @@ export default function HeroSlider() {
             key={index}
             onClick={() => setCurrent(index)}
             className={`h-2.5 rounded-full transition-all duration-300 ${
-              current === index ? "w-10 bg-emerald-500" : "w-2.5 bg-white/40"
+              current === index ? "w-10 bg-[#19B5D8]" : "w-2.5 bg-white/40"
             }`}
           />
         ))}

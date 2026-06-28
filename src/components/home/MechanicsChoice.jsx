@@ -36,7 +36,7 @@ export default function MechanicsChoice() {
 
         {/* Header */}
         <div className="text-center mb-24">
-          <span className="text-xs uppercase tracking-[0.35em] text-emerald-800">
+          <span className="text-xs uppercase tracking-[0.35em] text-[#19B5D8]">
             Workshop Essentials
           </span>
 
@@ -78,7 +78,7 @@ export default function MechanicsChoice() {
                     {tool.price}
                   </span>
 
-                  <span className="text-sm text-neutral-500 transition-colors group-hover:text-emerald-800">
+                  <span className="text-sm text-neutral-500 transition-colors group-hover:text-[#19B5D8]">
                     Explore →
                   </span>
                 </div>

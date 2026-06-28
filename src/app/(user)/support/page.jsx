@@ -84,20 +84,20 @@ const CATEGORIES = [
 
 export default function SupportPage() {
   return (
-    <div className="min-h-screen bg-[#fdfcf9] font-['Inter']">
+    <div className="min-h-screen bg-[#F8FAFC] font-['Inter']">
       {/* ─── Hero / Part Finder ─────────────────────────────────── */}
       <section className="bg-white border-b border-neutral-200/70 py-16 md:py-20 relative overflow-hidden">
-        <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-emerald-50 to-transparent pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-[#DDF8FD] to-transparent pointer-events-none" />
         <div className="max-w-5xl mx-auto px-4 md:px-8 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold uppercase tracking-wider mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#DDF8FD] text-[#19B5D8] text-xs font-semibold uppercase tracking-wider mb-6">
               <Wrench size={14} />
               Part Finder
             </div>
             <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-5 leading-tight">
               Find the perfect fit
               <br />
-              <span className="text-emerald-700">for your ride.</span>
+              <span className="text-[#19B5D8]">for your ride.</span>
             </h1>
             <p className="text-neutral-500 font-light text-lg leading-relaxed">
               Don&apos;t guess. Select your model below to instantly filter our
@@ -112,7 +112,7 @@ export default function SupportPage() {
                 <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
                   Category
                 </label>
-                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/20">
+                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20">
                   <option value="">Select Type</option>
                   <option>E-Bikes</option>
                   <option>E-Scooters</option>
@@ -123,7 +123,7 @@ export default function SupportPage() {
                 <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
                   Brand
                 </label>
-                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/20">
+                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20">
                   <option value="">Select Brand</option>
                   <option>EvWheels</option>
                   <option>Urban Glide</option>
@@ -135,7 +135,7 @@ export default function SupportPage() {
                 <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
                   Model
                 </label>
-                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/20">
+                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20">
                   <option value="">Select Model</option>
                   <option>Glide X1</option>
                   <option>Glide X2 Pro</option>
@@ -146,7 +146,7 @@ export default function SupportPage() {
               <div className="flex items-end">
                 <button
                   type="button"
-                  className="w-full py-3.5 bg-emerald-800 hover:bg-emerald-700 text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full py-3.5 bg-[#19B5D8] hover:bg-[#1297B5] text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
                 >
                   <Search size={18} />
                   Check Fit
@@ -158,7 +158,7 @@ export default function SupportPage() {
           <p className="flex items-center justify-center gap-2 mt-5 text-sm text-neutral-500 font-light">
             <Info size={15} />
             Not sure about your model?{" "}
-            <span className="text-emerald-700 underline underline-offset-4 cursor-pointer hover:text-emerald-800 transition-colors">
+            <span className="text-[#19B5D8] underline underline-offset-4 cursor-pointer hover:text-[#19B5D8] transition-colors">
               Find your serial number
             </span>
           </p>
@@ -178,7 +178,7 @@ export default function SupportPage() {
           </div>
           <Link
             href="/products"
-            className="flex items-center gap-1 text-sm font-medium text-emerald-700 hover:gap-2 transition-all"
+            className="flex items-center gap-1 text-sm font-medium text-[#19B5D8] hover:gap-2 transition-all"
           >
             View all models <ArrowRight size={16} />
           </Link>
@@ -190,18 +190,18 @@ export default function SupportPage() {
               key={m.name}
               className="group bg-white border border-neutral-200/70 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
-              <div className="h-44 bg-neutral-50 flex items-center justify-center relative group-hover:bg-emerald-50/40 transition-colors">
+              <div className="h-44 bg-neutral-50 flex items-center justify-center relative group-hover:bg-[#DDF8FD]/40 transition-colors">
                 <m.icon
                   size={56}
                   strokeWidth={1.2}
-                  className="text-neutral-300 group-hover:text-emerald-600 transition-colors"
+                  className="text-neutral-300 group-hover:text-[#19B5D8] transition-colors"
                 />
                 <span className="absolute top-4 right-4 bg-white border border-neutral-200 px-2 py-1 rounded text-xs font-medium text-neutral-700 shadow-sm">
                   {m.badge}
                 </span>
               </div>
               <div className="p-5">
-                <h3 className="font-medium text-neutral-900 mb-1 group-hover:text-emerald-700 transition-colors">
+                <h3 className="font-medium text-neutral-900 mb-1 group-hover:text-[#19B5D8] transition-colors">
                   {m.name}
                 </h3>
                 <p className="text-sm text-neutral-500 font-light mb-4">{m.type}</p>
@@ -211,7 +211,7 @@ export default function SupportPage() {
                   </span>
                   <ArrowRight
                     size={16}
-                    className="text-emerald-600 group-hover:translate-x-0.5 transition-transform"
+                    className="text-[#19B5D8] group-hover:translate-x-0.5 transition-transform"
                   />
                 </div>
               </div>
@@ -236,7 +236,7 @@ export default function SupportPage() {
               <div className="space-y-6">
                 {IDENTIFY_STEPS.map((step) => (
                   <div key={step.title} className="flex gap-4">
-                    <div className="w-11 h-11 shrink-0 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-emerald-700 shadow-sm">
+                    <div className="w-11 h-11 shrink-0 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-[#19B5D8] shadow-sm">
                       <step.icon size={20} strokeWidth={1.6} />
                     </div>
                     <div>
@@ -261,13 +261,13 @@ export default function SupportPage() {
                     <MapPin
                       size={28}
                       strokeWidth={1.4}
-                      className="text-emerald-600 mx-auto mb-2"
+                      className="text-[#19B5D8] mx-auto mb-2"
                     />
                     <p className="font-medium text-sm text-neutral-800">{loc}</p>
                   </div>
                 ))}
               </div>
-              <button className="w-full mt-6 py-3 border border-neutral-200 hover:border-emerald-600 hover:text-emerald-700 text-neutral-700 font-medium rounded-xl transition-colors text-sm">
+              <button className="w-full mt-6 py-3 border border-neutral-200 hover:border-[#19B5D8] hover:text-[#19B5D8] text-neutral-700 font-medium rounded-xl transition-colors text-sm">
                 Download Identification Guide
               </button>
             </div>
@@ -285,12 +285,12 @@ export default function SupportPage() {
             <Link
               key={cat.label}
               href="/products"
-              className="group flex flex-col items-center gap-3 p-6 rounded-xl bg-white border border-neutral-200/70 hover:border-emerald-600/50 hover:shadow-md transition-all"
+              className="group flex flex-col items-center gap-3 p-6 rounded-xl bg-white border border-neutral-200/70 hover:border-[#19B5D8]/50 hover:shadow-md transition-all"
             >
               <cat.icon
                 size={28}
                 strokeWidth={1.4}
-                className="text-neutral-400 group-hover:text-emerald-600 transition-colors"
+                className="text-neutral-400 group-hover:text-[#19B5D8] transition-colors"
               />
               <span className="font-medium text-sm text-neutral-700 text-center">
                 {cat.label}

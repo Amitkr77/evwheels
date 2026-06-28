@@ -119,7 +119,7 @@ export default function CyclesPage() {
       <div className="w-full max-w-md mx-auto pt-32">
         <div className="h-1.5 w-full bg-neutral-200 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-emerald-700 rounded-full"
+            className="h-full bg-[#19B5D8] rounded-full"
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
@@ -134,17 +134,14 @@ export default function CyclesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-20 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8FAFC] pt-24 pb-20 flex items-center justify-center">
         <p className="text-xl text-red-600">Error: {error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-20">
-      <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
-        <div className="absolute inset-0 subtle-gradient"></div>
-      </div>
+    <div className="min-h-screen bg-[#F8FAFC] pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -159,13 +156,13 @@ export default function CyclesPage() {
           {/* Filters (mobile trigger + desktop inline) */}
           <button
             onClick={() => setFilterDrawerOpen(true)}
-            className="flex items-center gap-2 px-5 py-3 bg-white border border-neutral-300 rounded-full shadow-sm hover:border-emerald-600 transition md:hidden"
+            className="flex items-center gap-2 px-5 py-3 bg-white border border-neutral-300 rounded-full shadow-sm hover:border-[#19B5D8] transition md:hidden"
           >
             <SlidersHorizontal size={18} />
             <span className="text-sm font-medium">
               Filters
               {activeFilterCount > 0 && (
-                <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-700 px-1.5 text-xs font-bold text-white">
+                <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[#19B5D8] px-1.5 text-xs font-bold text-white">
                   {activeFilterCount}
                 </span>
               )}
@@ -178,7 +175,7 @@ export default function CyclesPage() {
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="min-w-[150px] px-4 py-2.5 border border-neutral-300 rounded-xl text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="min-w-[150px] px-4 py-2.5 border border-neutral-300 rounded-xl text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#19B5D8]/40"
               >
                 <option>All Types</option>
                 <option>City</option>
@@ -194,7 +191,7 @@ export default function CyclesPage() {
               <select
                 value={priceFilter}
                 onChange={(e) => setPriceFilter(e.target.value)}
-                className="min-w-[180px] px-4 py-2.5 border border-neutral-300 rounded-xl text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="min-w-[180px] px-4 py-2.5 border border-neutral-300 rounded-xl text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#19B5D8]/40"
               >
                 <option>All Prices</option>
                 <option>Under ₹50,000</option>
@@ -208,7 +205,7 @@ export default function CyclesPage() {
           <div className="flex items-center gap-3 md:gap-6">
             <button
               onClick={() => setSortDrawerOpen(true)}
-              className="flex items-center gap-2 px-5 py-3 bg-white border border-neutral-300 rounded-full shadow-sm hover:border-emerald-600 transition md:hidden"
+              className="flex items-center gap-2 px-5 py-3 bg-white border border-neutral-300 rounded-full shadow-sm hover:border-[#19B5D8] transition md:hidden"
             >
               <SlidersHorizontal size={18} className="rotate-90" />
               <span className="text-sm font-medium">Sort</span>
@@ -219,7 +216,7 @@ export default function CyclesPage() {
               <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
-                className="min-w-[190px] px-4 py-2.5 border border-neutral-300 rounded-xl text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="min-w-[190px] px-4 py-2.5 border border-neutral-300 rounded-xl text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#19B5D8]/40"
               >
                 <option>Featured</option>
                 <option>Price: Low to High</option>
@@ -284,7 +281,7 @@ export default function CyclesPage() {
                   <select
                     value={typeFilter}
                     onChange={(e) => setTypeFilter(e.target.value)}
-                    className="w-full p-3.5 border border-neutral-300 rounded-2xl text-base focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 outline-none"
+                    className="w-full p-3.5 border border-neutral-300 rounded-2xl text-base focus:ring-2 focus:ring-[#19B5D8] focus:border-[#19B5D8] outline-none"
                   >
                     <option>All Types</option>
                     <option>City</option>
@@ -300,7 +297,7 @@ export default function CyclesPage() {
                   <select
                     value={priceFilter}
                     onChange={(e) => setPriceFilter(e.target.value)}
-                    className="w-full p-3.5 border border-neutral-300 rounded-2xl text-base focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 outline-none"
+                    className="w-full p-3.5 border border-neutral-300 rounded-2xl text-base focus:ring-2 focus:ring-[#19B5D8] focus:border-[#19B5D8] outline-none"
                   >
                     <option>All Prices</option>
                     <option>Under ₹50,000</option>
@@ -322,7 +319,7 @@ export default function CyclesPage() {
                 </button>
                 <button
                   onClick={() => setFilterDrawerOpen(false)}
-                  className="flex-1 py-3.5 bg-emerald-700 text-white rounded-2xl text-base font-medium hover:bg-emerald-800 active:bg-emerald-900"
+                  className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-2xl text-base font-medium hover:bg-[#1297B5] active:bg-[#0F7E97]"
                 >
                   View Results
                 </button>
@@ -364,7 +361,7 @@ export default function CyclesPage() {
                     }}
                     className={`py-3.5 px-5 text-left rounded-2xl border transition-colors ${
                       sortOption === opt
-                        ? "bg-emerald-50 border-emerald-600 text-emerald-800 font-medium"
+                        ? "bg-[#DDF8FD] border-[#19B5D8] text-[#19B5D8] font-medium"
                         : "border-neutral-200 hover:bg-neutral-50"
                     }`}
                   >
@@ -395,12 +392,12 @@ export default function CyclesPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: i * 0.08 }}
-                className={`group ${viewMode === "List" ? "flex gap-6 md:gap-10 items-center" : ""}`}
+                className={`group ${viewMode === "List" ? "flex gap-6 md:gap-10 items-center border border-[#E2E8F0] rounded-2xl p-4 bg-white hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] transition-all duration-300" : "border border-[#E2E8F0] rounded-2xl overflow-hidden bg-white hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300"}`}
               >
                 <div
                   className={`overflow-hidden bg-neutral-100 relative ${
                     viewMode === "Grid"
-                      ? "aspect-[4/3] mb-5"
+                      ? "aspect-[4/3]"
                       : "w-44 md:w-64 h-32 md:h-48 flex-shrink-0"
                   }`}
                 >
@@ -439,12 +436,12 @@ export default function CyclesPage() {
                   </button>
                 </div>
 
-                <div className={viewMode === "List" ? "flex-1" : ""}>
+                <div className={viewMode === "List" ? "flex-1" : "p-5"}>
                   <h3 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium mb-2">
                     {product.title}
                   </h3>
 
-                  <div className="text-xl font-light text-emerald-800 mb-4">
+                  <div className="text-xl font-light text-[#19B5D8] mb-4">
                     ₹{Number(product.price || 0).toLocaleString("en-IN")}
                   </div>
 
@@ -455,7 +452,7 @@ export default function CyclesPage() {
 
                   <Link
                     href={product.slug ? `/cycles/${product.slug}` : "#"}
-                    className="inline-flex items-center gap-2 text-neutral-900 font-medium hover:text-emerald-800 transition-colors"
+                    className="inline-flex items-center gap-2 text-neutral-900 font-medium hover:text-[#19B5D8] transition-colors"
                   >
                     View Details
                     <ArrowRight size={18} />

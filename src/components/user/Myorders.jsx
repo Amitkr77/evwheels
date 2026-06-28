@@ -74,7 +74,7 @@ export default function MyOrders() {
                 <span
                   className={`px-3 py-1 text-xs rounded-full font-medium ${
                     order.orderStatus === "DELIVERED"
-                      ? "bg-emerald-50 text-emerald-700"
+                      ? "bg-[#DDF8FD] text-[#19B5D8]"
                       : order.orderStatus === "CANCELLED"
                         ? "bg-red-50 text-red-700"
                         : "bg-blue-50 text-blue-700"
@@ -115,7 +115,7 @@ export default function MyOrders() {
 
               <button
                 onClick={() => setSelectedOrder(order)}
-                className="text-sm font-medium text-emerald-700 hover:underline"
+                className="text-sm font-medium text-[#19B5D8] hover:underline"
               >
                 Track Order
               </button>

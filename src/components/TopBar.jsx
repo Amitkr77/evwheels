@@ -67,7 +67,7 @@ export default function TopBar() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? "bg-[#fdfcf9]/95 backdrop-blur-md shadow-sm border-b border-neutral-200/60"
+            ? "bg-[#F8FAFC]/95 backdrop-blur-md shadow-sm border-b border-neutral-200/60"
             : "bg-transparent"
         }`}
       >
@@ -75,7 +75,7 @@ export default function TopBar() {
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3.5 z-50">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-xl md:text-2xl shadow-sm">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-xl md:text-2xl shadow-sm">
                 E
               </div>
               <span className="text-xl md:text-2xl font-['Playfair_Display'] font-medium tracking-tight text-neutral-900">
@@ -98,7 +98,7 @@ export default function TopBar() {
                 >
                   <Link
                     href={item.href}
-                    className="text-sm md:text-base font-medium text-neutral-700 hover:text-emerald-800 transition-colors flex items-center gap-1 group"
+                    className="text-sm md:text-base font-medium text-neutral-700 hover:text-[#19B5D8] transition-colors flex items-center gap-1 group"
                   >
                     {item.label}
                     {item.hasDropdown && (
@@ -127,9 +127,9 @@ export default function TopBar() {
                               <Link
                                 key={subItem.href}
                                 href={subItem.href}
-                                className="flex items-center gap-3 px-5 py-3 text-sm text-neutral-700 hover:bg-emerald-50 hover:text-emerald-800 transition-colors"
+                                className="flex items-center gap-3 px-5 py-3 text-sm text-neutral-700 hover:bg-[#DDF8FD] hover:text-[#19B5D8] transition-colors"
                               >
-                                <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-800">
+                                <div className="w-8 h-8 rounded-lg bg-[#DDF8FD] flex items-center justify-center text-[#19B5D8]">
                                   <subItem.icon size={18} />
                                 </div>
                                 <span>{subItem.label}</span>
@@ -151,7 +151,7 @@ export default function TopBar() {
                 href="https://wa.me/919876543210"
                 target="_blank"
                 rel="noreferrer"
-                className="hidden md:flex items-center gap-2 text-neutral-700 hover:text-emerald-800 transition-colors"
+                className="hidden md:flex items-center gap-2 text-neutral-700 hover:text-[#19B5D8] transition-colors"
               >
                 <MessageCircle size={20} />
                 <span className="text-sm font-medium">Chat</span>
@@ -160,10 +160,10 @@ export default function TopBar() {
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative text-neutral-700 hover:text-emerald-800 transition-colors"
+                className="relative text-neutral-700 hover:text-[#19B5D8] transition-colors"
               >
                 <ShoppingBag size={22} strokeWidth={1.6} />
-                <span className="absolute -top-1 -right-1 bg-emerald-800 text-white text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#19B5D8] text-white text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
                   2
                 </span>
               </Link>
@@ -171,14 +171,14 @@ export default function TopBar() {
               {/* User / Login */}
               <Link
                 href="/login"
-                className="text-neutral-700 hover:text-emerald-800 transition-colors"
+                className="text-neutral-700 hover:text-[#19B5D8] transition-colors"
               >
                 <User size={22} strokeWidth={1.6} />
               </Link>
 
               {/* Mobile Menu Button */}
               <button
-                className="lg:hidden text-neutral-700 hover:text-emerald-800 transition-colors z-50"
+                className="lg:hidden text-neutral-700 hover:text-[#19B5D8] transition-colors z-50"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -205,18 +205,18 @@ export default function TopBar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-80 bg-[#fdfcf9] border-l border-neutral-200/70 z-50 lg:hidden overflow-y-auto"
+              className="fixed top-0 right-0 h-full w-80 bg-[#F8FAFC] border-l border-neutral-200/70 z-50 lg:hidden overflow-y-auto"
             >
               <div className="p-6">
                 <button
-                  className="absolute top-6 right-6 text-neutral-700 hover:text-emerald-800"
+                  className="absolute top-6 right-6 text-neutral-700 hover:text-[#19B5D8]"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <X size={28} />
                 </button>
 
                 <div className="flex items-center gap-3 mb-10">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl">
+                  <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl">
                     E
                   </div>
                   <span className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900">
@@ -229,7 +229,7 @@ export default function TopBar() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="text-lg font-medium text-neutral-800 hover:text-emerald-800 transition-colors"
+                      className="text-lg font-medium text-neutral-800 hover:text-[#19B5D8] transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.label}
@@ -242,7 +242,7 @@ export default function TopBar() {
                     href="https://wa.me/919876543210"
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-3 px-5 py-4 bg-emerald-800 text-white rounded-xl text-base font-medium hover:bg-emerald-900 transition-colors"
+                    className="flex items-center gap-3 px-5 py-4 bg-[#19B5D8] text-white rounded-xl text-base font-medium hover:bg-[#1297B5] transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <MessageCircle size={20} />

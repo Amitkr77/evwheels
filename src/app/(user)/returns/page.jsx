@@ -26,13 +26,13 @@ const STEPS = [
 
 export default function ReturnsPage() {
   return (
-    <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-24 font-['Inter']">
+    <div className="min-h-screen bg-[#F8FAFC] pt-24 pb-24 font-['Inter']">
       <div className="max-w-3xl mx-auto px-5 sm:px-8">
 
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-neutral-500" aria-label="Breadcrumb">
           <ol className="flex items-center gap-2">
-            <li><Link href="/" className="hover:text-emerald-800 transition-colors">Home</Link></li>
+            <li><Link href="/" className="hover:text-[#19B5D8] transition-colors">Home</Link></li>
             <li>/</li>
             <li className="text-neutral-900">Returns & Refunds</li>
           </ol>
@@ -50,9 +50,9 @@ export default function ReturnsPage() {
         </div>
 
         {/* Return Window Banner */}
-        <div className="flex items-center gap-4 bg-emerald-50 border border-emerald-100 rounded-2xl p-6 mb-12">
-          <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-            <RefreshCw size={24} className="text-emerald-800" />
+        <div className="flex items-center gap-4 bg-[#DDF8FD] border border-[#19B5D8]/20 rounded-2xl p-6 mb-12">
+          <div className="w-14 h-14 rounded-full bg-[#DDF8FD] flex items-center justify-center shrink-0">
+            <RefreshCw size={24} className="text-[#19B5D8]" />
           </div>
           <div>
             <h2 className="text-xl font-semibold text-neutral-900">30-Day Return Window</h2>
@@ -68,7 +68,7 @@ export default function ReturnsPage() {
           <div className="grid gap-4 mb-8">
             {ELIGIBLE.map((item, i) => (
               <div key={i} className="flex gap-3 items-start bg-white border border-neutral-200 rounded-xl p-4">
-                <CheckCircle size={20} className="text-emerald-700 mt-0.5 shrink-0" />
+                <CheckCircle size={20} className="text-[#19B5D8] mt-0.5 shrink-0" />
                 <p className="text-neutral-700 text-sm">{item}</p>
               </div>
             ))}
@@ -91,7 +91,7 @@ export default function ReturnsPage() {
           <div className="space-y-4">
             {STEPS.map((s) => (
               <div key={s.step} className="flex gap-4 bg-white border border-neutral-200 rounded-xl p-5">
-                <span className="text-2xl font-bold text-emerald-800 font-['Playfair_Display'] shrink-0">{s.step}</span>
+                <span className="text-2xl font-bold text-[#19B5D8] font-['Playfair_Display'] shrink-0">{s.step}</span>
                 <div>
                   <h3 className="font-semibold text-neutral-900">{s.title}</h3>
                   <p className="text-sm text-neutral-600 mt-1">{s.desc}</p>
@@ -113,10 +113,10 @@ export default function ReturnsPage() {
             ].map((row, i, arr) => (
               <div key={i} className={`flex justify-between items-center px-5 py-4 ${i < arr.length - 1 ? "border-b border-neutral-100" : ""}`}>
                 <div className="flex items-center gap-2 text-neutral-700 text-sm">
-                  <Clock size={16} className="text-emerald-800" />
+                  <Clock size={16} className="text-[#19B5D8]" />
                   {row.label}
                 </div>
-                <span className="text-sm font-medium text-emerald-800">{row.time}</span>
+                <span className="text-sm font-medium text-[#19B5D8]">{row.time}</span>
               </div>
             ))}
           </div>
@@ -131,14 +131,14 @@ export default function ReturnsPage() {
         </section>
 
         {/* Contact */}
-        <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+        <div className="p-6 bg-[#DDF8FD] rounded-2xl border border-[#19B5D8]/20">
           <h2 className="text-lg font-semibold text-neutral-900 mb-2">Ready to return or have questions?</h2>
           <p className="text-neutral-600 text-sm mb-4">
-            Email us at <a href="mailto:support@evwheels.in" className="text-emerald-800 hover:underline font-medium">support@evwheels.in</a> or call <a href="tel:+919876543210" className="text-emerald-800 hover:underline font-medium">+91 98765 43210</a>. Our team is available Monday – Saturday, 10 AM – 7 PM.
+            Email us at <a href="mailto:support@evwheels.in" className="text-[#19B5D8] hover:underline font-medium">support@evwheels.in</a> or call <a href="tel:+919876543210" className="text-[#19B5D8] hover:underline font-medium">+91 98765 43210</a>. Our team is available Monday – Saturday, 10 AM – 7 PM.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Phone size={16} />
             Contact Support

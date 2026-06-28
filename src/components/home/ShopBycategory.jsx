@@ -43,7 +43,7 @@ export default function ShopByCategory() {
 
     {/* Header */}
     <div className="text-center mb-20">
-      <span className="text-xs uppercase tracking-[0.35em] text-emerald-800">
+      <span className="text-xs uppercase tracking-[0.35em] text-[#19B5D8]">
         Browse Categories
       </span>
 
@@ -74,18 +74,18 @@ export default function ShopByCategory() {
                 mx-auto
                 mb-6
                 rounded-full
-                bg-emerald-50/40
+                bg-[#DDF8FD]/40
                 flex
                 items-center
                 justify-center
                 transition-colors
-                group-hover:bg-emerald-50
+                group-hover:bg-[#DDF8FD]
               "
             >
               <Icon
                 size={24}
                 strokeWidth={1.5}
-                className="text-emerald-800"
+                className="text-[#19B5D8]"
               />
             </div>
 

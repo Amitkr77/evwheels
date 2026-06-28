@@ -48,7 +48,7 @@ export default function Home() {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-black text-xl shadow-md group-hover:shadow-lg transition-shadow"
+              className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#19B5D8] to-[#1297B5] flex items-center justify-center text-white font-black text-xl shadow-md group-hover:shadow-lg transition-shadow"
             >
               E
             </motion.div>
@@ -60,19 +60,19 @@ export default function Home() {
           <div className="hidden md:flex items-center gap-10 text-sm font-medium">
             <Link
               href="#cycles"
-              className="hover:text-emerald-700 transition-colors"
+              className="hover:text-[#19B5D8] transition-colors"
             >
               Cycles
             </Link>
             <Link
               href="#accessories"
-              className="hover:text-emerald-700 transition-colors"
+              className="hover:text-[#19B5D8] transition-colors"
             >
               Accessories
             </Link>
             <Link
               href="#why"
-              className="hover:text-emerald-700 transition-colors"
+              className="hover:text-[#19B5D8] transition-colors"
             >
               Why EVWheels
             </Link>
@@ -99,7 +99,7 @@ export default function Home() {
       {/* ─── Hero ─── */}
       <section className="relative min-h-[100svh] flex items-center pt-20">
         <motion.div style={{ opacity, scale }} className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-neutral-950/60 via-neutral-900/40 to-emerald-950/30 mix-blend-multiply z-10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-neutral-950/60 via-neutral-900/40 to-[#0A4A5E]/30 mix-blend-multiply z-10" />
           <img
             src="https://images.unsplash.com/photo-1621577239950-449fb208e624?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Electric bicycle riding at dusk"
@@ -110,14 +110,14 @@ export default function Home() {
         <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 w-full">
           <div className="max-w-4xl">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-lg border border-white/10 text-white/90 text-sm font-medium mb-8">
-              <Leaf size={16} className="text-emerald-400" /> Ride Clean • Ride
+              <Leaf size={16} className="text-[#7DE8F5]" /> Ride Clean • Ride
               Far
             </div>
 
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.9] mb-10 text-white">
               Electric.
               <br />
-              <span className="text-emerald-400">Effortless.</span>
+              <span className="text-[#7DE8F5]">Effortless.</span>
             </h1>
 
             <p className="text-xl sm:text-2xl text-white/80 font-light max-w-2xl mb-14 leading-relaxed">
@@ -128,14 +128,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-5">
               <Link
                 href="#cycles"
-                className="group relative overflow-hidden bg-emerald-600 text-white px-10 py-5 rounded-full text-lg font-semibold inline-flex items-center justify-center gap-3 shadow-xl shadow-emerald-900/25 hover:shadow-emerald-900/40 transition-all duration-400"
+                className="group relative overflow-hidden bg-[#19B5D8] text-white px-10 py-5 rounded-full text-lg font-semibold inline-flex items-center justify-center gap-3 shadow-xl shadow-[#0C6E87]/25 hover:shadow-[#0C6E87]/40 transition-all duration-400"
               >
                 <span className="relative z-10">Discover Cycles</span>
                 <ArrowRight
                   className="relative z-10 group-hover:translate-x-1.5 transition-transform"
                   size={22}
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1297B5] to-[#0EA5C9] opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
               </Link>
 
               <Link
@@ -149,19 +149,19 @@ export default function Home() {
             {/* Trust row */}
             <div className="flex flex-wrap gap-x-8 gap-y-4 mt-16 text-white/80 text-sm">
               <div className="flex items-center gap-2.5">
-                <ShieldCheck size={18} className="text-emerald-400" /> 24-month
+                <ShieldCheck size={18} className="text-[#7DE8F5]" /> 24-month
                 battery warranty
               </div>
               <div className="flex items-center gap-2.5">
-                <Truck size={18} className="text-emerald-400" /> Free delivery
+                <Truck size={18} className="text-[#7DE8F5]" /> Free delivery
                 in Bihar
               </div>
               <div className="flex items-center gap-2.5">
-                <IndianRupee size={18} className="text-emerald-400" /> Easy EMI
+                <IndianRupee size={18} className="text-[#7DE8F5]" /> Easy EMI
                 options
               </div>
               <div className="flex items-center gap-2.5">
-                <HeartHandshake size={18} className="text-emerald-400" />{" "}
+                <HeartHandshake size={18} className="text-[#7DE8F5]" />{" "}
                 After-sales in Patna
               </div>
             </div>
@@ -206,12 +206,12 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.8, delay: i * 0.12 }}
-                className="bg-neutral-50/60 rounded-3xl p-10 border border-neutral-100 hover:border-emerald-200/70 transition-colors group"
+                className="bg-neutral-50/60 rounded-3xl p-10 border border-neutral-100 hover:border-[#19B5D8]/20 transition-colors group"
               >
-                <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-8 group-hover:bg-emerald-100/80 transition-colors">
+                <div className="w-16 h-16 rounded-2xl bg-[#DDF8FD] flex items-center justify-center mb-8 group-hover:bg-[#DDF8FD]/80 transition-colors">
                   <item.icon
                     size={32}
-                    className="text-emerald-700"
+                    className="text-[#19B5D8]"
                     strokeWidth={1.8}
                   />
                 </div>

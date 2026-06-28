@@ -52,7 +52,7 @@ export default function Wishlist() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="group bg-white border border-neutral-200 rounded-xl overflow-hidden hover:border-emerald-200 hover:shadow-md transition-all duration-300"
+            className="group bg-white border border-neutral-200 rounded-xl overflow-hidden hover:border-[#19B5D8]/20 hover:shadow-md transition-all duration-300"
           >
             <div className="relative aspect-[4/3] bg-neutral-100">
               <Image
@@ -75,7 +75,7 @@ export default function Wishlist() {
               <h3 className="text-lg md:text-xl font-medium mb-2 line-clamp-2">
                 {item.title}
               </h3>
-              <div className="text-xl md:text-2xl font-light text-emerald-800 mb-5">
+              <div className="text-xl md:text-2xl font-light text-[#19B5D8] mb-5">
                 {new Intl.NumberFormat("en-US", {
                   style: "currency",
                   currency: "INR",

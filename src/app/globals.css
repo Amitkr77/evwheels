@@ -88,8 +88,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
 
-  --primary: #46f20d;
-  --primary-content: #131811;
+  --primary: #19B5D8;
+  --primary-content: #ffffff;
   --primary-foreground: oklch(0.985 0 0);
 
   --secondary: oklch(0.97 0 0);
@@ -220,7 +220,7 @@
   scrollbar-width: none;
 }
 
-/* Subtle Emerald Gradient Animation */
+/* EVWheels Cyan Gradient Animation */
 @keyframes subtle-gradient {
   0%, 100% {
     background-position: 0% 50%;
@@ -233,9 +233,11 @@
 .subtle-gradient {
   background: linear-gradient(
     90deg,
-    #065f46,   /* dark emerald */
-    #10b981,   /* emerald */
-    #065f46    /* dark emerald again */
+    #1297B5,
+    #19B5D8,
+    #7DE8F5,
+    #19B5D8,
+    #1297B5
   );
   background-size: 200% 200%;
   animation: subtle-gradient 6s ease infinite;

@@ -122,13 +122,13 @@ export default function ContactPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#fdfcf9] font-['Inter']">
+    <div className="min-h-screen bg-[#F8FAFC] font-['Inter']">
        <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
         <div className="absolute inset-0 subtle-gradient"></div>
       </div>
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/30 via-transparent to-emerald-50/20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#DDF8FD]/30 via-transparent to-[#DDF8FD]/20" />
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Text + Quick Actions */}
@@ -137,12 +137,12 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <span className="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-800 rounded-full text-sm font-medium mb-6">
+              <span className="inline-block px-4 py-1.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm font-medium mb-6">
                 📬 Contact Us
               </span>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-medium text-neutral-900 leading-tight mb-6">
-                Get in Touch with <span className="text-emerald-800">EVWheels</span>
+                Get in Touch with <span className="text-[#19B5D8]">EVWheels</span>
               </h1>
 
               <p className="text-lg md:text-xl text-neutral-600 font-light leading-relaxed mb-10 max-w-xl">
@@ -155,7 +155,7 @@ export default function ContactPage() {
                   href="https://wa.me/919876543210"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm md:text-base font-medium hover:bg-emerald-900 transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
                 >
                   <MessageCircle size={18} />
                   WhatsApp Us
@@ -184,7 +184,7 @@ export default function ContactPage() {
                     href={s.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-neutral-500 hover:text-emerald-800 transition-colors"
+                    className="text-neutral-500 hover:text-[#19B5D8] transition-colors"
                   >
                     <s.icon size={20} />
                   </a>
@@ -201,7 +201,7 @@ export default function ContactPage() {
             >
               <div className="p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center text-white">
+                  <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white">
                     <MapPin size={20} />
                   </div>
                   <div>
@@ -229,7 +229,7 @@ export default function ContactPage() {
                     href="https://maps.google.com/?q=Boring+Road+Patna+Bihar"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-emerald-800 hover:underline font-medium flex items-center gap-1.5"
+                    className="text-[#19B5D8] hover:underline font-medium flex items-center gap-1.5"
                   >
                     📍 Get Directions
                   </Link>
@@ -252,17 +252,17 @@ export default function ContactPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors"
+                className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
               >
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mb-5 text-emerald-800"
-                  style={{ background: 'rgba(16,185,129,0.08)' }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center mb-5 text-[#19B5D8]"
+                  style={{ background: 'rgba(25,181,216,0.08)' }}
                 >
                   {card.icon}
                 </div>
                 <h4 className="text-lg font-medium text-neutral-900 mb-3">{card.title}</h4>
                 {card.link ? (
-                  <Link href={card.link} className="text-sm text-neutral-600 hover:text-emerald-800 transition-colors block">
+                  <Link href={card.link} className="text-sm text-neutral-600 hover:text-[#19B5D8] transition-colors block">
                     {card.lines.map((l, j) => (
                       <span key={j}>{l}</span>
                     ))}
@@ -279,7 +279,7 @@ export default function ContactPage() {
       </section>
 
       {/* Form + Quick Contact Sidebar */}
-      <section className="py-16 md:py-24 bg-[#fdfcf9]">
+      <section className="py-16 md:py-24 bg-[#F8FAFC]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
             {/* Form */}
@@ -290,8 +290,8 @@ export default function ContactPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="bg-white border border-neutral-200/70 rounded-2xl p-10 md:p-12 text-center"
                 >
-                  <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-emerald-50 flex items-center justify-center">
-                    <CheckCircle size={40} className="text-emerald-800" />
+                  <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-[#DDF8FD] flex items-center justify-center">
+                    <CheckCircle size={40} className="text-[#19B5D8]" />
                   </div>
                   <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
                     Message Sent Successfully!
@@ -304,7 +304,7 @@ export default function ContactPage() {
                       href="https://wa.me/919876543210"
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center justify-center gap-2 px-8 py-4 bg-emerald-800 text-white rounded-full text-sm md:text-base font-medium hover:bg-emerald-900 transition-colors"
+                      className="flex items-center justify-center gap-2 px-8 py-4 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
                     >
                       <MessageCircle size={18} />
                       WhatsApp Us
@@ -339,7 +339,7 @@ export default function ContactPage() {
                           value={form.name}
                           onChange={handleChange}
                           placeholder="Your full name"
-                          className={`w-full px-5 py-4 border ${errors.name ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-emerald-600 transition-colors`}
+                          className={`w-full px-5 py-4 border ${errors.name ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
                         />
                         {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name}</p>}
                       </div>
@@ -354,7 +354,7 @@ export default function ContactPage() {
                           value={form.phone}
                           onChange={handleChange}
                           placeholder="+91 98765 43210"
-                          className={`w-full px-5 py-4 border ${errors.phone ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-emerald-600 transition-colors`}
+                          className={`w-full px-5 py-4 border ${errors.phone ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
                         />
                         {errors.phone && <p className="mt-2 text-sm text-red-600">{errors.phone}</p>}
                       </div>
@@ -371,7 +371,7 @@ export default function ContactPage() {
                         value={form.email}
                         onChange={handleChange}
                         placeholder="your@email.com"
-                        className={`w-full px-5 py-4 border ${errors.email ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-emerald-600 transition-colors`}
+                        className={`w-full px-5 py-4 border ${errors.email ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
                       />
                       {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
                     </div>
@@ -385,7 +385,7 @@ export default function ContactPage() {
                         name="subject"
                         value={form.subject}
                         onChange={handleChange}
-                        className={`w-full px-5 py-4 border ${errors.subject ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-emerald-600 transition-colors`}
+                        className={`w-full px-5 py-4 border ${errors.subject ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
                       >
                         <option value="">Select an option...</option>
                         <option>RangeX City</option>
@@ -411,7 +411,7 @@ export default function ContactPage() {
                         onChange={handleChange}
                         placeholder="Tell us about your needs or questions..."
                         rows={5}
-                        className={`w-full px-5 py-4 border ${errors.message ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-emerald-600 transition-colors resize-none`}
+                        className={`w-full px-5 py-4 border ${errors.message ? 'border-red-500' : 'border-neutral-300'} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none`}
                       />
                       <div className="flex justify-between text-xs text-neutral-500 mt-2">
                         <span>{form.message.length} / 500 characters</span>
@@ -448,9 +448,9 @@ export default function ContactPage() {
             {/* Quick Contact Sidebar */}
             <div className="space-y-8">
               {/* WhatsApp Quick Card */}
-              <div className="bg-emerald-50/60 border border-emerald-100 rounded-xl p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <MessageCircle size={28} className="text-emerald-800" />
+              <div className="bg-[#DDF8FD]/60 border border-[#19B5D8]/20 rounded-xl p-6 text-center">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[#DDF8FD] flex items-center justify-center">
+                  <MessageCircle size={28} className="text-[#19B5D8]" />
                 </div>
                 <h3 className="text-xl font-medium text-neutral-900 mb-2">Chat on WhatsApp</h3>
                 <p className="text-sm text-neutral-600 mb-6">Instant reply from our Patna team</p>
@@ -458,7 +458,7 @@ export default function ContactPage() {
                   href="https://wa.me/919876543210"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-8 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+                  className="inline-flex items-center gap-2 px-8 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
                 >
                   Open WhatsApp
                 </Link>
@@ -469,7 +469,7 @@ export default function ContactPage() {
                 <h4 className="text-lg font-medium text-neutral-900 mb-6">Our Details</h4>
                 <div className="space-y-5 text-sm text-neutral-600">
                   <div className="flex items-start gap-3">
-                    <MapPin size={18} className="text-emerald-800 mt-0.5 shrink-0" />
+                    <MapPin size={18} className="text-[#19B5D8] mt-0.5 shrink-0" />
                     <div>
                       <strong className="text-neutral-900 block">EVWheels</strong>
                       Boring Road Crossing<br />
@@ -479,7 +479,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <Clock size={18} className="text-emerald-800 mt-0.5 shrink-0" />
+                    <Clock size={18} className="text-[#19B5D8] mt-0.5 shrink-0" />
                     <div>
                       <strong className="text-neutral-900 block">Working Hours</strong>
                       Mon – Sat: 10:00 AM – 7:00 PM<br />
@@ -488,10 +488,10 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <Phone size={18} className="text-emerald-800 mt-0.5 shrink-0" />
+                    <Phone size={18} className="text-[#19B5D8] mt-0.5 shrink-0" />
                     <div>
                       <strong className="text-neutral-900 block">Call / WhatsApp</strong>
-                      <Link href="tel:+919876543210" className="hover:text-emerald-800 transition-colors">
+                      <Link href="tel:+919876543210" className="hover:text-[#19B5D8] transition-colors">
                         +91 98765 43210
                       </Link>
                     </div>
@@ -511,7 +511,7 @@ export default function ContactPage() {
                   ].map((item, i) => (
                     <div key={i} className="flex justify-between">
                       <span className="text-neutral-600">{item.label}</span>
-                      <span className="text-emerald-800 font-medium">{item.time}</span>
+                      <span className="text-[#19B5D8] font-medium">{item.time}</span>
                     </div>
                   ))}
                 </div>
@@ -525,11 +525,11 @@ export default function ContactPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="text-center mb-12 md:mb-16">
-            <span className="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-800 rounded-full text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-1.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm font-medium mb-4">
               ❓ FAQs
             </span>
             <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900">
-              Frequently Asked <span className="text-emerald-800">Questions</span>
+              Frequently Asked <span className="text-[#19B5D8]">Questions</span>
             </h2>
           </div>
 
@@ -541,7 +541,7 @@ export default function ContactPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors"
+                className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
               >
                 <h4 className="text-lg font-medium text-neutral-900 mb-3">{faq.q}</h4>
                 <p className="text-neutral-600">{faq.a}</p>
@@ -552,7 +552,7 @@ export default function ContactPage() {
       </section>
 
       {/* Bottom CTA */}
-      <section className="py-16 md:py-24 bg-[#fdfcf9]">
+      <section className="py-16 md:py-24 bg-[#F8FAFC]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -572,7 +572,7 @@ export default function ContactPage() {
                 href="https://wa.me/919876543210"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 px-8 py-4 bg-emerald-800 text-white rounded-full text-sm md:text-base font-medium hover:bg-emerald-900 transition-colors"
+                className="flex items-center justify-center gap-2 px-8 py-4 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
               >
                 <MessageCircle size={18} />
                 WhatsApp Us

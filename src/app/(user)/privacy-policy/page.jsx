@@ -69,13 +69,13 @@ To exercise any of these rights, contact us at support@evwheels.in.`,
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-24 font-['Inter']">
+    <div className="min-h-screen bg-[#F8FAFC] pt-24 pb-24 font-['Inter']">
       <div className="max-w-3xl mx-auto px-5 sm:px-8">
 
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-neutral-500" aria-label="Breadcrumb">
           <ol className="flex items-center gap-2">
-            <li><Link href="/" className="hover:text-emerald-800 transition-colors">Home</Link></li>
+            <li><Link href="/" className="hover:text-[#19B5D8] transition-colors">Home</Link></li>
             <li>/</li>
             <li className="text-neutral-900">Privacy Policy</li>
           </ol>
@@ -107,10 +107,10 @@ export default function PrivacyPolicyPage() {
         </div>
 
         {/* Contact */}
-        <div className="mt-14 p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+        <div className="mt-14 p-6 bg-[#DDF8FD] rounded-2xl border border-[#19B5D8]/20">
           <h2 className="text-lg font-semibold text-neutral-900 mb-2">Questions about this policy?</h2>
           <p className="text-neutral-600 text-sm mb-4">
-            Contact our data team at <a href="mailto:support@evwheels.in" className="text-emerald-800 hover:underline">support@evwheels.in</a> or visit our <Link href="/contact" className="text-emerald-800 hover:underline">Contact page</Link>.
+            Contact our data team at <a href="mailto:support@evwheels.in" className="text-[#19B5D8] hover:underline">support@evwheels.in</a> or visit our <Link href="/contact" className="text-[#19B5D8] hover:underline">Contact page</Link>.
           </p>
         </div>
       </div>

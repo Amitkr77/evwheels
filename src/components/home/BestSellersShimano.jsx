@@ -48,7 +48,7 @@ export default function BestSellersShimano() {
       <div className="max-w-6xl mx-auto px-8 lg:px-16">
         {/* Header */}
         <div className="text-center mb-20">
-          <span className="text-xs uppercase tracking-[0.35em] text-emerald-800">
+          <span className="text-xs uppercase tracking-[0.35em] text-[#19B5D8]">
             Trusted Components
           </span>
 
@@ -97,7 +97,7 @@ export default function BestSellersShimano() {
                     {product.price}
                   </span>
 
-                  <span className="text-sm text-neutral-500 group-hover:text-emerald-800 transition-colors">
+                  <span className="text-sm text-neutral-500 group-hover:text-[#19B5D8] transition-colors">
                     Explore →
                   </span>
                 </div>
@@ -114,7 +114,7 @@ export default function BestSellersShimano() {
               inline-flex
               items-center
               gap-2
-              text-emerald-800
+              text-[#19B5D8]
               text-sm
               tracking-wide
               hover:opacity-70

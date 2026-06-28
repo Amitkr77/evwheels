@@ -40,7 +40,7 @@ export default function UpgradeYourRide() {
       <div className="max-w-6xl mx-auto px-8 lg:px-16">
         {/* Header */}
         <div className="text-center mb-24">
-          <span className="text-xs uppercase tracking-[0.35em] text-emerald-800">
+          <span className="text-xs uppercase tracking-[0.35em] text-[#19B5D8]">
             Premium Upgrades
           </span>
 
@@ -75,7 +75,7 @@ export default function UpgradeYourRide() {
 
               {/* Content */}
               <div>
-                <span className="text-xs uppercase tracking-[0.3em] text-emerald-800">
+                <span className="text-xs uppercase tracking-[0.3em] text-[#19B5D8]">
                   {product.category}
                 </span>
 
@@ -93,7 +93,7 @@ export default function UpgradeYourRide() {
                     {product.price}
                   </span>
 
-                  <span className="text-sm text-neutral-500 transition-colors group-hover:text-emerald-800">
+                  <span className="text-sm text-neutral-500 transition-colors group-hover:text-[#19B5D8]">
                     Explore →
                   </span>
                 </div>
@@ -113,7 +113,7 @@ export default function UpgradeYourRide() {
 
           <Link
             href="/parts"
-            className="inline-block mt-10 text-emerald-800 text-sm tracking-wide"
+            className="inline-block mt-10 text-[#19B5D8] text-sm tracking-wide"
           >
             View All Components →
           </Link>

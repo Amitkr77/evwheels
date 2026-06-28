@@ -125,13 +125,13 @@ export default function RegisterPage() {
     if (pwd.length < 12 || !/[A-Z]/.test(pwd) || !/\d/.test(pwd)) {
       return { width: 50, text: "Medium", color: "bg-amber-500" };
     }
-    return { width: 100, text: "Strong", color: "bg-emerald-600" };
+    return { width: 100, text: "Strong", color: "bg-[#19B5D8]" };
   };
 
   const { width, text, color } = getPasswordStrength();
 
   return (
-    <div className="min-h-screen bg-[#fdfcf9] flex items-center justify-center px-5 py-16 font-['Inter']">
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-5 py-16 font-['Inter']">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -140,7 +140,7 @@ export default function RegisterPage() {
       >
         {/* Back link */}
         <div className="mb-8 text-center">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-emerald-800 transition-colors">
+          <Link href="/" className="text-sm text-neutral-500 hover:text-[#19B5D8] transition-colors">
             ← Back to EVWheels
           </Link>
         </div>
@@ -161,7 +161,7 @@ export default function RegisterPage() {
             <div
               className={`p-4 rounded-lg text-center text-sm font-medium border ${
                 isSuccess
-                  ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                  ? "bg-[#DDF8FD] text-[#1297B5] border-[#19B5D8]/30"
                   : "bg-red-50 text-red-700 border-red-200"
               }`}
             >
@@ -181,7 +181,7 @@ export default function RegisterPage() {
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors ${
+                className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors ${
                   errors.name ? "border-red-500" : ""
                 }`}
                 placeholder="Amit Sharma"
@@ -208,7 +208,7 @@ export default function RegisterPage() {
                   type="email"
                   value={form.email}
                   onChange={handleChange}
-                  className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors ${
+                  className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors ${
                     errors.email ? "border-red-500" : ""
                   }`}
                   placeholder="amit@evwheels.in"
@@ -232,7 +232,7 @@ export default function RegisterPage() {
                   type="tel"
                   value={form.phone}
                   onChange={handleChange}
-                  className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors ${
+                  className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors ${
                     errors.phone ? "border-red-500" : ""
                   }`}
                   placeholder="+91 98765 43210"
@@ -258,7 +258,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 value={form.password}
                 onChange={handleChange}
-                className={`w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors ${
+                className={`w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors ${
                   errors.password ? "border-red-500" : ""
                 }`}
                 placeholder="••••••••"
@@ -299,7 +299,7 @@ export default function RegisterPage() {
             <input
               id="terms"
               type="checkbox"
-              className="mt-1 w-4 h-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-600"
+              className="mt-1 w-4 h-4 rounded border-neutral-300 text-[#19B5D8] focus:ring-[#19B5D8]"
               required
               disabled={loading}
             />
@@ -308,11 +308,11 @@ export default function RegisterPage() {
               className="text-sm text-neutral-600 leading-relaxed cursor-pointer"
             >
               I agree to the{" "}
-              <Link href="/terms" className="text-emerald-800 hover:underline">
+              <Link href="/terms" className="text-[#19B5D8] hover:underline">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="/privacy-policy" className="text-emerald-800 hover:underline">
+              <Link href="/privacy-policy" className="text-[#19B5D8] hover:underline">
                 Privacy Policy
               </Link>
             </label>
@@ -340,7 +340,7 @@ export default function RegisterPage() {
         {/* Login link */}
         <p className="mt-10 text-center text-neutral-600">
           Already have an account?{" "}
-          <Link href="/account/login" className="text-emerald-800 font-medium hover:underline">
+          <Link href="/account/login" className="text-[#19B5D8] font-medium hover:underline">
             Sign in
           </Link>
         </p>

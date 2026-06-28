@@ -77,14 +77,14 @@ export default function Navbar() {
 
   const textColor = scrolled ? "text-neutral-900" : "text-white";
   const hoverColor = scrolled
-    ? "hover:text-emerald-700"
-    : "hover:text-emerald-300";
+    ? "hover:text-[#19B5D8]"
+    : "hover:text-[#7DE8F5]";
 
   return (
     <nav
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#fdfcf9]/95 backdrop-blur-xl shadow-sm"
+          ? "bg-white/95 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0]"
           : " max-w-7xl mx-auto px-5  mt-2 bg-black/30 backdrop-blur-sm rounded-2xl"
       }`}
     >
@@ -135,7 +135,7 @@ export default function Navbar() {
                       w-[650px]
                     "
                   >
-                    <div className="bg-[#fdfcf9] shadow-2xl rounded-2xl border border-neutral-200/50 overflow-hidden p-6 grid grid-cols-2 gap-8">
+                    <div className="bg-white shadow-2xl rounded-2xl border border-neutral-200/50 overflow-hidden p-6 grid grid-cols-2 gap-8">
                       {item.subMenu.map((group) => (
                         <div key={group.title}>
                           <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3">
@@ -146,7 +146,7 @@ export default function Navbar() {
                               <Link
                                 key={link.href}
                                 href={link.href}
-                                className="block text-sm text-neutral-800 hover:text-emerald-700 hover:translate-x-1 transition-all duration-200"
+                                className="block text-sm text-neutral-800 hover:text-[#19B5D8] hover:translate-x-1 transition-all duration-200"
                               >
                                 {link.label}
                               </Link>
@@ -170,7 +170,7 @@ export default function Navbar() {
             >
               <ShoppingBag size={22} strokeWidth={1.6} />
               {totalQuantity > 0 && (
-                <span className="absolute -top-1 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-700 px-1.5 text-xs font-bold text-white border-2 border-white">
+                <span className="absolute -top-1 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#19B5D8] px-1.5 text-xs font-bold text-white border-2 border-white">
                   {totalQuantity > 99 ? "99+" : totalQuantity}
                 </span>
               )}
@@ -239,7 +239,7 @@ export default function Navbar() {
               ))}
 
             <button
-              className="md:hidden focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded-lg p-1"
+              className="md:hidden focus:outline-none focus:ring-2 focus:ring-[#19B5D8] rounded-lg p-1"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileMenuOpen}
@@ -262,7 +262,7 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(false)}
           />
           <div
-            className={`fixed top-0 right-0 h-full w-4/5 max-w-xs bg-[#fdfcf9] shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+            className={`fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
               mobileMenuOpen ? "translate-x-0" : "translate-x-full"
             } md:hidden overflow-y-auto`}
           >
@@ -328,7 +328,7 @@ export default function Navbar() {
                                       key={link.href}
                                       href={link.href}
                                       onClick={() => setMobileMenuOpen(false)}
-                                      className="block py-2 text-sm text-neutral-600 hover:text-emerald-700"
+                                      className="block py-2 text-sm text-neutral-600 hover:text-[#19B5D8]"
                                     >
                                       {link.label}
                                     </Link>
@@ -371,7 +371,7 @@ export default function Navbar() {
                 ) : (
                   <Link
                     href="/account/login"
-                    className="flex items-center justify-center gap-3 py-3 bg-emerald-700 text-white rounded-lg font-medium hover:bg-emerald-800 transition-colors"
+                    className="flex items-center justify-center gap-3 py-3 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <User size={20} />
@@ -392,7 +392,7 @@ function NavLink({ href, label, textColor, hoverColor, isSpecial }) {
   return (
     <Link
       href={href}
-      className={`text-sm lg:text-base font-medium tracking-wide relative group ${textColor} ${hoverColor} ${isSpecial ? "text-emerald-700 hover:text-emerald-600" : ""}`}
+      className={`text-sm lg:text-base font-medium tracking-wide relative group ${textColor} ${hoverColor} ${isSpecial ? "text-[#19B5D8] hover:text-[#1297B5]" : ""}`}
     >
       {label}
       <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full" />
@@ -405,7 +405,7 @@ function MobileNavLink({ href, label, isSpecial, onClick }) {
     <Link
       href={href}
       onClick={onClick}
-      className={`block py-3 text-lg font-medium ${isSpecial ? "text-emerald-700" : "text-neutral-900"} hover:text-emerald-700 transition-colors`}
+      className={`block py-3 text-lg font-medium ${isSpecial ? "text-[#19B5D8]" : "text-neutral-900"} hover:text-[#19B5D8] transition-colors`}
     >
       {label}
     </Link>

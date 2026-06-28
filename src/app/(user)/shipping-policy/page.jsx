@@ -16,13 +16,13 @@ const STEPS = [
 
 export default function ShippingPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#fdfcf9] pt-24 pb-24 font-['Inter']">
+    <div className="min-h-screen bg-[#F8FAFC] pt-24 pb-24 font-['Inter']">
       <div className="max-w-3xl mx-auto px-5 sm:px-8">
 
         {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-neutral-500" aria-label="Breadcrumb">
           <ol className="flex items-center gap-2">
-            <li><Link href="/" className="hover:text-emerald-800 transition-colors">Home</Link></li>
+            <li><Link href="/" className="hover:text-[#19B5D8] transition-colors">Home</Link></li>
             <li>/</li>
             <li className="text-neutral-900">Shipping Policy</li>
           </ol>
@@ -42,17 +42,17 @@ export default function ShippingPolicyPage() {
         {/* Key Info Cards */}
         <div className="grid sm:grid-cols-3 gap-4 mb-12">
           <div className="bg-white border border-neutral-200 rounded-xl p-5">
-            <Truck size={24} className="text-emerald-800 mb-3" />
+            <Truck size={24} className="text-[#19B5D8] mb-3" />
             <h3 className="font-semibold text-neutral-900 mb-1">Free Shipping</h3>
             <p className="text-sm text-neutral-600">On all electric cycles across Bihar</p>
           </div>
           <div className="bg-white border border-neutral-200 rounded-xl p-5">
-            <Clock size={24} className="text-emerald-800 mb-3" />
+            <Clock size={24} className="text-[#19B5D8] mb-3" />
             <h3 className="font-semibold text-neutral-900 mb-1">4–8 Business Days</h3>
             <p className="text-sm text-neutral-600">Standard delivery to major cities</p>
           </div>
           <div className="bg-white border border-neutral-200 rounded-xl p-5">
-            <Package size={24} className="text-emerald-800 mb-3" />
+            <Package size={24} className="text-[#19B5D8] mb-3" />
             <h3 className="font-semibold text-neutral-900 mb-1">Carefully Packed</h3>
             <p className="text-sm text-neutral-600">Heavy-duty packaging for safe transit</p>
           </div>
@@ -66,7 +66,7 @@ export default function ShippingPolicyPage() {
           <div className="space-y-4">
             {STEPS.map((s) => (
               <div key={s.step} className="flex gap-4 bg-white border border-neutral-200 rounded-xl p-5">
-                <span className="text-2xl font-bold text-emerald-800 font-['Playfair_Display'] shrink-0">{s.step}</span>
+                <span className="text-2xl font-bold text-[#19B5D8] font-['Playfair_Display'] shrink-0">{s.step}</span>
                 <div>
                   <h3 className="font-semibold text-neutral-900">{s.title}</h3>
                   <p className="text-sm text-neutral-600 mt-1">{s.desc}</p>
@@ -86,7 +86,7 @@ export default function ShippingPolicyPage() {
           </p>
           <div className="flex flex-wrap gap-3">
             {COVERAGE.map((city) => (
-              <span key={city} className="flex items-center gap-1.5 px-4 py-2 bg-emerald-50 text-emerald-800 rounded-full text-sm font-medium border border-emerald-100">
+              <span key={city} className="flex items-center gap-1.5 px-4 py-2 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm font-medium border border-[#19B5D8]/20">
                 <MapPin size={14} />
                 {city}
               </span>
@@ -111,7 +111,7 @@ export default function ShippingPolicyPage() {
               "We are not responsible for delays caused by incorrect or incomplete delivery addresses.",
             ].map((note, i) => (
               <li key={i} className="flex gap-3 text-neutral-600 text-sm">
-                <CheckCircle size={18} className="text-emerald-700 mt-0.5 shrink-0" />
+                <CheckCircle size={18} className="text-[#19B5D8] mt-0.5 shrink-0" />
                 {note}
               </li>
             ))}
@@ -119,10 +119,10 @@ export default function ShippingPolicyPage() {
         </section>
 
         {/* Contact */}
-        <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+        <div className="p-6 bg-[#DDF8FD] rounded-2xl border border-[#19B5D8]/20">
           <h2 className="text-lg font-semibold text-neutral-900 mb-2">Need help with your delivery?</h2>
           <p className="text-neutral-600 text-sm mb-4">
-            Call or WhatsApp us at <a href="tel:+919876543210" className="text-emerald-800 hover:underline font-medium">+91 98765 43210</a>, or visit our <Link href="/contact" className="text-emerald-800 hover:underline">Contact page</Link>.
+            Call or WhatsApp us at <a href="tel:+919876543210" className="text-[#19B5D8] hover:underline font-medium">+91 98765 43210</a>, or visit our <Link href="/contact" className="text-[#19B5D8] hover:underline">Contact page</Link>.
           </p>
           <p className="text-neutral-500 text-xs">Support hours: Monday – Saturday, 10:00 AM – 7:00 PM</p>
         </div>

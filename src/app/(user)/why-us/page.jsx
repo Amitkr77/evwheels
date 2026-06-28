@@ -32,10 +32,7 @@ const staggerContainer = {
 
 export default function WhyUsPage() {
   return (
-    <div className="min-h-screen bg-[#fdfcf9] font-['Inter'] pt-20 pb-20">
-       <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
-        <div className="absolute inset-0 subtle-gradient"></div>
-      </div>
+    <div className="min-h-screen bg-white font-['Inter'] pt-20 pb-20">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Hero Section */}
         <motion.div
@@ -46,7 +43,7 @@ export default function WhyUsPage() {
         >
           <motion.span
             variants={fadeInUp}
-            className="inline-block px-5 py-2 bg-emerald-50 text-emerald-800 rounded-full text-sm md:text-base font-medium mb-6"
+            className="inline-block px-5 py-2 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm md:text-base font-medium mb-6"
           >
             Why Choose EVWheels
           </motion.span>
@@ -57,7 +54,7 @@ export default function WhyUsPage() {
           >
             Ride Better.
             <br />
-            <span className="text-emerald-800">Live Quieter.</span>
+            <span className="text-[#19B5D8]">Live Quieter.</span>
           </motion.h1>
 
           <motion.p
@@ -97,9 +94,9 @@ export default function WhyUsPage() {
             <motion.div
               key={i}
               variants={fadeInUp}
-              className="bg-white border border-neutral-200/70 rounded-2xl p-8 hover:border-emerald-200/60 transition-colors group"
+              className="bg-white border border-neutral-200/70 rounded-2xl p-8 hover:border-[#19B5D8]/20 transition-colors group"
             >
-              <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mb-6 text-emerald-800 group-hover:bg-emerald-100 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-[#DDF8FD] flex items-center justify-center mb-6 text-[#19B5D8] group-hover:bg-[#C7F3FC] transition-colors">
                 {item.icon}
               </div>
               <h3 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
@@ -158,9 +155,9 @@ export default function WhyUsPage() {
               <motion.div
                 key={i}
                 variants={fadeInUp}
-                className="flex gap-5 bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-emerald-200/60 transition-colors"
+                className="flex gap-5 bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
               >
-                <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-800 shrink-0">
+                <div className="w-12 h-12 rounded-full bg-[#DDF8FD] flex items-center justify-center text-[#19B5D8] shrink-0">
                   {item.icon}
                 </div>
                 <div>
@@ -209,7 +206,7 @@ export default function WhyUsPage() {
                 <li className="flex items-start gap-3">
                   <BatteryCharging
                     size={24}
-                    className="text-emerald-800 shrink-0 mt-1"
+                    className="text-[#19B5D8] shrink-0 mt-1"
                   />
                   <div>
                     <strong className="text-neutral-900">RangeX City</strong> —
@@ -219,7 +216,7 @@ export default function WhyUsPage() {
                 <li className="flex items-start gap-3">
                   <BatteryCharging
                     size={24}
-                    className="text-emerald-800 shrink-0 mt-1"
+                    className="text-[#19B5D8] shrink-0 mt-1"
                   />
                   <div>
                     <strong className="text-neutral-900">TrailX Pro</strong> —
@@ -229,7 +226,7 @@ export default function WhyUsPage() {
                 <li className="flex items-start gap-3">
                   <BatteryCharging
                     size={24}
-                    className="text-emerald-800 shrink-0 mt-1"
+                    className="text-[#19B5D8] shrink-0 mt-1"
                   />
                   <div>
                     <strong className="text-neutral-900">LiteX Fold</strong> —
@@ -257,7 +254,7 @@ export default function WhyUsPage() {
           <motion.div variants={fadeInUp}>
             <Award
               size={48}
-              className="mx-auto mb-8 text-emerald-800"
+              className="mx-auto mb-8 text-[#19B5D8]"
               strokeWidth={1.4}
             />
             <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-6">
@@ -301,7 +298,7 @@ export default function WhyUsPage() {
               href="https://wa.me/919876543210"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-emerald-600 text-emerald-800 rounded-full text-lg font-medium hover:bg-emerald-50 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-[#19B5D8] text-[#19B5D8] rounded-full text-lg font-medium hover:bg-[#DDF8FD] transition-colors"
             >
               <MessageCircle size={20} />
               Chat on WhatsApp

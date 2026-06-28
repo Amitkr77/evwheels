@@ -17,7 +17,7 @@ export default function BudgetEssentials() {
       <div className="max-w-5xl mx-auto px-8 lg:px-16">
         {/* Header */}
         <div className="text-center mb-20">
-          <span className="text-xs tracking-[0.35em] uppercase text-emerald-800">
+          <span className="text-xs tracking-[0.35em] uppercase text-[#19B5D8]">
             Smart Savings
           </span>
 
@@ -53,7 +53,7 @@ export default function BudgetEssentials() {
                   {item.price}
                 </p>
 
-                <span className="mt-2 block text-sm text-neutral-400 transition-colors group-hover:text-emerald-800">
+                <span className="mt-2 block text-sm text-neutral-400 transition-colors group-hover:text-[#19B5D8]">
                   View →
                 </span>
               </div>

@@ -77,7 +77,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <main className="flex-grow bg-[#fdfcf9] min-h-screen pt-24 pb-20">
+      <main className="flex-grow bg-[#F8FAFC] min-h-screen pt-24 pb-20">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 text-center py-20">
           <ShoppingCart size={64} className="mx-auto text-neutral-400 mb-6" strokeWidth={1.2} />
           <h2 className="text-3xl font-medium mb-4">Your cart is empty</h2>
@@ -97,11 +97,7 @@ export default function CartPage() {
   }
 
   return (
-    <main className="flex-grow bg-[#fdfcf9] min-h-screen font-['Inter'] pt-24 pb-20">
-      <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
-        <div className="absolute inset-0 subtle-gradient"></div>
-      </div>
-
+    <main className="flex-grow bg-[#F8FAFC] min-h-screen font-['Inter'] pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-10 border-b border-neutral-200/70 mb-12">
@@ -126,10 +122,10 @@ export default function CartPage() {
           {/* Cart Items */}
           <div className="flex-1 flex flex-col gap-6 lg:gap-8">
             {summary?.shipping === 0 && !isSummaryLoading && (
-              <div className="flex items-center gap-3 p-5 bg-emerald-50/70 border border-emerald-100 rounded-xl text-sm text-neutral-700">
-                <ShieldCheck size={20} className="text-emerald-700 flex-shrink-0" />
+              <div className="flex items-center gap-3 p-5 bg-[#DDF8FD]/70 border border-[#19B5D8]/20 rounded-xl text-sm text-neutral-700">
+                <ShieldCheck size={20} className="text-[#19B5D8] flex-shrink-0" />
                 <span>
-                  You've qualified for <strong className="text-emerald-800">Free Shipping</strong>!
+                  You&apos;ve qualified for <strong className="text-[#19B5D8]">Free Shipping</strong>!
                 </span>
               </div>
             )}
@@ -139,7 +135,7 @@ export default function CartPage() {
               return (
                 <div
                   key={product._id}
-                  className="bg-white border border-neutral-200/70 rounded-xl p-5 sm:p-6 hover:border-emerald-200 transition-colors"
+                  className="bg-white border border-neutral-200/70 rounded-xl p-5 sm:p-6 hover:border-[#19B5D8]/20 transition-colors"
                 >
                   <div className="flex flex-col sm:flex-row gap-5 sm:gap-6">
                     <div className="relative shrink-0 w-full sm:w-32 aspect-square">
@@ -166,7 +162,7 @@ export default function CartPage() {
                               Color: <span className="text-neutral-900">{product.colors?.[0] || "—"}</span>
                             </p>
                           </div>
-                          <p className="text-xl font-medium text-emerald-800 whitespace-nowrap">
+                          <p className="text-xl font-medium text-[#19B5D8] whitespace-nowrap">
                             ₹{Number(product.price).toLocaleString("en-IN")}
                           </p>
                         </div>
@@ -247,7 +243,7 @@ export default function CartPage() {
                         </span>
                       </div>
                       {summary?.discount > 0 && (
-                        <div className="flex justify-between text-emerald-700 font-medium">
+                        <div className="flex justify-between text-[#22C55E] font-medium">
                           <span>Discount</span>
                           <span>-₹{(summary.discount).toLocaleString("en-IN")}</span>
                         </div>
@@ -256,7 +252,7 @@ export default function CartPage() {
 
                     <div className="flex justify-between items-center mb-8">
                       <span className="text-xl font-medium">Total</span>
-                      <span className="text-3xl font-['Playfair_Display'] font-medium text-emerald-800">
+                      <span className="text-3xl font-['Playfair_Display'] font-medium text-[#19B5D8]">
                         ₹{(summary?.total || 0).toLocaleString("en-IN")}
                       </span>
                     </div>
@@ -272,7 +268,7 @@ export default function CartPage() {
                             setCouponError("");
                           }}
                           placeholder="Enter code"
-                          className="flex-1 px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition text-sm uppercase"
+                          className="flex-1 px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] focus:ring-2 focus:ring-[#19B5D8]/10 transition text-sm uppercase"
                         />
                         <button
                           onClick={applyCoupon}
@@ -284,7 +280,7 @@ export default function CartPage() {
                       </div>
                       {couponError && <p className="text-red-600 text-sm mt-2">{couponError}</p>}
                       {summary?.couponApplied && (
-                        <p className="text-emerald-700 text-sm font-medium mt-2">
+                        <p className="text-[#22C55E] text-sm font-medium mt-2">
                           Coupon "{summary.couponApplied}" applied successfully!
                         </p>
                       )}

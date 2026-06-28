@@ -56,7 +56,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fdfcf9] flex items-center justify-center px-5 py-16 font-['Inter']">
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-5 py-16 font-['Inter']">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -65,7 +65,7 @@ function LoginForm() {
       >
         {/* Back link */}
         <div className="mb-8 text-center">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-emerald-800 transition-colors">
+          <Link href="/" className="text-sm text-neutral-500 hover:text-[#19B5D8] transition-colors">
             ← Back to EVWheels
           </Link>
         </div>
@@ -102,7 +102,7 @@ function LoginForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value.trim())}
-                className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                 placeholder="hello@evwheels.in"
                 autoComplete="email"
                 required
@@ -124,7 +124,7 @@ function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                className="w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                 placeholder="••••••••"
                 autoComplete="current-password"
                 required
@@ -144,14 +144,14 @@ function LoginForm() {
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-600"
+                className="w-4 h-4 rounded border-neutral-300 text-[#19B5D8] focus:ring-[#19B5D8]"
               />
               <span className="text-neutral-600 font-light">Remember me</span>
             </label>
 
             <Link
               href="/account/forgot-password"
-              className="text-emerald-800 font-medium hover:underline"
+              className="text-[#19B5D8] font-medium hover:underline"
             >
               Forgot password?
             </Link>
@@ -173,7 +173,7 @@ function LoginForm() {
           Don't have an account?{" "}
           <Link
             href="/account/register"
-            className="text-emerald-800 font-medium hover:underline"
+            className="text-[#19B5D8] font-medium hover:underline"
           >
             Create one
           </Link>

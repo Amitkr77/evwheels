@@ -142,7 +142,7 @@ export default function CheckoutPage() {
 }
 
   return (
-    <main className="flex-grow bg-[#fdfcf9] min-h-screen font-['Inter'] pt-20 pb-20">
+    <main className="flex-grow bg-[#F8FAFC] min-h-screen font-['Inter'] pt-20 pb-20">
       <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
         <div className="absolute inset-0 subtle-gradient"></div>
       </div>
@@ -175,7 +175,7 @@ export default function CheckoutPage() {
                     type="checkbox"
                     id="news"
                     disabled
-                    className="w-4 h-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-600"
+                    className="w-4 h-4 rounded border-neutral-300 text-[#19B5D8] focus:ring-[#19B5D8]"
                   />
                   <label
                     htmlFor="news"
@@ -202,7 +202,7 @@ export default function CheckoutPage() {
                     name="fullName"
                     value={shippingAddress.fullName}
                     onChange={handleAddressChange}
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                     required
                   />
                 </div>
@@ -217,7 +217,7 @@ export default function CheckoutPage() {
                     value={shippingAddress.street}
                     onChange={handleAddressChange}
                     placeholder="House no, Building, Street, Area"
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                     required
                   />
                 </div>
@@ -231,7 +231,7 @@ export default function CheckoutPage() {
                     name="city"
                     value={shippingAddress.city}
                     onChange={handleAddressChange}
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                     required
                   />
                 </div>
@@ -244,7 +244,7 @@ export default function CheckoutPage() {
                     name="state"
                     value={shippingAddress.state}
                     onChange={handleAddressChange}
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors bg-white"
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors bg-white"
                     required
                   >
                     <option value="">Select State</option>
@@ -263,7 +263,7 @@ export default function CheckoutPage() {
                     name="postalCode"
                     value={shippingAddress.postalCode}
                     onChange={handleAddressChange}
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                     required
                   />
                 </div>
@@ -278,7 +278,7 @@ export default function CheckoutPage() {
                       name="phone"
                       value={shippingAddress.phone}
                       onChange={handleAddressChange}
-                      className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                      className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                       required
                     />
                     <Phone
@@ -304,10 +304,10 @@ export default function CheckoutPage() {
                     defaultChecked
                     className="peer sr-only"
                   />
-                  <div className="p-5 rounded-xl border border-neutral-300 peer-checked:border-emerald-600 bg-white transition-all group-hover:border-emerald-300">
+                  <div className="p-5 rounded-xl border border-neutral-300 peer-checked:border-[#19B5D8] bg-white transition-all group-hover:border-[#19B5D8]/30">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="w-5 h-5 rounded-full border-2 border-neutral-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-colors flex items-center justify-center">
+                        <div className="w-5 h-5 rounded-full border-2 border-neutral-300 peer-checked:border-[#19B5D8] peer-checked:bg-[#19B5D8] transition-colors flex items-center justify-center">
                           <div className="w-2.5 h-2.5 bg-white rounded-full" />
                         </div>
                         <div>
@@ -319,7 +319,7 @@ export default function CheckoutPage() {
                           </p>
                         </div>
                       </div>
-                      <span className="font-medium text-emerald-800">Free</span>
+                      <span className="font-medium text-[#22C55E]">Free</span>
                     </div>
                   </div>
                 </label>
@@ -330,10 +330,10 @@ export default function CheckoutPage() {
                     name="delivery"
                     className="peer sr-only"
                   />
-                  <div className="p-5 rounded-xl border border-neutral-300 peer-checked:border-emerald-600 bg-white transition-all group-hover:border-emerald-300">
+                  <div className="p-5 rounded-xl border border-neutral-300 peer-checked:border-[#19B5D8] bg-white transition-all group-hover:border-[#19B5D8]/30">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="w-5 h-5 rounded-full border-2 border-neutral-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 transition-colors flex items-center justify-center">
+                        <div className="w-5 h-5 rounded-full border-2 border-neutral-300 peer-checked:border-[#19B5D8] peer-checked:bg-[#19B5D8] transition-colors flex items-center justify-center">
                           <div className="w-2.5 h-2.5 bg-white rounded-full" />
                         </div>
                         <div>
@@ -369,7 +369,7 @@ export default function CheckoutPage() {
                     onClick={() => setPaymentMethod(PAYMENT_METHODS.CARD)}
                     className={`flex items-center justify-center gap-2 py-4 text-sm md:text-base font-medium transition-all border-b-2 ${
                       paymentMethod === PAYMENT_METHODS.CARD
-                        ? "bg-emerald-50 text-emerald-800 border-emerald-600"
+                        ? "bg-[#DDF8FD] text-[#19B5D8] border-[#19B5D8]"
                         : "text-neutral-600 hover:text-neutral-900 border-transparent"
                     }`}
                   >
@@ -382,7 +382,7 @@ export default function CheckoutPage() {
                     onClick={() => setPaymentMethod(PAYMENT_METHODS.COD)}
                     className={`flex items-center justify-center gap-2 py-4 text-sm md:text-base font-medium transition-all border-b-2 ${
                       paymentMethod === PAYMENT_METHODS.COD
-                        ? "bg-emerald-50 text-emerald-800 border-emerald-600"
+                        ? "bg-[#DDF8FD] text-[#19B5D8] border-[#19B5D8]"
                         : "text-neutral-600 hover:text-neutral-900 border-transparent"
                     }`}
                   >
@@ -443,11 +443,11 @@ export default function CheckoutPage() {
 
             <p className="text-center text-sm text-neutral-600 mt-6">
               By placing your order, you agree to our{" "}
-              <Link href="#" className="text-emerald-800 hover:underline">
+              <Link href="#" className="text-[#19B5D8] hover:underline">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="#" className="text-emerald-800 hover:underline">
+              <Link href="#" className="text-[#19B5D8] hover:underline">
                 Privacy Policy
               </Link>
               .
@@ -484,7 +484,7 @@ export default function CheckoutPage() {
                               <h4 className="text-lg font-medium text-neutral-900">
                                 {product?.title}
                               </h4>
-                              <span className="text-xl font-medium text-emerald-800">
+                              <span className="text-xl font-medium text-[#19B5D8]">
                                 ₹{product.price.toLocaleString()}
                               </span>
                             </div>
@@ -535,7 +535,7 @@ export default function CheckoutPage() {
                         </svg>
                       </span>
                     </span>
-                    <span className="text-emerald-800 font-medium">
+                    <span className="text-[#19B5D8] font-medium">
                       {summary?.shipping === 0
                         ? "Free"
                         : new Intl.NumberFormat("en-IN", {
@@ -556,7 +556,7 @@ export default function CheckoutPage() {
                   {summary?.discount > 0 && (
                     <div className="flex justify-between text-neutral-600">
                       <span>Discount</span>
-                      <span className="text-emerald-700 font-medium">
+                      <span className="text-[#22C55E] font-medium">
                         -
                         {new Intl.NumberFormat("en-IN", {
                           style: "currency",
@@ -575,7 +575,7 @@ export default function CheckoutPage() {
                   </span>
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-sm text-neutral-600">INR</span>
-                    <span className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-emerald-800">
+                    <span className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-[#19B5D8]">
                       {new Intl.NumberFormat("en-IN", {
                         style: "currency",
                         currency: "INR",
@@ -590,14 +590,14 @@ export default function CheckoutPage() {
                 <div className="flex flex-col items-center text-center gap-2">
                   <ShieldCheck
                     size={24}
-                    className="text-emerald-800"
+                    className="text-[#19B5D8]"
                     strokeWidth={1.5}
                   />
                   <span className="text-xs font-light">2 Year Warranty</span>
                 </div>
                 <div className="flex flex-col items-center text-center gap-2">
                   <svg
-                    className="w-6 h-6 text-emerald-800"
+                    className="w-6 h-6 text-[#19B5D8]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -613,7 +613,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex flex-col items-center text-center gap-2">
                   <svg
-                    className="w-6 h-6 text-emerald-800"
+                    className="w-6 h-6 text-[#19B5D8]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

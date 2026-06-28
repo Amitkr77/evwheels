@@ -1,5 +1,3 @@
-// components/Footer.tsx
-
 "use client";
 
 import React, { useState } from "react";
@@ -13,7 +11,6 @@ import {
   Instagram,
   Twitter,
   Youtube,
-  MessageCircle,
   ShieldCheck,
   Truck,
   Battery,
@@ -23,7 +20,7 @@ import {
 
 export default function Footer() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState(""); // "success" | "error" | ""
+  const [status, setStatus] = useState("");
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -32,46 +29,39 @@ export default function Footer() {
       setTimeout(() => setStatus(""), 3000);
       return;
     }
-
-    // Simulate successful subscription
     setStatus("success");
     setEmail("");
     setTimeout(() => setStatus(""), 4000);
   };
 
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="bg-[#fdfcf9]   pt-16 pb-12 font-['Inter']">
-      {" "}
-      {/* border-t border-neutral-200/70*/}
+    <footer className="bg-[#121212] pt-16 pb-12 font-['Inter']">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
-          {/* Brand & Description */}
+          {/* Brand */}
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
                 E
               </div>
-              <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium tracking-tight text-neutral-900">
+              <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium tracking-tight text-white">
                 EVWheels
               </h2>
             </div>
 
-            <p className="text-neutral-600 font-light leading-relaxed max-w-xs">
+            <p className="text-[#94A3B8] font-light leading-relaxed max-w-xs">
               Premium electric cycles crafted for real Indian roads — silent,
               capable, and built to last.
             </p>
 
-            {/* Social Icons */}
             <div className="flex gap-5">
               <a
                 href="https://facebook.com/evwheels"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="EVWheels on Facebook"
-                className="text-neutral-500 hover:text-emerald-800 transition-colors"
+                className="text-[#64748B] hover:text-[#19B5D8] transition-colors"
               >
                 <Facebook size={20} />
               </a>
@@ -80,7 +70,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="EVWheels on Instagram"
-                className="text-neutral-500 hover:text-emerald-800 transition-colors"
+                className="text-[#64748B] hover:text-[#19B5D8] transition-colors"
               >
                 <Instagram size={20} />
               </a>
@@ -89,7 +79,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="EVWheels on Twitter"
-                className="text-neutral-500 hover:text-emerald-800 transition-colors"
+                className="text-[#64748B] hover:text-[#19B5D8] transition-colors"
               >
                 <Twitter size={20} />
               </a>
@@ -98,62 +88,46 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="EVWheels on YouTube"
-                className="text-neutral-500 hover:text-emerald-800 transition-colors"
+                className="text-[#64748B] hover:text-[#19B5D8] transition-colors"
               >
                 <Youtube size={20} />
               </a>
             </div>
 
-            {/* Address */}
-            <div className="flex items-start gap-2 text-sm text-neutral-500">
-              <MapPin size={16} className="text-emerald-800 mt-0.5 shrink-0" />
+            <div className="flex items-start gap-2 text-sm text-[#64748B]">
+              <MapPin size={16} className="text-[#19B5D8] mt-0.5 shrink-0" />
               <span>Boring Road Crossing, Patna, Bihar 800001</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-medium text-neutral-900 mb-6">
+            <h4 className="text-xs font-bold text-white mb-6 uppercase tracking-widest">
               Quick Links
             </h4>
-            <ul className="space-y-3 text-sm text-neutral-600">
+            <ul className="space-y-3.5 text-sm text-[#94A3B8]">
               <li>
-                <Link
-                  href="/cycles"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Link href="/cycles" className="hover:text-[#19B5D8] transition-colors">
                   Our Cycles
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/why-us"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Link href="/why-us" className="hover:text-[#19B5D8] transition-colors">
                   Why EVWheels
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/support"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Link href="/support" className="hover:text-[#19B5D8] transition-colors">
                   Support
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/contact"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Link href="/contact" className="hover:text-[#19B5D8] transition-colors">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/account/login"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Link href="/account/login" className="hover:text-[#19B5D8] transition-colors">
                   My Account
                 </Link>
               </li>
@@ -162,52 +136,37 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="text-lg font-medium text-neutral-900 mb-6">
+            <h4 className="text-xs font-bold text-white mb-6 uppercase tracking-widest">
               Support
             </h4>
-            <ul className="space-y-3 text-sm text-neutral-600">
+            <ul className="space-y-3.5 text-sm text-[#94A3B8]">
               <li className="flex items-center gap-2">
-                <Truck size={16} className="text-emerald-800 shrink-0" />
-                <Link
-                  href="/shipping-policy"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Truck size={15} className="text-[#19B5D8] shrink-0" />
+                <Link href="/shipping-policy" className="hover:text-[#19B5D8] transition-colors">
                   Shipping & Delivery
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <ShieldCheck size={16} className="text-emerald-800 shrink-0" />
-                <Link
-                  href="/returns"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <ShieldCheck size={15} className="text-[#19B5D8] shrink-0" />
+                <Link href="/returns" className="hover:text-[#19B5D8] transition-colors">
                   Returns & Refunds
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <Battery size={16} className="text-emerald-800 shrink-0" />
-                <Link
-                  href="/support"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Battery size={15} className="text-[#19B5D8] shrink-0" />
+                <Link href="/support" className="hover:text-[#19B5D8] transition-colors">
                   Battery Care
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <Wrench size={16} className="text-emerald-800 shrink-0" />
-                <Link
-                  href="/support"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Wrench size={15} className="text-[#19B5D8] shrink-0" />
+                <Link href="/support" className="hover:text-[#19B5D8] transition-colors">
                   Service Centers
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <Phone size={16} className="text-emerald-800 shrink-0" />
-                <Link
-                  href="tel:+919876543210"
-                  className="hover:text-emerald-800 transition-colors"
-                >
+                <Phone size={15} className="text-[#19B5D8] shrink-0" />
+                <Link href="tel:+919876543210" className="hover:text-[#19B5D8] transition-colors">
                   +91 98765 43210
                 </Link>
               </li>
@@ -216,31 +175,31 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-lg font-medium text-neutral-900 mb-6 flex items-center gap-2">
-              <Mail size={18} />
+            <h4 className="text-xs font-bold text-white mb-6 uppercase tracking-widest flex items-center gap-2">
+              <Mail size={14} />
               Stay Updated
             </h4>
-            <p className="text-sm text-neutral-600 mb-6 leading-relaxed">
+            <p className="text-sm text-[#94A3B8] mb-6 leading-relaxed">
               Get the latest on new models, offers, and Patna ride tips.
             </p>
 
-            <form onSubmit={handleSubscribe} className="space-y-4">
+            <form onSubmit={handleSubscribe} className="space-y-3">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
-                className={`w-full px-5 py-4 border ${
-                  status === "error" ? "border-red-500" : "border-neutral-300"
-                } rounded-lg focus:outline-none focus:border-emerald-600 transition-colors text-sm`}
+                className={`w-full px-5 py-3.5 bg-[#1E293B] border ${
+                  status === "error" ? "border-red-500" : "border-[#334155]"
+                } rounded-xl focus:outline-none focus:border-[#19B5D8] transition-colors text-sm text-white placeholder-[#64748B]`}
                 required
               />
 
               <button
                 type="submit"
-                className="w-full py-4 bg-neutral-900 text-white rounded-full text-sm md:text-base font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2"
               >
-                <Newspaper size={16} />
+                <Newspaper size={15} />
                 Subscribe
               </button>
 
@@ -248,14 +207,14 @@ export default function Footer() {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-emerald-700 text-sm font-light mt-2"
+                  className="text-[#19B5D8] text-sm font-light"
                 >
-                  Thank you! You're now on the list ⚡
+                  Thank you! You&apos;re now on the list ⚡
                 </motion.p>
               )}
 
               {status === "error" && (
-                <p className="text-red-600 text-sm font-light mt-2">
+                <p className="text-red-400 text-sm font-light">
                   Please enter a valid email address.
                 </p>
               )}
@@ -264,22 +223,20 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-neutral-200/70 pt-10 mt-12 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-neutral-600">
-          <p>
-            © {new Date().getFullYear()} EVWheels. Crafted with care in Patna.
-          </p>
+        <div className="border-t border-[#334155] pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-[#64748B]">
+          <p>© {new Date().getFullYear()} EVWheels. Crafted with care in Patna.</p>
 
-          <div className="flex flex-wrap gap-6">
-            <Link href="/privacy-policy" className="hover:text-neutral-900 transition-colors">
+          <div className="flex flex-wrap justify-center gap-6">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-neutral-900 transition-colors">
+            <Link href="/terms" className="hover:text-white transition-colors">
               Terms of Service
             </Link>
-            <Link href="/returns" className="hover:text-neutral-900 transition-colors">
+            <Link href="/returns" className="hover:text-white transition-colors">
               Returns Policy
             </Link>
-            <Link href="/shipping-policy" className="hover:text-neutral-900 transition-colors">
+            <Link href="/shipping-policy" className="hover:text-white transition-colors">
               Shipping
             </Link>
           </div>

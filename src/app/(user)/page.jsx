@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="bg-[#fdfcf9] text-neutral-900 min-h-screen font-['Inter']">
+      <div className="bg-[#F8FAFC] text-neutral-900 min-h-screen font-['Inter']">
         {/* ─── hero section ─── */}
         <section className="relative h-[85vh] md:h-screen flex items-center pt-20 pb-16 md:pb-0">
           <div className="absolute inset-0">
@@ -49,7 +49,7 @@ export default function Home() {
               alt="EV cycle on Patna street – golden hour calm ride"
               className="object-cover w-full h-full brightness-[0.93] contrast-[1.03]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#fdfcf9] via-transparent/40 to-transparent/70" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent/30" />
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full">
@@ -71,7 +71,7 @@ export default function Home() {
               className="mt-8 text-lg md:text-xl lg:text-2xl font-light text-white max-w-2xl"
             >
               Electric cycles crafted for real roads —{" "}
-              <span className="font-bold text-emerald-500">
+              <span className="font-bold text-[#19B5D8]">
                 long range, silent motion, thoughtful design.
               </span>
             </motion.p>
@@ -107,7 +107,7 @@ export default function Home() {
               <div>
                 <ShieldCheck
                   size={24}
-                  className="mx-auto mb-6 text-emerald-800"
+                  className="mx-auto mb-6 text-[#19B5D8]"
                   strokeWidth={1.4}
                 />
                 <p className="text-base font-light">2-Year Battery Warranty</p>
@@ -115,7 +115,7 @@ export default function Home() {
               <div>
                 <Truck
                   size={24}
-                  className="mx-auto mb-6 text-emerald-800"
+                  className="mx-auto mb-6 text-[#19B5D8]"
                   strokeWidth={1.4}
                 />
                 <p className="text-base font-light">Free Bihar Shipping</p>
@@ -123,7 +123,7 @@ export default function Home() {
               <div>
                 <IndianRupee
                   size={24}
-                  className="mx-auto mb-6 text-emerald-800"
+                  className="mx-auto mb-6 text-[#19B5D8]"
                   strokeWidth={1.4}
                 />
                 <p className="text-base font-light">EMI from ₹2,499/mo</p>
@@ -131,7 +131,7 @@ export default function Home() {
               <div>
                 <MapPin
                   size={24}
-                  className="mx-auto mb-6 text-emerald-800"
+                  className="mx-auto mb-6 text-[#19B5D8]"
                   strokeWidth={1.4}
                 />
                 <p className="text-base font-light">Patna Service</p>
@@ -200,10 +200,10 @@ export default function Home() {
                 { icon: Zap, title: "Fast Charger", desc: "4-hour charge" },
               ].map((item, i) => (
                 <motion.div key={i} variants={fadeIn} className="group">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-5 sm:mb-6 rounded-full bg-emerald-50/40 flex items-center justify-center transition-colors group-hover:bg-emerald-50">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-5 sm:mb-6 rounded-full bg-[#DDF8FD]/40 flex items-center justify-center transition-colors group-hover:bg-[#DDF8FD]">
                     <item.icon
                       size={24}
-                      className="text-emerald-800"
+                      className="text-[#19B5D8]"
                       strokeWidth={1.5}
                     />
                   </div>
@@ -240,10 +240,10 @@ export default function Home() {
               className="grid md:grid-cols-3 gap-16 lg:gap-24"
             >
               <motion.div variants={fadeIn}>
-                <div className="w-10 h-10 mx-auto mb-10 rounded-full bg-emerald-50/40 flex items-center justify-center">
+                <div className="w-10 h-10 mx-auto mb-10 rounded-full bg-[#DDF8FD]/40 flex items-center justify-center">
                   <BatteryCharging
                     size={22}
-                    className="text-emerald-800"
+                    className="text-[#19B5D8]"
                     strokeWidth={1.4}
                   />
                 </div>
@@ -254,10 +254,10 @@ export default function Home() {
               </motion.div>
 
               <motion.div variants={fadeIn}>
-                <div className="w-10 h-10 mx-auto mb-10 rounded-full bg-emerald-50/40 flex items-center justify-center">
+                <div className="w-10 h-10 mx-auto mb-10 rounded-full bg-[#DDF8FD]/40 flex items-center justify-center">
                   <Leaf
                     size={22}
-                    className="text-emerald-800"
+                    className="text-[#19B5D8]"
                     strokeWidth={1.4}
                   />
                 </div>
@@ -268,10 +268,10 @@ export default function Home() {
               </motion.div>
 
               <motion.div variants={fadeIn}>
-                <div className="w-10 h-10 mx-auto mb-10 rounded-full bg-emerald-50/40 flex items-center justify-center">
+                <div className="w-10 h-10 mx-auto mb-10 rounded-full bg-[#DDF8FD]/40 flex items-center justify-center">
                   <MapPin
                     size={22}
-                    className="text-emerald-800"
+                    className="text-[#19B5D8]"
                     strokeWidth={1.4}
                   />
                 </div>
@@ -321,7 +321,7 @@ export default function Home() {
           href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}?text=Hello%20EVWheels...`}
           target="_blank"
           rel="noopener noreferrer"
-          className="fixed bottom-10 right-10 z-50 w-12 h-12 bg-emerald-800/80 rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-300"
+          className="fixed bottom-10 right-10 z-50 w-12 h-12 bg-[#19B5D8]/80 rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-300"
         >
           <MessageCircle size={24} className="text-white" />
         </a>

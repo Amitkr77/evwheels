@@ -68,7 +68,7 @@ export default function ProductDetailClient() {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-[#DDF8FD] border-t-[#19B5D8] rounded-full animate-spin" />
           <p className="text-neutral-500 text-sm">Loading product...</p>
         </div>
       </div>
@@ -93,7 +93,7 @@ export default function ProductDetailClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fdfcf9] pt-20 pb-20">
+    <div className="min-h-screen bg-white pt-20 pb-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
         {/* Breadcrumb */}
@@ -158,7 +158,7 @@ export default function ProductDetailClient() {
               <p className="text-neutral-500 text-sm mb-4">Brand: {product.brand}</p>
             )}
 
-            <div className="text-3xl text-emerald-800 mb-6">
+            <div className="text-3xl text-[#19B5D8] font-medium mb-6">
               {formattedPrice}
             </div>
 
@@ -167,7 +167,7 @@ export default function ProductDetailClient() {
               {getSpecValue("weight") && <p>Weight: {getSpecValue("weight")} kg</p>}
               {product.colors?.length > 0 && <p>Color: {product.colors.join(", ")}</p>}
               {product.warranty > 0 && <p>Warranty: {product.warranty} months</p>}
-              <p className={`font-medium ${product.stock > 0 ? "text-emerald-700" : "text-red-600"}`}>
+              <p className={`font-medium ${product.stock > 0 ? "text-[#22C55E]" : "text-red-600"}`}>
                 {product.stock > 0 ? `In Stock (${product.stock} available)` : "Out of Stock"}
               </p>
             </div>
@@ -186,7 +186,7 @@ export default function ProductDetailClient() {
               <button
                 onClick={handleBuyNow}
                 disabled={product.stock === 0}
-                className="px-8 py-4 bg-emerald-800 text-white rounded-full cursor-pointer hover:bg-emerald-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-8 py-4 bg-[#19B5D8] text-white rounded-full cursor-pointer hover:bg-[#1297B5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Buy Now
               </button>
@@ -250,7 +250,7 @@ export default function ProductDetailClient() {
         href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-8 right-8 w-14 h-14 bg-emerald-800 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+        className="fixed bottom-8 right-8 w-14 h-14 bg-[#19B5D8] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
         aria-label="Contact us on WhatsApp"
       >
         <MessageCircle size={28} className="text-white" />

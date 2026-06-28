@@ -6,9 +6,9 @@ export default function NotFound() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#fdfcf9] flex items-center justify-center px-5 pt-20 pb-24 font-['Inter']">
+      <main className="min-h-screen bg-white flex items-center justify-center px-5 pt-20 pb-24 font-['Inter']">
         <div className="text-center max-w-lg mx-auto">
-          <p className="text-8xl font-['Playfair_Display'] font-medium text-emerald-800 mb-4">
+          <p className="text-8xl font-['Playfair_Display'] font-medium text-[#19B5D8] mb-4">
             404
           </p>
           <h1 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
@@ -34,9 +34,9 @@ export default function NotFound() {
           </div>
 
           <div className="mt-12 pt-8 border-t border-neutral-200 flex flex-wrap justify-center gap-6 text-sm text-neutral-500">
-            <Link href="/contact" className="hover:text-emerald-800 transition-colors">Contact Support</Link>
-            <Link href="/why-us" className="hover:text-emerald-800 transition-colors">Why EVWheels</Link>
-            <Link href="/support" className="hover:text-emerald-800 transition-colors">Help Center</Link>
+            <Link href="/contact" className="hover:text-[#19B5D8] transition-colors">Contact Support</Link>
+            <Link href="/why-us" className="hover:text-[#19B5D8] transition-colors">Why EVWheels</Link>
+            <Link href="/support" className="hover:text-[#19B5D8] transition-colors">Help Center</Link>
           </div>
         </div>
       </main>

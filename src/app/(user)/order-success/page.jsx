@@ -67,7 +67,7 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-5">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#19B5D8] mx-auto mb-4"></div>
           <p className="text-lg text-neutral-600">Loading your order details...</p>
         </div>
       </div>
@@ -96,7 +96,7 @@ export default function OrderConfirmationPage() {
   const estDelivery = getEstimatedDelivery(placedDate);
 
   return (
-    <main className="flex-grow bg-[#fdfcf9] min-h-screen font-['Inter'] pt-16 md:pt-20 pb-16 md:pb-24">
+    <main className="flex-grow bg-[#F8FAFC] min-h-screen font-['Inter'] pt-16 md:pt-20 pb-16 md:pb-24">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 xl:max-w-6xl">
         {/* Hero / Success Card */}
         <motion.div
@@ -106,8 +106,8 @@ export default function OrderConfirmationPage() {
           className="bg-white border border-neutral-200/70 rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-10 lg:p-12 text-center mb-12 md:mb-16 shadow-sm"
         >
           <div className="relative inline-flex items-center justify-center mb-6 md:mb-8">
-            <div className="absolute inset-0 rounded-full bg-emerald-50/70 animate-ping opacity-75 duration-[2000ms]" />
-            <div className="relative flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-full bg-emerald-800 text-white shadow-lg">
+            <div className="absolute inset-0 rounded-full bg-[#DDF8FD]/70 animate-ping opacity-75 duration-[2000ms]" />
+            <div className="relative flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-full bg-[#19B5D8] text-white shadow-lg">
               <CheckCircle size={32} className="md:size-40" strokeWidth={1.8} />
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function OrderConfirmationPage() {
               </div>
               <div className="text-right">
                 <p className="text-sm font-medium text-neutral-900">Est. Delivery</p>
-                <p className="text-emerald-800 font-medium">{estDelivery}</p>
+                <p className="text-[#19B5D8] font-medium">{estDelivery}</p>
               </div>
             </div>
 
@@ -141,7 +141,7 @@ export default function OrderConfirmationPage() {
                 initial={{ width: "0%" }}
                 animate={{ width: "25%" }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
-                className="absolute top-0 left-0 h-full rounded-full bg-emerald-600"
+                className="absolute top-0 left-0 h-full rounded-full bg-[#19B5D8]"
               />
             </div>
 
@@ -189,7 +189,7 @@ export default function OrderConfirmationPage() {
                   </div>
 
                   <div className="text-right sm:min-w-[140px]">
-                    <p className="text-lg sm:text-xl font-medium text-emerald-800">
+                    <p className="text-lg sm:text-xl font-medium text-[#19B5D8]">
                       ₹{(item.price * item.quantity).toLocaleString("en-IN")}
                     </p>
                     <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">
@@ -236,7 +236,7 @@ export default function OrderConfirmationPage() {
                 <div className="pt-5 mt-3 border-t border-neutral-200/60">
                   <div className="flex justify-between items-center">
                     <span className="text-base font-medium text-neutral-900">Total Paid</span>
-                    <span className="text-2xl sm:text-3xl font-['Playfair_Display'] font-medium text-emerald-800">
+                    <span className="text-2xl sm:text-3xl font-['Playfair_Display'] font-medium text-[#19B5D8]">
                       ₹{order.totalAmount?.toLocaleString("en-IN") || "—"}
                     </span>
                   </div>
@@ -272,7 +272,7 @@ export default function OrderConfirmationPage() {
         {/* Support note */}
         <p className="text-center text-sm text-neutral-600 mt-8 md:mt-10">
           Need help?{" "}
-          <Link href="/contact" className="text-emerald-800 hover:underline font-medium">
+          <Link href="/contact" className="text-[#19B5D8] hover:underline font-medium">
             Contact Support
           </Link>{" "}
           within 2 hours of placing your order.

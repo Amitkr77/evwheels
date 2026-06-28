@@ -71,7 +71,7 @@ const UserDashboard = () => {
 
   const getStatusStyle = (status) => {
     const styles = {
-      DELIVERED: "bg-emerald-50 text-emerald-800",
+      DELIVERED: "bg-[#DDF8FD] text-[#19B5D8]",
       SHIPPED: "bg-blue-50 text-blue-700",
       PLACED: "bg-amber-50 text-amber-700",
       Pending: "bg-yellow-50 text-yellow-700",
@@ -96,13 +96,13 @@ const UserDashboard = () => {
   ];
 
   return (
-    <div className="h-screen bg-[#fdfcf9] font-['Inter']">
+    <div className="h-screen bg-[#F8FAFC] font-['Inter']">
       {/* Sidebar unchanged */}
       <aside className="fixed inset-y-0 left-0 w-72 bg-white border-r border-neutral-200/70 overflow-y-auto hidden lg:block">
         {/* ... same sidebar code as before ... */}
         <div className="p-8 border-b border-neutral-200/60">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
               E
             </div>
             <span className="text-2xl font-['Playfair_Display'] font-medium tracking-tight text-neutral-900">
@@ -124,7 +124,7 @@ const UserDashboard = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium rounded-2xl transition-all ${
                 activeTab === tab.id
-                  ? "bg-emerald-100 text-emerald-800 shadow-sm"
+                  ? "bg-[#DDF8FD] text-[#19B5D8] shadow-sm"
                   : "text-neutral-700 hover:bg-neutral-50"
               }`}
             >
@@ -171,7 +171,7 @@ const UserDashboard = () => {
                   </div>
                   <div className="text-xs text-neutral-500">{user.email || ""}</div>
                 </div>
-                <div className="w-9 h-9 rounded-full border-2 border-white bg-emerald-800 flex items-center justify-center text-white text-sm font-medium">
+                <div className="w-9 h-9 rounded-full border-2 border-white bg-[#19B5D8] flex items-center justify-center text-white text-sm font-medium">
                   {user.name?.charAt(0)?.toUpperCase() || "U"}
                 </div>
               </div>
@@ -183,7 +183,7 @@ const UserDashboard = () => {
         <main className="flex-1 overflow-y p-6 pt-16 lg:p-12  lg:pt-20">
           {loading ? (
             <div className="flex flex-col items-center justify-center h-96 gap-4">
-              <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+              <div className="w-12 h-12 border-4 border-[#DDF8FD] border-t-[#19B5D8] rounded-full animate-spin"></div>
               <p className="text-lg text-neutral-600 font-medium">
                 Just a moment...
               </p>
@@ -213,7 +213,7 @@ const UserDashboard = () => {
                     {statCards.map((stat, i) => (
                       <div
                         key={i}
-                        className="bg-white border border-neutral-200/70 rounded-3xl p-7 hover:border-emerald-300 transition-all group"
+                        className="bg-white border border-neutral-200/70 rounded-3xl p-7 hover:border-[#19B5D8]/20 transition-all group"
                       >
                         <div className="flex items-start justify-between">
                           <div>
@@ -224,10 +224,10 @@ const UserDashboard = () => {
                               {stat.value}
                             </div>
                           </div>
-                          <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <div className="w-14 h-14 bg-[#DDF8FD] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                             <stat.icon
                               size={28}
-                              className="text-emerald-700"
+                              className="text-[#19B5D8]"
                               strokeWidth={1.6}
                             />
                           </div>
@@ -244,7 +244,7 @@ const UserDashboard = () => {
                       </h2>
                       <button
                         onClick={() => setActiveTab(1)}
-                        className="flex items-center gap-2 text-emerald-700 hover:text-emerald-800 font-medium transition-colors"
+                        className="flex items-center gap-2 text-[#19B5D8] hover:text-[#19B5D8] font-medium transition-colors"
                       >
                         View all orders
                         <ArrowRight size={18} />
@@ -287,16 +287,16 @@ const UserDashboard = () => {
                                   className={`
                   group transition-colors
                   ${index % 2 === 0 ? "bg-white" : "bg-neutral-50/40"}
-                  hover:bg-emerald-50/30
+                  hover:bg-[#DDF8FD]/30
                 `}
                                 >
                                   <td className="px-6 py-4.5">
                                     <div className="flex items-center gap-3">
-                                      <div className="w-8 h-8 rounded-lg bg-emerald-100/60 flex items-center justify-center text-emerald-700 font-medium text-xs">
+                                      <div className="w-8 h-8 rounded-lg bg-[#DDF8FD]/60 flex items-center justify-center text-[#19B5D8] font-medium text-xs">
                                         #{index + 1}
                                       </div>
                                       <div>
-                                        <div className="font-medium text-neutral-900 group-hover:text-emerald-800 transition-colors cursor-pointer">
+                                        <div className="font-medium text-neutral-900 group-hover:text-[#19B5D8] transition-colors cursor-pointer">
                                           {order.id}
                                         </div>
                                         <div className="text-xs text-neutral-500 md:hidden">

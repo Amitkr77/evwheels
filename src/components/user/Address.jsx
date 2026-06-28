@@ -120,7 +120,7 @@ export default function Address() {
         </h1>
         <button
           onClick={() => { setShowForm(true); setError(null); setForm(EMPTY_FORM); }}
-          className="flex items-center gap-2 px-6 py-3 bg-emerald-800 text-white rounded-full text-sm font-medium hover:bg-emerald-900 transition-colors"
+          className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
         >
           <Plus size={18} />
           Add New
@@ -135,7 +135,7 @@ export default function Address() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-[#DDF8FD] border-t-[#19B5D8] rounded-full animate-spin" />
         </div>
       ) : addresses.length === 0 ? (
         <p className="text-neutral-500 text-center py-16">
@@ -146,14 +146,14 @@ export default function Address() {
           {addresses.map((addr) => (
             <div
               key={addr._id}
-              className="bg-white border border-neutral-200/70 rounded-xl p-8 hover:border-emerald-200/60 transition-colors"
+              className="bg-white border border-neutral-200/70 rounded-xl p-8 hover:border-[#19B5D8]/20 transition-colors"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-lg font-medium">{addr.fullName}</span>
                     {addr.isDefault && (
-                      <span className="text-xs font-medium px-2.5 py-0.5 bg-emerald-50 text-emerald-800 rounded-full">
+                      <span className="text-xs font-medium px-2.5 py-0.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full">
                         Default
                       </span>
                     )}
@@ -170,7 +170,7 @@ export default function Address() {
                 {!addr.isDefault && (
                   <button
                     onClick={() => handleSetDefault(addr._id)}
-                    className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 hover:text-emerald-800 transition-colors"
+                    className="flex items-center gap-1.5 text-xs font-medium text-[#19B5D8] hover:text-[#19B5D8] transition-colors"
                   >
                     <Star size={14} />
                     Set as Default
@@ -215,7 +215,7 @@ export default function Address() {
                   name="fullName"
                   value={form.fullName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                 />
               </div>
 
@@ -226,7 +226,7 @@ export default function Address() {
                   name="phone"
                   value={form.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                 />
               </div>
 
@@ -238,7 +238,7 @@ export default function Address() {
                   onChange={handleChange}
                   rows={2}
                   placeholder="House no, Building, Street, Area"
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors resize-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
                 />
               </div>
 
@@ -250,7 +250,7 @@ export default function Address() {
                     name="city"
                     value={form.city}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                   />
                 </div>
                 <div>
@@ -260,7 +260,7 @@ export default function Address() {
                     name="postalCode"
                     value={form.postalCode}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                   />
                 </div>
               </div>
@@ -271,7 +271,7 @@ export default function Address() {
                   name="state"
                   value={form.state}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors bg-white"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors bg-white"
                 >
                   <option value="">Select State</option>
                   {INDIAN_STATES.map((s) => (
@@ -287,7 +287,7 @@ export default function Address() {
                   name="isDefault"
                   checked={form.isDefault}
                   onChange={handleChange}
-                  className="w-4 h-4 rounded border-neutral-300 text-emerald-600 focus:ring-emerald-600"
+                  className="w-4 h-4 rounded border-neutral-300 text-[#19B5D8] focus:ring-[#19B5D8]"
                 />
                 <label htmlFor="isDefault" className="text-sm text-neutral-600 cursor-pointer">
                   Set as default address
@@ -305,7 +305,7 @@ export default function Address() {
               <button
                 onClick={handleAdd}
                 disabled={saving}
-                className="flex-1 py-3.5 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors disabled:opacity-50"
+                className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors disabled:opacity-50"
               >
                 {saving ? "Saving..." : "Save Address"}
               </button>

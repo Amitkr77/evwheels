@@ -64,7 +64,7 @@ export default function Settings() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#DDF8FD] border-t-[#19B5D8] rounded-full animate-spin" />
       </div>
     );
   }
@@ -82,7 +82,7 @@ export default function Settings() {
       <div className="bg-white border border-neutral-200/70 rounded-xl p-10 md:p-12">
         {/* Avatar + name header */}
         <div className="flex flex-col sm:flex-row gap-8 items-start mb-12">
-          <div className="w-24 h-24 md:w-32 md:h-32 bg-emerald-800 rounded-2xl flex items-center justify-center text-white font-['Playfair_Display'] text-4xl font-medium shadow-sm shrink-0">
+          <div className="w-24 h-24 md:w-32 md:h-32 bg-[#19B5D8] rounded-2xl flex items-center justify-center text-white font-['Playfair_Display'] text-4xl font-medium shadow-sm shrink-0">
             {user?.name?.charAt(0)?.toUpperCase() || "U"}
           </div>
           <div>
@@ -100,7 +100,7 @@ export default function Settings() {
           <div
             className={`mb-8 px-4 py-3 rounded-lg text-sm ${
               message.type === "success"
-                ? "bg-emerald-50 border border-emerald-200 text-emerald-700"
+                ? "bg-[#DDF8FD] border border-[#19B5D8]/20 text-[#19B5D8]"
                 : "bg-red-50 border border-red-200 text-red-700"
             }`}
           >
@@ -118,7 +118,7 @@ export default function Settings() {
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+              className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
             />
           </div>
 
@@ -143,7 +143,7 @@ export default function Settings() {
               name="phone"
               value={form.phone}
               onChange={handleChange}
-              className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 transition-colors"
+              className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
             />
           </div>
         </div>
