@@ -15,6 +15,7 @@ import {
   Twitter,
   Instagram,
   Youtube,
+  CheckCircle,
 } from 'lucide-react'
 
 export default function ContactPage() {
