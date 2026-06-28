@@ -47,7 +47,7 @@ function LoginForm() {
 
       await login(data.user);
       const redirectTo = searchParams.get("redirect") || "/";
-      router.push(redirectTo);
+      window.location.href = redirectTo;
     } catch (err) {
       setError("Something went wrong. Please try again later.");
     } finally {
