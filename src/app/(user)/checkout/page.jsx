@@ -44,11 +44,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     fetchSummary();
-  }, []);
-  
-  useEffect(() => {
-  fetchSummary(); 
-}, [items]);
+  }, [items]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
@@ -90,8 +86,7 @@ export default function CheckoutPage() {
       const data = await res.json();
 
       if (res.ok) {
-        // Optional: clear cart after success
-        // clearCart();
+        clearCart();
         window.location.href = `/order-success?id=${data._id}`;
       } else {
         setError(data.error || "Failed to place order. Please try again.");
@@ -476,7 +471,7 @@ export default function CheckoutPage() {
                         <div className="flex gap-6">
                           <div className="relative w-20 h-20 shrink-0">
                             <img
-                              src={product?.image}
+                              src={product?.images?.[0] || "/logo.png"}
                               alt={product?.title}
                               className="w-full h-full object-cover rounded-lg border border-neutral-200/60"
                             />
@@ -493,17 +488,17 @@ export default function CheckoutPage() {
                                 ₹{product.price.toLocaleString()}
                               </span>
                             </div>
-                            <p className="text-sm text-neutral-600 mt-1">
-                              {product.color}
-                            </p>
+                            {product.colors?.length > 0 && (
+                              <p className="text-sm text-neutral-600 mt-1">
+                                {product.colors[0]}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-
-                <hr className="border-dashed border-neutral-200/60 my-8" />
 
                 <hr className="border-dashed border-neutral-200/60 my-8" />
 

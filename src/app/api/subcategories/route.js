@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-// import { verifyAdmin } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/adminAuth";
 import Subcategory from "@/models/Subcategory";
 import Category from "@/models/Category";
 
@@ -43,13 +43,13 @@ export async function GET(req) {
 // POST /api/subcategories
 export async function POST(req) {
   try {
-    // const admin = await verifyAdmin(req);
-    // if (!admin) {
-    //   return NextResponse.json(
-    //     { error: "Unauthorized" },
-    //     { status: 401 }
-    //   );
-    // }
+    const admin = await verifyAdmin(req);
+    if (!admin) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
 
     await connectDB();
 
@@ -71,12 +71,8 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-    console.log("category", category);
-    console.log(Category.collection.name);
-
     // validate category exists
     const categoryExists = await Category.findById(category);
-    console.log("categoryExists", categoryExists);
 
     if (!categoryExists) {
       return NextResponse.json(

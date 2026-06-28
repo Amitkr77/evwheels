@@ -4,16 +4,16 @@ import { Search, ShoppingCart, User, Zap, Menu, X, ChevronRight, ChevronDown } f
 import React, { useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
+import { useCartStore } from "@/store/cartStore";
 
 export default function Header() {
   const { isAuthenticated, user, logout } = useAuthStore();
+  const totalQuantity = useCartStore((state) => state.totalQuantity);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  
+
   // Mobile Accordion State
   const [openMobileCategory, setOpenMobileCategory] = useState(null);
-
-  const cartCount = 3; // ← placeholder – replace with real value
 
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
@@ -248,7 +248,7 @@ export default function Header() {
                     <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]">
                       Profile
                     </Link>
-                    <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]">
+                    <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-[#22301d]">
                       My Orders
                     </Link>
                     <button
@@ -276,12 +276,12 @@ export default function Header() {
             <Link
               href="/cart"
               className="relative p-2 hover:bg-gray-100 dark:hover:bg-[#22301d] rounded-full transition-colors group"
-              aria-label={`Shopping cart with ${cartCount} items`}
+              aria-label={`Shopping cart with ${totalQuantity} items`}
             >
               <ShoppingCart className="w-5 h-5 group-hover:text-primary transition-colors" />
-              {cartCount > 0 && (
+              {totalQuantity > 0 && (
                 <span className="absolute -top-1 -right-1 min-w-[18px] h-5 bg-primary text-primary-content text-[10px] font-bold rounded-full flex items-center justify-center px-1.5">
-                  {cartCount}
+                  {totalQuantity > 99 ? "99+" : totalQuantity}
                 </span>
               )}
             </Link>

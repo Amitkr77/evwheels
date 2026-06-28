@@ -99,7 +99,7 @@ export default function ReviewsPage() {
                 className="hover:bg-neutral-50/50 transition-colors"
               >
                 <td className="py-6 px-6 font-medium">
-                  ₹{review.product?.price || "-"}
+                  {review.product?.title || "—"}
                 </td>
                 <td className="py-6 px-6">
                   {review.user?.name || review.user?.email}

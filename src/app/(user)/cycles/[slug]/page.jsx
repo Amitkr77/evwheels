@@ -35,7 +35,7 @@ export default function ProductDetailPage() {
         }
 
         const data = await res.json();
-        setProduct(data);
+        setProduct(data.product);
       } catch (error) {
         console.error("Failed to fetch product:", error);
         setProduct(null);
@@ -53,7 +53,7 @@ export default function ProductDetailPage() {
       try {
         const res = await fetch(`/api/reviews?id=${product._id}`);
         const data = await res.json();
-        setReviews(data);
+        setReviews(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Failed to fetch reviews", err);
       } finally {
@@ -65,7 +65,14 @@ export default function ProductDetailPage() {
   }, [product]);
 
   if (loading) {
-    return <div className="pt-32 text-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-20">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
+          <p className="text-neutral-500 text-sm">Loading product...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!product) {
@@ -74,56 +81,19 @@ export default function ProductDetailPage() {
 
   const formattedPrice = `₹${product.price.toLocaleString("en-IN")}`;
 
-  const displayedSpecs = [
-    {
-      label: "Motor",
-      value: `${product.specs?.motor?.power}W ${product.specs?.motor?.type}`,
-    },
-    {
-      label: "Battery",
-      value: `${product.specs?.battery?.capacity}Wh ${product.specs?.battery?.type}`,
-    },
-    { label: "Range", value: `${product.specs?.battery?.range} km` },
-    {
-      label: "Charging Time",
-      value: `${product.specs?.battery?.chargingTime} hours`,
-    },
-    { label: "Top Speed", value: `${product.specs?.motor?.topSpeed} km/h` },
-    { label: "Weight", value: `${product.specs?.physical?.weight} kg` },
-    { label: "Frame", value: product.specs?.physical?.frameMaterial },
-    { label: "Brakes", value: product.specs?.components?.brakeType },
-    { label: "Suspension", value: product.specs?.components?.suspension },
-    { label: "Gears", value: product.specs?.components?.gearSystem },
-    { label: "Display", value: product.specs?.smartFeatures?.displayType },
-  ].filter((spec) => spec.value && spec.value.trim() !== "");
+  const getSpecValue = (key) =>
+    product.specifications?.find((s) =>
+      s.key.toLowerCase().includes(key.toLowerCase())
+    )?.value;
 
-  const suggestedProducts = [
-    {
-      name: "TrailX Pro",
-      price: "₹74,999",
-      image:
-        "https://images.unsplash.com/photo-1649972077917-2d9b0d2e3e8d?w=800",
-    },
-    {
-      name: "LiteX Fold",
-      price: "₹44,999",
-      image:
-        "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800",
-    },
-  ];
-
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
     if (!product) return;
-
-    addToCart(product, 1);
+    await addToCart(product, 1);
     router.push("/checkout");
   };
 
   return (
     <div className="min-h-screen bg-[#fdfcf9] pt-20 pb-20">
-      <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
-        <div className="absolute inset-0 subtle-gradient"></div>
-      </div>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         
         {/* Breadcrumb */}
@@ -147,45 +117,75 @@ export default function ProductDetailPage() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <Image
-              src={product.image || "/placeholder.png"}
-              alt={product.title}
-              width={400}
-              height={400}
-              className="w-full rounded-xl"
-            />
+            <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-neutral-100">
+              <Image
+                src={product.images?.[0] || "/logo.png"}
+                alt={product.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+
+            {product.images?.length > 1 && (
+              <div className="flex gap-3 mt-4 overflow-x-auto pb-1">
+                {product.images.map((img, i) => (
+                  <div
+                    key={i}
+                    className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100 border border-neutral-200"
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product.title} view ${i + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <h1 className="text-5xl font-semibold mb-6">{product.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-semibold mb-4">{product.title}</h1>
 
-            <div className="text-4xl text-emerald-800 mb-8">
+            {product.brand && (
+              <p className="text-neutral-500 text-sm mb-4">Brand: {product.brand}</p>
+            )}
+
+            <div className="text-3xl text-emerald-800 mb-6">
               {formattedPrice}
             </div>
 
-            <div className="space-y-2 mb-8">
-              <p>Range: {product.specs?.battery?.range} km</p>
-              <p>Weight: {product.specs?.physical?.weight} kg</p>
-              {product.color && <p>Color: {product.color}</p>}
-              {product.warranty && <p>Warranty: {product.warranty} months</p>}
+            <div className="space-y-2 mb-6 text-sm text-neutral-700">
+              {getSpecValue("range") && <p>Range: {getSpecValue("range")} km</p>}
+              {getSpecValue("weight") && <p>Weight: {getSpecValue("weight")} kg</p>}
+              {product.colors?.length > 0 && <p>Color: {product.colors.join(", ")}</p>}
+              {product.warranty > 0 && <p>Warranty: {product.warranty} months</p>}
+              <p className={`font-medium ${product.stock > 0 ? "text-emerald-700" : "text-red-600"}`}>
+                {product.stock > 0 ? `In Stock (${product.stock} available)` : "Out of Stock"}
+              </p>
             </div>
 
-            <p className="text-neutral-600 mb-10">{product.description}</p>
+            <p className="text-neutral-600 mb-8 leading-relaxed">{product.description}</p>
 
             <div className="flex gap-4">
               <button
                 onClick={() => addToCart(product, 1)}
-                className="px-8 py-4 bg-black text-white rounded-full cursor-pointer"
+                disabled={product.stock === 0}
+                className="px-8 py-4 bg-black text-white rounded-full cursor-pointer hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Add to Cart
               </button>
 
               <button
                 onClick={handleBuyNow}
-                className="px-8 py-4 bg-emerald-800 text-white rounded-full cursor-pointer"
+                disabled={product.stock === 0}
+                className="px-8 py-4 bg-emerald-800 text-white rounded-full cursor-pointer hover:bg-emerald-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Buy Now
               </button>
@@ -197,14 +197,20 @@ export default function ProductDetailPage() {
         <div className="mb-24">
           <h2 className="text-3xl font-semibold mb-10">Specifications</h2>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {displayedSpecs.map((spec, i) => (
-              <div key={i} className="flex justify-between border-b py-3">
-                <span className="text-neutral-600">{spec.label}</span>
-                <span className="font-medium">{spec.value}</span>
-              </div>
-            ))}
-          </div>
+          {product.specifications?.length > 0 ? (
+            <div className="grid md:grid-cols-2 gap-6">
+              {product.specifications.map((spec, i) => (
+                <div key={i} className="flex justify-between border-b py-3">
+                  <span className="text-neutral-600">{spec.key}</span>
+                  <span className="font-medium">{spec.value}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-neutral-500 text-center py-8">
+              No specifications available for this product.
+            </p>
+          )}
         </div>
 
         {/* Reviews */}
@@ -222,9 +228,9 @@ export default function ProductDetailPage() {
                   className="border p-4 rounded-lg shadow-sm"
                 >
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">{review.user.name}</span>
+                    <span className="font-medium">{review.user?.name}</span>
                     <span className="text-yellow-500">
-                      {"⭐".repeat(review.rating)}
+                      {"⭐".repeat(Math.min(review.rating, 5))}
                     </span>
                   </div>
                   <p className="text-neutral-700">{review.comment}</p>
@@ -240,9 +246,11 @@ export default function ProductDetailPage() {
 
       {/* WhatsApp Button */}
       <a
-        href="https://wa.me/919876543210"
+        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}`}
         target="_blank"
-        className="fixed bottom-8 right-8 w-14 h-14 bg-emerald-800 rounded-full flex items-center justify-center"
+        rel="noopener noreferrer"
+        className="fixed bottom-8 right-8 w-14 h-14 bg-emerald-800 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+        aria-label="Contact us on WhatsApp"
       >
         <MessageCircle size={28} className="text-white" />
       </a>

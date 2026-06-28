@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
+import { verifyAdmin } from "@/lib/adminAuth";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
 import Subcategory from "@/models/Subcategory";
@@ -22,6 +23,7 @@ export async function GET(req) {
     const brand = searchParams.get("brand");
     const search = searchParams.get("search");
     const inStock = searchParams.get("inStock") === "true";
+    const isAdmin = searchParams.get("admin") === "true";
 
     const minPrice = Number(searchParams.get("minPrice")) || 0;
     const maxPrice = Number(searchParams.get("maxPrice")) || 0;
@@ -29,9 +31,8 @@ export async function GET(req) {
     const sortBy = searchParams.get("sort") || "createdAt";
     const sortOrder = searchParams.get("order") === "asc" ? 1 : -1;
 
-    const filter = {
-      isActive: true,
-    };
+    // Admin can see all products; public only sees active ones
+    const filter = isAdmin ? {} : { isActive: true };
 
     // Category filter by slug
     if (categorySlug) {
@@ -193,8 +194,11 @@ export async function GET(req) {
 // POST /api/products
 export async function POST(req) {
   try {
-    await connectDB();
+    const admin = await verifyAdmin(req);
+    if (!admin)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+    await connectDB();
 
     const body = await req.json();
 

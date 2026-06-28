@@ -26,16 +26,26 @@ ChartJS.register(
   Legend,
 );
 
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
+
 export default function page() {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [period, setPeriod] = useState("7d");
 
   useEffect(() => {
     const fetchDashboard = async () => {
+      setLoading(true);
       try {
-        const res = await fetch("/api/admin/dashboard");
+        const res = await fetch(`/api/admin/dashboard?period=${period}`, {
+          credentials: "include",
+        });
         const data = await res.json();
-
         setDashboard(data);
       } catch (err) {
         console.error("Dashboard fetch error:", err);
@@ -45,7 +55,7 @@ export default function page() {
     };
 
     fetchDashboard();
-  }, []);
+  }, [period]);
 
   const stats = [
     {
@@ -149,7 +159,7 @@ export default function page() {
       // variants={stagger}
     >
       <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium mb-3">
-        Good afternoon
+        {getGreeting()}
       </h1>
       <p className="text-neutral-600 font-light mb-12">
         Here's what's happening with your store today
@@ -190,9 +200,13 @@ export default function page() {
           <h2 className="text-2xl font-['Playfair_Display'] font-medium">
             Sales Overview
           </h2>
-          <select className="px-4 py-2 border border-neutral-300 rounded-lg text-sm font-light focus:outline-none focus:border-emerald-600">
-            <option>Last 7 days</option>
-            <option>Last 30 days</option>
+          <select
+            value={period}
+            onChange={(e) => setPeriod(e.target.value)}
+            className="px-4 py-2 border border-neutral-300 rounded-lg text-sm font-light focus:outline-none focus:border-emerald-600"
+          >
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
           </select>
         </div>
         <div className="h-80">

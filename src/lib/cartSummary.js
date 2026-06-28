@@ -1,53 +1,54 @@
 import Cart from "@/models/Cart";
-import Product from "@/models/Product";
 import Coupon from "@/models/Coupon";
 
-// Example tax rate & shipping calculation
 const TAX_RATE = 0.08;
 const FLAT_SHIPPING = 10;
 
-export async function getCartSummary(userId) {
-    const cart = await Cart.findOne({ user: userId }).populate("items.product");
-    if (!cart || cart.items.length === 0) return null;
+/**
+ * @param {string} userId
+ * @param {string} [overrideCouponCode] - optional code to try (e.g. from query param preview)
+ */
+export async function getCartSummary(userId, overrideCouponCode) {
+  const cart = await Cart.findOne({ user: userId }).populate("items.product");
+  if (!cart || cart.items.length === 0) return null;
 
-    const appliedCouponCode = cart.couponCode
-    // 1️⃣ Subtotal
-    let subtotal = 0;
-    for (const item of cart.items) {
-        subtotal += item.product.price * item.quantity;
-    }
+  // Use override if provided, otherwise fall back to what's saved on the cart
+  const couponCodeToUse = overrideCouponCode?.trim().toUpperCase() || cart.couponCode || null;
 
-    // 2️⃣ Discount
-    let discount = 0;
+  let subtotal = 0;
+  for (const item of cart.items) {
+    subtotal += (item.product?.price ?? 0) * item.quantity;
+  }
 
-    if (appliedCouponCode) {
-        const coupon = await Coupon.findOne({ code: appliedCouponCode.toUpperCase() });
-        if (coupon && coupon.isActive && coupon.expiryDate > new Date()) {
-            if (coupon.discountType === "percentage") {
-                discount = (subtotal * coupon.discountValue) / 100;
-            } else {
-                discount = coupon.discountValue;
-            }
+  let discount = 0;
+  let appliedCoupon = null;
 
-            // Ensure discount does not exceed subtotal
-            discount = Math.min(discount, subtotal);
+  if (couponCodeToUse) {
+    const coupon = await Coupon.findOne({ code: couponCodeToUse });
+    if (coupon && coupon.isActive && coupon.expiryDate > new Date()) {
+      if (subtotal >= (coupon.minOrderAmount || 0)) {
+        if (coupon.discountType === "percentage") {
+          discount = (subtotal * coupon.discountValue) / 100;
+        } else {
+          discount = coupon.discountValue;
         }
+        discount = Math.min(discount, subtotal);
+        appliedCoupon = coupon.code;
+      }
     }
+  }
 
-    // 3️⃣ Tax & Shipping
-    const tax = (subtotal - discount) * TAX_RATE;
-    const shipping = FLAT_SHIPPING;
+  const tax = Math.round((subtotal - discount) * TAX_RATE * 100) / 100;
+  const shipping = FLAT_SHIPPING;
+  const total = Math.round((subtotal - discount + tax + shipping) * 100) / 100;
 
-    // 4️⃣ Final total
-    const total = subtotal - discount + tax + shipping;
-
-    return {
-        items: cart.items,
-        subtotal,
-        discount,
-        tax,
-        shipping,
-        total,
-        couponApplied: appliedCouponCode || null,
-    };
+  return {
+    items: cart.items,
+    subtotal,
+    discount,
+    tax,
+    shipping,
+    total,
+    couponApplied: appliedCoupon,
+  };
 }

@@ -62,6 +62,7 @@ export const useCartStore = create((set, get) => ({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ productId: product._id, quantity }),
+          credentials: "include",
         });
 
         const data = await res.json();
@@ -110,39 +111,98 @@ export const useCartStore = create((set, get) => ({
   },
 
   // Update quantity
-  updateQuantity: (productId, quantity) => {
+  // Update quantity
+  updateQuantity: async (productId, quantity) => {
+    const { isAuthenticated } = useAuthStore.getState();
     const { items } = get();
 
     if (quantity <= 0) return get().removeFromCart(productId);
 
-    const updatedCart = items.map((item) =>
-      item.productId === productId ? { ...item, quantity } : item
-    );
+    if (isAuthenticated) {
+      try {
+        const res = await fetch("/api/cart", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId, quantity }),
+          credentials: "include",
+        });
 
-    localStorage.setItem("guestCart", JSON.stringify(updatedCart));
+        if (!res.ok) {
+          const err = await res.json();
+          console.error("Update quantity failed:", err.error);
+          return;
+        }
 
-    const totals = get().calculateTotals(updatedCart);
+        const data = await res.json();
+        const totals = get().calculateTotals(data.items);
 
-    set({
-      items: updatedCart,
-      ...totals,
-    });
+        set({
+          items: data.items,
+          ...totals,
+        });
+      } catch (err) {
+        console.error("Update quantity failed", err);
+      }
+    } else {
+      // Guest cart — update localStorage
+      const updatedCart = items.map((item) =>
+        item.productId === productId ? { ...item, quantity } : item
+      );
+
+      localStorage.setItem("guestCart", JSON.stringify(updatedCart));
+
+      const totals = get().calculateTotals(updatedCart);
+
+      set({
+        items: updatedCart,
+        ...totals,
+      });
+    }
   },
 
   // Remove item
-  removeFromCart: (productId) => {
+  removeFromCart: async (productId) => {
+    const { isAuthenticated } = useAuthStore.getState();
     const { items } = get();
 
-    const updatedCart = items.filter((item) => item.productId !== productId);
+    if (isAuthenticated) {
+      try {
+        const res = await fetch("/api/cart", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId }),
+          credentials: "include",
+        });
 
-    localStorage.setItem("guestCart", JSON.stringify(updatedCart));
+        if (!res.ok) {
+          const err = await res.json();
+          console.error("Remove from cart failed:", err.error);
+          return;
+        }
 
-    const totals = get().calculateTotals(updatedCart);
+        const data = await res.json();
+        const totals = get().calculateTotals(data.items);
 
-    set({
-      items: updatedCart,
-      ...totals,
-    });
+        set({
+          items: data.items,
+          ...totals,
+        });
+      } catch (err) {
+        console.error("Remove from cart failed", err);
+      }
+    } else {
+      // Guest cart — update localStorage
+      const updatedCart = items.filter((item) => item.productId !== productId);
+
+      localStorage.setItem("guestCart", JSON.stringify(updatedCart));
+
+      const totals = get().calculateTotals(updatedCart);
+
+      set({
+        items: updatedCart,
+        ...totals,
+      });
+    }
   },
 
   // Clear cart

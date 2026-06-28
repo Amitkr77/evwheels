@@ -1,427 +1,304 @@
-import React from "react";
+import {
+  Wrench,
+  Search,
+  Info,
+  ArrowRight,
+  Bike,
+  Zap,
+  QrCode,
+  BookOpen,
+  Headphones,
+  MapPin,
+  BatteryCharging,
+  Circle,
+  Cpu,
+  Settings,
+  LayoutGrid,
+} from "lucide-react";
+import Link from "next/link";
 
-export default function page() {
+const MODELS = [
+  {
+    icon: Bike,
+    badge: "2023 Series",
+    name: "Urban Glide X1",
+    type: "City Commuter E-Bike",
+    parts: 42,
+  },
+  {
+    icon: Zap,
+    badge: "Pro Edition",
+    name: "VoltX Scooter",
+    type: "Long Range E-Scooter",
+    parts: 28,
+  },
+  {
+    icon: Bike,
+    badge: "Off-Road",
+    name: "Ranger 500",
+    type: "Mountain E-Bike",
+    parts: 56,
+  },
+  {
+    icon: Zap,
+    badge: "Legacy",
+    name: "City Mate V1",
+    type: "Compact Moped",
+    parts: 15,
+  },
+];
+
+const IDENTIFY_STEPS = [
+  {
+    icon: QrCode,
+    title: "Check the frame sticker",
+    desc: "Usually located on the underside of the frame near the pedals or under the battery pack.",
+  },
+  {
+    icon: BookOpen,
+    title: "Consult your manual",
+    desc: "Your original owner's manual will have the model specifications on the first page.",
+  },
+  {
+    icon: Headphones,
+    title: "Ask our experts",
+    desc: "Send us a photo of your bike, and we'll help you identify it instantly.",
+  },
+];
+
+const SERIAL_LOCATIONS = [
+  "Bottom Bracket",
+  "Head Tube",
+  "Rear Dropout",
+  "Battery Mount",
+];
+
+const CATEGORIES = [
+  { icon: BatteryCharging, label: "Batteries" },
+  { icon: Circle, label: "Tires & Tubes" },
+  { icon: Zap, label: "Chargers" },
+  { icon: Cpu, label: "Controllers" },
+  { icon: Settings, label: "Brakes" },
+  { icon: LayoutGrid, label: "View All" },
+];
+
+export default function SupportPage() {
   return (
-    <section className="bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 font-display transition-colors duration-200">
-      <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-        <main className="flex-grow">
-          <section className="bg-white dark:bg-[#1a2c15] border-b border-[#e5eadd] dark:border-[#2a3825] py-16 md:py-20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
-            <div className="max-w-[1280px] mx-auto px-4 md:px-10 relative z-10">
-              <div className="text-center max-w-3xl mx-auto mb-12">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
-                  <span className="material-symbols-outlined text-sm">build</span>
-                  Part Finder
-                </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-text-main dark:text-white mb-6 tracking-tight">
-                  Find the perfect fit
-                  <br />
-                  <span className="text-primary">for your ride.</span>
-                </h1>
-                <p className="text-lg text-text-muted dark:text-gray-400 max-w-2xl mx-auto">
-                  Don't guess. Select your model below to instantly filter our
-                  catalog for compatible parts, batteries, and upgrades
-                  guaranteed to work.
-                </p>
+    <div className="min-h-screen bg-[#fdfcf9] font-['Inter']">
+      {/* ─── Hero / Part Finder ─────────────────────────────────── */}
+      <section className="bg-white border-b border-neutral-200/70 py-16 md:py-20 relative overflow-hidden">
+        <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-emerald-50 to-transparent pointer-events-none" />
+        <div className="max-w-5xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold uppercase tracking-wider mb-6">
+              <Wrench size={14} />
+              Part Finder
+            </div>
+            <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-5 leading-tight">
+              Find the perfect fit
+              <br />
+              <span className="text-emerald-700">for your ride.</span>
+            </h1>
+            <p className="text-neutral-500 font-light text-lg leading-relaxed">
+              Don&apos;t guess. Select your model below to instantly filter our
+              catalog for compatible parts, batteries, and upgrades guaranteed to
+              work.
+            </p>
+          </div>
+
+          <div className="bg-neutral-50 border border-neutral-200/70 rounded-2xl p-5 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
+                  Category
+                </label>
+                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/20">
+                  <option value="">Select Type</option>
+                  <option>E-Bikes</option>
+                  <option>E-Scooters</option>
+                  <option>Accessories</option>
+                </select>
               </div>
-              <div className="max-w-4xl mx-auto bg-white dark:bg-[#142210] rounded-2xl p-4 shadow-xl shadow-black/5 border border-gray-100 dark:border-gray-800">
-                <form className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-text-muted dark:text-gray-500 uppercase tracking-wider ml-1">
-                      Category
-                    </label>
-                    <div className="relative">
-                      <select className="w-full rounded-xl bg-gray-50 dark:bg-[#22301d] border-transparent focus:border-primary focus:ring-primary text-text-main dark:text-white font-medium py-3 pl-4">
-                        <option disabled="" selected="">
-                          Select Type
-                        </option>
-                        <option>E-Bikes</option>
-                        <option>E-Scooters</option>
-                        <option>Accessories</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-text-muted dark:text-gray-500 uppercase tracking-wider ml-1">
-                      Brand
-                    </label>
-                    <div className="relative">
-                      <select className="w-full rounded-xl bg-gray-50 dark:bg-[#22301d] border-transparent focus:border-primary focus:ring-primary text-text-main dark:text-white font-medium py-3 pl-4">
-                        <option disabled="" selected="">
-                          Select Brand
-                        </option>
-                        <option>EvWheels</option>
-                        <option>Urban Glide</option>
-                        <option>Mountain King</option>
-                        <option>VoltX</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-text-muted dark:text-gray-500 uppercase tracking-wider ml-1">
-                      Model
-                    </label>
-                    <div className="relative">
-                      <select className="w-full rounded-xl bg-gray-50 dark:bg-[#22301d] border-transparent focus:border-primary focus:ring-primary text-text-main dark:text-white font-medium py-3 pl-4">
-                        <option disabled="" selected="">
-                          Select Model
-                        </option>
-                        <option>Glide X1</option>
-                        <option>Glide X2 Pro</option>
-                        <option>Ranger 500</option>
-                        <option>City Commuter</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="flex items-end">
-                    <button
-                      className="w-full py-3.5 bg-primary hover:bg-[#3ce00b] text-primary-content font-bold rounded-xl transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2"
-                      type="button"
-                    >
-                      <span className="material-symbols-outlined">
-                        search_check
-                      </span>
-                      Check Fit
-                    </button>
-                  </div>
-                </form>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
+                  Brand
+                </label>
+                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/20">
+                  <option value="">Select Brand</option>
+                  <option>EvWheels</option>
+                  <option>Urban Glide</option>
+                  <option>Mountain King</option>
+                  <option>VoltX</option>
+                </select>
               </div>
-              <div className="flex items-center justify-center gap-2 mt-6 text-sm text-text-muted dark:text-gray-500">
-                <span className="material-symbols-outlined text-lg">info</span>
-                <span>
-                  Not sure about your model?{" "}
-                  <a className="underline decoration-primary underline-offset-4 hover:text-text-main dark:hover:text-white transition-colors cursor-pointer">
-                    Find your serial number
-                  </a>
-                </span>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
+                  Model
+                </label>
+                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/20">
+                  <option value="">Select Model</option>
+                  <option>Glide X1</option>
+                  <option>Glide X2 Pro</option>
+                  <option>Ranger 500</option>
+                  <option>City Commuter</option>
+                </select>
+              </div>
+              <div className="flex items-end">
+                <button
+                  type="button"
+                  className="w-full py-3.5 bg-emerald-800 hover:bg-emerald-700 text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <Search size={18} />
+                  Check Fit
+                </button>
               </div>
             </div>
-          </section>
-          <section className="max-w-[1280px] mx-auto px-4 md:px-10 py-16 md:py-24">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-              <div>
-                <h2 className="text-3xl font-bold text-text-main dark:text-white mb-2">
-                  Popular Models
-                </h2>
-                <p className="text-text-muted dark:text-gray-400">
-                  Browse parts for our best-selling vehicles.
-                </p>
-              </div>
-              <a
-                className="flex items-center gap-1 font-bold text-primary hover:gap-2 transition-all"
-                href="#"
-              >
-                View all models{" "}
-                <span className="material-symbols-outlined text-lg">
-                  arrow_forward
-                </span>
-              </a>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <a
-                className="group bg-white dark:bg-[#1a2c15] rounded-2xl border border-[#e5eadd] dark:border-[#2a3825] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                href="#"
-              >
-                <div className="h-48 bg-gray-100 dark:bg-[#22301d] relative flex items-center justify-center group-hover:bg-[#f1f5f0] transition-colors">
-                  <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors">
-                    pedal_bike
-                  </span>
-                  <div className="absolute top-4 right-4 bg-white dark:bg-black/50 px-2 py-1 rounded text-xs font-bold text-text-main dark:text-white shadow-sm backdrop-blur-sm">
-                    2023 Series
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-text-main dark:text-white mb-1 group-hover:text-primary transition-colors">
-                    Urban Glide X1
-                  </h3>
-                  <p className="text-sm text-text-muted dark:text-gray-400 mb-4">
-                    City Commuter E-Bike
-                  </p>
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
-                    <span className="text-xs font-semibold text-text-muted dark:text-gray-500">
-                      42 compatible parts
-                    </span>
-                    <span className="material-symbols-outlined text-primary text-xl">
-                      arrow_circle_right
-                    </span>
-                  </div>
-                </div>
-              </a>
-              <a
-                className="group bg-white dark:bg-[#1a2c15] rounded-2xl border border-[#e5eadd] dark:border-[#2a3825] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                href="#"
-              >
-                <div className="h-48 bg-gray-100 dark:bg-[#22301d] relative flex items-center justify-center group-hover:bg-[#f1f5f0] transition-colors">
-                  <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors">
-                    electric_scooter
-                  </span>
-                  <div className="absolute top-4 right-4 bg-white dark:bg-black/50 px-2 py-1 rounded text-xs font-bold text-text-main dark:text-white shadow-sm backdrop-blur-sm">
-                    Pro Edition
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-text-main dark:text-white mb-1 group-hover:text-primary transition-colors">
-                    VoltX Scooter
-                  </h3>
-                  <p className="text-sm text-text-muted dark:text-gray-400 mb-4">
-                    Long Range E-Scooter
-                  </p>
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
-                    <span className="text-xs font-semibold text-text-muted dark:text-gray-500">
-                      28 compatible parts
-                    </span>
-                    <span className="material-symbols-outlined text-primary text-xl">
-                      arrow_circle_right
-                    </span>
-                  </div>
-                </div>
-              </a>
-              <a
-                className="group bg-white dark:bg-[#1a2c15] rounded-2xl border border-[#e5eadd] dark:border-[#2a3825] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                href="#"
-              >
-                <div className="h-48 bg-gray-100 dark:bg-[#22301d] relative flex items-center justify-center group-hover:bg-[#f1f5f0] transition-colors">
-                  <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors">
-                    directions_bike
-                  </span>
-                  <div className="absolute top-4 right-4 bg-white dark:bg-black/50 px-2 py-1 rounded text-xs font-bold text-text-main dark:text-white shadow-sm backdrop-blur-sm">
-                    Off-Road
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-text-main dark:text-white mb-1 group-hover:text-primary transition-colors">
-                    Ranger 500
-                  </h3>
-                  <p className="text-sm text-text-muted dark:text-gray-400 mb-4">
-                    Mountain E-Bike
-                  </p>
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
-                    <span className="text-xs font-semibold text-text-muted dark:text-gray-500">
-                      56 compatible parts
-                    </span>
-                    <span className="material-symbols-outlined text-primary text-xl">
-                      arrow_circle_right
-                    </span>
-                  </div>
-                </div>
-              </a>
-              <a
-                className="group bg-white dark:bg-[#1a2c15] rounded-2xl border border-[#e5eadd] dark:border-[#2a3825] overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                href="#"
-              >
-                <div className="h-48 bg-gray-100 dark:bg-[#22301d] relative flex items-center justify-center group-hover:bg-[#f1f5f0] transition-colors">
-                  <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 group-hover:text-primary transition-colors">
-                    moped
-                  </span>
-                  <div className="absolute top-4 right-4 bg-white dark:bg-black/50 px-2 py-1 rounded text-xs font-bold text-text-main dark:text-white shadow-sm backdrop-blur-sm">
-                    Legacy
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-text-main dark:text-white mb-1 group-hover:text-primary transition-colors">
-                    City Mate V1
-                  </h3>
-                  <p className="text-sm text-text-muted dark:text-gray-400 mb-4">
-                    Compact Moped
-                  </p>
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
-                    <span className="text-xs font-semibold text-text-muted dark:text-gray-500">
-                      15 compatible parts
-                    </span>
-                    <span className="material-symbols-outlined text-primary text-xl">
-                      arrow_circle_right
-                    </span>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </section>
-          <section className="bg-[#f6f8f5] dark:bg-[#111c0e] py-16 border-y border-[#e5eadd] dark:border-[#2a3825]">
-            <div className="max-w-[1280px] mx-auto px-4 md:px-10">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h2 className="text-3xl font-bold text-text-main dark:text-white mb-4">
-                    How to identify your model?
-                  </h2>
-                  <p className="text-text-muted dark:text-gray-400 mb-8 leading-relaxed">
-                    To ensure you purchase the correct parts, you'll need the
-                    exact model name or serial number of your vehicle. Here is
-                    where you can typically find this information.
-                  </p>
-                  <div className="space-y-6">
-                    <div className="flex gap-4">
-                      <div className="size-12 shrink-0 rounded-full bg-white dark:bg-[#1a2c15] border border-gray-200 dark:border-gray-800 flex items-center justify-center text-primary shadow-sm">
-                        <span className="material-symbols-outlined">qr_code_2</span>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-text-main dark:text-white mb-1">
-                          Check the frame sticker
-                        </h4>
-                        <p className="text-sm text-text-muted dark:text-gray-500">
-                          Usually located on the underside of the frame near the
-                          pedals or under the battery pack.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-4">
-                      <div className="size-12 shrink-0 rounded-full bg-white dark:bg-[#1a2c15] border border-gray-200 dark:border-gray-800 flex items-center justify-center text-primary shadow-sm">
-                        <span className="material-symbols-outlined">menu_book</span>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-text-main dark:text-white mb-1">
-                          Consult your manual
-                        </h4>
-                        <p className="text-sm text-text-muted dark:text-gray-500">
-                          Your original owner's manual will have the model
-                          specifications on the first page.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-4">
-                      <div className="size-12 shrink-0 rounded-full bg-white dark:bg-[#1a2c15] border border-gray-200 dark:border-gray-800 flex items-center justify-center text-primary shadow-sm">
-                        <span className="material-symbols-outlined">
-                          support_agent
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-text-main dark:text-white mb-1">
-                          Ask our experts
-                        </h4>
-                        <p className="text-sm text-text-muted dark:text-gray-500">
-                          Send us a photo of your bike, and we'll help you
-                          identify it instantly.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="relative rounded-2xl overflow-hidden bg-white dark:bg-[#1a2c15] border border-gray-200 dark:border-gray-800 p-8 shadow-lg">
-                  <div className="absolute top-0 right-0 p-4 opacity-10">
-                    <span className="material-symbols-outlined text-9xl">
-                      pedal_bike
-                    </span>
-                  </div>
-                  <div className="relative z-10">
-                    <h3 className="text-xl font-bold text-text-main dark:text-white mb-6">
-                      Common Serial Number Locations
-                    </h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-gray-50 dark:bg-[#22301d] p-4 rounded-xl text-center">
-                        <span className="material-symbols-outlined text-3xl text-primary mb-2">
-                          location_on
-                        </span>
-                        <p className="font-bold text-sm text-text-main dark:text-white">
-                          Bottom Bracket
-                        </p>
-                      </div>
-                      <div className="bg-gray-50 dark:bg-[#22301d] p-4 rounded-xl text-center">
-                        <span className="material-symbols-outlined text-3xl text-primary mb-2">
-                          location_on
-                        </span>
-                        <p className="font-bold text-sm text-text-main dark:text-white">
-                          Head Tube
-                        </p>
-                      </div>
-                      <div className="bg-gray-50 dark:bg-[#22301d] p-4 rounded-xl text-center">
-                        <span className="material-symbols-outlined text-3xl text-primary mb-2">
-                          location_on
-                        </span>
-                        <p className="font-bold text-sm text-text-main dark:text-white">
-                          Rear Dropout
-                        </p>
-                      </div>
-                      <div className="bg-gray-50 dark:bg-[#22301d] p-4 rounded-xl text-center">
-                        <span className="material-symbols-outlined text-3xl text-primary mb-2">
-                          location_on
-                        </span>
-                        <p className="font-bold text-sm text-text-main dark:text-white">
-                          Battery Mount
-                        </p>
-                      </div>
-                    </div>
-                    <button className="w-full mt-6 py-3 border border-gray-200 dark:border-gray-700 hover:border-primary text-text-main dark:text-white font-bold rounded-xl transition-colors hover:text-primary">
-                      Download Identification Guide
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section className="max-w-[1280px] mx-auto px-4 md:px-10 py-16 md:py-24">
-            <h2 className="text-3xl font-bold text-text-main dark:text-white mb-10 text-center">
-              Browse Compatibility by Category
+          </div>
+
+          <p className="flex items-center justify-center gap-2 mt-5 text-sm text-neutral-500 font-light">
+            <Info size={15} />
+            Not sure about your model?{" "}
+            <span className="text-emerald-700 underline underline-offset-4 cursor-pointer hover:text-emerald-800 transition-colors">
+              Find your serial number
+            </span>
+          </p>
+        </div>
+      </section>
+
+      {/* ─── Popular Models ──────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 md:px-8 py-16 md:py-24">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+          <div>
+            <h2 className="text-3xl font-['Playfair_Display'] font-medium text-neutral-900 mb-2">
+              Popular Models
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              <a
-                className="flex flex-col items-center gap-3 p-6 rounded-xl bg-white dark:bg-[#1a2c15] border border-[#e5eadd] dark:border-[#2a3825] hover:border-primary hover:shadow-md transition-all group"
-                href="#"
-              >
-                <span className="material-symbols-outlined text-3xl text-text-muted dark:text-gray-400 group-hover:text-primary transition-colors">
-                  battery_charging_full
+            <p className="text-neutral-500 font-light">
+              Browse parts for our best-selling vehicles.
+            </p>
+          </div>
+          <Link
+            href="/products"
+            className="flex items-center gap-1 text-sm font-medium text-emerald-700 hover:gap-2 transition-all"
+          >
+            View all models <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {MODELS.map((m) => (
+            <div
+              key={m.name}
+              className="group bg-white border border-neutral-200/70 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+            >
+              <div className="h-44 bg-neutral-50 flex items-center justify-center relative group-hover:bg-emerald-50/40 transition-colors">
+                <m.icon
+                  size={56}
+                  strokeWidth={1.2}
+                  className="text-neutral-300 group-hover:text-emerald-600 transition-colors"
+                />
+                <span className="absolute top-4 right-4 bg-white border border-neutral-200 px-2 py-1 rounded text-xs font-medium text-neutral-700 shadow-sm">
+                  {m.badge}
                 </span>
-                <span className="font-medium text-sm text-text-main dark:text-white">
-                  Batteries
-                </span>
-              </a>
-              <a
-                className="flex flex-col items-center gap-3 p-6 rounded-xl bg-white dark:bg-[#1a2c15] border border-[#e5eadd] dark:border-[#2a3825] hover:border-primary hover:shadow-md transition-all group"
-                href="#"
-              >
-                <span className="material-symbols-outlined text-3xl text-text-muted dark:text-gray-400 group-hover:text-primary transition-colors">
-                  tire_repair
-                </span>
-                <span className="font-medium text-sm text-text-main dark:text-white">
-                  Tires &amp; Tubes
-                </span>
-              </a>
-              <a
-                className="flex flex-col items-center gap-3 p-6 rounded-xl bg-white dark:bg-[#1a2c15] border border-[#e5eadd] dark:border-[#2a3825] hover:border-primary hover:shadow-md transition-all group"
-                href="#"
-              >
-                <span className="material-symbols-outlined text-3xl text-text-muted dark:text-gray-400 group-hover:text-primary transition-colors">
-                  bolt
-                </span>
-                <span className="font-medium text-sm text-text-main dark:text-white">
-                  Chargers
-                </span>
-              </a>
-              <a
-                className="flex flex-col items-center gap-3 p-6 rounded-xl bg-white dark:bg-[#1a2c15] border border-[#e5eadd] dark:border-[#2a3825] hover:border-primary hover:shadow-md transition-all group"
-                href="#"
-              >
-                <span className="material-symbols-outlined text-3xl text-text-muted dark:text-gray-400 group-hover:text-primary transition-colors">
-                  memory
-                </span>
-                <span className="font-medium text-sm text-text-main dark:text-white">
-                  Controllers
-                </span>
-              </a>
-              <a
-                className="flex flex-col items-center gap-3 p-6 rounded-xl bg-white dark:bg-[#1a2c15] border border-[#e5eadd] dark:border-[#2a3825] hover:border-primary hover:shadow-md transition-all group"
-                href="#"
-              >
-                <span className="material-symbols-outlined text-3xl text-text-muted dark:text-gray-400 group-hover:text-primary transition-colors">
-                  settings
-                </span>
-                <span className="font-medium text-sm text-text-main dark:text-white">
-                  Brakes
-                </span>
-              </a>
-              <a
-                className="flex flex-col items-center gap-3 p-6 rounded-xl bg-white dark:bg-[#1a2c15] border border-[#e5eadd] dark:border-[#2a3825] hover:border-primary hover:shadow-md transition-all group"
-                href="#"
-              >
-                <span className="material-symbols-outlined text-3xl text-text-muted dark:text-gray-400 group-hover:text-primary transition-colors">
-                  grid_view
-                </span>
-                <span className="font-medium text-sm text-text-main dark:text-white">
-                  View All
-                </span>
-              </a>
+              </div>
+              <div className="p-5">
+                <h3 className="font-medium text-neutral-900 mb-1 group-hover:text-emerald-700 transition-colors">
+                  {m.name}
+                </h3>
+                <p className="text-sm text-neutral-500 font-light mb-4">{m.type}</p>
+                <div className="flex items-center justify-between pt-4 border-t border-neutral-100">
+                  <span className="text-xs text-neutral-400">
+                    {m.parts} compatible parts
+                  </span>
+                  <ArrowRight
+                    size={16}
+                    className="text-emerald-600 group-hover:translate-x-0.5 transition-transform"
+                  />
+                </div>
+              </div>
             </div>
-          </section>
-        </main>
-      </div>
-    </section>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Identify Your Model ─────────────────────────────────── */}
+      <section className="bg-neutral-50/70 border-y border-neutral-200/70 py-16">
+        <div className="max-w-5xl mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+                How to identify your model?
+              </h2>
+              <p className="text-neutral-500 font-light mb-8 leading-relaxed">
+                To ensure you purchase the correct parts, you&apos;ll need the
+                exact model name or serial number of your vehicle. Here is where
+                you can typically find this information.
+              </p>
+              <div className="space-y-6">
+                {IDENTIFY_STEPS.map((step) => (
+                  <div key={step.title} className="flex gap-4">
+                    <div className="w-11 h-11 shrink-0 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-emerald-700 shadow-sm">
+                      <step.icon size={20} strokeWidth={1.6} />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-neutral-900 mb-1">{step.title}</h4>
+                      <p className="text-sm text-neutral-500 font-light">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white border border-neutral-200/70 rounded-2xl p-8 shadow-sm">
+              <h3 className="text-lg font-medium text-neutral-900 mb-6">
+                Common Serial Number Locations
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                {SERIAL_LOCATIONS.map((loc) => (
+                  <div
+                    key={loc}
+                    className="bg-neutral-50 border border-neutral-100 p-4 rounded-xl text-center"
+                  >
+                    <MapPin
+                      size={28}
+                      strokeWidth={1.4}
+                      className="text-emerald-600 mx-auto mb-2"
+                    />
+                    <p className="font-medium text-sm text-neutral-800">{loc}</p>
+                  </div>
+                ))}
+              </div>
+              <button className="w-full mt-6 py-3 border border-neutral-200 hover:border-emerald-600 hover:text-emerald-700 text-neutral-700 font-medium rounded-xl transition-colors text-sm">
+                Download Identification Guide
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Browse by Category ──────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 md:px-8 py-16 md:py-24">
+        <h2 className="text-3xl font-['Playfair_Display'] font-medium text-neutral-900 mb-10 text-center">
+          Browse Compatibility by Category
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {CATEGORIES.map((cat) => (
+            <Link
+              key={cat.label}
+              href="/products"
+              className="group flex flex-col items-center gap-3 p-6 rounded-xl bg-white border border-neutral-200/70 hover:border-emerald-600/50 hover:shadow-md transition-all"
+            >
+              <cat.icon
+                size={28}
+                strokeWidth={1.4}
+                className="text-neutral-400 group-hover:text-emerald-600 transition-colors"
+              />
+              <span className="font-medium text-sm text-neutral-700 text-center">
+                {cat.label}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

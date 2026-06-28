@@ -17,7 +17,7 @@ export async function POST(req) {
 
     await connectDB();
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
 
     // Generic error to prevent user enumeration
     if (!user) {
@@ -57,12 +57,15 @@ export async function POST(req) {
     response.cookies.set("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      // sameSite: "strict",
+      sameSite: "lax",
       path: "/",
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return response;
   } catch (error) {
+    console.error(error)
     return NextResponse.json(
       { error: "Server error. Please try again later." },
       { status: 500 }

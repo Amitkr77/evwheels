@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useAuthStore } from "@/store/authStore";
 
 import Myorders from "@/components/user/Myorders";
 import Wishlist from "@/components/user/Wishlist";
@@ -22,6 +23,7 @@ import Settings from "@/components/user/Settings";
 
 const UserDashboard = () => {
   const router = useRouter();
+  const logout = useAuthStore((state) => state.logout);
   const [activeTab, setActiveTab] = useState(0);
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -134,7 +136,12 @@ const UserDashboard = () => {
 
         <div className="p-6 border-t border-neutral-200/60 mt-auto">
           <button
-            onClick={() => confirm("Logout?") && router.push("/login")}
+            onClick={async () => {
+              if (confirm("Are you sure you want to logout?")) {
+                await logout();
+                router.push("/account/login");
+              }
+            }}
             className="w-full flex items-center justify-center gap-3 py-3.5 text-red-700 hover:bg-red-50 rounded-2xl transition-all font-medium"
           >
             <LogOut size={20} strokeWidth={1.8} />
@@ -160,16 +167,12 @@ const UserDashboard = () => {
               <div className="flex items-center gap-3">
                 <div className="text-right">
                   <div className="text-sm font-medium text-neutral-900">
-                    {user.name || "Amit Sharma"}
+                    {user.name || ""}
                   </div>
-                  <div className="text-xs text-neutral-500">Patna, Bihar</div>
+                  <div className="text-xs text-neutral-500">{user.email || ""}</div>
                 </div>
-                <div className="w-9 h-9 bg-neutral-200 rounded-full overflow-hidden border-2 border-white">
-                  <img
-                    src="https://i.pravatar.cc/128?u=amit"
-                    alt="User"
-                    className="object-cover"
-                  />
+                <div className="w-9 h-9 rounded-full border-2 border-white bg-emerald-800 flex items-center justify-center text-white text-sm font-medium">
+                  {user.name?.charAt(0)?.toUpperCase() || "U"}
                 </div>
               </div>
             </div>
@@ -199,7 +202,7 @@ const UserDashboard = () => {
                   transition={{ duration: 0.4 }}
                 >
                   <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium mb-2">
-                    {getGreeting()}, {user.name || "Amit"}
+                    {getGreeting()}, {user.name?.split(" ")[0] || "there"}
                   </h1>
                   <p className="text-neutral-600 font-light mb-10">
                     Here's what's happening with your account

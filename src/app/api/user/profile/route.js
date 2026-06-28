@@ -1,19 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
-import jwt from "jsonwebtoken";
-
-async function getUserId(req) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return null;
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded.id;
-  } catch {
-    return null;
-  }
-}
+import { getUserId } from "@/lib/getUserId";
 
 export async function GET(req) {
   const userId = await getUserId(req);
@@ -23,6 +11,8 @@ export async function GET(req) {
   await connectDB();
 
   const user = await User.findById(userId).select("-password");
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   return NextResponse.json(user);
 }
@@ -39,8 +29,11 @@ export async function PATCH(req) {
   const user = await User.findByIdAndUpdate(
     userId,
     { name, phone },
-    { new: true }
+    { new: true, runValidators: true }
   ).select("-password");
+
+  if (!user)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   return NextResponse.json(user);
 }

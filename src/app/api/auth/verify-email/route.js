@@ -22,7 +22,7 @@ export async function GET(req) {
 
     const user = await User.findOne({
       emailVerificationToken: hashedToken,
-      emailVerificationExpire: { $gt: Date.now() },
+      emailVerificationExpires: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -34,8 +34,8 @@ export async function GET(req) {
 
     // Mark email as verified and clear token
     user.isEmailVerified = true;
-    user.emailVerificationToken = null;
-    user.emailVerificationExpire = null;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
     await user.save();
 
     // Redirect to login page with success message

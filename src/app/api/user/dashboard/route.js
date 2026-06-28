@@ -3,20 +3,8 @@ import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import Order from "@/models/Order";
 import Wishlist from "@/models/Wishlist";
-import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-
-async function getUserId(req) {
-    const token = req.cookies.get("token")?.value;
-    if (!token) return null;
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return decoded.id;
-    } catch {
-        return null;
-    }
-}
+import { getUserId } from "@/lib/getUserId";
 
 export async function GET(req) {
     const userId = await getUserId(req);

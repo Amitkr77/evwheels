@@ -135,33 +135,36 @@ export async function GET(req) {
         const topSellingProduct = topProduct[0] || { name: null, sold: 0 };
 
         // ================================
-        // Last 7 Days Chart
+        // Revenue Chart (period-aware)
         // ================================
 
-        const last7Days = new Date();
-        last7Days.setDate(last7Days.getDate() - 7);
+        const { searchParams } = new URL(req.url);
+        const period = searchParams.get("period") || "7d";
+        const days = period === "30d" ? 30 : 7;
+        const chartStart = new Date();
+        chartStart.setDate(chartStart.getDate() - days);
+        chartStart.setHours(0, 0, 0, 0);
 
         const revenueChartRaw = await Order.aggregate([
             {
                 $match: {
                     orderStatus: "DELIVERED",
-                    createdAt: { $gte: last7Days },
+                    createdAt: { $gte: chartStart },
                 },
             },
             {
                 $group: {
                     _id: {
-                        day: { $dayOfMonth: "$createdAt" },
-                        month: { $month: "$createdAt" },
+                        $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
                     },
                     revenue: { $sum: "$totalAmount" },
                 },
             },
-            { $sort: { "_id.day": 1 } },
+            { $sort: { _id: 1 } },
         ]);
 
         const revenueChart = revenueChartRaw.map((d) => ({
-            label: `${d._id.day}/${d._id.month}`,
+            label: d._id.slice(5), // "MM-DD"
             revenue: d.revenue,
         }));
 

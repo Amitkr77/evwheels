@@ -56,7 +56,7 @@ export default function Wishlist() {
           >
             <div className="relative aspect-[4/3] bg-neutral-100">
               <Image
-                src={item.image}
+                src={item.image || "/logo.png"}
                 alt={item.title || "Product image"}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"

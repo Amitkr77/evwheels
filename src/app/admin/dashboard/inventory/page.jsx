@@ -209,13 +209,10 @@ export default function InventoryPage() {
   const fetchSummary = useCallback(async () => {
     setLoadingSummary(true);
     try {
-      const res = await fetch("/api/admin/inventory?type=summary");
+      const res = await fetch("/api/admin/inventory?type=summary", { credentials: "include" });
       const data = await res.json();
-      setSummary(data);
-      if (data.lowStockThreshold) {
-        setThreshold(data.lowStockThreshold);
-        setThresholdInput(String(data.lowStockThreshold));
-      }
+      setSummary(data.summary || null);
+      if (data.recentLogs) setLogs(data.recentLogs);
     } catch (err) {
       console.error("Summary fetch error:", err);
     } finally {
@@ -228,11 +225,12 @@ export default function InventoryPage() {
     setLoadingLowStock(true);
     try {
       const res = await fetch(
-        `/api/admin/inventory?type=low-stock&threshold=${threshold}&page=${page}&limit=20`
+        `/api/admin/inventory?type=low-stock&threshold=${threshold}&page=${page}&limit=20`,
+        { credentials: "include" }
       );
       const data = await res.json();
       setLowStockProducts(data.products || []);
-      setLowStockPagination(data.pagination || { total: 0, page: 1, limit: 20, pages: 1 });
+      setLowStockPagination(data.pagination || { total: data.products?.length || 0, page: 1, limit: 20, pages: 1 });
     } catch (err) {
       console.error("Low stock fetch error:", err);
     } finally {
@@ -245,11 +243,12 @@ export default function InventoryPage() {
     setLoadingOutOfStock(true);
     try {
       const res = await fetch(
-        `/api/admin/inventory?type=out-of-stock&page=${page}&limit=20`
+        `/api/admin/inventory?type=out-of-stock&page=${page}&limit=20`,
+        { credentials: "include" }
       );
       const data = await res.json();
       setOutOfStockProducts(data.products || []);
-      setOutOfStockPagination(data.pagination || { total: 0, page: 1, limit: 20, pages: 1 });
+      setOutOfStockPagination(data.pagination || { total: data.products?.length || 0, page: 1, limit: 20, pages: 1 });
     } catch (err) {
       console.error("Out of stock fetch error:", err);
     } finally {
@@ -262,7 +261,8 @@ export default function InventoryPage() {
     setLoadingLogs(true);
     try {
       const res = await fetch(
-        `/api/admin/inventory?type=logs&page=${page}&limit=20`
+        `/api/admin/inventory?type=logs&page=${page}&limit=20`,
+        { credentials: "include" }
       );
       const data = await res.json();
       setLogs(data.logs || []);
@@ -314,7 +314,7 @@ export default function InventoryPage() {
   // ─── Stock Adjustment Preview ───────────────────────────────────────
   const getStockPreview = () => {
     if (!selectedProduct) return null;
-    const current = selectedProduct.inventory?.stock ?? 0;
+    const current = selectedProduct.stock ?? 0;
     const qty = Number(adjustForm.quantity) || 0;
     let newStock;
     if (adjustForm.type === "increase" || adjustForm.type === "restock") {
@@ -322,7 +322,8 @@ export default function InventoryPage() {
     } else if (adjustForm.type === "decrease") {
       newStock = Math.max(0, current - qty);
     } else {
-      newStock = qty;
+      // adjustment = set to exact value
+      newStock = Math.max(0, qty);
     }
     return { current, newStock, change: newStock - current };
   };
@@ -340,6 +341,7 @@ export default function InventoryPage() {
       const res = await fetch("/api/admin/inventory", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           productId: adjustForm.productId,
           type: adjustForm.type,
@@ -355,12 +357,9 @@ export default function InventoryPage() {
       if (activeTab === "low-stock") fetchLowStock(lowStockPagination.page);
       if (activeTab === "out-of-stock") fetchOutOfStock(outOfStockPagination.page);
       if (activeTab === "logs") fetchLogs(logsPagination.page);
-      // Update selected product in modal
+      // Update selected product stock in modal
       if (selectedProduct) {
-        setSelectedProduct({
-          ...selectedProduct,
-          inventory: { ...selectedProduct.inventory, stock: data.newStock },
-        });
+        setSelectedProduct({ ...selectedProduct, stock: data.newStock });
       }
     } catch (err) {
       setAdjustError(err.message);
@@ -378,7 +377,7 @@ export default function InventoryPage() {
       quantity: "",
       reason: "",
     });
-    setProductSearch(product.name || "");
+    setProductSearch(product.title || "");
     setSearchResults([]);
     setAdjustError("");
     setAdjustSuccess("");
@@ -399,57 +398,50 @@ export default function InventoryPage() {
     ? [
         {
           title: "Total Products",
-          value: summary.totalProducts,
+          value: summary.totalProducts ?? 0,
           icon: Package,
-          color: "emerald",
           bgIcon: "bg-emerald-50",
           textIcon: "text-emerald-600",
         },
         {
           title: "Active Products",
-          value: summary.activeProducts,
+          value: summary.activeProducts ?? 0,
           icon: Package,
-          color: "emerald",
           bgIcon: "bg-emerald-50",
           textIcon: "text-emerald-600",
         },
         {
           title: "Out of Stock",
-          value: summary.outOfStock,
+          value: summary.outOfStock ?? 0,
           icon: AlertCircle,
-          color: "red",
           bgIcon: "bg-red-50",
           textIcon: "text-red-600",
         },
         {
           title: "Low Stock",
-          value: summary.lowStock,
+          value: summary.lowStock ?? 0,
           icon: AlertTriangle,
-          color: "amber",
           bgIcon: "bg-amber-50",
           textIcon: "text-amber-600",
         },
         {
           title: "Total Stock Units",
-          value: summary.totalStock?.toLocaleString("en-IN"),
+          value: (summary.totalStock ?? 0).toLocaleString("en-IN"),
           icon: BoxesIcon,
-          color: "emerald",
           bgIcon: "bg-emerald-50",
           textIcon: "text-emerald-600",
         },
         {
           title: "Inventory Value",
-          value: formatCurrency(summary.inventoryValue),
+          value: formatCurrency(summary.inventoryValue ?? 0),
           icon: IndianRupee,
-          color: "emerald",
           bgIcon: "bg-emerald-50",
           textIcon: "text-emerald-600",
         },
         {
           title: "Archived Products",
-          value: summary.archivedProducts,
+          value: summary.archivedProducts ?? 0,
           icon: Archive,
-          color: "neutral",
           bgIcon: "bg-neutral-100",
           textIcon: "text-neutral-500",
         },
@@ -632,13 +624,12 @@ export default function InventoryPage() {
             </thead>
             <tbody className="divide-y divide-neutral-200/60">
               {lowStockProducts.map((product) => {
-                const stock = product.inventory?.stock ?? 0;
-                const moq = product.inventory?.moq ?? 1;
+                const stock = product.stock ?? 0;
                 const status = getStockStatus(stock, threshold);
                 return (
                   <tr key={product._id} className="hover:bg-neutral-50/50 transition-colors">
                     <td className="py-5 px-6 font-medium text-neutral-900 max-w-[240px] truncate">
-                      {product.name}
+                      {product.title}
                     </td>
                     <td className="py-5 px-6 text-sm text-neutral-600">
                       {product.category?.name || "—"}
@@ -646,7 +637,7 @@ export default function InventoryPage() {
                     <td className="py-5 px-6">
                       <span className="text-amber-700 font-semibold text-lg">{stock}</span>
                     </td>
-                    <td className="py-5 px-6 text-sm text-neutral-600">{moq}</td>
+                    <td className="py-5 px-6 text-sm text-neutral-600">—</td>
                     <td className="py-5 px-6">
                       <span className={`px-3 py-1 text-xs font-medium rounded-full ${status.cls}`}>
                         {status.label}
@@ -710,13 +701,13 @@ export default function InventoryPage() {
               {outOfStockProducts.map((product) => (
                 <tr key={product._id} className="hover:bg-neutral-50/50 transition-colors">
                   <td className="py-5 px-6 font-medium text-neutral-900 max-w-[240px] truncate">
-                    {product.name}
+                    {product.title}
                   </td>
                   <td className="py-5 px-6 text-sm text-neutral-600">
                     {product.category?.name || "—"}
                   </td>
                   <td className="py-5 px-6 font-medium text-emerald-800">
-                    {formatCurrency(product.price?.base ?? 0)}
+                    {formatCurrency(product.price ?? 0)}
                   </td>
                   <td className="py-5 px-6">
                     <span className="px-3 py-1 text-xs font-medium rounded-full bg-red-50 text-red-700">
@@ -914,19 +905,19 @@ export default function InventoryPage() {
                         onClick={() => {
                           setSelectedProduct(p);
                           setAdjustForm((f) => ({ ...f, productId: p._id }));
-                          setProductSearch(p.name);
+                          setProductSearch(p.title);
                           setSearchResults([]);
                         }}
                         className="w-full text-left px-4 py-3 hover:bg-neutral-50 transition-colors flex items-center justify-between border-b border-neutral-100 last:border-0"
                       >
                         <div>
-                          <div className="text-sm font-medium text-neutral-900">{p.name}</div>
+                          <div className="text-sm font-medium text-neutral-900">{p.title}</div>
                           <div className="text-xs text-neutral-500">
-                            {p.category?.name || "—"} · Stock: {p.inventory?.stock ?? 0}
+                            {p.category?.name || "—"} · Stock: {p.stock ?? 0}
                           </div>
                         </div>
                         <span className="text-xs text-emerald-700 font-medium">
-                          {formatCurrency(p.price?.base ?? 0)}
+                          {formatCurrency(p.price ?? 0)}
                         </span>
                       </button>
                     ))}
@@ -939,15 +930,15 @@ export default function InventoryPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-sm font-medium text-neutral-900">
-                          {selectedProduct.name}
+                          {selectedProduct.title}
                         </div>
                         <div className="text-xs text-neutral-500 mt-0.5">
-                          {selectedProduct.category?.name || "—"} · SKU: {selectedProduct.sku || "N/A"}
+                          {selectedProduct.category?.name || "—"} · ₹{(selectedProduct.price ?? 0).toLocaleString("en-IN")}
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-semibold text-emerald-800">
-                          Stock: {selectedProduct.inventory?.stock ?? 0}
+                          Stock: {selectedProduct.stock ?? 0}
                         </div>
                       </div>
                     </div>

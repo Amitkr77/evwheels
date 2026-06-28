@@ -4,75 +4,77 @@ import Wishlist from "@/models/Wishlist";
 import Product from "@/models/Product";
 import { getUserId } from "@/lib/getUserId";
 
-
-// GET WISHLIST
-
 export async function GET(req) {
-    const userId = await getUserId(req);
+  const userId = await getUserId(req);
+  if (!userId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    if (!userId)
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  await connectDB();
 
-    await connectDB();
+  const wishlist = await Wishlist.findOne({ user: userId }).lean();
 
-    const wishlist = await Wishlist.findOne({ user: userId }).lean();
+  const products = (wishlist?.products || []).map((p) => ({
+    _id: p.productId,
+    title: p.title,
+    price: p.price,
+    image: p.image,
+  }));
 
-    // Transform the products array
-    const transformedWishlist = {
-        ...wishlist,
-        products: wishlist?.products.map((p) => ({
-            _id: p.productId,  
-            title: p.title,
-            price: p.price,
-            image: p.image
-        })) || []
-    };
-
-    return NextResponse.json(transformedWishlist);
+  return NextResponse.json({ products });
 }
 
+// Toggle: add if not present, remove if present
 export async function POST(req) {
-    const userId = await getUserId(req);
-    const { productId } = await req.json();
+  const userId = await getUserId(req);
+  if (!userId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    await connectDB();
+  const { productId } = await req.json();
+  if (!productId)
+    return NextResponse.json({ error: "Product ID required" }, { status: 400 });
 
-    let wishlist = await Wishlist.findOne({ user: userId });
+  await connectDB();
 
-    if (!wishlist) {
-        const product = await Product.findById(productId);
-        wishlist = await Wishlist.create({
-            user: userId,
-            products: [{
-                productId: product._id,
-                title: product.title,
-                price: product.price,
-                image: product.image,
-            }]
-        });
-        return NextResponse.json({ productId, wished: true });
-    }
+  let wishlist = await Wishlist.findOne({ user: userId });
 
-    const index = wishlist.products.findIndex(
-        (p) => p.productId.toString() === productId
-    );
+  if (!wishlist) {
+    const product = await Product.findById(productId).select("title price images");
+    if (!product)
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
-    let wished;
-    if (index > -1) {
-        wishlist.products.splice(index, 1);
-        wished = false;
-    } else {
-        const product = await Product.findById(productId);
-        wishlist.products.push({
-            productId: product._id,
-            title: product.title,
-            price: product.price,
-            image: product.image,
-        });
-        wished = true;
-    }
+    wishlist = await Wishlist.create({
+      user: userId,
+      products: [{
+        productId: product._id,
+        title: product.title,
+        price: product.price,
+        image: product.images?.[0] || "",
+      }],
+    });
+    return NextResponse.json({ productId, wished: true });
+  }
 
+  const index = wishlist.products.findIndex(
+    (p) => p.productId.toString() === productId
+  );
+
+  if (index > -1) {
+    wishlist.products.splice(index, 1);
     await wishlist.save();
+    return NextResponse.json({ productId, wished: false });
+  }
 
-    return NextResponse.json({ productId, wished });
+  const product = await Product.findById(productId).select("title price images");
+  if (!product)
+    return NextResponse.json({ error: "Product not found" }, { status: 404 });
+
+  wishlist.products.push({
+    productId: product._id,
+    title: product.title,
+    price: product.price,
+    image: product.images?.[0] || "",
+  });
+  await wishlist.save();
+
+  return NextResponse.json({ productId, wished: true });
 }

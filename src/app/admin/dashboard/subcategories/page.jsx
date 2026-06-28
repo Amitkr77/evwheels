@@ -52,7 +52,7 @@ export default function SubcategoriesPage() {
     try {
       const res = await fetch("/api/subcategories?active=false");
       const data = await res.json();
-      setSubcategories(Array.isArray(data) ? data : []);
+      setSubcategories(data.subcategories || []);
     } catch (err) {
       console.error("Subcategories fetch error:", err);
       setSubcategories([]);
@@ -66,7 +66,7 @@ export default function SubcategoriesPage() {
     try {
       const res = await fetch("/api/categories?active=false");
       const data = await res.json();
-      setCategories(Array.isArray(data) ? data : []);
+      setCategories(data.categories || []);
     } catch (err) {
       console.error("Categories fetch error:", err);
     }
@@ -151,9 +151,10 @@ export default function SubcategoriesPage() {
       )
     );
     try {
-      const res = await fetch(`/api/admin/subcategories/${item._id}`, {
-        method: "PUT",
+      const res = await fetch(`/api/subcategories/${item._id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ isActive: newStatus }),
       });
       if (!res.ok) {
@@ -162,7 +163,7 @@ export default function SubcategoriesPage() {
       }
       const updated = await res.json();
       setSubcategories((prev) =>
-        prev.map((s) => (s._id === item._id ? updated : s))
+        prev.map((s) => (s._id === item._id ? updated.subcategory || updated : s))
       );
     } catch (err) {
       // Revert optimistic update
@@ -184,9 +185,10 @@ export default function SubcategoriesPage() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch("/api/admin/subcategories", {
+      const res = await fetch("/api/subcategories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           name: formData.name,
           category: formData.category,
@@ -201,7 +203,7 @@ export default function SubcategoriesPage() {
         throw new Error(errData.error || "Failed to create subcategory");
       }
       const created = await res.json();
-      setSubcategories((prev) => [created, ...prev]);
+      setSubcategories((prev) => [created.subcategory || created, ...prev]);
       setShowCreateModal(false);
       setFormData({ ...EMPTY_FORM });
     } catch (err) {
@@ -220,9 +222,10 @@ export default function SubcategoriesPage() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/admin/subcategories/${editItem._id}`, {
-        method: "PUT",
+      const res = await fetch(`/api/subcategories/${editItem._id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           name: formData.name,
           category: formData.category,
@@ -238,7 +241,7 @@ export default function SubcategoriesPage() {
       }
       const updated = await res.json();
       setSubcategories((prev) =>
-        prev.map((s) => (s._id === editItem._id ? updated : s))
+        prev.map((s) => (s._id === editItem._id ? updated.subcategory || updated : s))
       );
       setEditItem(null);
       setFormData({ ...EMPTY_FORM });
@@ -254,8 +257,9 @@ export default function SubcategoriesPage() {
   const handleDelete = async (id) => {
     setDeleteError("");
     try {
-      const res = await fetch(`/api/admin/subcategories/${id}`, {
+      const res = await fetch(`/api/subcategories/${id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       if (!res.ok) {
         const errData = await res.json();

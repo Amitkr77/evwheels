@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/db";
 import Cart from "@/models/Cart";
 import Product from "@/models/Product";
 import User from "@/models/User";
-import { getUserId } from "@/lib/auth";
+import { getUserId } from "@/lib/getUserId";
 
 // Helper to update lastCartActivity on user
 async function updateCartActivity(userId) {
@@ -52,7 +52,7 @@ export async function POST(req) {
     return NextResponse.json({ error: "Product is not available" }, { status: 400 });
 
   // Stock validation
-  const availableStock = product.inventory?.stock ?? 0;
+  const availableStock = product.stock ?? 0;
   if (availableStock < numQty)
     return NextResponse.json(
       { error: `Only ${availableStock} units available` },
@@ -111,7 +111,7 @@ export async function PUT(req) {
   // Validate against stock
   const product = await Product.findById(productId);
   if (product) {
-    const availableStock = product.inventory?.stock ?? 0;
+    const availableStock = product.stock ?? 0;
     if (numQty > availableStock) {
       return NextResponse.json(
         { error: `Only ${availableStock} units available` },

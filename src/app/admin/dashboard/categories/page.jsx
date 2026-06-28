@@ -44,7 +44,7 @@ export default function CategoriesPage() {
       const res = await fetch("/api/categories?active=false");
       if (!res.ok) throw new Error("Failed to fetch categories");
       const data = await res.json();
-      setCategories(data || []);
+      setCategories(data.categories || []);
     } catch (err) {
       console.error("Category fetch error:", err);
       alert("Failed to load categories. Please try again.");
@@ -122,9 +122,10 @@ export default function CategoriesPage() {
     );
 
     try {
-      const res = await fetch(`/api/admin/categories/${category._id}`, {
-        method: "PUT",
+      const res = await fetch(`/api/categories/${category._id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ isActive: newStatus }),
       });
 
@@ -135,7 +136,7 @@ export default function CategoriesPage() {
 
       const updated = await res.json();
       setCategories((prev) =>
-        prev.map((c) => (c._id === category._id ? updated : c))
+        prev.map((c) => (c._id === category._id ? updated.category || updated : c))
       );
     } catch (err) {
       // Revert optimistic update
@@ -161,6 +162,7 @@ export default function CategoriesPage() {
       const res = await fetch("/api/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           name: formData.name,
           description: formData.description,
@@ -197,9 +199,10 @@ export default function CategoriesPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/admin/categories/${editCategory._id}`, {
-        method: "PUT",
+      const res = await fetch(`/api/categories/${editCategory._id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           name: formData.name,
           description: formData.description,
@@ -216,7 +219,7 @@ export default function CategoriesPage() {
 
       const updated = await res.json();
       setCategories((prev) =>
-        prev.map((c) => (c._id === editCategory._id ? updated : c))
+        prev.map((c) => (c._id === editCategory._id ? updated.category || updated : c))
       );
       setEditCategory(null);
       setFormData({ ...emptyForm });
@@ -234,8 +237,9 @@ export default function CategoriesPage() {
     if (!deleteConfirm) return;
 
     try {
-      const res = await fetch(`/api/admin/categories/${deleteConfirm._id}`, {
+      const res = await fetch(`/api/categories/${deleteConfirm._id}`, {
         method: "DELETE",
+        credentials: "include",
       });
 
       if (!res.ok) {

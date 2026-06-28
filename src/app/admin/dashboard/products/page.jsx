@@ -32,27 +32,361 @@ import {
 
 // ─── Empty form template ────────────────────────────────────────
 const EMPTY_FORM = {
-  name: "",
+  title: "",
   category: "",
   subcategory: "",
-  shortDescription: "",
   description: "",
   price: "",
-  discountType: "none",
-  discountValue: "",
-  sku: "",
   brand: "",
   stock: 0,
-  moq: 1,
-  boxQty: 1,
+  warranty: 0,
+  colors: "",
   image: "",
-  priceRange: "",
-  tags: "",
-  isFeatured: false,
+  specifications: [],
+  featured: false,
   isActive: true,
 };
 
 const ITEMS_PER_PAGE = 15;
+
+// ── ProductForm ──────────────────────────────────────────────────────────────
+// Defined OUTSIDE ProductsPage so React preserves input DOM nodes (and focus)
+// between parent re-renders. If placed inside, every keystroke recreates the
+// element tree and every input loses focus immediately.
+function ProductForm({
+  formData,
+  setFormData,
+  categories,
+  formSubcategories,
+  onSubmit,
+  onCancel,
+  submitting,
+  submitLabel,
+}) {
+  const inp =
+    "w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600/20 transition-colors text-sm";
+  const sel = `${inp} bg-white`;
+
+  const set = (key, val) => setFormData((p) => ({ ...p, [key]: val }));
+
+  const addSpec = () =>
+    setFormData((p) => ({
+      ...p,
+      specifications: [...p.specifications, { key: "", value: "" }],
+    }));
+
+  const removeSpec = (i) =>
+    setFormData((p) => ({
+      ...p,
+      specifications: p.specifications.filter((_, idx) => idx !== i),
+    }));
+
+  const updateSpec = (i, field, val) =>
+    setFormData((p) => {
+      const specs = [...p.specifications];
+      specs[i] = { ...specs[i], [field]: val };
+      return { ...p, specifications: specs };
+    });
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+      {/* Title */}
+      <div>
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Product Title <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          value={formData.title}
+          onChange={(e) => set("title", e.target.value)}
+          className={inp}
+          placeholder="e.g. E-Moto X500"
+        />
+      </div>
+
+      {/* Brand */}
+      <div>
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Brand <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          value={formData.brand}
+          onChange={(e) => set("brand", e.target.value)}
+          className={inp}
+          placeholder="e.g. EVWheels"
+        />
+      </div>
+
+      {/* Category */}
+      <div>
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Category <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={formData.category}
+          onChange={(e) =>
+            setFormData((p) => ({
+              ...p,
+              category: e.target.value,
+              subcategory: "",
+            }))
+          }
+          className={sel}
+        >
+          <option value="">Select Category</option>
+          {categories.map((c) => (
+            <option key={c._id} value={c._id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Subcategory */}
+      <div>
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Subcategory <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={formData.subcategory}
+          onChange={(e) => set("subcategory", e.target.value)}
+          className={sel}
+          disabled={!formData.category}
+        >
+          <option value="">
+            {formData.category ? "Select Subcategory" : "Select a category first"}
+          </option>
+          {formSubcategories.map((s) => (
+            <option key={s._id} value={s._id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Description */}
+      <div className="md:col-span-2">
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Description <span className="text-red-500">*</span>
+        </label>
+        <textarea
+          value={formData.description}
+          onChange={(e) => set("description", e.target.value)}
+          className={`${inp} h-24 resize-none`}
+          placeholder="Detailed product description..."
+        />
+      </div>
+
+      {/* Price */}
+      <div>
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Price (₹) <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          value={formData.price}
+          onChange={(e) => set("price", e.target.value)}
+          className={inp}
+          placeholder="0"
+          min="0"
+        />
+      </div>
+
+      {/* Stock */}
+      <div>
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Stock <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="number"
+          value={formData.stock}
+          onChange={(e) => set("stock", e.target.value)}
+          className={inp}
+          placeholder="0"
+          min="0"
+        />
+      </div>
+
+      {/* Warranty */}
+      <div>
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Warranty{" "}
+          <span className="text-xs font-light text-neutral-400">(months)</span>
+        </label>
+        <input
+          type="number"
+          value={formData.warranty}
+          onChange={(e) => set("warranty", e.target.value)}
+          className={inp}
+          placeholder="0"
+          min="0"
+        />
+      </div>
+
+      {/* Colors */}
+      <div>
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Colors{" "}
+          <span className="text-xs font-light text-neutral-400">
+            (comma-separated)
+          </span>
+        </label>
+        <input
+          type="text"
+          value={formData.colors}
+          onChange={(e) => set("colors", e.target.value)}
+          className={inp}
+          placeholder="e.g. Red, Blue, Black"
+        />
+      </div>
+
+      {/* Image URL */}
+      <div className="md:col-span-2">
+        <label className="block text-sm font-medium text-neutral-600 mb-2">
+          Image URL
+        </label>
+        <input
+          type="url"
+          value={formData.image}
+          onChange={(e) => set("image", e.target.value)}
+          className={inp}
+          placeholder="https://example.com/image.jpg"
+        />
+        {formData.image && (
+          <img
+            src={formData.image}
+            alt="Preview"
+            className="mt-3 max-h-36 rounded-xl border border-neutral-200/60 object-contain"
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
+          />
+        )}
+      </div>
+
+      {/* Specifications */}
+      <div className="md:col-span-2">
+        <div className="flex items-center justify-between mb-3">
+          <label className="block text-sm font-medium text-neutral-600">
+            Specifications
+          </label>
+          <button
+            type="button"
+            onClick={addSpec}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 border border-emerald-200 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors"
+          >
+            <Plus size={13} /> Add Spec
+          </button>
+        </div>
+        {formData.specifications.length === 0 ? (
+          <button
+            type="button"
+            onClick={addSpec}
+            className="w-full text-center py-5 border border-dashed border-neutral-200 rounded-xl text-neutral-400 text-sm hover:border-emerald-300 hover:text-emerald-600 transition-colors"
+          >
+            Click to add specifications (battery, range, motor power…)
+          </button>
+        ) : (
+          <div className="space-y-2">
+            {formData.specifications.map((spec, i) => (
+              <div key={i} className="flex gap-2">
+                <input
+                  type="text"
+                  value={spec.key}
+                  onChange={(e) => updateSpec(i, "key", e.target.value)}
+                  className={`${inp} flex-1`}
+                  placeholder="Key (e.g. Battery)"
+                />
+                <input
+                  type="text"
+                  value={spec.value}
+                  onChange={(e) => updateSpec(i, "value", e.target.value)}
+                  className={`${inp} flex-1`}
+                  placeholder="Value (e.g. 48V 20Ah)"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeSpec(i)}
+                  className="p-3 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Toggles */}
+      <div className="md:col-span-2 flex items-center gap-8 pt-4 border-t border-neutral-100">
+        <button
+          type="button"
+          onClick={() => set("featured", !formData.featured)}
+          className="flex items-center gap-2"
+        >
+          {formData.featured ? (
+            <ToggleRight size={30} className="text-emerald-600" />
+          ) : (
+            <ToggleLeft size={30} className="text-neutral-300" />
+          )}
+          <span
+            className={`text-sm font-medium ${
+              formData.featured ? "text-emerald-700" : "text-neutral-500"
+            }`}
+          >
+            Featured
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => set("isActive", !formData.isActive)}
+          className="flex items-center gap-2"
+        >
+          {formData.isActive ? (
+            <ToggleRight size={30} className="text-emerald-600" />
+          ) : (
+            <ToggleLeft size={30} className="text-neutral-300" />
+          )}
+          <span
+            className={`text-sm font-medium ${
+              formData.isActive ? "text-emerald-700" : "text-neutral-500"
+            }`}
+          >
+            Active
+          </span>
+        </button>
+      </div>
+
+      {/* Actions */}
+      <div className="flex gap-4 pt-2 md:col-span-2">
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={submitting}
+          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={submitting}
+          className="flex-1 py-4 bg-emerald-800 text-white rounded-lg font-medium hover:bg-emerald-900 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+        >
+          {submitting && <Loader2 size={18} className="animate-spin" />}
+          {submitting
+            ? submitLabel === "Create Product"
+              ? "Creating..."
+              : "Updating..."
+            : submitLabel}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function ProductsPage() {
   // ─── Data state ──────────────────────────────────────────────
@@ -192,10 +526,10 @@ export default function ProductsPage() {
   // ─── Fetch categories ───────────────────────────────────────
   const fetchCategories = useCallback(async () => {
     try {
-      const res = await fetch("/api/categories?active=false");
+      const res = await fetch("/api/categories");
       if (!res.ok) throw new Error("Failed to fetch categories");
       const data = await res.json();
-      setCategories(Array.isArray(data) ? data : []);
+      setCategories(data.categories || []);
     } catch (err) {
       console.error("Category fetch error:", err);
     }
@@ -214,7 +548,7 @@ export default function ProductsPage() {
           `/api/subcategories?categoryId=${categoryFilter}`
         );
         const data = await res.json();
-        setSubcategories(Array.isArray(data) ? data : []);
+        setSubcategories(data.subcategories || []);
       } catch (err) {
         console.error("Subcategory fetch error:", err);
         setSubcategories([]);
@@ -234,7 +568,7 @@ export default function ProductsPage() {
       try {
         const res = await fetch(`/api/subcategories?categoryId=${catId}`);
         const data = await res.json();
-        setFormSubcategories(Array.isArray(data) ? data : []);
+        setFormSubcategories(data.subcategories || []);
       } catch (err) {
         console.error("Form subcategory fetch error:", err);
         setFormSubcategories([]);
@@ -314,8 +648,8 @@ export default function ProductsPage() {
 
   // ─── Create product ─────────────────────────────────────────
   const handleCreate = async () => {
-    if (!formData.name.trim()) {
-      showToast("Product name is required", "error");
+    if (!formData.title.trim()) {
+      showToast("Product title is required", "error");
       return;
     }
     if (!formData.category) {
@@ -326,6 +660,10 @@ export default function ProductsPage() {
       showToast("Subcategory is required", "error");
       return;
     }
+    if (!formData.brand.trim()) {
+      showToast("Brand is required", "error");
+      return;
+    }
     if (!formData.price || Number(formData.price) <= 0) {
       showToast("Price must be greater than 0", "error");
       return;
@@ -334,41 +672,28 @@ export default function ProductsPage() {
     setSubmitting(true);
     try {
       const payload = {
-        name: formData.name.trim(),
+        title: formData.title.trim(),
         category: formData.category,
         subcategory: formData.subcategory,
-        shortDescription: formData.shortDescription,
         description: formData.description,
         price: Number(formData.price),
-        image: formData.image,
-        brand: formData.brand,
+        brand: formData.brand.trim(),
         stock: Number(formData.stock) || 0,
-        moq: Number(formData.moq) || 1,
-        boxQty: Number(formData.boxQty) || 1,
-        sku: formData.sku || undefined,
-        isFeatured: formData.isFeatured,
-        isActive: formData.isActive,
-        tags: formData.tags
+        warranty: Number(formData.warranty) || 0,
+        colors: formData.colors
           .split(",")
-          .map((t) => t.trim())
+          .map((c) => c.trim())
           .filter(Boolean),
-        priceRange: formData.priceRange || undefined,
+        images: formData.image ? [formData.image.trim()] : [],
+        specifications: formData.specifications.filter((s) => s.key.trim()),
+        featured: formData.featured,
+        isActive: formData.isActive,
       };
-
-      if (formData.discountType && formData.discountType !== "none") {
-        payload.price = {
-          base: Number(formData.price),
-          gstPercent: 18,
-          discount: {
-            type: formData.discountType,
-            value: Number(formData.discountValue) || 0,
-          },
-        };
-      }
 
       const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -391,8 +716,8 @@ export default function ProductsPage() {
 
   // ─── Update product ─────────────────────────────────────────
   const handleUpdate = async () => {
-    if (!formData.name.trim()) {
-      showToast("Product name is required", "error");
+    if (!formData.title.trim()) {
+      showToast("Product title is required", "error");
       return;
     }
     if (!formData.category) {
@@ -403,6 +728,10 @@ export default function ProductsPage() {
       showToast("Subcategory is required", "error");
       return;
     }
+    if (!formData.brand.trim()) {
+      showToast("Brand is required", "error");
+      return;
+    }
     if (!formData.price || Number(formData.price) <= 0) {
       showToast("Price must be greater than 0", "error");
       return;
@@ -411,43 +740,28 @@ export default function ProductsPage() {
     setSubmitting(true);
     try {
       const payload = {
-        name: formData.name.trim(),
+        title: formData.title.trim(),
         category: formData.category,
         subcategory: formData.subcategory,
-        shortDescription: formData.shortDescription,
         description: formData.description,
-        image: formData.image,
-        brand: formData.brand,
+        price: Number(formData.price),
+        brand: formData.brand.trim(),
         stock: Number(formData.stock) || 0,
-        moq: Number(formData.moq) || 1,
-        boxQty: Number(formData.boxQty) || 1,
-        sku: formData.sku || undefined,
-        isFeatured: formData.isFeatured,
-        isActive: formData.isActive,
-        tags: formData.tags
+        warranty: Number(formData.warranty) || 0,
+        colors: formData.colors
           .split(",")
-          .map((t) => t.trim())
+          .map((c) => c.trim())
           .filter(Boolean),
-        priceRange: formData.priceRange || undefined,
+        images: formData.image ? [formData.image.trim()] : [],
+        specifications: formData.specifications.filter((s) => s.key.trim()),
+        featured: formData.featured,
+        isActive: formData.isActive,
       };
-
-      // Handle price with discount
-      if (formData.discountType && formData.discountType !== "none") {
-        payload.price = {
-          base: Number(formData.price),
-          gstPercent: 18,
-          discount: {
-            type: formData.discountType,
-            value: Number(formData.discountValue) || 0,
-          },
-        };
-      } else {
-        payload.price = Number(formData.price);
-      }
 
       const res = await fetch(`/api/products/${editProduct._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -474,6 +788,7 @@ export default function ProductsPage() {
     try {
       const res = await fetch(`/api/products/${deleteConfirm._id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       if (!res.ok) {
         const errData = await res.json();
@@ -500,7 +815,8 @@ export default function ProductsPage() {
       const res = await fetch("/api/admin/products/duplicate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId }),
+        credentials: "include",
+        body: JSON.stringify({ id: productId }),
       });
 
       if (!res.ok) {
@@ -518,12 +834,13 @@ export default function ProductsPage() {
 
   // ─── Archive / Unarchive product ────────────────────────────
   const handleArchiveToggle = async (product) => {
-    const action = product.isArchived ? "unarchive" : "archive";
+    const action = product.isActive ? "deactivate" : "activate";
     try {
       const res = await fetch("/api/admin/products/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, productIds: [product._id] }),
+        credentials: "include",
+        body: JSON.stringify({ action, ids: [product._id] }),
       });
 
       if (!res.ok) {
@@ -532,9 +849,9 @@ export default function ProductsPage() {
       }
 
       showToast(
-        product.isArchived
-          ? "Product unarchived successfully!"
-          : "Product archived successfully!"
+        product.isActive
+          ? "Product deactivated successfully!"
+          : "Product activated successfully!"
       );
       fetchProducts();
     } catch (err) {
@@ -559,9 +876,10 @@ export default function ProductsPage() {
       const res = await fetch("/api/admin/products/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           action: bulkAction,
-          productIds: Array.from(selectedIds),
+          ids: Array.from(selectedIds),
         }),
       });
 
@@ -597,6 +915,7 @@ export default function ProductsPage() {
       const res = await fetch("/api/admin/inventory", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           productId: stockModal.productId,
           type,
@@ -621,9 +940,8 @@ export default function ProductsPage() {
 
   // ─── Open edit modal ────────────────────────────────────────
   const openEdit = (product) => {
-    const discount = product.price?.discount || { type: "none", value: 0 };
     setFormData({
-      name: getName(product),
+      title: getName(product),
       category:
         (typeof product.category === "object"
           ? product.category?._id
@@ -632,20 +950,17 @@ export default function ProductsPage() {
         (typeof product.subcategory === "object"
           ? product.subcategory?._id
           : product.subcategory) || "",
-      shortDescription: product.shortDescription || "",
       description: product.description || "",
       price: getPrice(product),
-      discountType: discount.type || "none",
-      discountValue: discount.value || "",
-      sku: product.sku || "",
       brand: product.brand || "",
       stock: getStock(product),
-      moq: getMoq(product),
-      boxQty: getBoxQty(product),
+      warranty: product.warranty || 0,
+      colors: Array.isArray(product.colors) ? product.colors.join(", ") : "",
       image: getImage(product),
-      priceRange: product.priceRange || "",
-      tags: Array.isArray(product.tags) ? product.tags.join(", ") : "",
-      isFeatured: getIsFeatured(product),
+      specifications: Array.isArray(product.specifications)
+        ? product.specifications
+        : [],
+      featured: getIsFeatured(product),
       isActive: product.isActive !== false,
     });
     setEditProduct(product);
@@ -688,17 +1003,17 @@ export default function ProductsPage() {
   // ─── Product form (shared for create & edit) ────────────────
   const renderForm = (onSubmit, submitLabel) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <FormField label="Product Name" required>
+      <FormField label="Product Title" required>
         <input
           type="text"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           className={inputClass}
           placeholder="e.g. E-Moto X500"
         />
       </FormField>
 
-      <FormField label="Brand">
+      <FormField label="Brand" required>
         <input
           type="text"
           value={formData.brand}
@@ -738,7 +1053,9 @@ export default function ProductsPage() {
           className={selectClass}
           disabled={!formData.category}
         >
-          <option value="">Select Subcategory</option>
+          <option value="">
+            {formData.category ? "Select Subcategory" : "Select a category first"}
+          </option>
           {formSubcategories.map((sub) => (
             <option key={sub._id} value={sub._id}>
               {sub.name}
@@ -747,19 +1064,7 @@ export default function ProductsPage() {
         </select>
       </FormField>
 
-      <FormField label="Short Description" span2>
-        <input
-          type="text"
-          value={formData.shortDescription}
-          onChange={(e) =>
-            setFormData({ ...formData, shortDescription: e.target.value })
-          }
-          className={inputClass}
-          placeholder="Brief product tagline..."
-        />
-      </FormField>
-
-      <FormField label="Full Description" span2>
+      <FormField label="Description" required span2>
         <textarea
           value={formData.description}
           onChange={(e) =>
@@ -780,50 +1085,11 @@ export default function ProductsPage() {
           className={inputClass}
           placeholder="0"
           min="0"
-          step="0.01"
+          step="1"
         />
       </FormField>
 
-      <FormField label="Discount">
-        <div className="flex gap-3">
-          <select
-            value={formData.discountType}
-            onChange={(e) =>
-              setFormData({ ...formData, discountType: e.target.value })
-            }
-            className={`${selectClass} w-2/5`}
-          >
-            <option value="none">None</option>
-            <option value="percentage">Percentage</option>
-            <option value="fixed">Fixed (₹)</option>
-          </select>
-          {formData.discountType !== "none" && (
-            <input
-              type="number"
-              value={formData.discountValue}
-              onChange={(e) =>
-                setFormData({ ...formData, discountValue: e.target.value })
-              }
-              className={`${inputClass} flex-1`}
-              placeholder="Value"
-              min="0"
-              step="0.01"
-            />
-          )}
-        </div>
-      </FormField>
-
-      <FormField label="SKU">
-        <input
-          type="text"
-          value={formData.sku}
-          onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-          className={inputClass}
-          placeholder="e.g. EVM-X500-BLK"
-        />
-      </FormField>
-
-      <FormField label="Stock">
+      <FormField label="Stock" required>
         <input
           type="number"
           value={formData.stock}
@@ -832,28 +1098,7 @@ export default function ProductsPage() {
           }
           className={inputClass}
           min="0"
-        />
-      </FormField>
-
-      <FormField label="MOQ">
-        <input
-          type="number"
-          value={formData.moq}
-          onChange={(e) => setFormData({ ...formData, moq: e.target.value })}
-          className={inputClass}
-          min="1"
-        />
-      </FormField>
-
-      <FormField label="Box Qty">
-        <input
-          type="number"
-          value={formData.boxQty}
-          onChange={(e) =>
-            setFormData({ ...formData, boxQty: e.target.value })
-          }
-          className={inputClass}
-          min="1"
+          placeholder="0"
         />
       </FormField>
 
@@ -877,44 +1122,22 @@ export default function ProductsPage() {
         )}
       </FormField>
 
-      <FormField label="Price Range">
-        <input
-          type="text"
-          value={formData.priceRange}
-          onChange={(e) =>
-            setFormData({ ...formData, priceRange: e.target.value })
-          }
-          className={inputClass}
-          placeholder="e.g. under-50000"
-        />
-      </FormField>
-
-      <FormField label="Tags (comma-separated)">
-        <input
-          type="text"
-          value={formData.tags}
-          onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-          className={inputClass}
-          placeholder="electric, scooter, commuter"
-        />
-      </FormField>
-
       <div className="md:col-span-2 flex items-center gap-8 pt-2">
         <button
           type="button"
           onClick={() =>
-            setFormData({ ...formData, isFeatured: !formData.isFeatured })
+            setFormData({ ...formData, featured: !formData.featured })
           }
           className="flex items-center gap-2 cursor-pointer"
         >
-          {formData.isFeatured ? (
+          {formData.featured ? (
             <ToggleRight size={32} className="text-emerald-600" />
           ) : (
             <ToggleLeft size={32} className="text-neutral-400" />
           )}
           <span
             className={`text-sm font-medium ${
-              formData.isFeatured ? "text-emerald-700" : "text-neutral-500"
+              formData.featured ? "text-emerald-700" : "text-neutral-500"
             }`}
           >
             Featured
@@ -1312,15 +1535,15 @@ export default function ProductsPage() {
                                   }}
                                   className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
                                 >
-                                  {product.isArchived ? (
+                                  {product.isActive ? (
                                     <>
-                                      <ArchiveRestore size={16} />
-                                      Unarchive
+                                      <Archive size={16} />
+                                      Deactivate
                                     </>
                                   ) : (
                                     <>
-                                      <Archive size={16} />
-                                      Archive
+                                      <ArchiveRestore size={16} />
+                                      Activate
                                     </>
                                   )}
                                 </button>
@@ -1721,7 +1944,19 @@ export default function ProductsPage() {
                   <X size={24} />
                 </button>
               </div>
-              {renderForm(handleCreate, "Create Product")}
+              <ProductForm
+                formData={formData}
+                setFormData={setFormData}
+                categories={categories}
+                formSubcategories={formSubcategories}
+                onSubmit={handleCreate}
+                onCancel={() => {
+                  setShowCreateModal(false);
+                  setFormData({ ...EMPTY_FORM });
+                }}
+                submitting={submitting}
+                submitLabel="Create Product"
+              />
             </motion.div>
           </div>
         )}
@@ -1752,7 +1987,19 @@ export default function ProductsPage() {
                   <X size={24} />
                 </button>
               </div>
-              {renderForm(handleUpdate, "Update Product")}
+              <ProductForm
+                formData={formData}
+                setFormData={setFormData}
+                categories={categories}
+                formSubcategories={formSubcategories}
+                onSubmit={handleUpdate}
+                onCancel={() => {
+                  setEditProduct(null);
+                  setFormData({ ...EMPTY_FORM });
+                }}
+                submitting={submitting}
+                submitLabel="Update Product"
+              />
             </motion.div>
           </div>
         )}

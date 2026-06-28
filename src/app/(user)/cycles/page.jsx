@@ -14,6 +14,12 @@ import {
 import { useEffect, useState, useMemo } from "react";
 import { useWishlistStore } from "@/store/wishlistStore";
 
+function getSpec(specifications, key) {
+  return specifications?.find((s) =>
+    s.key.toLowerCase().includes(key.toLowerCase())
+  )?.value;
+}
+
 export default function CyclesPage() {
   const [products, setProducts] = useState([]);
   const { toggleWishlist, isInWishlist } = useWishlistStore();
@@ -92,8 +98,8 @@ export default function CyclesPage() {
       result.sort((a, b) => Number(b.price) - Number(a.price));
     } else if (sortOption === "Range: High to Low") {
       result.sort((a, b) => {
-        const rangeA = Number(a.specs?.battery?.range || 0);
-        const rangeB = Number(b.specs?.battery?.range || 0);
+        const rangeA = Number(getSpec(a.specifications, "range") || 0);
+        const rangeB = Number(getSpec(b.specifications, "range") || 0);
         return rangeB - rangeA;
       });
     } else if (sortOption === "Newest First") {
@@ -399,18 +405,14 @@ export default function CyclesPage() {
                   }`}
                 >
                   <img
-                    src={
-                      product.image ||
-                      "https://via.placeholder.com/800x600?text=No+Image"
-                    }
+                    src={product.images?.[0] || "/logo.png"}
                     alt={product.title || "Cycle"}
                     className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${
                       viewMode === "List" ? "object-contain p-3" : ""
                     }`}
-                    onError={(e) =>
-                      (e.currentTarget.src =
-                        "https://via.placeholder.com/800x600?text=Error")
-                    }
+                    onError={(e) => {
+                      e.currentTarget.src = "/logo.png";
+                    }}
                   />
 
                   <button
@@ -447,8 +449,8 @@ export default function CyclesPage() {
                   </div>
 
                   <div className="text-sm text-neutral-600 font-light space-y-1 mb-5">
-                    <p>Range: {product.specs?.battery?.range ?? "—"} km</p>
-                    <p>Weight: {product.specs?.physical?.weight ?? "—"} kg</p>
+                    <p>Range: {getSpec(product.specifications, "range") ?? "—"} km</p>
+                    <p>Weight: {getSpec(product.specifications, "weight") ?? "—"} kg</p>
                   </div>
 
                   <Link

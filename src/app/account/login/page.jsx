@@ -1,21 +1,22 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import Link from "next/link";
 
-export default function LoginPage() {
-  const { login, checkAuth } = useAuthStore();
+function LoginForm() {
+  const { login } = useAuthStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
@@ -28,28 +29,30 @@ export default function LoginPage() {
       return;
     }
 
-    startTransition(async () => {
-      try {
-        const res = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
+    setIsPending(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if (!res.ok) {
-          setError(data.error || "Login failed. Please try again.");
-          return;
-        }
-
-        login(data.user);
-        await checkAuth();
-        router.push("/");
-      } catch (err) {
-        setError("Something went wrong. Please try again later.");
+      if (!res.ok) {
+        setError(data.error || "Login failed. Please try again.");
+        return;
       }
-    });
+
+      await login(data.user);
+      const redirectTo = searchParams.get("redirect") || "/";
+      router.push(redirectTo);
+    } catch (err) {
+      setError("Something went wrong. Please try again later.");
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
@@ -140,7 +143,7 @@ export default function LoginPage() {
             </label>
 
             <Link
-              href="/forgot-password"
+              href="/account/forgot-password"
               className="text-emerald-800 font-medium hover:underline"
             >
               Forgot password?
@@ -170,5 +173,13 @@ export default function LoginPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }

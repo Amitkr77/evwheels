@@ -2,78 +2,65 @@ import { create } from "zustand";
 import { useAuthStore } from "@/store/authStore";
 
 export const useWishlistStore = create((set, get) => ({
-  items: [],         // Array of product snapshots { productId, title, price, image }
+  items: [],
   isLoading: false,
 
-  // 🟢 Fetch wishlist from backend
   fetchWishlist: async () => {
     const { isAuthenticated } = useAuthStore.getState();
     if (!isAuthenticated) return;
 
+    set({ isLoading: true });
     try {
-      set({ isLoading: true });
-
-      const res = await fetch("/api/user/wishlist");
+      const res = await fetch("/api/user/wishlist", { credentials: "include" });
       if (!res.ok) throw new Error("Failed to fetch wishlist");
-
       const data = await res.json();
-
-      set({
-        items: data.products || [],
-        isLoading: false,
-      });
+      set({ items: data.products || [], isLoading: false });
     } catch (err) {
-      console.error("Fetch wishlist failed", err);
+      console.error("Fetch wishlist failed:", err);
       set({ isLoading: false });
     }
   },
 
-  // 🟢 Toggle wishlist using the toggle API
+  // Toggle via the POST endpoint (add if absent, remove if present)
   toggleWishlist: async (productId) => {
     const { isAuthenticated } = useAuthStore.getState();
     if (!isAuthenticated) {
-      window.location.href = "/login";
+      window.location.href = "/account/login";
       return;
     }
 
     try {
-      const res = await fetch("/api/user/wishlist/toggle", {
+      const res = await fetch("/api/user/wishlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ productId }),
       });
 
       if (!res.ok) throw new Error("Failed to toggle wishlist");
 
-      const data = await res.json();
+      const { wished } = await res.json();
 
-      const { wished } = data;
-
-      set((state) => {
-        let updatedItems;
-        if (wished) {
-          // Add product placeholder (optional: fetch product data again if needed)
-          updatedItems = [...state.items, data.product];
-        } else {
-          // Remove product
-          updatedItems = state.items.filter(
-            (item) => item.productId !== productId
-          );
-        }
-        return { items: updatedItems };
-      });
+      if (wished) {
+        // Refetch to get full product snapshot
+        await get().fetchWishlist();
+      } else {
+        set((state) => ({
+          items: state.items.filter(
+            (item) => item._id?.toString() !== productId
+          ),
+        }));
+      }
     } catch (err) {
-      console.error("Wishlist toggle failed", err);
+      console.error("Wishlist toggle failed:", err);
     }
   },
 
-  // 🟢 Check if product is in wishlist
   isInWishlist: (productId) => {
-    return get().items.some((item) => item.productId === productId);
+    return get().items.some(
+      (item) => item._id?.toString() === productId?.toString()
+    );
   },
 
-  // 🟢 Clear wishlist on logout
-  clearWishlist: () => {
-    set({ items: [] });
-  },
+  clearWishlist: () => set({ items: [] }),
 }));

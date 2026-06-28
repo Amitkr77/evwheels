@@ -65,13 +65,11 @@ const ProductSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
-      index: true,
     },
 
     featured: {
       type: Boolean,
       default: false,
-      index: true,
     },
 
     stock: {
@@ -90,14 +88,11 @@ const ProductSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
-      index: true,
     },
 
     subcategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subcategory",
-      // required: true,
-      index: true,
     },
 
     colors: [
@@ -129,7 +124,7 @@ ProductSchema.index({ isActive: 1 });
 ProductSchema.index({ price: 1 });
 
 // Auto-generate slug
-ProductSchema.pre("validate", function (next) {
+ProductSchema.pre("validate", function () {
   if (!this.slug && this.title) {
     this.slug = slugify(this.title, {
       lower: true,
@@ -137,7 +132,7 @@ ProductSchema.pre("validate", function (next) {
     });
   }
 
-  next();
+
 });
 
 export default mongoose.models.Product ||

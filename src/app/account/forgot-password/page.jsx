@@ -1,5 +1,3 @@
-// app/forgot-password/page.tsx
-
 'use client'
 
 import { useState } from 'react'
@@ -18,12 +16,21 @@ export default function ForgotPasswordPage() {
     setError(null)
     setLoading(true)
 
-    // Simulate API call (replace with your real /api/forgot-password endpoint)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1200))
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Something went wrong.')
+      }
+
       setSubmitted(true)
-    } catch {
-      setError('Something went wrong. Please try again.')
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -37,16 +44,14 @@ export default function ForgotPasswordPage() {
         transition={{ duration: 0.9 }}
         className="w-full max-w-md"
       >
-        {/* Back link */}
         <Link
-          href="/login"
+          href="/account/login"
           className="inline-flex items-center gap-2 text-sm md:text-base font-light text-neutral-600 hover:text-neutral-900 mb-12 transition-colors"
         >
           <ArrowLeft size={18} />
           Back to Login
         </Link>
 
-        {/* Heading */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-3">
             Forgot Password
@@ -56,7 +61,6 @@ export default function ForgotPasswordPage() {
           </p>
         </div>
 
-        {/* Form */}
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
@@ -89,13 +93,7 @@ export default function ForgotPasswordPage() {
               disabled={loading}
               className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loading ? (
-                <>
-                  Sending...
-                </>
-              ) : (
-                "Send Reset Link"
-              )}
+              {loading ? 'Sending...' : 'Send Reset Link'}
             </motion.button>
           </form>
         ) : (
@@ -111,11 +109,11 @@ export default function ForgotPasswordPage() {
               Check Your Email
             </h2>
             <p className="text-lg text-neutral-600 font-light mb-8">
-              We’ve sent a password reset link to <br />
-              <span className="font-medium text-neutral-900">{email}</span>
+              If an account exists for <span className="font-medium text-neutral-900">{email}</span>,
+              a reset link has been sent.
             </p>
             <p className="text-sm text-neutral-500">
-              Didn’t receive it? Check spam or{' '}
+              Didn't receive it? Check spam or{' '}
               <button
                 onClick={() => setSubmitted(false)}
                 className="text-emerald-800 hover:underline font-medium"
@@ -126,10 +124,9 @@ export default function ForgotPasswordPage() {
           </motion.div>
         )}
 
-        {/* Back to login */}
         <div className="mt-12 text-center">
           <Link
-            href="/login"
+            href="/account/login"
             className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
           >
             ← Back to Login

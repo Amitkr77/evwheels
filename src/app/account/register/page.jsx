@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, User, Mail, Phone, Lock, Loader2 } from "lucide-react";
@@ -27,7 +27,6 @@ export default function RegisterPage() {
   const [serverMessage, setServerMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const [isPending, startTransition] = useTransition();
 
   const validateField = (name, value) => {
     switch (name) {
@@ -91,33 +90,32 @@ export default function RegisterPage() {
     setServerMessage("");
     setIsSuccess(false);
 
-    startTransition(async () => {
-      try {
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        });
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+        credentials: "include",
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if (!res.ok) {
-          setServerMessage(data.error || "Registration failed. Please try again.");
-        } else {
-          setServerMessage("Account created successfully! Redirecting to login...");
-          setIsSuccess(true);
-          setTimeout(() => router.push("/account/login"), 1500);
+      if (!res.ok) {
+        setServerMessage(data.error || "Registration failed. Please try again.");
+      } else {
+        setServerMessage("Account created successfully! Redirecting to login...");
+        setIsSuccess(true);
+        setTimeout(() => router.push("/account/login"), 1500);
 
-          setForm({ name: "", email: "", phone: "", password: "" });
-          setErrors({ name: "", email: "", phone: "", password: "" });
-        }
-      } catch (err) {
-        setServerMessage("Network error — please check your connection.");
-        console.error(err);
-      } finally {
-        setLoading(false);
+        setForm({ name: "", email: "", phone: "", password: "" });
+        setErrors({ name: "", email: "", phone: "", password: "" });
       }
-    });
+    } catch (err) {
+      setServerMessage("Network error — please check your connection.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getPasswordStrength = () => {
@@ -318,10 +316,10 @@ export default function RegisterPage() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-            disabled={loading || isPending}
+            disabled={loading}
             className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-4 flex items-center justify-center gap-2"
           >
-            {loading || isPending ? (
+            {loading ? (
               <>
                 <Loader2 size={20} className="animate-spin" />
                 Creating account...
@@ -335,7 +333,7 @@ export default function RegisterPage() {
         {/* Login link */}
         <p className="mt-10 text-center text-neutral-600">
           Already have an account?{" "}
-          <Link href="/login" className="text-emerald-800 font-medium hover:underline">
+          <Link href="/account/login" className="text-emerald-800 font-medium hover:underline">
             Sign in
           </Link>
         </p>

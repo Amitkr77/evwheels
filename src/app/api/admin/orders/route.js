@@ -24,21 +24,3 @@ export async function GET(req) {
     return NextResponse.json(orders);
 }
 
-// UPDATE ORDER STATUS
-export async function PATCH(req, { params }) {
-  const { status } = await req.json();
-
-  await connectDB();
-
-  const order = await Order.findById(params.id);
-
-  if (!order)
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-  order.orderStatus = status;
-  order.statusHistory.push({ status });
-
-  await order.save();
-
-  return NextResponse.json(order);
-}

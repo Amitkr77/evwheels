@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
-import { verifyAdmin } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/adminAuth";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
 import Subcategory from "@/models/Subcategory";
@@ -154,14 +154,16 @@ export async function PUT(req, { params }) {
       updateData.images = body.images;
     }
 
-    // Specifications (dynamic)
+    // Specifications
     if (body.specifications !== undefined) {
       updateData.specifications = body.specifications;
     }
 
-    // Color
-    if (body.color !== undefined) {
-      updateData.color = body.color;
+    // Colors
+    if (body.colors !== undefined) {
+      updateData.colors = Array.isArray(body.colors)
+        ? body.colors
+        : body.colors.split(",").map((c) => c.trim()).filter(Boolean);
     }
 
     // Warranty

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import { verifyAdmin } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/adminAuth";
 import mongoose from "mongoose";
 import Subcategory from "@/models/Subcategory";
 import Category from "@/models/Category";

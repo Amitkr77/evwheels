@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-// import { verifyAdmin } from "@/lib/auth";
+import { verifyAdmin } from "@/lib/adminAuth";
 import Category from "@/models/Category";
 import "@/models/Product"; // Ensure Product model is registered for virtual populate
 
@@ -31,9 +31,9 @@ export async function GET(req) {
 // POST /api/categories — create a new category (admin only)
 export async function POST(req) {
   try {
-    // const admin = await verifyAdmin(req);
-    // if (!admin)
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const admin = await verifyAdmin(req);
+    if (!admin)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     await connectDB();
 

@@ -13,7 +13,7 @@ import {
     Warehouse,
     Layers,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 
 
@@ -21,6 +21,7 @@ export default function AdminDashboardLayout({ children }) {
     const { isAuthenticated, user, logout, isLoading } = useAuthStore();
 
     const router = useRouter();
+    const currentPath = usePathname();
 
     const sidebarItems = [
         { icon: Home, label: "Dashboard", path: "/admin/dashboard" },
@@ -34,7 +35,6 @@ export default function AdminDashboardLayout({ children }) {
         { icon: BarChart3, label: "Reports", path: "/admin/dashboard/reports" },
     ];
 
-    const currentPath = router.pathname;
 
     return (
         <div className="min-h-screen bg-[#fdfcf9] font-['Inter'] flex">
@@ -53,7 +53,8 @@ export default function AdminDashboardLayout({ children }) {
 
                 <nav className="p-6 space-y-1 flex-1">
                     {sidebarItems.map((item) => {
-                        const isActive = currentPath === item.path;
+                        const isActive =
+                            currentPath === item.path || currentPath?.startsWith(item.path + "/");
                         return (
                             <button
                                 key={item.path}
@@ -77,15 +78,13 @@ export default function AdminDashboardLayout({ children }) {
 
                 <div className="p-6 border-t border-neutral-200/60">
                     <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 bg-neutral-200 rounded-full overflow-hidden border-2 border-white relative">
-                            <img
-                                src="https://i.pravatar.cc/128?u=admin"
-                                alt="Admin"
-                                className="object-cover"
-                            />
+                        <div className="w-11 h-11 bg-emerald-700 rounded-full flex items-center justify-center text-white font-semibold text-base shrink-0">
+                            {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
                         </div>
-                        <div className="flex-1">
-                            <div className="font-medium text-neutral-900">Admin</div>
+                        <div className="flex-1 min-w-0">
+                            <div className="font-medium text-neutral-900 truncate">
+                                {user?.name || "Admin"}
+                            </div>
                             <div className="text-xs text-emerald-700 flex items-center gap-1.5">
                                 <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                                 Online
@@ -110,29 +109,22 @@ export default function AdminDashboardLayout({ children }) {
 
                     <div className="flex items-center justify-end gap-6  w-full">
                         <div className="flex items-center gap-6">
-                            <div className="relative cursor-pointer ">
+                            <div className="relative cursor-pointer">
                                 <Bell size={20} className="text-neutral-600" />
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-medium w-4 h-4 flex items-center justify-center rounded-full">
-                                    7
-                                </span>
                             </div>
 
                             {/* Profile */}
                             <div className="flex items-center gap-3">
                                 <div className="text-right">
                                     <div className="text-sm font-medium text-neutral-900">
-                                        {isAuthenticated
-                                            ? user?.name?.split(" ")[0] || "Account"
-                                            : "Admin"}
+                                        {user?.name?.split(" ")[0] || "Admin"}
                                     </div>
-                                    <div className="text-xs text-neutral-500">Patna, Bihar</div>
+                                    <div className="text-xs text-neutral-500">
+                                        {user?.email || "admin"}
+                                    </div>
                                 </div>
-                                <div className="w-9 h-9 bg-neutral-200 rounded-full overflow-hidden border-2 border-white relative">
-                                    <img
-                                        src="https://i.pravatar.cc/128?u=admin"
-                                        alt="Admin Avatar"
-                                        className="object-cover w-full h-full"
-                                    />
+                                <div className="w-9 h-9 bg-emerald-700 rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0">
+                                    {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
                                 </div>
                             </div>
                         </div>

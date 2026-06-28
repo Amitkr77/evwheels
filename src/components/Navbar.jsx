@@ -333,7 +333,7 @@ export default function Navbar() {
                         Profile
                       </Link>
                       <Link
-                        href="/orders"
+                        href="/profile"
                         className="block px-5 py-2.5 hover:bg-neutral-50"
                         onClick={() => setUserDropdownOpen(false)}
                       >
@@ -478,7 +478,7 @@ export default function Navbar() {
                       onClick={() => setMobileMenuOpen(false)}
                     />
                     <MobileNavLink
-                      href="/orders"
+                      href="/profile"
                       label="My Orders"
                       onClick={() => setMobileMenuOpen(false)}
                     />

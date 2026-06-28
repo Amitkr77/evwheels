@@ -29,7 +29,7 @@ export async function POST(req) {
     }
 
     // Generate reset token
-    const resetToken = user.generateResetPasswordToken();
+    const resetToken = user.generatePasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
     // Create reset URL

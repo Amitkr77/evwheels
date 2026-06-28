@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
@@ -25,13 +24,11 @@ export async function POST(req) {
 
     await connectDB();
 
-    // Hash the incoming token to compare with stored hash
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-    // Find user with valid token and non-expired
     const user = await User.findOne({
-      resetPasswordToken: hashedToken,
-      resetPasswordExpire: { $gt: Date.now() },
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -41,13 +38,12 @@ export async function POST(req) {
       );
     }
 
-    // Update password and clear reset fields
-    user.password = await bcrypt.hash(password, 10);
-    user.resetPasswordToken = null;
-    user.resetPasswordExpire = null;
+    // Set raw password — pre-save hook will hash it
+    user.password = password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
     await user.save();
 
-    // Auto-login: set JWT cookie
     const jwtToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
@@ -61,8 +57,9 @@ export async function POST(req) {
     response.cookies.set("token", jwtToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
       path: "/",
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return response;

@@ -8,7 +8,7 @@ export default function CartProvider({ children }) {
 
   useEffect(() => {
     initializeCart();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return children;
 }

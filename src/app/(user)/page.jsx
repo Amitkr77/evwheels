@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -38,36 +38,6 @@ const stagger = {
 };
 
 export default function Home() {
-  const [scrolled, setScrolled] = useState(false);
-  const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch featured products
-  useEffect(() => {
-    async function fetchFeatured() {
-      try {
-        setLoading(true);
-        const res = await fetch("/api/products?featured=true");
-        if (!res.ok) throw new Error("Failed to fetch featured products");
-
-        const result = await res.json();
-        // Assuming your API returns { products: [...] }
-        setFeaturedProducts(result.products || []);
-      } catch (err) {
-        console.error("Error fetching featured products:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchFeatured();
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <>
@@ -134,7 +104,7 @@ export default function Home() {
               </Link>
 
               <Link
-                href="'/why-us"
+                href="/why-us"
                 className="inline-flex items-center gap-3 px-10 py-4 border border-neutral-400 text-white hover:text-neutral-800 rounded-full text-lg font-light hover:bg-neutral-100 transition-colors"
               >
                 Why EVWheels
@@ -464,7 +434,7 @@ export default function Home() {
 
         {/* Floating WhatsApp – subtle */}
         <a
-          href="https://wa.me/919876543210?text=Hello%20EVWheels..."
+          href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}?text=Hello%20EVWheels...`}
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-10 right-10 z-50 w-12 h-12 bg-emerald-800/80 rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-300"

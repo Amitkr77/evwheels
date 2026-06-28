@@ -48,7 +48,7 @@ const CategorySchema = new mongoose.Schema(
   }
 );
 
-CategorySchema.pre("validate", function (next) {
+CategorySchema.pre("validate", function () {
   if (!this.slug && this.name) {
     this.slug = slugify(this.name, {
       lower: true,
@@ -56,7 +56,6 @@ CategorySchema.pre("validate", function (next) {
     });
   }
 
-  next();
 });
 
 // Count active products

@@ -1,60 +1,53 @@
+import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import User from "@/models/User";
 import Cart from "@/models/Cart";
-import jwt from "jsonwebtoken";
+import Product from "@/models/Product";
+import { getUserId } from "@/lib/getUserId";
 
-async function getUserId(req) {
-    const token = req.cookies.get("token")?.value;
-    if (!token) return null;
+export async function POST(req) {
+  const userId = await getUserId(req);
+  if (!userId)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return decoded.id;
-    } catch {
-        return null;
+  const { items: guestItems = [] } = await req.json();
+
+  await connectDB();
+
+  try {
+    let userCart = await Cart.findOne({ user: userId });
+
+    if (!userCart) {
+      userCart = new Cart({ user: userId, items: [] });
     }
-}
 
-export async function handler(req, res) {
-    if (req.method !== "POST") return res.status(405).end();
+    for (const guestItem of guestItems) {
+      const productId = guestItem.productId || guestItem.product?._id;
+      if (!productId) continue;
 
-    const userId = await getUserId(req);
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const product = await Product.findById(productId).lean();
+      if (!product || !product.isActive) continue;
 
-    await connectDB();
+      const existingIndex = userCart.items.findIndex(
+        (item) => item.product.toString() === productId.toString()
+      );
 
-    try {
-        let userCart = await Cart.findOne({ user: userId }).populate("items.product");
-
-        if (!userCart) {
-            userCart = new Cart({ user: userId, items: [] });
-        }
-
-        const guestItems = req.body.items || [];
-
-        const mergedItems = [...userCart.items];
-
-        guestItems.forEach((guestItem) => {
-            const existing = mergedItems.find(
-                (item) => item.productId.toString() === guestItem.productId.toString()
-            );
-
-            if (existing) {
-                existing.quantity += guestItem.quantity;
-            } else {
-                mergedItems.push(guestItem);
-            }
+      if (existingIndex > -1) {
+        const newQty = userCart.items[existingIndex].quantity + (guestItem.quantity || 1);
+        userCart.items[existingIndex].quantity = Math.min(newQty, product.stock ?? 999);
+      } else {
+        userCart.items.push({
+          product: productId,
+          quantity: Math.min(guestItem.quantity || 1, product.stock ?? 999),
         });
-
-        userCart.items = mergedItems;
-        await userCart.save();
-
-        // Populate again if you need product details in the response
-        await userCart.populate("items.product");
-
-        res.status(200).json({ items: userCart.items });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error" });
+      }
     }
+
+    await userCart.save();
+    await userCart.populate("items.product");
+
+    return NextResponse.json({ items: userCart.items });
+  } catch (err) {
+    console.error("Cart merge error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
 }

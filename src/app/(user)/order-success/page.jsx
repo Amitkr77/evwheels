@@ -81,7 +81,7 @@ export default function OrderConfirmationPage() {
           <h2 className="text-2xl md:text-3xl font-medium text-red-600 mb-4">Something went wrong</h2>
           <p className="text-neutral-700 mb-6">{error || "Order not found."}</p>
           <Link
-            href="/profile/orders"
+            href="/profile"
             className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition"
           >
             View All Orders
@@ -170,7 +170,7 @@ export default function OrderConfirmationPage() {
                 >
                   <div className="relative w-full sm:w-24 sm:h-24 aspect-square shrink-0 bg-neutral-50 rounded-lg overflow-hidden">
                     <img
-                      src={item.product?.image || "/placeholder-product.jpg"}
+                      src={item.product?.images?.[0] || "/logo.png"}
                       alt={item.name || "Product"}
                       className="w-full h-full object-cover"
                     />
@@ -253,10 +253,13 @@ export default function OrderConfirmationPage() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mt-10 sm:mt-12">
-          <button className="flex-1 py-4 px-6 bg-neutral-900 text-white rounded-full text-base sm:text-lg font-medium hover:bg-neutral-800 transition flex items-center justify-center gap-2 shadow-sm">
+          <Link
+            href="/profile"
+            className="flex-1 py-4 px-6 bg-neutral-900 text-white rounded-full text-base sm:text-lg font-medium hover:bg-neutral-800 transition flex items-center justify-center gap-2 shadow-sm"
+          >
             Track Order
             <ArrowRight size={18} />
-          </button>
+          </Link>
 
           <Link
             href="/cycles"

@@ -23,13 +23,10 @@ export default function CartPage() {
   const [isSummaryLoading, setIsSummaryLoading] = useState(true);
   const [couponError, setCouponError] = useState("");
 
-  const fetchSummary = useCallback(async (couponCode = "") => {
+  const fetchSummary = useCallback(async () => {
     setIsSummaryLoading(true);
-    setCouponError("");
-    const url = couponCode ? `/api/cart/summary?coupon=${couponCode}` : `/api/cart/summary`;
-
     try {
-      const res = await fetch(url, { credentials: "include" });
+      const res = await fetch("/api/cart/summary", { credentials: "include" });
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || "Failed to load summary");
@@ -38,19 +35,38 @@ export default function CartPage() {
       setSummary(data);
     } catch (err) {
       console.error(err);
-      setCouponError(err.message || "Could not load order summary");
     } finally {
       setIsSummaryLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchSummary(coupon);
-  }, [items, coupon]); // ← re-fetch on items change or coupon (after apply)
+    fetchSummary();
+  }, [items, fetchSummary]);
 
   const applyCoupon = async () => {
     if (!coupon.trim()) return;
-    await fetchSummary(coupon.trim()); // let fetch handle success/error
+    setIsSummaryLoading(true);
+    setCouponError("");
+    try {
+      const res = await fetch("/api/cart/apply-coupon", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ couponCode: coupon.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setCouponError(data.error || "Invalid coupon code.");
+        setIsSummaryLoading(false);
+        return;
+      }
+      // Refetch summary now that coupon is saved on the cart
+      await fetchSummary();
+    } catch {
+      setCouponError("Could not apply coupon. Please try again.");
+      setIsSummaryLoading(false);
+    }
   };
 
   const handleQuantityChange = async (productId, newQty) => {
@@ -128,7 +144,7 @@ export default function CartPage() {
                   <div className="flex flex-col sm:flex-row gap-5 sm:gap-6">
                     <div className="relative shrink-0 w-full sm:w-32 aspect-square">
                       <Image
-                        src={product.image || "/placeholder-product.jpg"}
+                        src={product.images?.[0] || "/logo.png"}
                         fill
                         sizes="(max-width: 640px) 100vw, 128px"
                         alt={product.title || "Product image"}
@@ -147,7 +163,7 @@ export default function CartPage() {
                               Brand: <span className="text-neutral-900">{product.brand || "—"}</span>
                             </p>
                             <p className="text-sm text-neutral-600">
-                              Color: <span className="text-neutral-900">{product.color || "—"}</span>
+                              Color: <span className="text-neutral-900">{product.colors?.[0] || "—"}</span>
                             </p>
                           </div>
                           <p className="text-xl font-medium text-emerald-800 whitespace-nowrap">
