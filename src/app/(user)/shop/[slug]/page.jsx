@@ -24,11 +24,11 @@ export async function generateMetadata({ params }) {
     return {
       title,
       description,
-      alternates: { canonical: `${BASE_URL}/cycles/${slug}` },
+      alternates: { canonical: `${BASE_URL}/shop/${slug}` },
       openGraph: {
         title: `${title} | EVWheels`,
         description,
-        url: `${BASE_URL}/cycles/${slug}`,
+        url: `${BASE_URL}/shop/${slug}`,
         type: "website",
         images: image
           ? [{ url: image, width: 1200, height: 630, alt: title }]
@@ -86,7 +86,7 @@ export default async function ProductDetailPage({ params }) {
             product.stock > 0
               ? "https://schema.org/InStock"
               : "https://schema.org/OutOfStock",
-          url: `${BASE_URL}/cycles/${slug}`,
+          url: `${BASE_URL}/shop/${slug}`,
           seller: { "@type": "Organization", name: "EVWheels" },
           priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
             .toISOString()
@@ -115,7 +115,7 @@ export default async function ProductDetailPage({ params }) {
         "@type": "ListItem",
         position: 3,
         name: product?.title || slug,
-        item: `${BASE_URL}/cycles/${slug}`,
+        item: `${BASE_URL}/shop/${slug}`,
       },
     ],
   };

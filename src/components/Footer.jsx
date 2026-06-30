@@ -107,27 +107,42 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3.5 text-sm text-[#94A3B8]">
               <li>
-                <Link href="/shop" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/shop"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   Our Cycles
                 </Link>
               </li>
               <li>
-                <Link href="/why-us" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/why-us"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   Why EVWheels
                 </Link>
               </li>
               <li>
-                <Link href="/support" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/support"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   Support
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/contact"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/account/login" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/account/login"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   My Account
                 </Link>
               </li>
@@ -142,32 +157,47 @@ export default function Footer() {
             <ul className="space-y-3.5 text-sm text-[#94A3B8]">
               <li className="flex items-center gap-2">
                 <Truck size={15} className="text-[#19B5D8] shrink-0" />
-                <Link href="/shipping-policy" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/shipping-policy"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   Shipping & Delivery
                 </Link>
               </li>
               <li className="flex items-center gap-2">
                 <ShieldCheck size={15} className="text-[#19B5D8] shrink-0" />
-                <Link href="/returns" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/returns"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   Returns & Refunds
                 </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Battery size={15} className="text-[#19B5D8] shrink-0" />
-                <Link href="/support" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/support"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   Battery Care
                 </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Wrench size={15} className="text-[#19B5D8] shrink-0" />
-                <Link href="/support" className="hover:text-[#19B5D8] transition-colors">
+                <Link
+                  href="/support"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
                   Service Centers
                 </Link>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={15} className="text-[#19B5D8] shrink-0" />
-                <Link href="tel:+919876543210" className="hover:text-[#19B5D8] transition-colors">
-                  +91 98765 43210
+                <Link
+                  href="tel:+919876543210"
+                  className="hover:text-[#19B5D8] transition-colors"
+                >
+                  +91 8298922623{" "}
                 </Link>
               </li>
             </ul>
@@ -224,19 +254,28 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-[#334155] pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-[#64748B]">
-          <p>© {new Date().getFullYear()} EVWheels. Crafted with care in Patna.</p>
+          <p>© 2025 EVWheels. Crafted with care in Patna.</p>
 
           <div className="flex flex-wrap justify-center gap-6">
-            <Link href="/privacy-policy" className="hover:text-white transition-colors">
+            <Link
+              href="/privacy-policy"
+              className="hover:text-white transition-colors"
+            >
               Privacy Policy
             </Link>
             <Link href="/terms" className="hover:text-white transition-colors">
               Terms of Service
             </Link>
-            <Link href="/returns" className="hover:text-white transition-colors">
+            <Link
+              href="/returns"
+              className="hover:text-white transition-colors"
+            >
               Returns Policy
             </Link>
-            <Link href="/shipping-policy" className="hover:text-white transition-colors">
+            <Link
+              href="/shipping-policy"
+              className="hover:text-white transition-colors"
+            >
               Shipping
             </Link>
           </div>

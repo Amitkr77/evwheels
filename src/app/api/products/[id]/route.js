@@ -20,11 +20,13 @@ export async function GET(req, { params }) {
     if (isObjectId) {
       product = await Product.findById(id)
         .populate("category", "name slug")
-        .populate("subcategory", "name slug");
+        .populate("subcategory", "name slug")
+        .lean();
     } else {
       product = await Product.findOne({ slug: id })
         .populate("category", "name slug")
-        .populate("subcategory", "name slug");
+        .populate("subcategory", "name slug")
+        .lean();
     }
 
     if (!product) {
@@ -34,12 +36,12 @@ export async function GET(req, { params }) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      product,
-    });
+    return NextResponse.json(
+      { success: true, product },
+      { headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } }
+    );
   } catch (error) {
-    console.error(error);
+    console.error("[products/id] GET", error.message);
     return NextResponse.json(
       { error: "Server error" },
       { status: 500 }
@@ -209,7 +211,7 @@ export async function PUT(req, { params }) {
       product,
     });
   } catch (error) {
-    console.error(error);
+    console.error("[products/id]", error.message);
 
     return NextResponse.json(
       { error: "Failed to update product" },
@@ -254,7 +256,7 @@ export async function DELETE(req, { params }) {
       message: "Product deleted successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.error("[products/id]", error.message);
 
     return NextResponse.json(
       { error: "Failed to delete product" },

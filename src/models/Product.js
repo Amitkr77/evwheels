@@ -134,12 +134,22 @@ const ProductSchema = new mongoose.Schema(
   }
 );
 
-// Useful indexes
+// Single-field indexes (kept for targeted lookups)
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ subcategory: 1 });
-ProductSchema.index({ featured: 1 });
-ProductSchema.index({ isActive: 1 });
 ProductSchema.index({ price: 1 });
+
+// Compound indexes for common query patterns
+// Default shop listing: active products sorted by date
+ProductSchema.index({ isActive: 1, createdAt: -1 });
+// Featured products on home page
+ProductSchema.index({ isActive: 1, featured: 1, createdAt: -1 });
+// Category + active listing
+ProductSchema.index({ isActive: 1, category: 1, createdAt: -1 });
+// Price range filter
+ProductSchema.index({ isActive: 1, price: 1 });
+// Text search (required for $text queries)
+ProductSchema.index({ title: "text", description: "text", brand: "text" });
 
 // Auto-generate slug
 ProductSchema.pre("validate", function () {

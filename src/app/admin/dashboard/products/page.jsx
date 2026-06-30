@@ -28,7 +28,10 @@ import {
   Star,
   ChevronDown,
   ChevronUp,
+  Upload,
+  ImagePlus,
 } from "lucide-react";
+import { useRef } from "react";
 
 // ─── Empty form template ────────────────────────────────────────
 const EMPTY_FORM = {
@@ -68,6 +71,27 @@ function ProductForm({
   const sel = `${inp} bg-white`;
 
   const set = (key, val) => setFormData((p) => ({ ...p, [key]: val }));
+  const fileRef = useRef(null);
+  const [uploading, setUploading] = React.useState(false);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      if (!res.ok) throw new Error("Upload failed");
+      const { url } = await res.json();
+      set("image", url);
+    } catch (err) {
+      alert("Image upload failed: " + err.message);
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  };
 
   const addSpec = () =>
     setFormData((p) => ({
@@ -242,27 +266,58 @@ function ProductForm({
         />
       </div>
 
-      {/* Image URL */}
+      {/* Image — URL input + Cloudinary upload */}
       <div className="md:col-span-2">
         <label className="block text-sm font-medium text-neutral-600 mb-2">
-          Image URL
+          Product Image
         </label>
-        <input
-          type="url"
-          value={formData.image}
-          onChange={(e) => set("image", e.target.value)}
-          className={inp}
-          placeholder="https://example.com/image.jpg"
-        />
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt="Preview"
-            className="mt-3 max-h-36 rounded-xl border border-neutral-200/60 object-contain"
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
+
+        <div className="flex gap-2">
+          <input
+            type="url"
+            value={formData.image}
+            onChange={(e) => set("image", e.target.value)}
+            className={`${inp} flex-1`}
+            placeholder="https://example.com/image.jpg  or upload below"
           />
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFileUpload}
+          />
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="shrink-0 flex items-center gap-2 px-4 py-2.5 border border-neutral-300 rounded-lg text-sm font-medium text-neutral-600 hover:border-[#19B5D8] hover:text-[#19B5D8] hover:bg-[#DDF8FD]/40 transition-colors disabled:opacity-60"
+          >
+            {uploading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <ImagePlus size={16} />
+            )}
+            {uploading ? "Uploading…" : "Upload"}
+          </button>
+        </div>
+
+        {formData.image && (
+          <div className="mt-3 relative inline-block">
+            <img
+              src={formData.image}
+              alt="Preview"
+              className="max-h-36 rounded-xl border border-neutral-200/60 object-contain"
+              onError={(e) => { e.target.style.display = "none"; }}
+            />
+            <button
+              type="button"
+              onClick={() => set("image", "")}
+              className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            >
+              <X size={12} />
+            </button>
+          </div>
         )}
       </div>
 

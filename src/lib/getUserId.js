@@ -1,13 +1,8 @@
-import jwt from "jsonwebtoken";
+import { verifyToken } from "@/lib/jwt";
 
 export async function getUserId(req) {
-    const token = req.cookies.get("token")?.value;
-    if (!token) return null;
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return decoded.id;
-    } catch {
-        return null;
-    }
+  const token = req.cookies.get("token")?.value;
+  if (!token) return null;
+  const decoded = await verifyToken(token);
+  return decoded?.id ?? null;
 }

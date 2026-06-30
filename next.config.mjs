@@ -6,6 +6,7 @@ const nextConfig = {
       { protocol: "https", hostname: "i.pravatar.cc" },
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
+    formats: ["image/avif", "image/webp"],
   },
 
   async headers() {
@@ -17,9 +18,21 @@ const nextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          // HSTS: enforce HTTPS for 1 year (only active in production)
+          { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
+          // CSP: allow own origin + Cloudinary images + Google Fonts + inline scripts for Next.js
           {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com https://i.pravatar.cc",
+              "connect-src 'self' https://accounts.google.com",
+              "frame-src https://accounts.google.com",
+            ].join("; "),
           },
         ],
       },

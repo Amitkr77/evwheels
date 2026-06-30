@@ -9,10 +9,9 @@ const FLAT_SHIPPING = 10;
  * @param {string} [overrideCouponCode] - optional code to try (e.g. from query param preview)
  */
 export async function getCartSummary(userId, overrideCouponCode) {
-  const cart = await Cart.findOne({ user: userId }).populate("items.product");
+  const cart = await Cart.findOne({ user: userId }).populate("items.product").lean();
   if (!cart || cart.items.length === 0) return null;
 
-  // Use override if provided, otherwise fall back to what's saved on the cart
   const couponCodeToUse = overrideCouponCode?.trim().toUpperCase() || cart.couponCode || null;
 
   let subtotal = 0;
@@ -24,7 +23,7 @@ export async function getCartSummary(userId, overrideCouponCode) {
   let appliedCoupon = null;
 
   if (couponCodeToUse) {
-    const coupon = await Coupon.findOne({ code: couponCodeToUse });
+    const coupon = await Coupon.findOne({ code: couponCodeToUse }).lean();
     if (coupon && coupon.isActive && coupon.expiryDate > new Date()) {
       if (subtotal >= (coupon.minOrderAmount || 0)) {
         if (coupon.discountType === "percentage") {

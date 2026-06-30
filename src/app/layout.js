@@ -117,15 +117,18 @@ const websiteSchema = {
     "@type": "SearchAction",
     target: {
       "@type": "EntryPoint",
-      urlTemplate: `${BASE_URL}/cycles?search={search_term_string}`,
+      urlTemplate: `${BASE_URL}/shop?search={search_term_string}`,
     },
     "query-input": "required name=search_term_string",
   },
 };
 
+const orgSchemaJSON = JSON.stringify(orgSchema);
+const websiteSchemaJSON = JSON.stringify(websiteSchema);
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -134,14 +137,14 @@ export default function RootLayout({ children }) {
         <link rel="manifest" href="/site.webmanifest" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+          dangerouslySetInnerHTML={{ __html: orgSchemaJSON }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+          dangerouslySetInnerHTML={{ __html: websiteSchemaJSON }}
         />
       </head>
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

@@ -81,5 +81,12 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Compound index for the most common query: user's orders sorted by date
+orderSchema.index({ user: 1, createdAt: -1 });
+// Admin queries filtering by status + date range
+orderSchema.index({ orderStatus: 1, createdAt: -1 });
+// Revenue aggregation (delivered orders by date)
+orderSchema.index({ orderStatus: 1, totalAmount: 1 });
+
 export default mongoose.models.Order ||
   mongoose.model("Order", orderSchema);

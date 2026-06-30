@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
+import { signToken } from "@/lib/jwt";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(req) {
+  if (rateLimit(req, { limit: 10, windowMs: 60_000, prefix: "login" }))
+    return NextResponse.json({ error: "Too many attempts. Please wait a minute." }, { status: 429 });
+
   try {
     const { email, password } = await req.json();
 
@@ -36,17 +40,13 @@ export async function POST(req) {
       );
     }
 
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-        name: user.name,
-        email: user.email,
-        isEmailVerified: user.isEmailVerified,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = await signToken({
+      id: String(user._id),
+      role: user.role,
+      name: user.name,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+    });
 
     // Strip password and sensitive fields from response
     const response = NextResponse.json({
@@ -71,7 +71,7 @@ export async function POST(req) {
 
     return response;
   } catch (error) {
-    console.error(error)
+    console.error("[auth/login]", error.message)
     return NextResponse.json(
       { error: "Server error. Please try again later." },
       { status: 500 }

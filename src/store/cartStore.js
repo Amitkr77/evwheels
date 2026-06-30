@@ -1,7 +1,10 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { useAuthStore } from "@/store/authStore";
 
-export const useCartStore = create((set, get) => ({
+export const useCartStore = create(
+  persist(
+    (set, get) => ({
   items: [],
   totalQuantity: 0,
   totalPrice: 0,
@@ -217,11 +220,17 @@ export const useCartStore = create((set, get) => ({
   // Clear cart
   clearCart: () => {
     localStorage.removeItem("guestCart");
-
-    set({
-      items: [],
-      totalQuantity: 0,
-      totalPrice: 0,
-    });
+    set({ items: [], totalQuantity: 0, totalPrice: 0 });
   },
-}));
+}),
+{
+  name: "evwheels-cart-meta",
+  // Only persist the counts — not the full items array.
+  // This gives the navbar instant accurate badge count on page load
+  // while the real items are re-hydrated from the server / localStorage.
+  partialize: (state) => ({
+    totalQuantity: state.totalQuantity,
+    totalPrice:    state.totalPrice,
+  }),
+}
+));

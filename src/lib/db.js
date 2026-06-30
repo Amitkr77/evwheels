@@ -1,15 +1,12 @@
-
 import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
-
 
 if (!MONGODB_URI) {
   throw new Error("Please define MONGODB_URI in .env");
 }
 
 let cached = global.mongoose;
-
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
@@ -20,12 +17,14 @@ export async function connectDB() {
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
-    }).then((mongoose) => mongoose);
+      maxPoolSize: 10,          // Up to 10 concurrent MongoDB connections per server
+      minPoolSize: 2,           // Keep 2 connections warm at all times
+      serverSelectionTimeoutMS: 5000,  // Fail fast if Atlas is unreachable
+      socketTimeoutMS: 45000,   // Close idle sockets after 45s
+    }).then((m) => m);
   }
 
   cached.conn = await cached.promise;
   return cached.conn;
 }
-
-
 

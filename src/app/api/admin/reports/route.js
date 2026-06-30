@@ -182,7 +182,7 @@ export async function GET(req) {
           as:           "product",
         },
       },
-      { $unwind: { path: "$product", preserveNullAndEmpty: true } },
+      { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
       {
         $project: {
           name:       { $ifNull: ["$product.title", "$items.title"] },
@@ -228,7 +228,7 @@ export async function GET(req) {
           as:           "product",
         },
       },
-      { $unwind: { path: "$product", preserveNullAndEmpty: true } },
+      { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
       {
         $project: {
           name:      { $ifNull: ["$product.title", "Unknown"] },

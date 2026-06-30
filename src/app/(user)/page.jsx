@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -63,10 +64,12 @@ function ProductCard({ p }) {
       {/* Image area */}
       <div className="relative bg-neutral-50 p-4 aspect-square overflow-hidden">
         {p.images?.[0] ? (
-          <img
+          <Image
             src={p.images[0]}
             alt={p.title}
-            className="w-full h-full object-contain group-hover:scale-[1.04] transition-transform duration-500"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-contain group-hover:scale-[1.04] transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

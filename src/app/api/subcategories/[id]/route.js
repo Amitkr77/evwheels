@@ -46,7 +46,7 @@ export async function GET(req, { params }) {
             productCount,
         });
     } catch (error) {
-        console.error(error);
+        console.error("[subcategories/id]", error.message);
 
         return NextResponse.json(
             { error: "Failed to fetch subcategory" },
@@ -143,7 +143,7 @@ export async function PATCH(req, { params }) {
             subcategory,
         });
     } catch (error) {
-        console.error(error);
+        console.error("[subcategories/id]", error.message);
 
         return NextResponse.json(
             { error: "Failed to update subcategory" },
@@ -204,7 +204,7 @@ export async function DELETE(req, { params }) {
             message: "Subcategory deleted successfully",
         });
     } catch (error) {
-        console.error(error);
+        console.error("[subcategories/id]", error.message);
 
         return NextResponse.json(
             { error: "Failed to delete subcategory" },

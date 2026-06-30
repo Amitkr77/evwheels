@@ -36,17 +36,10 @@ export async function GET(req) {
 
     // Category filter by slug
     if (categorySlug) {
-      const category = await Category.findOne({
-        slug: categorySlug,
-      });
-
+      const category = await Category.findOne({ slug: categorySlug }).select("_id").lean();
       if (!category) {
-        return NextResponse.json(
-          { error: "Category not found" },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: "Category not found" }, { status: 404 });
       }
-
       filter.category = category._id;
     }
 
@@ -112,53 +105,39 @@ export async function GET(req) {
       sort[sortBy] = sortOrder;
     }
 
-    const products = await Product.find(filter)
-      .populate("category", "name slug")
-      .populate("subcategory", "name slug")
-      .sort(sort)
-      .skip(skip)
-      .limit(limit);
-
-    const total = await Product.countDocuments(filter);
-
-    const statsAgg = await Product.aggregate([
-      {
-        $match: filter,
-      },
-      {
-        $group: {
-          _id: null,
-          minPrice: {
-            $min: "$price",
-          },
-          maxPrice: {
-            $max: "$price",
-          },
-          avgPrice: {
-            $avg: "$price",
-          },
-          totalStock: {
-            $sum: "$stock",
+    // Run products query, count, and stats aggregation in parallel
+    const [products, total, statsAgg] = await Promise.all([
+      Product.find(filter)
+        .populate("category", "name slug")
+        .populate("subcategory", "name slug")
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Product.countDocuments(filter),
+      Product.aggregate([
+        { $match: filter },
+        {
+          $group: {
+            _id: null,
+            minPrice:   { $min: "$price" },
+            maxPrice:   { $max: "$price" },
+            avgPrice:   { $avg: "$price" },
+            totalStock: { $sum: "$stock" },
           },
         },
-      },
+      ]),
     ]);
 
     const stats = statsAgg[0]
       ? {
         total,
-        minPrice: statsAgg[0].minPrice,
-        maxPrice: statsAgg[0].maxPrice,
-        avgPrice: Math.round(statsAgg[0].avgPrice),
+        minPrice:   statsAgg[0].minPrice,
+        maxPrice:   statsAgg[0].maxPrice,
+        avgPrice:   Math.round(statsAgg[0].avgPrice),
         totalStock: statsAgg[0].totalStock,
       }
-      : {
-        total,
-        minPrice: 0,
-        maxPrice: 0,
-        avgPrice: 0,
-        totalStock: 0,
-      };
+      : { total, minPrice: 0, maxPrice: 0, avgPrice: 0, totalStock: 0 };
 
     return NextResponse.json({
       success: true,
@@ -174,7 +153,7 @@ export async function GET(req) {
 
 
   } catch (error) {
-    console.error(error);
+    console.error("[products]", error.message);
 
 
     return NextResponse.json(
@@ -368,7 +347,7 @@ export async function POST(req) {
     );
 
   } catch (error) {
-    console.error(error);
+    console.error("[products]", error.message);
 
 
     return NextResponse.json(

@@ -27,7 +27,8 @@ export default function TopBar() {
     return () => clearInterval(t);
   }, []);
 
-  const prev = () => setCurrent((c) => (c - 1 + ANNOUNCEMENTS.length) % ANNOUNCEMENTS.length);
+  const prev = () =>
+    setCurrent((c) => (c - 1 + ANNOUNCEMENTS.length) % ANNOUNCEMENTS.length);
   const next = () => setCurrent((c) => (c + 1) % ANNOUNCEMENTS.length);
 
   return (
@@ -37,7 +38,6 @@ export default function TopBar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-full flex items-center justify-between gap-4">
-
         {/* Left — contact info (desktop only) */}
         <div className="hidden lg:flex items-center gap-5 shrink-0">
           <a
@@ -45,7 +45,7 @@ export default function TopBar() {
             className="flex items-center gap-1.5 text-neutral-300 hover:text-white transition-colors"
           >
             <Phone size={12} />
-            +91 98765 43210
+            +91 8298922623{" "}
           </a>
           <a
             href="mailto:info@evwheels.in"
@@ -87,13 +87,14 @@ export default function TopBar() {
               key={i}
               onClick={() => setCurrent(i)}
               className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                i === current ? "bg-[#19B5D8]" : "bg-neutral-600 hover:bg-neutral-400"
+                i === current
+                  ? "bg-[#19B5D8]"
+                  : "bg-neutral-600 hover:bg-neutral-400"
               }`}
               aria-label={`Go to announcement ${i + 1}`}
             />
           ))}
         </div>
-
       </div>
     </div>
   );

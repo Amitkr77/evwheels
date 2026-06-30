@@ -11,12 +11,6 @@ import { sendEmail } from "@/lib/email/sendMail";
 import { getUserId } from "@/lib/getUserId";
 import { newOrderAdminTemplate } from "@/lib/email/templates/newOrderAdmin";
 
-function generateNextOrderId(lastId) {
-  if (!lastId) return "#ORD-1000";
-  const number = parseInt(lastId.split("-")[1], 10) + 1;
-  return `#ORD-${String(number).padStart(4, "0")}`;
-}
-
 export async function POST(req) {
   const userId = await getUserId(req);
   if (!userId)
@@ -44,68 +38,63 @@ export async function POST(req) {
   session.startTransaction();
 
   try {
-    const cart = await Cart.findOne({ user: userId })
-      .populate("items.product")
-      .session(session);
-
-    if (!cart || cart.items.length === 0) {
-      throw new Error("Cart is empty");
-    }
-
+    // Compute summary outside the transaction (read-only, no locks needed)
     const summary = await getCartSummary(userId, couponCode);
-    if (!summary?.items?.length) {
-      throw new Error("Cart is empty");
-    }
+    if (!summary?.items?.length) throw new Error("Cart is empty");
+
+    const productIds = summary.items.map((item) => item.product._id);
+
+    // Batch-fetch all products in one query instead of N sequential reads
+    const products = await Product.find({ _id: { $in: productIds } }).session(session);
+    const productMap = Object.fromEntries(products.map((p) => [p._id.toString(), p]));
 
     const orderItems = summary.items.map((item) => ({
-      product: item.product._id,
-      name: item.product.title,
-      price: item.product.price,
+      product:  item.product._id,
+      name:     item.product.title,
+      price:    item.product.price,
       quantity: item.quantity,
     }));
 
+    // Validate stock and apply decrements
     for (const item of summary.items) {
-      const product = await Product.findById(item.product._id).session(session);
+      const product = productMap[item.product._id.toString()];
       if (!product) throw new Error("Product not found");
-      if (product.stock < item.quantity) {
+      if (product.stock < item.quantity)
         throw new Error(`Insufficient stock for ${product.title}`);
-      }
       product.stock -= item.quantity;
-      await product.save({ session });
     }
+
+    // Bulk-save all updated products in parallel
+    await Promise.all(products.map((p) => p.save({ session })));
 
     const { total, discount, tax, shipping } = summary;
 
-    const lastOrder = await Order.findOne()
-      .sort({ createdAt: -1 })
-      .select("id")
-      .session(session);
-
-    const orderId = generateNextOrderId(lastOrder?.id);
+    // Use a collision-resistant ID from timestamp + random suffix instead of a DB read
+    const orderId = `#ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
     const paymentStatus = paymentMethod === "COD" ? "PENDING" : "PAID";
 
-    const [order] = await Order.create(
-      [
-        {
-          user: userId,
-          items: orderItems,
-          shippingAddress,
-          paymentMethod,
-          paymentStatus,
-          totalAmount: total,
-          discountAmount: discount,
-          taxAmount: tax,
-          shippingAmount: shipping,
-          id: orderId,
-          statusHistory: [{ status: "PLACED" }],
-        },
-      ],
-      { session }
-    );
-
-    cart.items = [];
-    cart.couponCode = null;
-    await cart.save({ session });
+    // Create order and clear cart in parallel inside the transaction
+    const [[order]] = await Promise.all([
+      Order.create(
+        [
+          {
+            user: userId,
+            items: orderItems,
+            shippingAddress,
+            paymentMethod,
+            paymentStatus,
+            totalAmount: total,
+            discountAmount: discount,
+            taxAmount: tax,
+            shippingAmount: shipping,
+            id: orderId,
+            statusHistory: [{ status: "PLACED" }],
+          },
+        ],
+        { session }
+      ),
+      Cart.updateOne({ user: userId }, { $set: { items: [], couponCode: null } }, { session }),
+    ]);
 
     await session.commitTransaction();
     session.endSession();

@@ -4,8 +4,12 @@ import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { sendEmail } from "@/lib/email/sendMail";
 import { resetPasswordTemplate } from "@/lib/email/templates/resetPassword";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(req) {
+  if (rateLimit(req, { limit: 3, windowMs: 60_000, prefix: "forgot-pw" }))
+    return NextResponse.json({ error: "Too many attempts. Please wait a minute." }, { status: 429 });
+
   try {
     const { email } = await req.json();
 

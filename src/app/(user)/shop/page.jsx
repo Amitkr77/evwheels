@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
   SlidersHorizontal,
   X,
@@ -55,10 +56,12 @@ function ProductCard({ product }) {
     >
       <div className="relative bg-neutral-50 p-4 aspect-square overflow-hidden">
         {product.images?.[0] ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.title}
-            className="w-full h-full object-contain group-hover:scale-[1.04] transition-transform duration-500"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-contain group-hover:scale-[1.04] transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

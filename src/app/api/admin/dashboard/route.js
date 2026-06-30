@@ -7,207 +7,126 @@ import { verifyAdmin } from "@/lib/adminAuth";
 export async function GET(req) {
     try {
         const admin = await verifyAdmin(req);
-
-        if (!admin) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
         await connectDB();
-
-        // ================================
-        // Basic Stats
-        // ================================
-
-        const totalOrders = await Order.countDocuments();
-        const totalProducts = await Product.countDocuments();
-        const lowStock = await Product.countDocuments({ stock: { $lt: 5 } });
-
-        const revenueResult = await Order.aggregate([
-            { $match: { orderStatus: "DELIVERED" } },
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: "$totalAmount" },
-                },
-            },
-        ]);
-
-        const totalRevenue = revenueResult[0]?.total || 0;
-
-        // ================================
-        // Today's Revenue
-        // ================================
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const todayRevenueResult = await Order.aggregate([
-            {
-                $match: {
-                    orderStatus: "DELIVERED",
-                    createdAt: { $gte: today },
-                },
-            },
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: "$totalAmount" },
-                },
-            },
-        ]);
-
-        const todayRevenue = todayRevenueResult[0]?.total || 0;
-
-        // ================================
-        // Yesterday Revenue
-        // ================================
-
-        const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
-
-        const yesterdayRevenueResult = await Order.aggregate([
-            {
-                $match: {
-                    orderStatus: "DELIVERED",
-                    createdAt: { $gte: yesterday, $lt: today },
-                },
-            },
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: "$totalAmount" },
-                },
-            },
-        ]);
-
-        const yesterdayRevenue = yesterdayRevenueResult[0]?.total || 0;
-
-        const revenueGrowth =
-            yesterdayRevenue === 0
-                ? 0
-                : (((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100).toFixed(1);
-
-        // ================================
-        // Pending Orders
-        // ================================
-
-        const pendingOrders = await Order.countDocuments({
-            orderStatus: { $in: ["PLACED", "PROCESSING"] },
-        });
-
-        // ================================
-        // Top Selling Product
-        // ================================
-
-        const topProduct = await Order.aggregate([
-            { $unwind: "$items" },
-
-            {
-                $group: {
-                    _id: "$items.product",
-                    sold: { $sum: "$items.quantity" },
-                },
-            },
-
-            { $sort: { sold: -1 } },
-            { $limit: 1 },
-
-            {
-                $lookup: {
-                    from: "products",
-                    localField: "_id",
-                    foreignField: "_id",
-                    as: "product",
-                },
-            },
-
-            { $unwind: "$product" },
-
-            {
-                $project: {
-                    _id: 0,
-                    name: "$product.title",
-                    sold: 1,
-                },
-            },
-        ]);
-
-        const topSellingProduct = topProduct[0] || { name: null, sold: 0 };
-
-        // ================================
-        // Revenue Chart (period-aware)
-        // ================================
 
         const { searchParams } = new URL(req.url);
         const period = searchParams.get("period") || "7d";
         const days = period === "30d" ? 30 : 7;
-        const chartStart = new Date();
-        chartStart.setDate(chartStart.getDate() - days);
-        chartStart.setHours(0, 0, 0, 0);
 
-        const revenueChartRaw = await Order.aggregate([
-            {
-                $match: {
-                    orderStatus: "DELIVERED",
-                    createdAt: { $gte: chartStart },
-                },
-            },
-            {
-                $group: {
-                    _id: {
-                        $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+        const now = new Date();
+        const today = new Date(now); today.setHours(0, 0, 0, 0);
+        const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+        const chartStart = new Date(today); chartStart.setDate(today.getDate() - days);
+
+        // Run all independent queries in parallel — was 10 sequential, now 5 parallel
+        const [
+            counts,
+            revenueStats,
+            topProduct,
+            revenueChartRaw,
+            recentOrders,
+        ] = await Promise.all([
+            // 1. All countDocuments in one aggregation
+            Order.aggregate([
+                {
+                    $facet: {
+                        total:   [{ $count: "n" }],
+                        pending: [{ $match: { orderStatus: { $in: ["PLACED", "PROCESSING"] } } }, { $count: "n" }],
                     },
-                    revenue: { $sum: "$totalAmount" },
                 },
-            },
-            { $sort: { _id: 1 } },
+            ]),
+
+            // 2. All-time + today + yesterday revenue in a single pipeline
+            Order.aggregate([
+                { $match: { orderStatus: "DELIVERED" } },
+                {
+                    $group: {
+                        _id: null,
+                        allTime:   { $sum: "$totalAmount" },
+                        today:     { $sum: { $cond: [{ $gte: ["$createdAt", today] }, "$totalAmount", 0] } },
+                        yesterday: {
+                            $sum: {
+                                $cond: [
+                                    { $and: [{ $gte: ["$createdAt", yesterday] }, { $lt: ["$createdAt", today] }] },
+                                    "$totalAmount", 0,
+                                ],
+                            },
+                        },
+                    },
+                },
+            ]),
+
+            // 3. Top-selling product (limited to last 90 days for performance)
+            Order.aggregate([
+                { $match: { createdAt: { $gte: new Date(Date.now() - 90 * 864e5) } } },
+                { $unwind: "$items" },
+                { $group: { _id: "$items.product", sold: { $sum: "$items.quantity" } } },
+                { $sort: { sold: -1 } },
+                { $limit: 1 },
+                { $lookup: { from: "products", localField: "_id", foreignField: "_id", as: "product" } },
+                { $unwind: "$product" },
+                { $project: { _id: 0, name: "$product.title", sold: 1 } },
+            ]),
+
+            // 4. Revenue chart
+            Order.aggregate([
+                { $match: { orderStatus: "DELIVERED", createdAt: { $gte: chartStart } } },
+                {
+                    $group: {
+                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                        revenue: { $sum: "$totalAmount" },
+                    },
+                },
+                { $sort: { _id: 1 } },
+            ]),
+
+            // 5. Recent orders — lean for speed
+            Order.find()
+                .sort({ createdAt: -1 })
+                .limit(5)
+                .select("id totalAmount orderStatus createdAt user")
+                .populate("user", "name")
+                .lean(),
         ]);
 
-        const revenueChart = revenueChartRaw.map((d) => ({
-            label: d._id.slice(5), // "MM-DD"
-            revenue: d.revenue,
-        }));
+        // Product counts (separate collection — run alongside above)
+        const [totalProducts, lowStock] = await Promise.all([
+            Product.countDocuments(),
+            Product.countDocuments({ stock: { $lt: 5 } }),
+        ]);
 
-        // ================================
-        // Recent Orders
-        // ================================
-
-        const recentOrders = await Order.find()
-            .sort({ createdAt: -1 })
-            .limit(5)
-            .select("id totalAmount orderStatus createdAt user")
-            .populate("user", "name");
-
-        const formattedOrders = recentOrders.map((order) => ({
-            id: order.id,
-            name: order.user?.name || "Guest",
-            amount: order.totalAmount,
-            status: order.orderStatus,
-            date: order.createdAt,
-        }));
+        const totalOrders   = counts[0]?.total[0]?.n   ?? 0;
+        const pendingOrders = counts[0]?.pending[0]?.n  ?? 0;
+        const rev           = revenueStats[0] ?? { allTime: 0, today: 0, yesterday: 0 };
+        const revenueGrowth = rev.yesterday === 0 ? 0
+            : (((rev.today - rev.yesterday) / rev.yesterday) * 100).toFixed(1);
 
         return NextResponse.json({
             stats: {
-                totalRevenue,
+                totalRevenue: rev.allTime,
                 totalOrders,
                 totalProducts,
                 lowStock,
             },
             insights: {
-                todayRevenue,
+                todayRevenue:     rev.today,
                 revenueGrowth,
                 pendingOrders,
-                topSellingProduct,
+                topSellingProduct: topProduct[0] ?? { name: null, sold: 0 },
             },
-            revenueChart,
-            recentOrders: formattedOrders,
+            revenueChart: revenueChartRaw.map((d) => ({ label: d._id.slice(5), revenue: d.revenue })),
+            recentOrders: recentOrders.map((o) => ({
+                id:     o.id,
+                name:   o.user?.name || "Guest",
+                amount: o.totalAmount,
+                status: o.orderStatus,
+                date:   o.createdAt,
+            })),
         });
     } catch (error) {
-        console.error(error);
-
-        return NextResponse.json(
-            { error: "Failed to load dashboard data" },
-            { status: 500 }
-        );
+        console.error("[admin/dashboard]", error.message);
+        return NextResponse.json({ error: "Failed to load dashboard data" }, { status: 500 });
     }
 }

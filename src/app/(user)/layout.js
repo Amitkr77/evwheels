@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function UserRootLayout({ children }) {
     return (
-        <main>
+        <main suppressHydrationWarning>
             <TopBar />
             <Navbar />
             {/* Spacer so page content clears the combined topbar (36px) + navbar (80px) */}

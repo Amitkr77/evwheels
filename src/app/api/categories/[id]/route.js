@@ -38,7 +38,7 @@ export async function GET(req, { params }) {
             category,
         });
     } catch (error) {
-        console.error(error);
+        console.error("[categories/id]", error.message);
 
         return NextResponse.json(
             { error: "Failed to fetch category" },
@@ -125,7 +125,7 @@ export async function PATCH(req, { params }) {
             category,
         });
     } catch (error) {
-        console.error(error);
+        console.error("[categories/id]", error.message);
 
         return NextResponse.json(
             { error: "Failed to update category" },
@@ -185,7 +185,7 @@ export async function DELETE(req, { params }) {
             message: "Category deleted successfully",
         });
     } catch (error) {
-        console.error(error);
+        console.error("[categories/id]", error.message);
 
         return NextResponse.json(
             { error: "Failed to delete category" },

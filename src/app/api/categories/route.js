@@ -4,6 +4,9 @@ import { verifyAdmin } from "@/lib/adminAuth";
 import Category from "@/models/Category";
 import "@/models/Product"; // Ensure Product model is registered for virtual populate
 
+// Cache category list for 1 hour — changes rarely, high read volume
+export const revalidate = 3600;
+
 // GET /api/categories — list all categories (with product counts)
 export async function GET(req) {
   try {
@@ -16,8 +19,8 @@ export async function GET(req) {
 
     const categories = await Category.find(filter)
       .sort({ sortOrder: 1 })
-      .populate("productCount");
-
+      .populate("productCount")
+      .lean();
 
     return NextResponse.json({ success: true, categories });
   } catch (error) {

@@ -128,7 +128,6 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-['Inter']">
-     
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#DDF8FD]/30 via-transparent to-[#DDF8FD]/20" />
@@ -575,7 +574,7 @@ export default function ContactPage() {
                         href="tel:+919876543210"
                         className="hover:text-[#19B5D8] transition-colors"
                       >
-                        +91 98765 43210
+                        +91 8298922623{" "}
                       </Link>
                     </div>
                   </div>

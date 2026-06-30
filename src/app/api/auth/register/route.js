@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { sendEmail } from "@/lib/email/sendMail";
 import { welcomeTemplate } from "@/lib/email/templates/welcome";
+import { signToken } from "@/lib/jwt";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(req) {
+  if (rateLimit(req, { limit: 5, windowMs: 60_000, prefix: "register" }))
+    return NextResponse.json({ error: "Too many attempts. Please wait a minute." }, { status: 429 });
+
   try {
-    
     const { name, email, phone, password } = await req.json();
 
     // Validation
@@ -83,20 +86,13 @@ export async function POST(req) {
       console.error("Welcome email failed:", err);
     });
 
-    // Create JWT
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-        name: user.name,
-        email: user.email,
-        isEmailVerified: user.isEmailVerified,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
+    const token = await signToken({
+      id: String(user._id),
+      role: user.role,
+      name: user.name,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+    });
 
     // Create response
     const response = NextResponse.json(
