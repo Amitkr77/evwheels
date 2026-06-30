@@ -3,411 +3,331 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  ShoppingBag,
-  User,
-  Menu,
-  X,
-  ChevronDown,
-  ChevronRight,
-} from "lucide-react";
+import { ShoppingBag, User, Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
+
+const SHOP_CATEGORIES = [
+  { name: "Bells", href: "/cycles?category=bells" },
+  { name: "Brakes", href: "/cycles?category=brakes" },
+  { name: "Chains", href: "/cycles?category=chains" },
+  { name: "Gear Sets", href: "/cycles?category=gear-sets" },
+  { name: "Handlebar Parts", href: "/cycles?category=handlebar-parts" },
+  { name: "Lights", href: "/cycles?category=lights-reflectors" },
+  { name: "Locks", href: "/cycles?category=locks-security" },
+  { name: "Mudguards", href: "/cycles?category=mudguards-fenders" },
+  { name: "Saddles", href: "/cycles?category=saddles-seats" },
+  { name: "Tyres & Tubes", href: "/cycles?category=tyres-tubes" },
+  { name: "Tools", href: "/cycles?category=tools-maintenance" },
+  { name: "Wheels & Hubs", href: "/cycles?category=wheels-hubs" },
+];
+
+const OTHER_LINKS = [
+  { label: "Why Us", href: "/why-us" },
+  { label: "Support", href: "/support" },
+  { label: "Contact", href: "/contact" },
+];
 
 export default function Navbar() {
   const { isAuthenticated, user, logout, isLoading } = useAuthStore();
   const totalQuantity = useCartStore((state) => state.totalQuantity);
-
   const pathname = usePathname();
 
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileShopOpen, setMobileShopOpen] = useState(false);
+  const [userDropOpen, setUserDropOpen] = useState(false);
+  const userDropRef = useRef(null);
 
-  // Mobile Accordion State
-  const [mobileOpenCategory, setMobileOpenCategory] = useState(null);
+  // Only show transparent style on the homepage
+  const isHome = pathname === "/";
+  const transparent = isHome && !scrolled;
 
-  const dropdownRef = useRef(null);
-
-  const navItems = [
-    { label: "Cycles", href: "/cycles" },
-    { label: "Why EVWheels", href: "/why-us" },
-    { label: "Support", href: "/support" },
-    { label: "Contact", href: "/contact" },
-  ];
-
-  // Scroll handler
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
-    setMobileMenuOpen(false);
-    setUserDropdownOpen(false);
-    setMobileOpenCategory(null);
+    setMobileOpen(false);
+    setMobileShopOpen(false);
+    setUserDropOpen(false);
   }, [pathname]);
 
-  // Body overflow for mobile menu
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileMenuOpen]);
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
 
-  // Click outside to close user dropdown
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setUserDropdownOpen(false);
-      }
+    if (!userDropOpen) return;
+    const h = (e) => {
+      if (userDropRef.current && !userDropRef.current.contains(e.target))
+        setUserDropOpen(false);
     };
-    if (userDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [userDropdownOpen]);
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [userDropOpen]);
 
-  const textColor = scrolled ? "text-neutral-900" : "text-white";
-  const hoverColor = scrolled
-    ? "hover:text-[#19B5D8]"
-    : "hover:text-[#7DE8F5]";
+  const tx = transparent ? "text-white" : "text-neutral-900";
+  const hx = transparent ? "hover:text-white/70" : "hover:text-[#19B5D8]";
 
   return (
     <nav
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-xl shadow-sm border-b border-[#E2E8F0]"
-          : " max-w-7xl mx-auto px-5  mt-2 bg-black/30 backdrop-blur-sm rounded-2xl"
+          ? "top-0 bg-white border-b border-neutral-200"
+          : transparent
+            ? "top-9 bg-transparent"
+            : "top-9 bg-white border-b border-neutral-200"
       }`}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
+
           {/* Logo */}
-          <Link
-            href="/"
-            className={`text-2xl md:text-3xl font-['Playfair_Display'] font-bold tracking-wide ${textColor}`}
-            aria-label="EVWheels Home"
-          >
+          <Link href="/" className={`text-xl font-bold tracking-tight transition-colors ${tx}`}>
             EVWheels
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-8">
-            {navItems.map((item) => (
-              <div
-                key={item.label}
-                className="relative group h-20 flex items-center"
-              >
-                {item.href ? (
-                  <NavLink
-                    href={item.href}
-                    label={item.label}
-                    textColor={textColor}
-                    hoverColor={hoverColor}
-                    isSpecial={item.isSpecial}
-                  />
-                ) : (
-                  // Dropdown Trigger
-                  <button
-                    className={`flex items-center gap-1 text-sm lg:text-base font-medium tracking-wide transition-colors ${textColor} ${hoverColor}`}
-                  >
-                    {item.label}
-                    <ChevronDown
-                      size={14}
-                      className="opacity-70 group-hover:rotate-180 transition-transform duration-200"
-                    />
-                  </button>
-                )}
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center gap-1">
 
-                {/* Mega Dropdown Content */}
-                {item.subMenu && (
-                  <div
-                    className="
-                      absolute left-1/2 -translate-x-1/2 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300
-                      w-[650px]
-                    "
-                  >
-                    <div className="bg-white shadow-2xl rounded-2xl border border-neutral-200/50 overflow-hidden p-6 grid grid-cols-2 gap-8">
-                      {item.subMenu.map((group) => (
-                        <div key={group.title}>
-                          <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3">
-                            {group.title}
-                          </h4>
-                          <div className="space-y-2">
-                            {group.links.map((link) => (
-                              <Link
-                                key={link.href}
-                                href={link.href}
-                                className="block text-sm text-neutral-800 hover:text-[#19B5D8] hover:translate-x-1 transition-all duration-200"
-                              >
-                                {link.label}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
+            {/* Shop with mega-dropdown */}
+            <div className="relative group h-16 flex items-center">
+              <button className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${tx} ${hx}`}>
+                Shop
+                <ChevronDown size={14} className="transition-transform duration-200 group-hover:rotate-180" />
+              </button>
+
+              {/* Mega dropdown */}
+              <div className="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="flex overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-2xl">
+
+                  {/* Left: category grid */}
+                  <div className="w-80 p-5">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mb-3 px-2">
+                      Browse Categories
+                    </p>
+                    <div className="grid grid-cols-2 gap-0.5">
+                      {SHOP_CATEGORIES.map((cat) => (
+                        <Link
+                          key={cat.name}
+                          href={cat.href}
+                          className="px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-50 hover:text-[#19B5D8] rounded-lg transition-colors"
+                        >
+                          {cat.name}
+                        </Link>
                       ))}
                     </div>
+                    <div className="mt-3 pt-3 border-t border-neutral-100">
+                      <Link
+                        href="/cycles"
+                        className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-[#19B5D8] hover:bg-[#DDF8FD]/60 rounded-lg transition-colors"
+                      >
+                        View All Products
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
                   </div>
-                )}
+
+                  {/* Right: image panel */}
+                  <div className="w-44 relative overflow-hidden bg-neutral-900">
+                    <img
+                      src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80&auto=format&fit=crop"
+                      alt="Cycle accessories"
+                      className="absolute inset-0 h-full w-full object-cover opacity-60"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                    <div className="absolute bottom-5 left-4 right-4">
+                      <p className="text-white font-bold text-xl leading-tight">240+</p>
+                      <p className="text-white/70 text-xs mt-0.5">Products in stock</p>
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            {/* Other links */}
+            {OTHER_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  pathname === link.href
+                    ? transparent ? "text-white" : "text-[#19B5D8]"
+                    : `${tx} ${hx}`
+                }`}
+              >
+                {link.label}
+              </Link>
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-5 sm:gap-7">
+          {/* Right actions */}
+          <div className="flex items-center gap-3">
+
+            {/* Cart */}
             <Link
               href="/cart"
-              className={`relative ${textColor} transition-colors hover:opacity-80`}
-              aria-label={`Shopping Cart ${totalQuantity > 0 ? `(${totalQuantity} items)` : ""}`}
+              className={`relative transition-colors ${tx} ${hx}`}
+              aria-label="Cart"
             >
-              <ShoppingBag size={22} strokeWidth={1.6} />
+              <ShoppingBag size={20} strokeWidth={1.8} />
               {totalQuantity > 0 && (
-                <span className="absolute -top-1 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#19B5D8] px-1.5 text-xs font-bold text-white border-2 border-white">
-                  {totalQuantity > 99 ? "99+" : totalQuantity}
+                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#19B5D8] text-white text-[9px] font-bold flex items-center justify-center leading-none">
+                  {totalQuantity > 9 ? "9+" : totalQuantity}
                 </span>
               )}
             </Link>
 
-            {!isLoading &&
-              (isAuthenticated ? (
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                      scrolled ? "hover:bg-neutral-100" : "hover:bg-white/10"
-                    }`}
-                    onClick={() => setUserDropdownOpen((prev) => !prev)}
-                    aria-expanded={userDropdownOpen}
-                    aria-haspopup="true"
-                  >
-                    <User size={20} className={textColor} />
-                    <span
-                      className={`text-sm font-medium hidden lg:block ${textColor}`}
-                    >
-                      {user?.name?.split(" ")[0] || "Account"}
-                    </span>
-                  </button>
+            {/* Auth */}
+            {isLoading ? (
+              <div className="w-7 h-7 rounded-full bg-current opacity-10 animate-pulse" />
+            ) : isAuthenticated ? (
+              <div className="relative hidden sm:block" ref={userDropRef}>
+                <button
+                  onClick={() => setUserDropOpen((p) => !p)}
+                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${tx} ${hx}`}
+                >
+                  <User size={18} strokeWidth={1.8} />
+                  <span className="hidden md:block max-w-[72px] truncate">
+                    {user?.name?.split(" ")[0]}
+                  </span>
+                  <ChevronDown size={13} className={`transition-transform duration-200 ${userDropOpen ? "rotate-180" : ""}`} />
+                </button>
 
-                  {userDropdownOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white shadow-xl rounded-xl border border-neutral-200 py-2 text-sm z-50">
-                      <div className="px-5 py-3 border-b border-neutral-100">
-                        <p className="font-medium text-neutral-900 truncate">{user?.name}</p>
-                        <p className="text-xs text-neutral-500 truncate">{user?.email}</p>
-                      </div>
-                      <Link
-                        href="/profile"
-                        className="block px-5 py-2.5 hover:bg-neutral-50 transition-colors"
-                        onClick={() => setUserDropdownOpen(false)}
-                      >
-                        My Profile
-                      </Link>
-                      <Link
-                        href="/cart"
-                        className="block px-5 py-2.5 hover:bg-neutral-50 transition-colors"
-                        onClick={() => setUserDropdownOpen(false)}
-                      >
-                        My Cart
-                      </Link>
-                      <hr className="my-1 border-neutral-200" />
-                      <button
-                        onClick={() => {
-                          logout();
-                          setUserDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-5 py-2.5 text-red-600 hover:bg-red-50 transition-colors"
-                      >
-                        Logout
+                {userDropOpen && (
+                  <div className="absolute right-0 top-full mt-1.5 w-52 bg-white rounded-xl shadow-xl border border-neutral-100 py-1 text-sm overflow-hidden z-50">
+                    <div className="px-4 py-3 border-b border-neutral-100">
+                      <p className="font-semibold text-neutral-900 truncate">{user?.name}</p>
+                      <p className="text-xs text-neutral-400 mt-0.5 truncate">{user?.email}</p>
+                    </div>
+                    <Link href="/profile" className="block px-4 py-2.5 text-neutral-700 hover:bg-neutral-50 transition-colors" onClick={() => setUserDropOpen(false)}>My Profile</Link>
+                    <Link href="/cart" className="block px-4 py-2.5 text-neutral-700 hover:bg-neutral-50 transition-colors" onClick={() => setUserDropOpen(false)}>My Cart</Link>
+                    <div className="border-t border-neutral-100 mt-1">
+                      <button onClick={() => { logout(); setUserDropOpen(false); }} className="w-full text-left px-4 py-2.5 text-red-500 hover:bg-red-50 transition-colors">
+                        Sign Out
                       </button>
                     </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  href="/account/login"
-                  className={`flex items-center gap-2 text-sm font-medium ${textColor} ${hoverColor}`}
-                >
-                  <User size={20} />
-                  <span className="hidden sm:inline">Login</span>
-                </Link>
-              ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/account/login"
+                className={`hidden sm:flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${tx} ${hx}`}
+              >
+                <User size={18} strokeWidth={1.8} />
+                <span className="hidden md:block">Login</span>
+              </Link>
+            )}
 
+            {/* Mobile hamburger */}
             <button
-              className="md:hidden focus:outline-none focus:ring-2 focus:ring-[#19B5D8] rounded-lg p-1"
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileMenuOpen}
+              className={`lg:hidden p-1 transition-colors ${tx} ${hx}`}
+              onClick={() => setMobileOpen((p) => !p)}
+              aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? (
-                <X size={28} className={textColor} />
-              ) : (
-                <Menu size={28} className={textColor} />
-              )}
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
+      {/* ── Mobile drawer ── */}
+      {mobileOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
-            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setMobileOpen(false)}
           />
-          <div
-            className={`fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
-              mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-            } md:hidden overflow-y-auto`}
-          >
-            <div className="flex flex-col h-full">
-              {/* Mobile Header */}
-              <div className="flex justify-between items-center p-6 border-b border-neutral-200">
-                <span className="text-xl font-semibold text-neutral-900">
-                  Menu
-                </span>
+          <div className="fixed top-0 right-0 h-full w-72 max-w-[85vw] bg-white z-50 shadow-2xl flex flex-col lg:hidden">
+
+            {/* Drawer header */}
+            <div className="flex items-center justify-between px-5 h-16 border-b border-neutral-100 shrink-0">
+              <span className="font-bold text-neutral-900">EVWheels</span>
+              <button onClick={() => setMobileOpen(false)} className="text-neutral-400 hover:text-neutral-900 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Nav items */}
+            <div className="flex-1 overflow-y-auto px-4 py-3">
+
+              {/* Shop accordion */}
+              <div>
                 <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-label="Close menu"
+                  onClick={() => setMobileShopOpen((p) => !p)}
+                  className="flex items-center justify-between w-full px-3 h-12 text-base font-medium text-neutral-800 hover:text-[#19B5D8] transition-colors"
                 >
-                  <X size={32} className="text-neutral-700" />
+                  Shop
+                  <ChevronDown size={16} className={`transition-transform duration-200 ${mobileShopOpen ? "rotate-180" : ""}`} />
                 </button>
-              </div>
-
-              {/* Mobile Navigation Links */}
-              <div className="flex-1 p-6 space-y-1">
-                {navItems.map((item) => (
-                  <div
-                    key={item.label}
-                    className="border-b border-neutral-100 last:border-0"
-                  >
-                    {item.href ? (
-                      <MobileNavLink
-                        href={item.href}
-                        label={item.label}
-                        isSpecial={item.isSpecial}
-                        onClick={() => setMobileMenuOpen(false)}
-                      />
-                    ) : (
-                      // Accordion Item
-                      <div>
-                        <button
-                          onClick={() =>
-                            setMobileOpenCategory(
-                              mobileOpenCategory === item.label
-                                ? null
-                                : item.label,
-                            )
-                          }
-                          className="w-full flex items-center justify-between py-4 text-lg font-medium text-neutral-900"
-                        >
-                          {item.label}
-                          {mobileOpenCategory === item.label ? (
-                            <ChevronDown size={18} />
-                          ) : (
-                            <ChevronRight size={18} />
-                          )}
-                        </button>
-
-                        {mobileOpenCategory === item.label && (
-                          <div className="pl-4 pb-4 space-y-4 animate-fade-in">
-                            {item.subMenu.map((group) => (
-                              <div key={group.title}>
-                                <p className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2 mt-2">
-                                  {group.title}
-                                </p>
-                                <div className="space-y-1">
-                                  {group.links.map((link) => (
-                                    <Link
-                                      key={link.href}
-                                      href={link.href}
-                                      onClick={() => setMobileMenuOpen(false)}
-                                      className="block py-2 text-sm text-neutral-600 hover:text-[#19B5D8]"
-                                    >
-                                      {link.label}
-                                    </Link>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Mobile Auth Section */}
-              <div className="p-6 border-t border-neutral-200 bg-neutral-50/50">
-                {isAuthenticated ? (
-                  <div className="flex flex-col gap-4">
-                    <MobileNavLink
-                      href="/profile"
-                      label="My Profile"
-                      onClick={() => setMobileMenuOpen(false)}
-                    />
-                    <MobileNavLink
-                      href="/cart"
-                      label="My Cart"
-                      onClick={() => setMobileMenuOpen(false)}
-                    />
-                    <button
-                      onClick={() => {
-                        logout();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="w-full text-left py-3 text-red-600 font-medium text-lg hover:text-red-700 transition-colors"
+                {mobileShopOpen && (
+                  <div className="pl-3 pb-2 grid grid-cols-2 gap-0.5">
+                    {SHOP_CATEGORIES.map((cat) => (
+                      <Link
+                        key={cat.name}
+                        href={cat.href}
+                        className="px-3 py-2 text-sm text-neutral-600 hover:text-[#19B5D8] transition-colors"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                    <Link
+                      href="/cycles"
+                      className="col-span-2 flex items-center gap-1 px-3 py-2.5 text-sm font-semibold text-[#19B5D8]"
+                      onClick={() => setMobileOpen(false)}
                     >
-                      Logout
-                    </button>
+                      All Products <ArrowRight size={13} />
+                    </Link>
                   </div>
-                ) : (
-                  <Link
-                    href="/account/login"
-                    className="flex items-center justify-center gap-3 py-3 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <User size={20} />
-                    Login / Register
-                  </Link>
                 )}
               </div>
+
+              {OTHER_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex items-center h-12 px-3 text-base font-medium transition-colors ${
+                    pathname === link.href ? "text-[#19B5D8]" : "text-neutral-800 hover:text-[#19B5D8]"
+                  }`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Auth footer */}
+            <div className="px-4 py-5 border-t border-neutral-100 shrink-0">
+              {isAuthenticated ? (
+                <div>
+                  <div className="px-3 py-2 mb-2">
+                    <p className="text-sm font-semibold text-neutral-900">{user?.name}</p>
+                    <p className="text-xs text-neutral-400 truncate">{user?.email}</p>
+                  </div>
+                  <Link href="/profile" className="flex items-center h-11 px-3 text-sm text-neutral-700 hover:text-[#19B5D8] transition-colors" onClick={() => setMobileOpen(false)}>My Profile</Link>
+                  <Link href="/cart" className="flex items-center h-11 px-3 text-sm text-neutral-700 hover:text-[#19B5D8] transition-colors" onClick={() => setMobileOpen(false)}>My Cart</Link>
+                  <button onClick={() => { logout(); setMobileOpen(false); }} className="flex items-center h-11 px-3 w-full text-left text-sm text-red-500 hover:text-red-600 transition-colors">Sign Out</button>
+                </div>
+              ) : (
+                <Link
+                  href="/account/login"
+                  className="flex items-center justify-center gap-2 h-11 bg-neutral-900 text-white rounded-xl text-sm font-semibold hover:bg-neutral-800 transition-colors"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <User size={16} />
+                  Login / Register
+                </Link>
+              )}
             </div>
           </div>
         </>
       )}
     </nav>
-  );
-}
-
-// ─── Helpers ───
-function NavLink({ href, label, textColor, hoverColor, isSpecial }) {
-  return (
-    <Link
-      href={href}
-      className={`text-sm lg:text-base font-medium tracking-wide relative group ${textColor} ${hoverColor} ${isSpecial ? "text-[#19B5D8] hover:text-[#1297B5]" : ""}`}
-    >
-      {label}
-      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full" />
-    </Link>
-  );
-}
-
-function MobileNavLink({ href, label, isSpecial, onClick }) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className={`block py-3 text-lg font-medium ${isSpecial ? "text-[#19B5D8]" : "text-neutral-900"} hover:text-[#19B5D8] transition-colors`}
-    >
-      {label}
-    </Link>
   );
 }

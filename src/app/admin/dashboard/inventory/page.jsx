@@ -520,7 +520,7 @@ export default function InventoryPage() {
       {/* Recent Adjustment Logs */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium">
+          <h2 className="text-2xl font-medium">
             Recent Adjustments
           </h2>
           <button
@@ -843,7 +843,7 @@ export default function InventoryPage() {
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-2xl font-medium">
                   Stock Adjustment
                 </h2>
                 <button
@@ -1114,7 +1114,7 @@ export default function InventoryPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
         <div>
-          <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+          <h1 className="text-4xl md:text-5xl font-medium">
             Inventory
           </h1>
           <p className="text-neutral-500 font-light mt-2">

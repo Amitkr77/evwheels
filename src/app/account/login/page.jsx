@@ -72,7 +72,7 @@ function LoginForm() {
 
         {/* Heading */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-3">
+          <h1 className="text-4xl md:text-5xl font-medium text-neutral-900 mb-3">
             Welcome Back
           </h1>
           <p className="text-lg text-neutral-600 font-light">

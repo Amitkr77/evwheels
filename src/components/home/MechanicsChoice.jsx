@@ -40,7 +40,7 @@ export default function MechanicsChoice() {
             Workshop Essentials
           </span>
 
-          <h2 className="mt-6 text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+          <h2 className="mt-6 text-4xl md:text-5xl font-medium">
             Mechanic's Choice
           </h2>
 

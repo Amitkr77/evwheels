@@ -75,18 +75,18 @@ export default function Settings() {
       animate={{ opacity: 1, y: 0 }}
       className="max-w-3xl mx-auto"
     >
-      <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium mb-12">
+      <h1 className="text-4xl md:text-5xl font-medium mb-12">
         Profile
       </h1>
 
       <div className="bg-white border border-neutral-200/70 rounded-xl p-10 md:p-12">
         {/* Avatar + name header */}
         <div className="flex flex-col sm:flex-row gap-8 items-start mb-12">
-          <div className="w-24 h-24 md:w-32 md:h-32 bg-[#19B5D8] rounded-2xl flex items-center justify-center text-white font-['Playfair_Display'] text-4xl font-medium shadow-sm shrink-0">
+          <div className="w-24 h-24 md:w-32 md:h-32 bg-[#19B5D8] rounded-2xl flex items-center justify-center text-white text-4xl font-medium shadow-sm shrink-0">
             {user?.name?.charAt(0)?.toUpperCase() || "U"}
           </div>
           <div>
-            <div className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium mb-1">
+            <div className="text-3xl md:text-4xl font-medium mb-1">
               {user?.name}
             </div>
             <div className="text-neutral-600 font-light">

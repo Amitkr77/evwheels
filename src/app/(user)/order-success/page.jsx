@@ -112,7 +112,7 @@ export default function OrderConfirmationPage() {
             </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-3 md:mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium text-neutral-900 mb-3 md:mb-4">
             Order Confirmed!
           </h1>
 
@@ -158,7 +158,7 @@ export default function OrderConfirmationPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Items List */}
           <div className="lg:col-span-2">
-            <h3 className="text-2xl sm:text-3xl font-['Playfair_Display'] font-medium text-neutral-900 mb-5 pb-3 border-b border-neutral-200/60">
+            <h3 className="text-2xl sm:text-3xl font-medium text-neutral-900 mb-5 pb-3 border-b border-neutral-200/60">
               Items Ordered
             </h3>
 
@@ -204,7 +204,7 @@ export default function OrderConfirmationPage() {
           {/* Order Summary – sticky on lg+ */}
           <div className="lg:col-span-1">
             <div className="bg-white border border-neutral-200/70 rounded-xl p-6 sm:p-7 lg:p-8 lg:sticky lg:top-24">
-              <h3 className="text-xl sm:text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-6 pb-4 border-b border-neutral-200/60">
+              <h3 className="text-xl sm:text-2xl font-medium text-neutral-900 mb-6 pb-4 border-b border-neutral-200/60">
                 Order Summary
               </h3>
 
@@ -236,7 +236,7 @@ export default function OrderConfirmationPage() {
                 <div className="pt-5 mt-3 border-t border-neutral-200/60">
                   <div className="flex justify-between items-center">
                     <span className="text-base font-medium text-neutral-900">Total Paid</span>
-                    <span className="text-2xl sm:text-3xl font-['Playfair_Display'] font-medium text-[#19B5D8]">
+                    <span className="text-2xl sm:text-3xl font-medium text-[#19B5D8]">
                       ₹{order.totalAmount?.toLocaleString("en-IN") || "—"}
                     </span>
                   </div>

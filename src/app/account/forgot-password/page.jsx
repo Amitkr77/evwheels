@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
         </Link>
 
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-3">
+          <h1 className="text-4xl md:text-5xl font-medium text-neutral-900 mb-3">
             Forgot Password
           </h1>
           <p className="text-lg text-neutral-600 font-light">
@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
             <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#DDF8FD] flex items-center justify-center">
               <Mail size={28} className="text-[#19B5D8]" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium mb-4">
+            <h2 className="text-2xl md:text-3xl font-medium mb-4">
               Check Your Email
             </h2>
             <p className="text-lg text-neutral-600 font-light mb-8">

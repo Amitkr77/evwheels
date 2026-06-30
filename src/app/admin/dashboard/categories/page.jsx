@@ -460,7 +460,7 @@ export default function CategoriesPage() {
       <div className="w-20 h-20 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
         <FolderOpen size={36} className="text-neutral-400" />
       </div>
-      <h3 className="text-xl font-['Playfair_Display'] font-medium text-neutral-800 mb-2">
+      <h3 className="text-xl font-medium text-neutral-800 mb-2">
         No categories yet
       </h3>
       <p className="text-neutral-500 text-sm max-w-sm mb-8">
@@ -634,7 +634,7 @@ export default function CategoriesPage() {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         {/* ─── Header ─── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
-          <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+          <h1 className="text-4xl md:text-5xl font-medium">
             Categories
           </h1>
           <button
@@ -691,7 +691,7 @@ export default function CategoriesPage() {
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-3xl font-medium">
                   Create Category
                 </h2>
                 <button
@@ -722,7 +722,7 @@ export default function CategoriesPage() {
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-3xl font-medium">
                   Edit Category
                 </h2>
                 <button
@@ -753,7 +753,7 @@ export default function CategoriesPage() {
               className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-2xl font-medium">
                   Delete Category
                 </h2>
                 <button

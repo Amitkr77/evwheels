@@ -40,7 +40,7 @@ export default function Wishlist() {
       className="container mx-auto px-4"
     >
       <div className="flex items-center justify-between mb-10">
-        <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+        <h1 className="text-4xl md:text-5xl font-medium">
           Wishlist ({items.length})
         </h1>
       </div>

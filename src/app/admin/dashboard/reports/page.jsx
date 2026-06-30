@@ -215,7 +215,7 @@ export default function ReportsPage() {
 
         {/* Category Breakdown */}
         <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8 mb-10">
-          <h3 className="text-xl font-['Playfair_Display'] font-medium mb-6">
+          <h3 className="text-xl font-medium mb-6">
             Category Breakdown
           </h3>
           <div className="border border-neutral-200/60 rounded-lg overflow-hidden">
@@ -268,7 +268,7 @@ export default function ReportsPage() {
 
         {/* Price Distribution */}
         <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8">
-          <h3 className="text-xl font-['Playfair_Display'] font-medium mb-6">
+          <h3 className="text-xl font-medium mb-6">
             Price Distribution
           </h3>
           {d.priceDistribution?.length ? (
@@ -329,7 +329,7 @@ export default function ReportsPage() {
 
         {/* Revenue Chart */}
         <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8 mb-10">
-          <h3 className="text-xl font-['Playfair_Display'] font-medium mb-6">
+          <h3 className="text-xl font-medium mb-6">
             Daily Revenue
           </h3>
           <CSSBarChart
@@ -341,7 +341,7 @@ export default function ReportsPage() {
 
         {/* Orders by Status */}
         <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8">
-          <h3 className="text-xl font-['Playfair_Display'] font-medium mb-6">
+          <h3 className="text-xl font-medium mb-6">
             Orders by Status
           </h3>
           {d.byStatus?.length ? (
@@ -621,7 +621,7 @@ export default function ReportsPage() {
 
         {/* Monthly Revenue Breakdown */}
         <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8">
-          <h3 className="text-xl font-['Playfair_Display'] font-medium mb-6">
+          <h3 className="text-xl font-medium mb-6">
             Monthly Revenue Breakdown
           </h3>
           <div className="border border-neutral-200/60 rounded-lg overflow-hidden">
@@ -719,7 +719,7 @@ export default function ReportsPage() {
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
-        <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+        <h1 className="text-4xl md:text-5xl font-medium">
           Reports &amp; Analytics
         </h1>
       </div>

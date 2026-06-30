@@ -91,7 +91,7 @@ export default function OrdersPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium mb-10">Orders</h1>
+      <h1 className="text-4xl md:text-5xl font-medium mb-10">Orders</h1>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
@@ -207,7 +207,7 @@ export default function OrdersPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                   <div>
-                    <h2 className="text-2xl font-['Playfair_Display'] font-medium">Order Details</h2>
+                    <h2 className="text-2xl font-medium">Order Details</h2>
                     <p className="text-sm text-neutral-500 mt-1 font-mono">
                       {selectedOrder.id || selectedOrder._id?.toString().slice(-8)}
                     </p>

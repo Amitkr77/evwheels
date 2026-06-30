@@ -83,7 +83,7 @@ export default function PrivacyPolicyPage() {
 
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-medium text-neutral-900 mb-4">
             Privacy Policy
           </h1>
           <p className="text-neutral-500 text-sm">Last updated: June 2025</p>

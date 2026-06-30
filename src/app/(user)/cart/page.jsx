@@ -96,12 +96,12 @@ export default function CartPage() {
   }
 
   return (
-    <main className="flex-grow bg-[#F8FAFC] min-h-screen font-['Inter'] pt-24 pb-20">
+    <main className="flex-grow bg-[#F8FAFC] min-h-screen pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-10 border-b border-neutral-200/70 mb-12">
           <div>
-            <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-2">
+            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-2">
               Your Shopping Cart
             </h1>
             <p className="text-lg text-neutral-600 font-light">
@@ -151,7 +151,7 @@ export default function CartPage() {
                       <div>
                         <div className="flex items-start justify-between gap-4">
                           <div>
-                            <h3 className="text-xl font-['Playfair_Display'] font-medium mb-1 line-clamp-2">
+                            <h3 className="text-xl font-semibold mb-1 line-clamp-2">
                               {product.title}
                             </h3>
                             <p className="text-sm text-neutral-600">
@@ -218,7 +218,7 @@ export default function CartPage() {
           <div className="lg:w-[380px] shrink-0">
             <div className="lg:sticky lg:top-24 flex flex-col gap-8">
               <div className="bg-white border border-neutral-200/70 rounded-xl p-6 sm:p-8">
-                <h2 className="text-2xl font-['Playfair_Display'] font-medium mb-6">Order Summary</h2>
+                <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
 
                 {isSummaryLoading ? (
                   <div className="space-y-4 animate-pulse">
@@ -258,7 +258,7 @@ export default function CartPage() {
 
                     <div className="flex justify-between items-center mb-8">
                       <span className="text-xl font-medium">Total</span>
-                      <span className="text-3xl font-['Playfair_Display'] font-medium text-[#19B5D8]">
+                      <span className="text-3xl font-bold text-[#19B5D8]">
                         ₹{(summary?.total || 0).toLocaleString("en-IN")}
                       </span>
                     </div>

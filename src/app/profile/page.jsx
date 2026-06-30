@@ -102,10 +102,10 @@ const UserDashboard = () => {
         {/* ... same sidebar code as before ... */}
         <div className="p-8 border-b border-neutral-200/60">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-semibold text-2xl shadow-sm">
               E
             </div>
-            <span className="text-2xl font-['Playfair_Display'] font-medium tracking-tight text-neutral-900">
+            <span className="text-2xl font-medium tracking-tight text-neutral-900">
               EVWheels
             </span>
           </div>
@@ -201,7 +201,7 @@ const UserDashboard = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium mb-2">
+                  <h1 className="text-4xl md:text-5xl font-medium mb-2">
                     {getGreeting()}, {user.name?.split(" ")[0] || "there"}
                   </h1>
                   <p className="text-neutral-600 font-light mb-10">
@@ -239,7 +239,7 @@ const UserDashboard = () => {
                   {/* Recent Orders - Improved Table */}
                   <div>
                     <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium">
+                      <h2 className="text-2xl md:text-3xl font-medium">
                         Recent Orders
                       </h2>
                       <button

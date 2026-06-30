@@ -40,7 +40,7 @@ export default function ReturnsPage() {
 
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-medium text-neutral-900 mb-4">
             Returns & Refund Policy
           </h1>
           <p className="text-neutral-500 text-sm">Last updated: June 2025</p>
@@ -64,7 +64,7 @@ export default function ReturnsPage() {
 
         {/* Eligibility */}
         <section className="mb-12">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-6">What Can Be Returned</h2>
+          <h2 className="text-2xl font-medium text-neutral-900 mb-6">What Can Be Returned</h2>
           <div className="grid gap-4 mb-8">
             {ELIGIBLE.map((item, i) => (
               <div key={i} className="flex gap-3 items-start bg-white border border-neutral-200 rounded-xl p-4">
@@ -74,7 +74,7 @@ export default function ReturnsPage() {
             ))}
           </div>
 
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">What Cannot Be Returned</h2>
+          <h2 className="text-2xl font-medium text-neutral-900 mb-4">What Cannot Be Returned</h2>
           <div className="grid gap-3">
             {NOT_ELIGIBLE.map((item, i) => (
               <div key={i} className="flex gap-3 items-start">
@@ -87,11 +87,11 @@ export default function ReturnsPage() {
 
         {/* Return Process */}
         <section className="mb-12">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-6">How to Return</h2>
+          <h2 className="text-2xl font-medium text-neutral-900 mb-6">How to Return</h2>
           <div className="space-y-4">
             {STEPS.map((s) => (
               <div key={s.step} className="flex gap-4 bg-white border border-neutral-200 rounded-xl p-5">
-                <span className="text-2xl font-bold text-[#19B5D8] font-['Playfair_Display'] shrink-0">{s.step}</span>
+                <span className="text-2xl font-bold text-[#19B5D8] shrink-0">{s.step}</span>
                 <div>
                   <h3 className="font-semibold text-neutral-900">{s.title}</h3>
                   <p className="text-sm text-neutral-600 mt-1">{s.desc}</p>
@@ -103,7 +103,7 @@ export default function ReturnsPage() {
 
         {/* Refund Timeline */}
         <section className="mb-12">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">Refund Timeline</h2>
+          <h2 className="text-2xl font-medium text-neutral-900 mb-4">Refund Timeline</h2>
           <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
             {[
               { label: "Return request reviewed", time: "Within 2 business days" },
@@ -124,7 +124,7 @@ export default function ReturnsPage() {
 
         {/* Warranty note */}
         <section className="mb-12">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">Warranty Claims</h2>
+          <h2 className="text-2xl font-medium text-neutral-900 mb-4">Warranty Claims</h2>
           <p className="text-neutral-600 leading-relaxed">
             Warranty claims (for manufacturer defects within the warranty period) are handled separately from returns. Our electric cycles come with a <strong>2-year battery warranty</strong> and a <strong>1-year frame & motor warranty</strong>. To raise a warranty claim, contact us with your order number and a description of the issue.
           </p>

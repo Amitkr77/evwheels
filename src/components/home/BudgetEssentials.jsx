@@ -21,7 +21,7 @@ export default function BudgetEssentials() {
             Smart Savings
           </span>
 
-          <h2 className="mt-6 text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+          <h2 className="mt-6 text-4xl md:text-5xl font-medium">
             Budget Essentials
           </h2>
 

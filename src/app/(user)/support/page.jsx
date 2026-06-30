@@ -94,7 +94,7 @@ export default function SupportPage() {
               <Wrench size={14} />
               Part Finder
             </div>
-            <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-5 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-medium text-neutral-900 mb-5 leading-tight">
               Find the perfect fit
               <br />
               <span className="text-[#19B5D8]">for your ride.</span>
@@ -169,7 +169,7 @@ export default function SupportPage() {
       <section className="max-w-5xl mx-auto px-4 md:px-8 py-16 md:py-24">
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
           <div>
-            <h2 className="text-3xl font-['Playfair_Display'] font-medium text-neutral-900 mb-2">
+            <h2 className="text-3xl font-medium text-neutral-900 mb-2">
               Popular Models
             </h2>
             <p className="text-neutral-500 font-light">
@@ -225,7 +225,7 @@ export default function SupportPage() {
         <div className="max-w-5xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+              <h2 className="text-3xl font-medium text-neutral-900 mb-4">
                 How to identify your model?
               </h2>
               <p className="text-neutral-500 font-light mb-8 leading-relaxed">
@@ -277,7 +277,7 @@ export default function SupportPage() {
 
       {/* ─── Browse by Category ──────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-4 md:px-8 py-16 md:py-24">
-        <h2 className="text-3xl font-['Playfair_Display'] font-medium text-neutral-900 mb-10 text-center">
+        <h2 className="text-3xl font-medium text-neutral-900 mb-10 text-center">
           Browse Compatibility by Category
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">

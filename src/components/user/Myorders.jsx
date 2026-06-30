@@ -41,7 +41,7 @@ export default function MyOrders() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-4xl font-['Playfair_Display'] mb-10">My Orders</h1>
+      <h1 className="text-4xl mb-10">My Orders</h1>
 
       <div className="space-y-6">
         {orders.map((order) => (

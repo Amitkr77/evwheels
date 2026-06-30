@@ -30,7 +30,7 @@ export default function ShippingPolicyPage() {
 
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-medium text-neutral-900 mb-4">
             Shipping Policy
           </h1>
           <p className="text-neutral-500 text-sm">Last updated: June 2025</p>
@@ -60,13 +60,13 @@ export default function ShippingPolicyPage() {
 
         {/* Delivery Timeline */}
         <section className="mb-12">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-6">
+          <h2 className="text-2xl font-medium text-neutral-900 mb-6">
             Delivery Timeline
           </h2>
           <div className="space-y-4">
             {STEPS.map((s) => (
               <div key={s.step} className="flex gap-4 bg-white border border-neutral-200 rounded-xl p-5">
-                <span className="text-2xl font-bold text-[#19B5D8] font-['Playfair_Display'] shrink-0">{s.step}</span>
+                <span className="text-2xl font-bold text-[#19B5D8] shrink-0">{s.step}</span>
                 <div>
                   <h3 className="font-semibold text-neutral-900">{s.title}</h3>
                   <p className="text-sm text-neutral-600 mt-1">{s.desc}</p>
@@ -78,7 +78,7 @@ export default function ShippingPolicyPage() {
 
         {/* Coverage Area */}
         <section className="mb-12">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+          <h2 className="text-2xl font-medium text-neutral-900 mb-4">
             Cities We Deliver To
           </h2>
           <p className="text-neutral-600 mb-5">
@@ -99,7 +99,7 @@ export default function ShippingPolicyPage() {
 
         {/* Important Notes */}
         <section className="mb-12">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+          <h2 className="text-2xl font-medium text-neutral-900 mb-4">
             Important Notes
           </h2>
           <ul className="space-y-3">

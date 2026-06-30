@@ -265,7 +265,7 @@ export default function CouponsPage() {
     <section>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
-          <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">Coupons</h1>
+          <h1 className="text-4xl md:text-5xl font-medium">Coupons</h1>
           <button
             onClick={openCreate}
             className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
@@ -376,7 +376,7 @@ export default function CouponsPage() {
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-['Playfair_Display'] font-medium">Create Coupon</h2>
+                <h2 className="text-3xl font-medium">Create Coupon</h2>
                 <button
                   onClick={() => setShowCreateModal(false)}
                   className="text-neutral-400 hover:text-neutral-600"
@@ -401,7 +401,7 @@ export default function CouponsPage() {
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-['Playfair_Display'] font-medium">Edit Coupon</h2>
+                <h2 className="text-3xl font-medium">Edit Coupon</h2>
                 <button
                   onClick={() => setEditCoupon(null)}
                   className="text-neutral-400 hover:text-neutral-600"
@@ -425,7 +425,7 @@ export default function CouponsPage() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
             >
-              <h3 className="text-2xl font-['Playfair_Display'] font-medium mb-4">Delete Coupon</h3>
+              <h3 className="text-2xl font-medium mb-4">Delete Coupon</h3>
               <p className="text-neutral-600 mb-8">
                 Delete coupon{" "}
                 <span className="font-mono font-semibold text-neutral-900">{deleteConfirm.code}</span>?

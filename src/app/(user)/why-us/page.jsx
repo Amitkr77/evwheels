@@ -50,7 +50,7 @@ export default function WhyUsPage() {
 
           <motion.h1
             variants={fadeInUp}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-['Playfair_Display'] font-medium text-neutral-900 leading-tight mb-6"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium text-neutral-900 leading-tight mb-6"
           >
             Ride Better.
             <br />
@@ -99,7 +99,7 @@ export default function WhyUsPage() {
               <div className="w-14 h-14 rounded-full bg-[#DDF8FD] flex items-center justify-center mb-6 text-[#19B5D8] group-hover:bg-[#C7F3FC] transition-colors">
                 {item.icon}
               </div>
-              <h3 className="text-2xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+              <h3 className="text-2xl font-medium text-neutral-900 mb-4">
                 {item.title}
               </h3>
               <p className="text-neutral-600 leading-relaxed">{item.desc}</p>
@@ -115,7 +115,7 @@ export default function WhyUsPage() {
           variants={staggerContainer}
           className="mb-20 md:mb-32"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-['Playfair_Display'] font-medium text-center text-neutral-900 mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-center text-neutral-900 mb-12 md:mb-16">
             Built for Patna, Loved in Patna
           </h2>
 
@@ -181,7 +181,7 @@ export default function WhyUsPage() {
           variants={staggerContainer}
           className="mb-20 md:mb-32"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-['Playfair_Display'] font-medium text-center text-neutral-900 mb-10 md:mb-14">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium text-center text-neutral-900 mb-10 md:mb-14">
             Real Range — Not Just Claims
           </h2>
 
@@ -257,7 +257,7 @@ export default function WhyUsPage() {
               className="mx-auto mb-8 text-[#19B5D8]"
               strokeWidth={1.4}
             />
-            <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-6">
+            <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-6">
               Our Promise to You
             </h2>
             <p className="text-lg md:text-xl text-neutral-600 font-light max-w-4xl mx-auto leading-relaxed">
@@ -277,7 +277,7 @@ export default function WhyUsPage() {
           transition={{ duration: 0.9 }}
           className="text-center"
         >
-          <h3 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-6">
+          <h3 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-6">
             Ready to Ride Quieter?
           </h3>
           <p className="text-lg text-neutral-600 font-light mb-10 max-w-2xl mx-auto">

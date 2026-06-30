@@ -44,7 +44,7 @@ export default function UpgradeYourRide() {
             Premium Upgrades
           </span>
 
-          <h2 className="mt-6 text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+          <h2 className="mt-6 text-4xl md:text-5xl font-medium">
             Upgrade Your Ride
           </h2>
 

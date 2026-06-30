@@ -42,10 +42,10 @@ export default function AdminDashboardLayout({ children }) {
             <aside className="fixed inset-y-0 left-0 w-72 bg-white border-r border-neutral-200/70 overflow-y-auto hidden lg:flex flex-col">
                 <div className="p-8 border-b border-neutral-200/60">
                     <div className="flex items-center gap-3.5">
-                        <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-semibold text-2xl shadow-sm">
                             E
                         </div>
-                        <span className="text-2xl font-['Playfair_Display'] font-medium tracking-tight text-neutral-900">
+                        <span className="text-2xl font-medium tracking-tight text-neutral-900">
                             EVWheels
                         </span>
                     </div>

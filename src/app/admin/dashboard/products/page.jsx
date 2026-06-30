@@ -1245,7 +1245,7 @@ export default function ProductsPage() {
       <div className="w-20 h-20 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
         <Package size={36} className="text-neutral-400" />
       </div>
-      <h3 className="text-xl font-['Playfair_Display'] font-medium text-neutral-800 mb-2">
+      <h3 className="text-xl font-medium text-neutral-800 mb-2">
         No products yet
       </h3>
       <p className="text-neutral-500 text-sm max-w-sm mb-8">
@@ -1761,7 +1761,7 @@ export default function ProductsPage() {
         {/* ─── Header ─── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
           <div>
-            <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+            <h1 className="text-4xl md:text-5xl font-medium">
               Products
             </h1>
             <p className="text-neutral-500 text-sm mt-2">
@@ -1931,7 +1931,7 @@ export default function ProductsPage() {
               className="bg-white rounded-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-3xl font-medium">
                   Add New Product
                 </h2>
                 <button
@@ -1974,7 +1974,7 @@ export default function ProductsPage() {
               className="bg-white rounded-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-3xl font-medium">
                   Edit Product
                 </h2>
                 <button
@@ -2021,7 +2021,7 @@ export default function ProductsPage() {
                   <AlertTriangle size={24} className="text-red-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-['Playfair_Display'] font-medium text-neutral-900">
+                  <h3 className="text-xl font-medium text-neutral-900">
                     Delete Product
                   </h3>
                   <p className="text-sm text-neutral-500 mt-1">
@@ -2069,7 +2069,7 @@ export default function ProductsPage() {
               className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-2xl font-medium">
                   Adjust Stock
                 </h2>
                 <button

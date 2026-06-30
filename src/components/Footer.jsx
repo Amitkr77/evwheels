@@ -42,10 +42,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-['Playfair_Display'] font-semibold text-2xl shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-semibold text-2xl shadow-sm">
                 E
               </div>
-              <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium tracking-tight text-white">
+              <h2 className="text-2xl md:text-3xl font-medium tracking-tight text-white">
                 EVWheels
               </h2>
             </div>

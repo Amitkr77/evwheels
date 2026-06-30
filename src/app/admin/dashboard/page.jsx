@@ -158,7 +158,7 @@ export default function page() {
       animate="visible"
       // variants={stagger}
     >
-      <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium mb-3">
+      <h1 className="text-4xl md:text-5xl font-medium mb-3">
         {getGreeting()}
       </h1>
       <p className="text-neutral-600 font-light mb-12">
@@ -197,7 +197,7 @@ export default function page() {
       {/* Sales Chart */}
       <div className="bg-white border border-neutral-200/70 rounded-xl p-8 mb-16">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-['Playfair_Display'] font-medium">
+          <h2 className="text-2xl font-medium">
             Sales Overview
           </h2>
           <select
@@ -217,7 +217,7 @@ export default function page() {
       {/* Recent Orders */}
       <div>
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium">
+          <h2 className="text-2xl md:text-3xl font-medium">
             Recent Orders
           </h2>
         </div>

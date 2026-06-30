@@ -1,140 +1,81 @@
 "use client";
 
 import Link from "next/link";
-import { Bike, ShieldCheck, Wrench, Lock, Zap, Cog } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
-const categories = [
-  {
-    name: "Brakes",
-    icon: ShieldCheck,
-    href: "/parts/disc-brakes",
-  },
-  {
-    name: "Lights",
-    icon: Zap,
-    href: "/accessories/lights",
-  },
-  {
-    name: "Gears",
-    icon: Cog,
-    href: "/parts/gear-shifters",
-  },
-  {
-    name: "Helmets",
-    icon: Bike,
-    href: "/accessories/helmets",
-  },
-  {
-    name: "Tools",
-    icon: Wrench,
-    href: "/accessories/tools",
-  },
-  {
-    name: "Locks",
-    icon: Lock,
-    href: "/accessories/locks",
-  },
+const CATEGORIES = [
+  { name: "Bells", emoji: "🔔", href: "/cycles?category=bells" },
+  { name: "Brakes", emoji: "🛑", href: "/cycles?category=brakes" },
+  { name: "Chains", emoji: "⛓️", href: "/cycles?category=chains" },
+  { name: "Gear Sets", emoji: "⚙️", href: "/cycles?category=gear-sets" },
+  { name: "Lights", emoji: "💡", href: "/cycles?category=lights-reflectors" },
+  { name: "Locks", emoji: "🔒", href: "/cycles?category=locks-security" },
+  { name: "Saddles", emoji: "🪑", href: "/cycles?category=saddles-seats" },
+  { name: "Tyres", emoji: "🔵", href: "/cycles?category=tyres-tubes" },
+  { name: "Tools", emoji: "🔧", href: "/cycles?category=tools-maintenance" },
+  { name: "Mudguards", emoji: "🛡️", href: "/cycles?category=mudguards-fenders" },
+  { name: "Wheels", emoji: "🎡", href: "/cycles?category=wheels-hubs" },
+  { name: "Handlebar", emoji: "🎯", href: "/cycles?category=handlebar-parts" },
 ];
 
 export default function ShopByCategory() {
   return (
-    <section className="py-32 md:py-40 bg-white">
-  <div className="max-w-6xl mx-auto px-6 lg:px-12">
+    <section className="py-20 md:py-28 bg-white border-t border-neutral-100">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
 
-    {/* Header */}
-    <div className="text-center mb-20">
-      <span className="text-xs uppercase tracking-[0.35em] text-[#19B5D8]">
-        Browse Categories
-      </span>
-
-      <h2 className="mt-6 text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
-        Shop By Category
-      </h2>
-
-      <p className="mt-6 max-w-2xl mx-auto text-neutral-600 font-light leading-relaxed">
-        Explore thoughtfully selected components and accessories for
-        everyday riding and long-term reliability.
-      </p>
-    </div>
-
-    {/* Categories */}
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10 md:gap-14 text-center">
-      {categories.map((category) => {
-        const Icon = category.icon;
-
-        return (
+        {/* Header */}
+        <div className="flex items-end justify-between mb-10 md:mb-12">
+          <div>
+            <p className="text-[#19B5D8] text-xs font-semibold tracking-widest uppercase mb-2">
+              Browse
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900">
+              Shop by Category
+            </h2>
+          </div>
           <Link
-            key={category.name}
-            href={category.href}
-            className="group"
+            href="/cycles"
+            className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-neutral-500 hover:text-[#19B5D8] transition-colors"
           >
-            <div
-              className="
-                w-16 h-16
-                mx-auto
-                mb-6
-                rounded-full
-                bg-[#DDF8FD]/40
-                flex
-                items-center
-                justify-center
-                transition-colors
-                group-hover:bg-[#DDF8FD]
-              "
-            >
-              <Icon
-                size={24}
-                strokeWidth={1.5}
-                className="text-[#19B5D8]"
-              />
-            </div>
-
-            <h3 className="text-base sm:text-lg font-medium">
-              {category.name}
-            </h3>
+            All Products
+            <ArrowRight size={15} />
           </Link>
-        );
-      })}
-    </div>
-
-    {/* Bottom Values */}
-    <div className="mt-28 pt-16 border-t border-neutral-200/70">
-      <div className="grid md:grid-cols-3 gap-16 text-center">
-        <div>
-          <h3 className="text-2xl font-light mb-5">
-            Genuine Components
-          </h3>
-
-          <p className="text-neutral-600 font-light leading-relaxed">
-            Trusted brands and authentic replacement parts selected
-            for reliability and performance.
-          </p>
         </div>
 
-        <div>
-          <h3 className="text-2xl font-light mb-5">
-            Fast Shipping
-          </h3>
-
-          <p className="text-neutral-600 font-light leading-relaxed">
-            Quick dispatch and secure packaging across India.
-          </p>
+        {/* Category grid */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 md:gap-4">
+          {CATEGORIES.map((cat, i) => (
+            <motion.div
+              key={cat.name}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: i * 0.04 }}
+            >
+              <Link
+                href={cat.href}
+                className="group flex flex-col items-center gap-3 p-4 rounded-2xl border border-neutral-100 bg-neutral-50 hover:border-[#19B5D8]/30 hover:bg-[#DDF8FD]/30 transition-all duration-200"
+              >
+                <span className="text-2xl">{cat.emoji}</span>
+                <span className="text-xs font-medium text-neutral-700 group-hover:text-[#19B5D8] transition-colors text-center leading-tight">
+                  {cat.name}
+                </span>
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
-        <div>
-          <h3 className="text-2xl font-light mb-5">
-            Expert Support
-          </h3>
-
-          <p className="text-neutral-600 font-light leading-relaxed">
-            Guidance from specialists to help you choose the right
-            components.
-          </p>
+        {/* Mobile view all */}
+        <div className="mt-8 sm:hidden text-center">
+          <Link
+            href="/cycles"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#19B5D8]"
+          >
+            View All Products <ArrowRight size={14} />
+          </Link>
         </div>
       </div>
-    </div>
-
-  </div>
-</section>
+    </section>
   );
 }

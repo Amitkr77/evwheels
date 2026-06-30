@@ -635,7 +635,7 @@ export default function SubcategoriesPage() {
         {/* ─── Header ─── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
           <div>
-            <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+            <h1 className="text-4xl md:text-5xl font-medium">
               Subcategories
             </h1>
             <p className="text-neutral-500 text-sm mt-2">
@@ -702,7 +702,7 @@ export default function SubcategoriesPage() {
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-3xl font-medium">
                   New Subcategory
                 </h2>
                 <button
@@ -732,7 +732,7 @@ export default function SubcategoriesPage() {
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-['Playfair_Display'] font-medium">
+                <h2 className="text-3xl font-medium">
                   Edit Subcategory
                 </h2>
                 <button

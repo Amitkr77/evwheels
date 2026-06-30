@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
-import User from "@/models/User";
 import jwt from "jsonwebtoken";
 
 export async function GET(req) {
@@ -13,16 +11,14 @@ export async function GET(req) {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    await connectDB();
-
-    const user = await User.findById(decoded.id).select("-password");
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(user);
-  } catch (err) {
+    return NextResponse.json({
+      id: decoded.id,
+      name: decoded.name,
+      email: decoded.email,
+      role: decoded.role,
+      isEmailVerified: decoded.isEmailVerified,
+    });
+  } catch {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 }

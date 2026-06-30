@@ -146,7 +146,7 @@ export default function CyclesPage() {
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-6xl lg:text-7xl font-['Playfair_Display'] font-medium text-center mb-12 md:mb-20"
+          className="text-5xl md:text-6xl lg:text-7xl font-medium text-center mb-12 md:mb-20"
         >
           Our Cycles
         </motion.h1>
@@ -437,7 +437,7 @@ export default function CyclesPage() {
                 </div>
 
                 <div className={viewMode === "List" ? "flex-1" : "p-5"}>
-                  <h3 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium mb-2">
+                  <h3 className="text-2xl md:text-3xl font-medium mb-2">
                     {product.title}
                   </h3>
 

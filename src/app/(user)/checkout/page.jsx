@@ -165,7 +165,7 @@ export default function CheckoutPage() {
 
             {/* Contact Information */}
             <section>
-              <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
+              <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-8">
                 Contact Information
               </h2>
               <div className="space-y-6">
@@ -189,7 +189,7 @@ export default function CheckoutPage() {
 
             {/* Shipping Address */}
             <section>
-              <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
+              <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-8">
                 Shipping Address
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -292,7 +292,7 @@ export default function CheckoutPage() {
 
             {/* Delivery Method */}
             {/* <section>
-              <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
+              <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-8">
                 Delivery Method
               </h2>
 
@@ -355,7 +355,7 @@ export default function CheckoutPage() {
             {/* Payment */}
 
             <section>
-              <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-8">
+              <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-8">
                 Payment
               </h2>
 
@@ -458,7 +458,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-5">
             <div className="sticky top-24 space-y-8">
               <div className="bg-white border border-neutral-200/70 rounded-xl p-8">
-                <h2 className="text-2xl md:text-3xl font-['Playfair_Display'] font-medium mb-8">
+                <h2 className="text-2xl md:text-3xl font-medium mb-8">
                   Order Summary
                 </h2>
 
@@ -575,7 +575,7 @@ export default function CheckoutPage() {
                   </span>
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-sm text-neutral-600">INR</span>
-                    <span className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-[#19B5D8]">
+                    <span className="text-3xl md:text-4xl font-medium text-[#19B5D8]">
                       {new Intl.NumberFormat("en-IN", {
                         style: "currency",
                         currency: "INR",

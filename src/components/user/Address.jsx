@@ -115,7 +115,7 @@ export default function Address() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <div className="flex items-center justify-between mb-10">
-        <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium">
+        <h1 className="text-4xl md:text-5xl font-medium">
           Addresses
         </h1>
         <button
@@ -197,7 +197,7 @@ export default function Address() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
           >
-            <h2 className="text-3xl font-['Playfair_Display'] font-medium mb-8">
+            <h2 className="text-3xl font-medium mb-8">
               Add New Address
             </h2>
 

@@ -141,7 +141,7 @@ export default function ContactPage() {
                 📬 Contact Us
               </span>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-['Playfair_Display'] font-medium text-neutral-900 leading-tight mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium text-neutral-900 leading-tight mb-6">
                 Get in Touch with <span className="text-[#19B5D8]">EVWheels</span>
               </h1>
 
@@ -293,7 +293,7 @@ export default function ContactPage() {
                   <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-[#DDF8FD] flex items-center justify-center">
                     <CheckCircle size={40} className="text-[#19B5D8]" />
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+                  <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-4">
                     Message Sent Successfully!
                   </h2>
                   <p className="text-lg text-neutral-600 font-light mb-8">
@@ -319,7 +319,7 @@ export default function ContactPage() {
                 </motion.div>
               ) : (
                 <div className="bg-white border border-neutral-200/70 rounded-2xl p-8 md:p-12">
-                  <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-2">
+                  <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-2">
                     Send Us a Message
                   </h2>
                   <p className="text-lg text-neutral-600 font-light mb-10">
@@ -528,7 +528,7 @@ export default function ContactPage() {
             <span className="inline-block px-4 py-1.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm font-medium mb-4">
               ❓ FAQs
             </span>
-            <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] font-medium text-neutral-900">
+            <h2 className="text-4xl md:text-5xl font-medium text-neutral-900">
               Frequently Asked <span className="text-[#19B5D8]">Questions</span>
             </h2>
           </div>
@@ -560,7 +560,7 @@ export default function ContactPage() {
             viewport={{ once: true }}
             className="bg-white border border-neutral-200/70 rounded-2xl p-10 md:p-12"
           >
-            <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-4">
               Still Have Questions?
             </h2>
             <p className="text-lg text-neutral-600 font-light mb-8">

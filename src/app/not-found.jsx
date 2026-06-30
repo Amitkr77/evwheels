@@ -8,10 +8,10 @@ export default function NotFound() {
       <Navbar />
       <main className="min-h-screen bg-white flex items-center justify-center px-5 pt-20 pb-24 font-['Inter']">
         <div className="text-center max-w-lg mx-auto">
-          <p className="text-8xl font-['Playfair_Display'] font-medium text-[#19B5D8] mb-4">
+          <p className="text-8xl font-medium text-[#19B5D8] mb-4">
             404
           </p>
-          <h1 className="text-3xl md:text-4xl font-['Playfair_Display'] font-medium text-neutral-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-4">
             Page Not Found
           </h1>
           <p className="text-lg text-neutral-600 font-light leading-relaxed mb-10">
