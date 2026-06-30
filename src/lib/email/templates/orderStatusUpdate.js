@@ -13,6 +13,7 @@ const STATUS_CONFIG = {
  */
 export function orderStatusUpdateTemplate({
   orderId,
+  orderDbId,
   newStatus,
   previousStatus,
   items,
@@ -38,10 +39,12 @@ export function orderStatusUpdateTemplate({
   `
     : "";
 
+  const orderUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ""}${orderDbId ? `/order-success?id=${orderDbId}` : "/profile"}`;
+
   const shippedCta = newStatus === "SHIPPED"
     ? `
     <div style="text-align:center; margin-top:24px;">
-      <a href="${process.env.NEXT_PUBLIC_BASE_URL || ""}/account/orders"
+      <a href="${orderUrl}"
          style="display:inline-block; padding:14px 32px; background:#f59e0b; color:#ffffff; text-decoration:none; border-radius:8px; font-weight:600; font-size:15px;">
         Track Your Order
       </a>
@@ -49,7 +52,7 @@ export function orderStatusUpdateTemplate({
   `
     : `
     <div style="text-align:center; margin-top:24px;">
-      <a href="${process.env.NEXT_PUBLIC_BASE_URL || ""}/account/orders"
+      <a href="${orderUrl}"
          style="display:inline-block; padding:14px 32px; background:#111827; color:#ffffff; text-decoration:none; border-radius:8px; font-weight:600; font-size:15px;">
         View Order Details
       </a>

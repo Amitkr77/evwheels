@@ -3,7 +3,7 @@ import { verifyToken } from "@/lib/jwt";
 
 const protectedRoutes = ["/cart", "/checkout", "/profile", "/order-success"];
 const adminRoutes = ["/admin/dashboard"];
-const authRoutes = ["/account/login", "/account/register", "/admin/login"];
+const authRoutes = ["/account/login", "/account/register", "/account/forgot-password", "/admin/login"];
 
 function getToken(req) {
   return req.cookies.get("token")?.value;
@@ -35,7 +35,7 @@ export async function middleware(req) {
   if (isProtectedRoute) {
     if (!decoded) {
       const loginUrl = new URL("/account/login", req.url);
-      loginUrl.searchParams.set("redirect", pathname);
+      loginUrl.searchParams.set("redirect", pathname + req.nextUrl.search);
       return NextResponse.redirect(loginUrl);
     }
     return NextResponse.next();

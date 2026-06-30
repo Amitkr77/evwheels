@@ -107,6 +107,7 @@ export async function POST(req) {
       subject: `Order Confirmed — ${orderId}`,
       html: orderConfirmationTemplate({
         orderId,
+        orderDbId: order._id.toString(),
         items: orderItems,
         subtotal,
         discount,

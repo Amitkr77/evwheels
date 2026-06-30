@@ -80,7 +80,7 @@ export function orderCancellationTemplate({
     ${refundSection}
 
     <div style="text-align:center; margin-top:28px;">
-      <a href="${process.env.NEXT_PUBLIC_BASE_URL || ""}/products"
+      <a href="${process.env.NEXT_PUBLIC_BASE_URL || ""}/shop"
          style="display:inline-block; padding:14px 32px; background:#059669; color:#ffffff; text-decoration:none; border-radius:8px; font-weight:600; font-size:15px;">
         Continue Shopping
       </a>
