@@ -8,18 +8,18 @@ import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 
 const SHOP_CATEGORIES = [
-  { name: "Bells", href: "/cycles?category=bells" },
-  { name: "Brakes", href: "/cycles?category=brakes" },
-  { name: "Chains", href: "/cycles?category=chains" },
-  { name: "Gear Sets", href: "/cycles?category=gear-sets" },
-  { name: "Handlebar Parts", href: "/cycles?category=handlebar-parts" },
-  { name: "Lights", href: "/cycles?category=lights-reflectors" },
-  { name: "Locks", href: "/cycles?category=locks-security" },
-  { name: "Mudguards", href: "/cycles?category=mudguards-fenders" },
-  { name: "Saddles", href: "/cycles?category=saddles-seats" },
-  { name: "Tyres & Tubes", href: "/cycles?category=tyres-tubes" },
-  { name: "Tools", href: "/cycles?category=tools-maintenance" },
-  { name: "Wheels & Hubs", href: "/cycles?category=wheels-hubs" },
+  { name: "Bells", href: "/shop?category=bells" },
+  { name: "Brakes", href: "/shop?category=brakes" },
+  { name: "Chains", href: "/shop?category=chains" },
+  { name: "Gear Sets", href: "/shop?category=gear-sets" },
+  { name: "Handlebar Parts", href: "/shop?category=handlebar-parts" },
+  { name: "Lights", href: "/shop?category=lights-reflectors" },
+  { name: "Locks", href: "/shop?category=locks-security" },
+  { name: "Mudguards", href: "/shop?category=mudguards-fenders" },
+  { name: "Saddles", href: "/shop?category=saddles-seats" },
+  { name: "Tyres & Tubes", href: "/shop?category=tyres-tubes" },
+  { name: "Tools", href: "/shop?category=tools-maintenance" },
+  { name: "Wheels & Hubs", href: "/shop?category=wheels-hubs" },
 ];
 
 const OTHER_LINKS = [
@@ -123,7 +123,7 @@ export default function Navbar() {
                     </div>
                     <div className="mt-3 pt-3 border-t border-neutral-100">
                       <Link
-                        href="/cycles"
+                        href="/shop"
                         className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-[#19B5D8] hover:bg-[#DDF8FD]/60 rounded-lg transition-colors"
                       >
                         View All Products
@@ -278,7 +278,7 @@ export default function Navbar() {
                       </Link>
                     ))}
                     <Link
-                      href="/cycles"
+                      href="/shop"
                       className="col-span-2 flex items-center gap-1 px-3 py-2.5 text-sm font-semibold text-[#19B5D8]"
                       onClick={() => setMobileOpen(false)}
                     >

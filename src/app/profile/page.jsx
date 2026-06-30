@@ -11,7 +11,9 @@ import {
   Bell,
   ShoppingBag,
   ArrowRight,
+  ArrowLeft,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
@@ -25,6 +27,12 @@ const UserDashboard = () => {
   const router = useRouter();
   const logout = useAuthStore((state) => state.logout);
   const [activeTab, setActiveTab] = useState(0);
+  const [visited, setVisited] = useState(new Set([0]));
+
+  const handleTabChange = (id) => {
+    setVisited((prev) => new Set([...prev, id]));
+    setActiveTab(id);
+  };
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -100,14 +108,23 @@ const UserDashboard = () => {
       {/* Sidebar unchanged */}
       <aside className="fixed inset-y-0 left-0 w-72 bg-white border-r border-neutral-200/70 overflow-y-auto hidden lg:block">
         {/* ... same sidebar code as before ... */}
-        <div className="p-8 border-b border-neutral-200/60">
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-semibold text-2xl shadow-sm">
-              E
+        <div className="p-6 border-b border-neutral-200/60">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-semibold text-xl shadow-sm">
+                E
+              </div>
+              <span className="text-xl font-semibold tracking-tight text-neutral-900">
+                EVWheels
+              </span>
             </div>
-            <span className="text-2xl font-medium tracking-tight text-neutral-900">
-              EVWheels
-            </span>
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-neutral-50"
+            >
+              <ArrowLeft size={13} />
+              Home
+            </Link>
           </div>
         </div>
 
@@ -121,7 +138,7 @@ const UserDashboard = () => {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`w-full flex items-center gap-3 px-5 py-3.5 text-sm font-medium rounded-2xl transition-all ${
                 activeTab === tab.id
                   ? "bg-[#DDF8FD] text-[#19B5D8] shadow-sm"
@@ -154,8 +171,10 @@ const UserDashboard = () => {
       <div className="lg:ml-72 min-h-screen flex flex-col">
         {/* Top Bar */}
         <header className="fixed top-0 left-0 right-0 lg:left-72 h-16 bg-white border-b border-neutral-200/70 flex items-center px-6 lg:px-12 justify-between z-20">
-          {" "}
-          <div className="w-full flex justify-end">
+          <Link href="/" className="flex items-center gap-1.5 text-sm font-medium text-neutral-500 hover:text-neutral-900 transition-colors lg:hidden">
+            <ArrowLeft size={16} /> Home
+          </Link>
+          <div className="flex-1 flex justify-end">
             <div className="flex items-center gap-6">
               <div className="relative cursor-pointer">
                 <Bell size={20} className="text-neutral-600" />
@@ -376,11 +395,19 @@ const UserDashboard = () => {
                 </motion.div>
               )}
 
-              {/* Other tabs */}
-              {activeTab === 1 && <Myorders />}
-              {activeTab === 2 && <Wishlist />}
-              {activeTab === 3 && <Address />}
-              {activeTab === 4 && <Settings />}
+              {/* Other tabs — keep mounted after first visit to avoid re-fetch lag */}
+              {[
+                { id: 1, el: <Myorders /> },
+                { id: 2, el: <Wishlist /> },
+                { id: 3, el: <Address /> },
+                { id: 4, el: <Settings /> },
+              ].map(({ id, el }) =>
+                visited.has(id) ? (
+                  <div key={id} className={activeTab === id ? "" : "hidden"}>
+                    {el}
+                  </div>
+                ) : null
+              )}
             </>
           )}
         </main>

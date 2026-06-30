@@ -5,18 +5,18 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 const CATEGORIES = [
-  { name: "Bells", emoji: "🔔", href: "/cycles?category=bells" },
-  { name: "Brakes", emoji: "🛑", href: "/cycles?category=brakes" },
-  { name: "Chains", emoji: "⛓️", href: "/cycles?category=chains" },
-  { name: "Gear Sets", emoji: "⚙️", href: "/cycles?category=gear-sets" },
-  { name: "Lights", emoji: "💡", href: "/cycles?category=lights-reflectors" },
-  { name: "Locks", emoji: "🔒", href: "/cycles?category=locks-security" },
-  { name: "Saddles", emoji: "🪑", href: "/cycles?category=saddles-seats" },
-  { name: "Tyres", emoji: "🔵", href: "/cycles?category=tyres-tubes" },
-  { name: "Tools", emoji: "🔧", href: "/cycles?category=tools-maintenance" },
-  { name: "Mudguards", emoji: "🛡️", href: "/cycles?category=mudguards-fenders" },
-  { name: "Wheels", emoji: "🎡", href: "/cycles?category=wheels-hubs" },
-  { name: "Handlebar", emoji: "🎯", href: "/cycles?category=handlebar-parts" },
+  { name: "Bells", emoji: "🔔", href: "/shop?category=bells" },
+  { name: "Brakes", emoji: "🛑", href: "/shop?category=brakes" },
+  { name: "Chains", emoji: "⛓️", href: "/shop?category=chains" },
+  { name: "Gear Sets", emoji: "⚙️", href: "/shop?category=gear-sets" },
+  { name: "Lights", emoji: "💡", href: "/shop?category=lights-reflectors" },
+  { name: "Locks", emoji: "🔒", href: "/shop?category=locks-security" },
+  { name: "Saddles", emoji: "🪑", href: "/shop?category=saddles-seats" },
+  { name: "Tyres", emoji: "🔵", href: "/shop?category=tyres-tubes" },
+  { name: "Tools", emoji: "🔧", href: "/shop?category=tools-maintenance" },
+  { name: "Mudguards", emoji: "🛡️", href: "/shop?category=mudguards-fenders" },
+  { name: "Wheels", emoji: "🎡", href: "/shop?category=wheels-hubs" },
+  { name: "Handlebar", emoji: "🎯", href: "/shop?category=handlebar-parts" },
 ];
 
 export default function ShopByCategory() {
@@ -35,7 +35,7 @@ export default function ShopByCategory() {
             </h2>
           </div>
           <Link
-            href="/cycles"
+            href="/shop"
             className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-neutral-500 hover:text-[#19B5D8] transition-colors"
           >
             All Products
@@ -69,7 +69,7 @@ export default function ShopByCategory() {
         {/* Mobile view all */}
         <div className="mt-8 sm:hidden text-center">
           <Link
-            href="/cycles"
+            href="/shop"
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#19B5D8]"
           >
             View All Products <ArrowRight size={14} />

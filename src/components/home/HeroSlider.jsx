@@ -12,7 +12,7 @@ const slides = [
       "Discover high-performance E-Cycles, EV Parts, and Accessories designed for modern riders.",
     image:
       "https://images.unsplash.com/photo-1511994298241-608e28f14fde?q=80&w=2000&auto=format&fit=crop",
-    primaryBtn: "/cycles",
+    primaryBtn: "/shop",
     secondaryBtn: "/parts",
   },
   {
@@ -22,7 +22,7 @@ const slides = [
       "Explore rugged mountain e-bikes engineered for performance, comfort, and endurance.",
     image:
       "https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=2000&auto=format&fit=crop",
-    primaryBtn: "/cycles/mtb",
+    primaryBtn: "/shop/mtb",
     secondaryBtn: "/parts",
   },
   {

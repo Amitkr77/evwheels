@@ -104,7 +104,7 @@ export default function ProductDetailClient() {
             </li>
             <li>/</li>
             <li>
-              <Link href="/cycles">Cycles</Link>
+              <Link href="/shop">Cycles</Link>
             </li>
             <li>/</li>
             <li className="text-neutral-900 font-medium">{product.title}</li>

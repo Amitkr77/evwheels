@@ -96,7 +96,7 @@ export default function Footer() {
 
             <div className="flex items-start gap-2 text-sm text-[#64748B]">
               <MapPin size={16} className="text-[#19B5D8] mt-0.5 shrink-0" />
-              <span>Boring Road Crossing, Patna, Bihar 800001</span>
+              <span>Naubatpur, Patna, Bihar 801109</span>
             </div>
           </div>
 
@@ -107,7 +107,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3.5 text-sm text-[#94A3B8]">
               <li>
-                <Link href="/cycles" className="hover:text-[#19B5D8] transition-colors">
+                <Link href="/shop" className="hover:text-[#19B5D8] transition-colors">
                   Our Cycles
                 </Link>
               </li>

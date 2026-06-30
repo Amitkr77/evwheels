@@ -84,7 +84,7 @@ export default function CartPage() {
             Looks like you haven't added anything yet. Start browsing our collection!
           </p>
           <Link
-            href="/cycles"
+            href="/shop"
             className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition"
           >
             Start Shopping
@@ -109,7 +109,7 @@ export default function CartPage() {
             </p>
           </div>
           <Link
-            href="/cycles"
+            href="/shop"
             className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900 font-medium transition-colors"
           >
             <ArrowLeft size={18} />

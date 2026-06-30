@@ -287,7 +287,7 @@ export default function WhyUsPage() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-5">
             <Link
-              href="/cycles"
+              href="/shop"
               className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors"
             >
               Explore Cycles

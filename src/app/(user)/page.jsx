@@ -57,7 +57,7 @@ const EV_FEATURES = [
 function ProductCard({ p }) {
   return (
     <Link
-      href={`/cycles/${p.slug}`}
+      href={`/shop/${p.slug}`}
       className="group flex flex-col bg-white border border-neutral-100 rounded-xl overflow-hidden hover:border-neutral-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-all duration-200"
     >
       {/* Image area */}
@@ -140,7 +140,7 @@ function FeaturedProducts() {
             </h2>
           </div>
           <Link
-            href="/cycles"
+            href="/shop"
             className="hidden sm:flex items-center gap-1 text-sm text-neutral-400 hover:text-neutral-900 transition-colors"
           >
             View all <ArrowRight size={14} />
@@ -164,7 +164,7 @@ function FeaturedProducts() {
         </div>
 
         <div className="mt-8 sm:hidden text-center">
-          <Link href="/cycles" className="text-sm font-medium text-[#19B5D8]">
+          <Link href="/shop" className="text-sm font-medium text-[#19B5D8]">
             View all products →
           </Link>
         </div>
@@ -231,7 +231,7 @@ function ShowcaseSection() {
               </div>
 
               <Link
-                href="/cycles"
+                href="/shop"
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-neutral-900 rounded-full text-sm font-semibold hover:bg-neutral-100 transition-colors"
               >
                 Explore EV Cycles <ArrowRight size={14} />
@@ -273,7 +273,7 @@ function ShowcaseSection() {
             <div className="mt-5 pt-5 border-t border-neutral-100 flex items-center justify-between">
               <p className="text-sm text-neutral-400">240+ products in stock</p>
               <Link
-                href="/cycles"
+                href="/shop"
                 className="flex items-center gap-1 text-sm font-semibold text-neutral-900 hover:text-[#19B5D8] transition-colors"
               >
                 Browse all <ArrowRight size={14} />
@@ -324,7 +324,7 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-3 mb-14">
               <Link
-                href="/cycles"
+                href="/shop"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-neutral-900 rounded-full text-sm font-semibold hover:bg-neutral-100 transition-colors"
               >
                 Browse Catalogue <ArrowRight size={14} />
@@ -435,7 +435,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                href="/cycles"
+                href="/shop"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-neutral-900 rounded-full text-sm font-semibold hover:bg-neutral-100 transition-colors"
               >
                 Browse Catalogue <ArrowRight size={14} />
@@ -448,6 +448,116 @@ export default function Home() {
               </Link>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── Instagram ── */}
+      <section className="py-16 md:py-20 bg-white border-t border-neutral-100">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+
+          {/* Header */}
+          <div className="flex flex-col items-center text-center mb-8 md:mb-10">
+            {/* Instagram gradient icon */}
+            <a
+              href="https://www.instagram.com/evwheels_patna"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-4 w-14 h-14 rounded-2xl flex items-center justify-center"
+              style={{
+                background: "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
+              }}
+            >
+              {/* Instagram SVG */}
+              <svg viewBox="0 0 24 24" fill="white" className="w-7 h-7">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+              </svg>
+            </a>
+
+            <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-[0.2em] mb-1">
+              Follow our journey
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 tracking-tight mb-1">
+              @evwheels_patna
+            </h2>
+            <p className="text-sm text-neutral-400">Cycle parts, dealer stories & daily updates from Patna</p>
+          </div>
+
+          {/* Photo grid */}
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 md:gap-2">
+            {[
+              {
+                src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop",
+                alt: "Cycle accessories",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80&auto=format&fit=crop",
+                alt: "Cycling road",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80&auto=format&fit=crop",
+                alt: "Cyclist outdoors",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&q=80&auto=format&fit=crop",
+                alt: "Mountain biking",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600&q=80&auto=format&fit=crop",
+                alt: "Cycling gear",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?w=600&q=80&auto=format&fit=crop",
+                alt: "Cycle parts",
+              },
+            ].map((post, i) => (
+              <motion.a
+                key={i}
+                href="https://www.instagram.com/evwheels_patna"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, delay: i * 0.06 }}
+                className="group relative aspect-square overflow-hidden rounded-xl bg-neutral-100 block"
+              >
+                <img
+                  src={post.src}
+                  alt={post.alt}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    className="w-7 h-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  >
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                  </svg>
+                </div>
+              </motion.a>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="mt-8 text-center">
+            <a
+              href="https://www.instagram.com/evwheels_patna"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              style={{
+                background: "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
+              }}
+            >
+              <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+              </svg>
+              Follow us on Instagram
+            </a>
+          </div>
+
         </div>
       </section>
 

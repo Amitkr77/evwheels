@@ -25,7 +25,7 @@ export default function Header() {
       label: "Electric Mobility",
       key: "electric-mobility",
       subMenu: [
-        { title: "E-Cycles", links: [{ label: "Mountain E-Bikes", href: "/cycles/mtb" }, { label: "City E-Bikes", href: "/cycles/city" }] },
+        { title: "E-Cycles", links: [{ label: "Mountain E-Bikes", href: "/shop/mtb" }, { label: "City E-Bikes", href: "/shop/city" }] },
         { title: "E-Scooty", links: [{ label: "High Speed", href: "/scooty/high-speed" }, { label: "Commuter", href: "/scooty/commuter" }] },
         { title: "EV Parts", links: [{ label: "Batteries", href: "/parts/batteries" }, { label: "Controllers", href: "/parts/controllers" }, { label: "Smart Displays", href: "/parts/displays" }] },
       ],
@@ -33,7 +33,7 @@ export default function Header() {
     {
       label: "Cycles",
       key: "cycles",
-      href: "/cycles", // Direct link to listing
+      href: "/shop", // Direct link to listing
     },
     {
       label: "Parts",

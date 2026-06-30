@@ -26,7 +26,7 @@ export default function NotFound() {
               Go to Homepage
             </Link>
             <Link
-              href="/cycles"
+              href="/shop"
               className="px-8 py-4 border border-neutral-300 text-neutral-900 rounded-full text-sm font-medium hover:bg-neutral-50 transition-colors"
             >
               Browse Cycles

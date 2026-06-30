@@ -262,7 +262,7 @@ export default function OrderConfirmationPage() {
           </Link>
 
           <Link
-            href="/cycles"
+            href="/shop"
             className="flex-1 py-4 px-6 border border-neutral-300 text-neutral-900 rounded-full text-base sm:text-lg font-medium hover:bg-neutral-50 transition flex items-center justify-center"
           >
             Continue Shopping

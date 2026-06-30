@@ -1,635 +1,389 @@
-// app/checkout/page.tsx
-
 "use client";
 
 import Link from "next/link";
-import { CreditCard, ShieldCheck, Phone, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cartStore";
+import { useAuthStore } from "@/store/authStore";
+import { ShieldCheck, ChevronRight, MapPin, Plus, CheckCircle2, ArrowLeft } from "lucide-react";
+
+const INDIAN_STATES = [
+  "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
+  "Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh",
+  "Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab",
+  "Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh",
+  "Uttarakhand","West Bengal","Andaman and Nicobar Islands","Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu","Delhi","Jammu and Kashmir",
+  "Ladakh","Lakshadweep","Puducherry",
+];
+
+const EMPTY_ADDR = { fullName: "", phone: "", street: "", city: "", state: "", postalCode: "", country: "India" };
+
+const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+
+function Field({ label, children, span2 }) {
+  return (
+    <div className={span2 ? "sm:col-span-2" : ""}>
+      <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-1.5">{label}</label>
+      {children}
+    </div>
+  );
+}
+
+const inputCls = "w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] focus:ring-2 focus:ring-[#19B5D8]/10 transition-colors placeholder:text-neutral-300";
+const selectCls = `${inputCls} appearance-none cursor-pointer`;
 
 export default function CheckoutPage() {
+  const router = useRouter();
+  const { items, clearCart } = useCartStore();
+  const { isAuthenticated } = useAuthStore();
+
+  // Hydration guard — prevents "0 items" flash before Zustand loads
+  const [mounted, setMounted] = useState(false);
   const [summary, setSummary] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [summaryLoading, setSummaryLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  // Shipping address state – matches required backend format
-  const [shippingAddress, setShippingAddress] = useState({
-    fullName: "",
-    phone: "",
-    street: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "India",
-  });
+  // Saved addresses
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [showForm, setShowForm] = useState(true);
 
-  // Payment method – controlled by tabs
-  const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [addr, setAddr] = useState(EMPTY_ADDR);
+  const [paymentMethod] = useState("COD");
 
-  const { items, clearCart } = useCartStore();
+  useEffect(() => { setMounted(true); }, []);
 
-  const fetchSummary = async () => {
-    try {
-      const res = await fetch("/api/cart/summary", { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to load summary");
-      const data = await res.json();
-      setSummary(data);
-    } catch (err) {
-      setError(err.message || "Could not load order summary");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch cart summary
   useEffect(() => {
-    fetchSummary();
-  }, [items]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!mounted) return;
+    setSummaryLoading(true);
+    fetch("/api/cart/summary", { credentials: "include" })
+      .then((r) => r.json())
+      .then((d) => setSummary(d))
+      .catch(() => {})
+      .finally(() => setSummaryLoading(false));
+  }, [mounted]);
 
-  const handleAddressChange = (e) => {
+  // Fetch saved addresses if logged in
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    fetch("/api/user/addresses", { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSavedAddresses(data);
+          setShowForm(false);
+          // Pre-select default or first
+          const def = data.find((a) => a.isDefault) || data[0];
+          selectSavedAddress(def);
+        }
+      })
+      .catch(() => {});
+  }, [isAuthenticated]);
+
+  function selectSavedAddress(a) {
+    setSelectedAddressId(a._id);
+    setAddr({
+      fullName: a.fullName || "",
+      phone: a.phone || "",
+      street: a.addressLine || "",  // addressLine → street
+      city: a.city || "",
+      state: a.state || "",
+      postalCode: a.postalCode || "",
+      country: a.country || "India",
+    });
+    setShowForm(false);
+  }
+
+  const handleAddrChange = (e) => {
     const { name, value } = e.target;
-    setShippingAddress((prev) => ({ ...prev, [name]: value }));
+    setAddr((prev) => ({ ...prev, [name]: value }));
   };
+
+  const valid = addr.fullName && addr.phone && addr.street && addr.city && addr.state && addr.postalCode;
 
   const placeOrder = async () => {
-    if (submitting) return;
-
-    // Basic client-side check (expand with proper validation later)
-    if (
-      !shippingAddress.fullName ||
-      !shippingAddress.phone ||
-      !shippingAddress.street ||
-      !shippingAddress.city ||
-      !shippingAddress.state ||
-      !shippingAddress.postalCode
-    ) {
-      setError("Please fill in all required shipping fields.");
-      return;
-    }
-
+    if (submitting || !valid) { if (!valid) setError("Please fill in all shipping fields."); return; }
     setSubmitting(true);
     setError(null);
-
     try {
-      const payload = {
-        shippingAddress,
-        paymentMethod,
-      };
-
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ shippingAddress: addr, paymentMethod }),
       });
-
       const data = await res.json();
-
       if (res.ok) {
         clearCart();
-        window.location.href = `/order-success?id=${data._id}`;
+        router.push(`/order-success?id=${data._id}`);
       } else {
-        setError(data.error || "Failed to place order. Please try again.");
+        setError(data.error || "Failed to place order.");
       }
-    } catch (err) {
-      setError("Network error. Please check your connection.");
+    } catch {
+      setError("Network error. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (loading) {
-    return <div className="text-center py-20">Loading order summary...</div>;
+  // Show skeleton while Zustand hydrates
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-neutral-50 pt-24 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-neutral-200 border-t-[#19B5D8] rounded-full animate-spin" />
+      </div>
+    );
   }
-
-  if (error && !summary) {
-    return <div className="text-center py-20 text-red-600">{error}</div>;
-  }
-
-  const PAYMENT_METHODS = {
-    CARD: "CARD",
-    COD: "COD",
-  };
-
-  const availableMethods = ["COD"];
-
-  const INDIAN_STATES = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
-  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
-  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
-  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
-  "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
-];
 
   if (items.length === 0) {
-  return (
-    <div className="min-h-screen flex items-center justify-center text-center px-6">
-      <div>
-        <h2 className="text-3xl font-medium mb-4">Your cart is empty</h2>
-        <p className="text-neutral-600 mb-8">Add some cycles to proceed to checkout.</p>
-        <Link
-          href="/cycles"
-          className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-full hover:bg-neutral-800"
-        >
-          Browse Cycles
-          <ArrowRight size={18} />
+    return (
+      <div className="min-h-screen bg-neutral-50 pt-24 flex flex-col items-center justify-center text-center px-6 gap-4">
+        <div className="w-16 h-16 rounded-2xl bg-neutral-100 flex items-center justify-center mb-2">
+          <ShieldCheck size={28} className="text-neutral-300" />
+        </div>
+        <h2 className="text-2xl font-bold text-neutral-900">Your cart is empty</h2>
+        <p className="text-neutral-500 text-sm max-w-xs">Add some products before proceeding to checkout.</p>
+        <Link href="/shop" className="mt-2 inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white rounded-full text-sm font-semibold hover:bg-neutral-800 transition-colors">
+          <ArrowLeft size={15} /> Browse Products
         </Link>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
-    <main className="flex-grow bg-[#F8FAFC] min-h-screen font-['Inter'] pt-20 pb-20">
-      <div className="fixed top-0 left-0 w-full h-18 overflow-hidden">
-        <div className="absolute inset-0 subtle-gradient"></div>
-      </div>
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-        <div className="grid lg:grid-cols-12 gap-10 xl:gap-16">
-          {/* Left Column: Forms */}
-          <div className="lg:col-span-7 flex flex-col gap-12 md:gap-10">
-            {/* Breadcrumbs */}
-            <nav className="flex items-center gap-2 md:gap-3 text-sm md:text-base font-light text-neutral-600 mt-5">
-              <Link
-                href="/cart"
-                className="hover:text-neutral-900 transition-colors"
-              >
-                Cart
-              </Link>
-              <span className="text-neutral-400">/</span>
-              <span className="text-neutral-900 font-medium">Checkout</span>
-              {/* <span className="text-neutral-400">/</span> */}
-            </nav>
+    <main className="min-h-screen bg-neutral-50 pt-20 pb-16">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-12">
 
-            {/* Contact Information */}
-            <section>
-              <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-8">
-                Contact Information
-              </h2>
-              <div className="space-y-6">
-                {/* You can add email back if needed – skipped for now as per payload */}
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="news"
-                    disabled
-                    className="w-4 h-4 rounded border-neutral-300 text-[#19B5D8] focus:ring-[#19B5D8]"
-                  />
-                  <label
-                    htmlFor="news"
-                    className="text-sm text-neutral-600 cursor-pointer"
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-xs text-neutral-400 mt-6 mb-8">
+          <Link href="/cart" className="hover:text-neutral-700 transition-colors flex items-center gap-1">
+            <ArrowLeft size={12} /> Cart
+          </Link>
+          <ChevronRight size={11} />
+          <span className="text-neutral-700 font-medium">Checkout</span>
+        </nav>
+
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+
+          {/* ── Left: Shipping + Payment ── */}
+          <div className="flex-1 space-y-5">
+
+            {/* Saved addresses */}
+            {savedAddresses.length > 0 && (
+              <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+                <div className="px-5 py-4 border-b border-neutral-100 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <MapPin size={15} className="text-[#19B5D8]" />
+                    <span className="text-sm font-semibold text-neutral-900">Saved Addresses</span>
+                  </div>
+                  <button
+                    onClick={() => { setShowForm(true); setSelectedAddressId(null); setAddr(EMPTY_ADDR); }}
+                    className="flex items-center gap-1 text-xs text-[#19B5D8] font-medium hover:underline"
                   >
-                    Email me with news and offers
-                  </label>
+                    <Plus size={12} /> New address
+                  </button>
+                </div>
+                <div className="p-4 grid sm:grid-cols-2 gap-3">
+                  {savedAddresses.map((a) => (
+                    <button
+                      key={a._id}
+                      onClick={() => selectSavedAddress(a)}
+                      className={`relative text-left p-4 rounded-xl border-2 transition-all ${
+                        selectedAddressId === a._id
+                          ? "border-[#19B5D8] bg-[#DDF8FD]/20"
+                          : "border-neutral-100 hover:border-neutral-200 bg-white"
+                      }`}
+                    >
+                      {selectedAddressId === a._id && (
+                        <CheckCircle2 size={15} className="absolute top-3 right-3 text-[#19B5D8]" />
+                      )}
+                      {a.isDefault && (
+                        <span className="text-[9px] font-semibold uppercase tracking-wide text-[#19B5D8] bg-[#DDF8FD] px-2 py-0.5 rounded-full mb-1.5 inline-block">
+                          Default
+                        </span>
+                      )}
+                      <p className="text-sm font-semibold text-neutral-900">{a.fullName}</p>
+                      <p className="text-xs text-neutral-500 mt-0.5 leading-relaxed">
+                        {a.addressLine}, {a.city}, {a.state} {a.postalCode}
+                      </p>
+                      <p className="text-xs text-neutral-400 mt-0.5">{a.phone}</p>
+                    </button>
+                  ))}
                 </div>
               </div>
-            </section>
+            )}
 
-            {/* Shipping Address */}
-            <section>
-              <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-8">
-                Shipping Address
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={shippingAddress.fullName}
-                    onChange={handleAddressChange}
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
-                    required
-                  />
+            {/* Address form */}
+            {(showForm || savedAddresses.length === 0) && (
+              <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+                <div className="px-5 py-4 border-b border-neutral-100 flex items-center gap-2">
+                  <MapPin size={15} className="text-[#19B5D8]" />
+                  <span className="text-sm font-semibold text-neutral-900">
+                    {savedAddresses.length > 0 ? "New Shipping Address" : "Shipping Address"}
+                  </span>
                 </div>
-
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Street Address *
-                  </label>
-                  <input
-                    type="text"
-                    name="street"
-                    value={shippingAddress.street}
-                    onChange={handleAddressChange}
-                    placeholder="House no, Building, Street, Area"
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    City *
-                  </label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={shippingAddress.city}
-                    onChange={handleAddressChange}
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    State *
-                  </label>
-                  <select
-                    name="state"
-                    value={shippingAddress.state}
-                    onChange={handleAddressChange}
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors bg-white"
-                    required
-                  >
-                    <option value="">Select State</option>
-                   {INDIAN_STATES.map(s => (
-    <option key={s} value={s}>{s}</option>
-  ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Postal Code (PIN) *
-                  </label>
-                  <input
-                    type="text"
-                    name="postalCode"
-                    value={shippingAddress.postalCode}
-                    onChange={handleAddressChange}
-                    className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
-                    required
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-neutral-600 mb-2">
-                    Phone *
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={shippingAddress.phone}
-                      onChange={handleAddressChange}
-                      className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
-                      required
-                    />
-                    <Phone
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500"
-                      size={20}
-                    />
-                  </div>
+                <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Field label="Full Name *" span2>
+                    <input name="fullName" value={addr.fullName} onChange={handleAddrChange} className={inputCls} placeholder="e.g. Rahul Kumar" />
+                  </Field>
+                  <Field label="Phone *" span2>
+                    <input name="phone" value={addr.phone} onChange={handleAddrChange} type="tel" className={inputCls} placeholder="+91 98765 43210" />
+                  </Field>
+                  <Field label="Street Address *" span2>
+                    <input name="street" value={addr.street} onChange={handleAddrChange} className={inputCls} placeholder="House no., street, area" />
+                  </Field>
+                  <Field label="City *">
+                    <input name="city" value={addr.city} onChange={handleAddrChange} className={inputCls} placeholder="Patna" />
+                  </Field>
+                  <Field label="PIN Code *">
+                    <input name="postalCode" value={addr.postalCode} onChange={handleAddrChange} className={inputCls} placeholder="800001" maxLength={6} />
+                  </Field>
+                  <Field label="State *" span2>
+                    <select name="state" value={addr.state} onChange={handleAddrChange} className={selectCls}>
+                      <option value="">Select State</option>
+                      {INDIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </Field>
                 </div>
               </div>
-            </section>
-
-            {/* Delivery Method */}
-            {/* <section>
-              <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-8">
-                Delivery Method
-              </h2>
-
-              <div className="space-y-4">
-                <label className="relative block cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="delivery"
-                    defaultChecked
-                    className="peer sr-only"
-                  />
-                  <div className="p-5 rounded-xl border border-neutral-300 peer-checked:border-[#19B5D8] bg-white transition-all group-hover:border-[#19B5D8]/30">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-5 h-5 rounded-full border-2 border-neutral-300 peer-checked:border-[#19B5D8] peer-checked:bg-[#19B5D8] transition-colors flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 bg-white rounded-full" />
-                        </div>
-                        <div>
-                          <span className="font-medium text-neutral-900">
-                            Standard Shipping
-                          </span>
-                          <p className="text-sm text-neutral-600">
-                            4-6 business days
-                          </p>
-                        </div>
-                      </div>
-                      <span className="font-medium text-[#22C55E]">Free</span>
-                    </div>
-                  </div>
-                </label>
-
-                <label className="relative block cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="delivery"
-                    className="peer sr-only"
-                  />
-                  <div className="p-5 rounded-xl border border-neutral-300 peer-checked:border-[#19B5D8] bg-white transition-all group-hover:border-[#19B5D8]/30">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-5 h-5 rounded-full border-2 border-neutral-300 peer-checked:border-[#19B5D8] peer-checked:bg-[#19B5D8] transition-colors flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 bg-white rounded-full" />
-                        </div>
-                        <div>
-                          <span className="font-medium text-neutral-900">
-                            Express Priority
-                          </span>
-                          <p className="text-sm text-neutral-600">
-                            1-2 business days
-                          </p>
-                        </div>
-                      </div>
-                      <span className="font-medium text-neutral-900">₹499</span>
-                    </div>
-                  </div>
-                </label>
-              </div>
-            </section> */}
+            )}
 
             {/* Payment */}
-
-            <section>
-              <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-8">
-                Payment
-              </h2>
-
-              <div className="bg-white border border-neutral-200/70 rounded-xl overflow-hidden">
-                {/* Payment Tabs */}
-                <div className="grid grid-cols-2 border-b border-neutral-200/70">
-                  {/* Credit Card */}
-                  <button
-                    type="button"
-                    disabled={!availableMethods.includes(PAYMENT_METHODS.CARD)}
-                    onClick={() => setPaymentMethod(PAYMENT_METHODS.CARD)}
-                    className={`flex items-center justify-center gap-2 py-4 text-sm md:text-base font-medium transition-all border-b-2 ${
-                      paymentMethod === PAYMENT_METHODS.CARD
-                        ? "bg-[#DDF8FD] text-[#19B5D8] border-[#19B5D8]"
-                        : "text-neutral-600 hover:text-neutral-900 border-transparent"
-                    }`}
-                  >
-                    💳 Credit / Debit Card
-                  </button>
-
-                  {/* COD */}
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod(PAYMENT_METHODS.COD)}
-                    className={`flex items-center justify-center gap-2 py-4 text-sm md:text-base font-medium transition-all border-b-2 ${
-                      paymentMethod === PAYMENT_METHODS.COD
-                        ? "bg-[#DDF8FD] text-[#19B5D8] border-[#19B5D8]"
-                        : "text-neutral-600 hover:text-neutral-900 border-transparent"
-                    }`}
-                  >
-                    💵 Cash on Delivery
-                  </button>
-                </div>
-
-                {/* Payment Content */}
-                <div className="p-6 md:p-8">
-                  {/* CARD PAYMENT */}
-                  {paymentMethod === PAYMENT_METHODS.CARD && (
-                    <div className="flex flex-col items-center justify-center py-10 text-center text-neutral-600 space-y-4">
-                      <div className="text-4xl">💳</div>
-
-                      <p className="text-lg font-medium text-neutral-800">
-                        Card Payments Coming Soon
-                      </p>
-
-                      <p className="text-sm text-neutral-500 max-w-sm">
-                        Secure payments with Visa, Mastercard and more will be
-                        available soon.
-                      </p>
-                    </div>
-                  )}
-
-                  {/* COD PAYMENT */}
-                  {paymentMethod === PAYMENT_METHODS.COD && (
-                    <div className="flex flex-col items-center text-center space-y-4 py-8">
-                      <div className="text-4xl">📦</div>
-
-                      <p className="text-lg font-medium text-neutral-800">
-                        Cash on Delivery
-                      </p>
-
-                      <p className="text-sm text-neutral-500 max-w-sm">
-                        Pay with cash when your order arrives at your doorstep.
-                      </p>
-
-                      <div className="text-xs text-neutral-500 bg-neutral-50 px-4 py-2 rounded-lg">
-                        Additional COD charges may apply depending on location.
-                      </div>
-                    </div>
-                  )}
-                </div>
+            <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+              <div className="px-5 py-4 border-b border-neutral-100">
+                <span className="text-sm font-semibold text-neutral-900">Payment Method</span>
               </div>
-            </section>
+              <div className="p-5">
+                <div className="flex items-center gap-3 p-4 rounded-xl border-2 border-[#19B5D8] bg-[#DDF8FD]/20">
+                  <div className="w-4 h-4 rounded-full border-2 border-[#19B5D8] flex items-center justify-center shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-[#19B5D8]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Cash on Delivery</p>
+                    <p className="text-xs text-neutral-500 mt-0.5">Pay when your order arrives at your doorstep</p>
+                  </div>
+                </div>
+                <p className="text-xs text-neutral-400 mt-3 text-center">Online payment coming soon</p>
+              </div>
+            </div>
 
-            {error && <p className="text-red-600 text-center mt-4">{error}</p>}
+            {/* Error */}
+            {error && (
+              <div className="px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
+                {error}
+              </div>
+            )}
 
+            {/* Place order button */}
             <button
               onClick={placeOrder}
-              disabled={submitting || loading}
-              className={`w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed`}
+              disabled={submitting || summaryLoading}
+              className="w-full py-4 bg-neutral-900 text-white rounded-2xl text-sm font-semibold hover:bg-neutral-800 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {submitting ? "Placing Order..." : "Place Order"}
-              <ArrowRight size={18} />
+              {submitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Placing order…
+                </>
+              ) : (
+                <>
+                  Place Order · {fmt(summary?.total)}
+                </>
+              )}
             </button>
 
-            <p className="text-center text-sm text-neutral-600 mt-6">
-              By placing your order, you agree to our{" "}
-              <Link href="#" className="text-[#19B5D8] hover:underline">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="#" className="text-[#19B5D8] hover:underline">
-                Privacy Policy
-              </Link>
-              .
+            <p className="text-center text-xs text-neutral-400">
+              By placing your order you agree to our{" "}
+              <Link href="/terms" className="underline hover:text-neutral-600">Terms of Service</Link>
+              {" "}and{" "}
+              <Link href="/privacy-policy" className="underline hover:text-neutral-600">Privacy Policy</Link>
             </p>
           </div>
 
-          {/* Right Column: Order Summary (Sticky) */}
-          <div className="lg:col-span-5">
-            <div className="sticky top-24 space-y-8">
-              <div className="bg-white border border-neutral-200/70 rounded-xl p-8">
-                <h2 className="text-2xl md:text-3xl font-medium mb-8">
-                  Order Summary
-                </h2>
-
-                {/* Items List */}
-                <div className="space-y-8 mb-10">
-                  {items.map((item) => {
-                    const { product, quantity } = item;
-                    return (
-                      <div key={product._id}>
-                        <div className="flex gap-6">
-                          <div className="relative w-20 h-20 shrink-0">
-                            <img
-                              src={product?.images?.[0] || "/logo.png"}
-                              alt={product?.title}
-                              className="w-full h-full object-cover rounded-lg border border-neutral-200/60"
-                            />
-                            <span className="absolute -top-2 -right-2 bg-neutral-900 text-white text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center">
-                              {quantity}
-                            </span>
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex justify-between items-start">
-                              <h4 className="text-lg font-medium text-neutral-900">
-                                {product?.title}
-                              </h4>
-                              <span className="text-xl font-medium text-[#19B5D8]">
-                                ₹{product.price.toLocaleString()}
-                              </span>
-                            </div>
-                            {product.colors?.length > 0 && (
-                              <p className="text-sm text-neutral-600 mt-1">
-                                {product.colors[0]}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <hr className="border-dashed border-neutral-200/60 my-8" />
-
-                {/* Totals */}
-                <div className="space-y-4 text-neutral-600">
-                  <div className="flex justify-between">
-                    <span>Subtotal</span>
-                    <span className="text-neutral-900 font-medium">
-                      {new Intl.NumberFormat("en-IN", {
-                        style: "currency",
-                        currency: "INR",
-                      }).format(summary?.subtotal || 0)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="flex items-center gap-1.5">
-                      Shipping
-                      <span
-                        className="text-neutral-500 cursor-help"
-                        title="Calculated at next step"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </span>
-                    </span>
-                    <span className="text-[#19B5D8] font-medium">
-                      {summary?.shipping === 0
-                        ? "Free"
-                        : new Intl.NumberFormat("en-IN", {
-                            style: "currency",
-                            currency: "INR",
-                          }).format(summary?.shipping || 0)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Estimated Tax</span>
-                    <span className="text-neutral-900 font-medium">
-                      {new Intl.NumberFormat("en-IN", {
-                        style: "currency",
-                        currency: "INR",
-                      }).format(summary?.tax || 0)}
-                    </span>
-                  </div>
-                  {summary?.discount > 0 && (
-                    <div className="flex justify-between text-neutral-600">
-                      <span>Discount</span>
-                      <span className="text-[#22C55E] font-medium">
-                        -
-                        {new Intl.NumberFormat("en-IN", {
-                          style: "currency",
-                          currency: "INR",
-                        }).format(summary?.discount)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <hr className="border-neutral-200/60 my-8" />
-
-                <div className="flex justify-between items-end">
-                  <span className="text-xl font-medium text-neutral-900">
-                    Total
-                  </span>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-sm text-neutral-600">INR</span>
-                    <span className="text-3xl md:text-4xl font-medium text-[#19B5D8]">
-                      {new Intl.NumberFormat("en-IN", {
-                        style: "currency",
-                        currency: "INR",
-                      }).format(summary?.total || 0)}{" "}
-                    </span>
-                  </div>
-                </div>
+          {/* ── Right: Order summary (sticky) ── */}
+          <div className="w-full lg:w-[360px] shrink-0">
+            <div className="sticky top-24 bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+              <div className="px-5 py-4 border-b border-neutral-100">
+                <span className="text-sm font-semibold text-neutral-900">
+                  Order Summary ({items.length} item{items.length !== 1 ? "s" : ""})
+                </span>
               </div>
 
-              {/* Trust Badges */}
-              <div className="flex justify-center gap-6 md:gap-10 text-neutral-500">
-                <div className="flex flex-col items-center text-center gap-2">
-                  <ShieldCheck
-                    size={24}
-                    className="text-[#19B5D8]"
-                    strokeWidth={1.5}
-                  />
-                  <span className="text-xs font-light">2 Year Warranty</span>
-                </div>
-                <div className="flex flex-col items-center text-center gap-2">
-                  <svg
-                    className="w-6 h-6 text-[#19B5D8]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                  <span className="text-xs font-light">30-Day Returns</span>
-                </div>
-                <div className="flex flex-col items-center text-center gap-2">
-                  <svg
-                    className="w-6 h-6 text-[#19B5D8]"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-                    />
-                  </svg>
-                  <span className="text-xs font-light">24/7 Support</span>
-                </div>
+              {/* Items */}
+              <div className="p-5 space-y-4 max-h-72 overflow-y-auto">
+                {items.map(({ product, quantity }) => (
+                  <div key={product._id} className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-xl border border-neutral-100 bg-neutral-50 shrink-0 relative overflow-hidden">
+                      <img
+                        src={product?.images?.[0] || "/logo.png"}
+                        alt={product?.title}
+                        className="w-full h-full object-contain p-1"
+                      />
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-neutral-900 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                        {quantity}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-neutral-800 line-clamp-2 leading-snug">{product?.title}</p>
+                    </div>
+                    <p className="text-sm font-bold text-neutral-900 shrink-0">
+                      {fmt(product.price * quantity)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Totals */}
+              <div className="px-5 pb-5 space-y-3 border-t border-neutral-100 pt-4">
+                {summaryLoading ? (
+                  <div className="space-y-2 animate-pulse">
+                    <div className="h-3 bg-neutral-100 rounded w-full" />
+                    <div className="h-3 bg-neutral-100 rounded w-2/3" />
+                    <div className="h-4 bg-neutral-100 rounded w-1/2 mt-2" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex justify-between text-sm text-neutral-500">
+                      <span>Subtotal</span>
+                      <span className="text-neutral-800 font-medium">{fmt(summary?.subtotal)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-neutral-500">
+                      <span>Shipping</span>
+                      <span className={summary?.shipping === 0 ? "text-emerald-600 font-medium" : "text-neutral-800 font-medium"}>
+                        {summary?.shipping === 0 ? "Free" : fmt(summary?.shipping)}
+                      </span>
+                    </div>
+                    {summary?.tax > 0 && (
+                      <div className="flex justify-between text-sm text-neutral-500">
+                        <span>Tax</span>
+                        <span className="text-neutral-800 font-medium">{fmt(summary?.tax)}</span>
+                      </div>
+                    )}
+                    {summary?.discount > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-emerald-600">Discount</span>
+                        <span className="text-emerald-600 font-medium">−{fmt(summary?.discount)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center pt-3 border-t border-neutral-100">
+                      <span className="text-sm font-semibold text-neutral-900">Total</span>
+                      <span className="text-xl font-bold text-neutral-900">{fmt(summary?.total)}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Trust strip */}
+              <div className="px-5 pb-5 flex items-center justify-center gap-5 text-xs text-neutral-400">
+                <span className="flex items-center gap-1"><ShieldCheck size={13} className="text-[#19B5D8]" /> Secure checkout</span>
+                <span className="flex items-center gap-1">✓ COD available</span>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </main>
