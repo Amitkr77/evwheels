@@ -70,7 +70,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", h);
   }, [userDropOpen]);
 
-  const tx = transparent ? "text-white" : "text-neutral-900";
+  const tx = transparent ? "text-black" : "text-neutral-900";
   const hx = transparent ? "hover:text-white/70" : "hover:text-[#19B5D8]";
 
   return (
