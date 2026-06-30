@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/providers/AuthProvider";
+import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -146,6 +147,18 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
         <AuthProvider>{children}</AuthProvider>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-9J6P8DLC69"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-9J6P8DLC69');
+          `}
+        </Script>
       </body>
     </html>
   );

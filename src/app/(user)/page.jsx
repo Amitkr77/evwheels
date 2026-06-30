@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -14,20 +15,69 @@ import {
   Zap,
   Leaf,
   BarChart3,
+  Search,
+  Tag,
+  Sun,
+  Wrench,
+  Star,
 } from "lucide-react";
 import ShopByCategory from "@/components/home/ShopBycategory";
 
+// ── Data ──────────────────────────────────────────────────
 const TRUST = [
-  { icon: Truck, label: "Free Delivery", sub: "Orders above ₹5,000" },
-  { icon: ShieldCheck, label: "Genuine Products", sub: "100% authentic" },
-  { icon: Package, label: "240+ Products", sub: "Across 23 categories" },
-  { icon: MapPin, label: "Bihar & Jharkhand", sub: "Pan-state delivery" },
+  { icon: Truck,       label: "Free Delivery",    sub: "Orders above ₹5,000" },
+  { icon: ShieldCheck, label: "Genuine Products",  sub: "100% authentic" },
+  { icon: Package,     label: "240+ Products",     sub: "Across 23 categories" },
+  { icon: MapPin,      label: "Bihar & Jharkhand", sub: "Pan-state delivery" },
 ];
 
 const HERO_STATS = [
   { num: "240+", label: "Products" },
-  { num: "23", label: "Categories" },
+  { num: "23",   label: "Categories" },
   { num: "500+", label: "Dealers served" },
+];
+
+const HERO_CATS = [
+  {
+    name:    "Brakes & Safety",
+    sub:     "Disc, rim & pads",
+    href:    "/shop?category=brakes",
+    icon:    ShieldCheck,
+    cardCls: "bg-red-50 hover:border-red-200",
+    iconBg:  "bg-red-100",
+    iconC:   "text-red-500",
+    linkC:   "text-red-400",
+  },
+  {
+    name:    "Lights & Reflectors",
+    sub:     "LED front & rear",
+    href:    "/shop?category=lights-reflectors",
+    icon:    Sun,
+    cardCls: "bg-amber-50 hover:border-amber-200",
+    iconBg:  "bg-amber-100",
+    iconC:   "text-amber-500",
+    linkC:   "text-amber-400",
+  },
+  {
+    name:    "Chains & Gears",
+    sub:     "Shimano & more",
+    href:    "/shop?category=chains",
+    icon:    Wrench,
+    cardCls: "bg-[#F0FEFF] hover:border-[#19B5D8]/30",
+    iconBg:  "bg-[#DDF8FD]",
+    iconC:   "text-[#19B5D8]",
+    linkC:   "text-[#19B5D8]",
+  },
+  {
+    name:    "Tools & Kits",
+    sub:     "Workshop essentials",
+    href:    "/shop?category=tools-maintenance",
+    icon:    Package,
+    cardCls: "bg-emerald-50 hover:border-emerald-200",
+    iconBg:  "bg-emerald-100",
+    iconC:   "text-emerald-600",
+    linkC:   "text-emerald-400",
+  },
 ];
 
 const WHY = [
@@ -49,10 +99,44 @@ const WHY = [
 ];
 
 const EV_FEATURES = [
-  { icon: Zap, label: "Electric Assist", desc: "Pedal-assist motors up to 250W" },
-  { icon: Leaf, label: "Zero Emissions", desc: "Clean commute, reduced carbon footprint" },
-  { icon: BarChart3, label: "80km Range", desc: "Single charge on flat terrain" },
+  { icon: Zap,      label: "Electric Assist", desc: "Pedal-assist motors up to 250W" },
+  { icon: Leaf,     label: "Zero Emissions",  desc: "Clean commute, reduced carbon footprint" },
+  { icon: BarChart3, label: "80 km Range",    desc: "Single charge on flat terrain" },
 ];
+
+// ── Hero search bar ───────────────────────────────────────
+function HeroSearch() {
+  const [q, setQ] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const term = q.trim();
+    if (term) router.push(`/shop?search=${encodeURIComponent(term)}`);
+  };
+
+  return (
+    <form
+      onSubmit={handleSearch}
+      className="flex items-center bg-neutral-50 border border-neutral-200 rounded-full overflow-hidden focus-within:border-[#19B5D8] focus-within:ring-2 focus-within:ring-[#19B5D8]/10 transition-all max-w-md"
+    >
+      <Search size={15} className="ml-4 text-neutral-400 shrink-0" />
+      <input
+        type="text"
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        placeholder="Search parts, accessories…"
+        className="flex-1 bg-transparent px-3 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none min-w-0"
+      />
+      <button
+        type="submit"
+        className="mr-1.5 px-4 py-2 bg-[#19B5D8] text-white text-xs font-semibold rounded-full hover:bg-[#17a3c4] transition-colors shrink-0"
+      >
+        Search
+      </button>
+    </form>
+  );
+}
 
 // ── Clean product card ─────────────────────────────────────
 function ProductCard({ p }) {
@@ -61,7 +145,6 @@ function ProductCard({ p }) {
       href={`/shop/${p.slug}`}
       className="group flex flex-col bg-white border border-neutral-100 rounded-xl overflow-hidden hover:border-neutral-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-all duration-200"
     >
-      {/* Image area */}
       <div className="relative bg-neutral-50 p-4 aspect-square overflow-hidden">
         {p.images?.[0] ? (
           <Image
@@ -85,7 +168,6 @@ function ProductCard({ p }) {
         )}
       </div>
 
-      {/* Text */}
       <div className="px-3.5 pb-3.5 pt-3 flex flex-col gap-1.5">
         <h3 className="text-[13px] font-medium text-neutral-800 line-clamp-2 leading-snug">
           {p.title}
@@ -194,7 +276,6 @@ function ShowcaseSection() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 md:py-24">
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-stretch">
 
-          {/* Left — big image + content */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -242,7 +323,6 @@ function ShowcaseSection() {
             </div>
           </motion.div>
 
-          {/* Right — product cards grid */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -294,65 +374,137 @@ export default function Home() {
   return (
     <div className="bg-white text-neutral-900">
 
-      {/* Hero */}
-      <section className="relative min-h-screen flex items-end pb-16 md:pb-24">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1621577239950-449fb208e624?q=80&w=1469&auto=format&fit=crop"
-            alt="Cycling"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
-        </div>
+      {/* ── Hero ─────────────────────────────────────────── */}
+      <section className="bg-[#F8FAFC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-16 md:pt-20 pb-6 md:pb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] gap-4 items-stretch">
 
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-          >
-            <p className="text-[#19B5D8] text-[11px] font-semibold tracking-[0.25em] uppercase mb-5">
-              Bihar's Leading Wholesaler
-            </p>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.0] tracking-tight mb-6">
-              Cycle Parts.
-              <br />
-              <span className="text-white/55">Wholesale</span>{" "}
-              <span className="text-white">Price.</span>
-            </h1>
-            <p className="text-base md:text-lg text-white/55 max-w-lg mb-10 leading-relaxed">
-              240+ accessories across 23 categories — Shimano, disc brakes,
-              lights, helmets & more. Serving dealers across Bihar & Jharkhand.
-            </p>
+            {/* ── Left: Main hero panel ───────────────────── */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: "easeOut" }}
+              className="relative bg-white rounded-2xl border border-neutral-100 overflow-hidden flex flex-col justify-between p-7 sm:p-9 md:p-10 min-h-[400px] md:min-h-[460px]"
+            >
+              {/* Decorative blobs */}
+              <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-gradient-to-br from-[#DDF8FD] to-white opacity-60 -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-52 h-52 rounded-full bg-[#F0FEFF] opacity-50 translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
-            <div className="flex flex-col sm:flex-row gap-3 mb-14">
-              <Link
-                href="/shop"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-neutral-900 rounded-full text-sm font-semibold hover:bg-neutral-100 transition-colors"
-              >
-                Browse Catalogue <ArrowRight size={14} />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-full text-sm font-medium hover:bg-white/8 transition-colors"
-              >
-                Get Wholesale Pricing
-              </Link>
-            </div>
-
-            <div className="flex items-center gap-10 pt-8 border-t border-white/12">
-              {HERO_STATS.map((s) => (
-                <div key={s.label}>
-                  <p className="text-2xl md:text-3xl font-bold text-white">{s.num}</p>
-                  <p className="text-[11px] text-white/35 mt-0.5 tracking-wide">{s.label}</p>
+              {/* Top content */}
+              <div className="relative z-10">
+                {/* Offer badge */}
+                <div className="inline-flex items-center gap-1.5 bg-[#DDF8FD] text-[#19B5D8] text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5 border border-[#19B5D8]/15">
+                  <Truck size={11} />
+                  Free delivery above ₹5,000 · COD Available
                 </div>
-              ))}
-            </div>
-          </motion.div>
+
+                {/* Headline */}
+                <h1 className="text-4xl sm:text-5xl md:text-[3.25rem] font-bold text-neutral-900 leading-[1.1] tracking-tight mb-4">
+                  Cycle Parts.
+                  <br />
+                  <span className="text-[#19B5D8]">Wholesale</span> Price.
+                </h1>
+
+                <p className="text-neutral-500 text-[15px] leading-relaxed max-w-[440px] mb-7">
+                  240+ accessories across 23 categories — Shimano, disc brakes,
+                  lights, helmets & more. Serving dealers across Bihar & Jharkhand.
+                </p>
+
+                {/* Inline search */}
+                <HeroSearch />
+
+                {/* CTA row */}
+                <div className="flex flex-wrap gap-3 mt-5">
+                  <Link
+                    href="/shop"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white text-sm font-semibold rounded-full hover:bg-neutral-800 transition-colors shadow-sm"
+                  >
+                    Browse Catalogue <ArrowRight size={14} />
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center gap-2 px-6 py-3 border border-neutral-200 text-neutral-700 text-sm font-medium rounded-full hover:bg-neutral-50 hover:border-neutral-300 transition-colors"
+                  >
+                    Get Wholesale Quote
+                  </Link>
+                </div>
+              </div>
+
+              {/* Bottom stats */}
+              <div className="relative z-10 flex items-center gap-8 sm:gap-12 pt-6 mt-6 border-t border-neutral-100">
+                {HERO_STATS.map((s) => (
+                  <div key={s.label}>
+                    <p className="text-2xl font-bold text-neutral-900 leading-none">{s.num}</p>
+                    <p className="text-[11px] text-neutral-400 mt-1.5 tracking-wide">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* ── Right: Promo banner + category cards ────── */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.12, ease: "easeOut" }}
+              className="flex flex-col gap-3"
+            >
+              {/* Promo card */}
+              <div className="relative bg-neutral-900 rounded-2xl overflow-hidden flex flex-col justify-between p-6 h-[150px] shrink-0">
+                <img
+                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80&auto=format&fit=crop"
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 w-full h-full object-cover opacity-20"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/70 to-transparent" />
+
+                <div className="relative z-10">
+                  <span className="inline-flex items-center gap-1.5 bg-[#19B5D8]/20 text-[#19B5D8] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#19B5D8]/30 mb-2">
+                    <Star size={9} fill="currentColor" />
+                    NEW ARRIVALS
+                  </span>
+                  <p className="text-white font-bold text-lg leading-snug">Fresh stock just in</p>
+                  <p className="text-white/45 text-xs mt-0.5">240+ SKUs available now</p>
+                </div>
+
+                <Link
+                  href="/shop"
+                  className="relative z-10 inline-flex items-center gap-1 text-[#19B5D8] text-xs font-semibold hover:underline"
+                >
+                  Browse all <ArrowRight size={11} />
+                </Link>
+              </div>
+
+              {/* 2×2 Category grid */}
+              <div className="grid grid-cols-2 gap-3 flex-1">
+                {HERO_CATS.map((cat) => (
+                  <Link
+                    key={cat.name}
+                    href={cat.href}
+                    className={`group rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-neutral-100 hover:shadow-sm transition-all ${cat.cardCls}`}
+                  >
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 ${cat.iconBg}`}>
+                      <cat.icon size={17} strokeWidth={1.9} className={cat.iconC} />
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-semibold text-neutral-900 leading-tight">
+                        {cat.name}
+                      </p>
+                      <p className="text-[11px] text-neutral-400 mt-0.5">{cat.sub}</p>
+                      <p className={`text-[11px] font-medium flex items-center gap-0.5 mt-2 ${cat.linkC}`}>
+                        Shop now <ArrowRight size={9} />
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
-      {/* Trust bar */}
+      {/* ── Trust bar ────────────────────────────────────── */}
       <section className="bg-neutral-950 py-4 md:py-5">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-0 md:divide-x md:divide-white/8">
@@ -454,13 +606,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Instagram ── */}
+      {/* Instagram */}
       <section className="py-16 md:py-20 bg-white border-t border-neutral-100">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
 
-          {/* Header */}
           <div className="flex flex-col items-center text-center mb-8 md:mb-10">
-            {/* Instagram gradient icon */}
             <a
               href="https://www.instagram.com/evwheels_patna"
               target="_blank"
@@ -470,7 +620,6 @@ export default function Home() {
                 background: "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
               }}
             >
-              {/* Instagram SVG */}
               <svg viewBox="0 0 24 24" fill="white" className="w-7 h-7">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
               </svg>
@@ -485,33 +634,14 @@ export default function Home() {
             <p className="text-sm text-neutral-400">Cycle parts, dealer stories & daily updates from Patna</p>
           </div>
 
-          {/* Photo grid */}
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 md:gap-2">
             {[
-              {
-                src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop",
-                alt: "Cycle accessories",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80&auto=format&fit=crop",
-                alt: "Cycling road",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80&auto=format&fit=crop",
-                alt: "Cyclist outdoors",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&q=80&auto=format&fit=crop",
-                alt: "Mountain biking",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600&q=80&auto=format&fit=crop",
-                alt: "Cycling gear",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?w=600&q=80&auto=format&fit=crop",
-                alt: "Cycle parts",
-              },
+              { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop", alt: "Cycle accessories" },
+              { src: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80&auto=format&fit=crop", alt: "Cycling road" },
+              { src: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80&auto=format&fit=crop", alt: "Cyclist outdoors" },
+              { src: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&q=80&auto=format&fit=crop", alt: "Mountain biking" },
+              { src: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600&q=80&auto=format&fit=crop", alt: "Cycling gear" },
+              { src: "https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?w=600&q=80&auto=format&fit=crop", alt: "Cycle parts" },
             ].map((post, i) => (
               <motion.a
                 key={i}
@@ -529,7 +659,6 @@ export default function Home() {
                   alt={post.alt}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
                   <svg
                     viewBox="0 0 24 24"
@@ -543,7 +672,6 @@ export default function Home() {
             ))}
           </div>
 
-          {/* CTA */}
           <div className="mt-8 text-center">
             <a
               href="https://www.instagram.com/evwheels_patna"
@@ -560,7 +688,6 @@ export default function Home() {
               Follow us on Instagram
             </a>
           </div>
-
         </div>
       </section>
 
