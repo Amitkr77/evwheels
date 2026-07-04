@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/db";
 import { verifyAdmin } from "@/lib/adminAuth";
 import Category from "@/models/Category";
 import Product from "@/models/Product";
+import Subcategory from "@/models/Subcategory";
+import Segment from "@/models/Segment";
 import mongoose from "mongoose";
 
 // GET /api/categories/[id]
@@ -17,13 +19,13 @@ export async function GET(req, { params }) {
         let category;
 
         if (isObjectId) {
-            category = await Category.findById(id).populate(
-                "productCount"
-            );
+            category = await Category.findById(id)
+                .populate("productCount")
+                .populate("segment", "name slug");
         } else {
-            category = await Category.findOne({ slug: id }).populate(
-                "productCount"
-            );
+            category = await Category.findOne({ slug: id })
+                .populate("productCount")
+                .populate("segment", "name slug");
         }
 
         if (!category) {
@@ -71,10 +73,25 @@ export async function PATCH(req, { params }) {
         }
 
         const updateData = {};
+        let cascadeSegment = null;
 
         // Name
         if (body.name !== undefined) {
             updateData.name = body.name.trim();
+        }
+
+        // Segment — reassigning cascades to child subcategories/products
+        // so their denormalized `segment` cache stays consistent.
+        if (body.segment !== undefined) {
+            const segmentExists = await Segment.findById(body.segment);
+            if (!segmentExists) {
+                return NextResponse.json(
+                    { error: "Segment not found" },
+                    { status: 404 }
+                );
+            }
+            updateData.segment = body.segment;
+            cascadeSegment = body.segment;
         }
 
         // Description
@@ -116,6 +133,17 @@ export async function PATCH(req, { params }) {
             return NextResponse.json(
                 { error: "Category not found" },
                 { status: 404 }
+            );
+        }
+
+        if (cascadeSegment) {
+            await Subcategory.updateMany(
+                { category: id },
+                { segment: cascadeSegment }
+            );
+            await Product.updateMany(
+                { category: id },
+                { segment: cascadeSegment }
             );
         }
 

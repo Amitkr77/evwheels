@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
 import Category from "../models/Category.js";
+import Segment from "../models/Segment.js";
 import dotenv from "dotenv";
 import slugify from "slugify";
 
 dotenv.config();
+
+const EV_SEGMENT_NAME = "Electric Vehicles";
+const DEFAULT_SEGMENT_NAME = "Cycle Parts & Accessories";
 
 const CATEGORIES = [
   { name: 'Bells', sortOrder: 1 },
@@ -29,10 +33,10 @@ const CATEGORIES = [
   { name: 'Stands & Carriers', sortOrder: 21 },
   { name: 'Tools & Maintenance', sortOrder: 22 },
   { name: 'Wheels & Hubs', sortOrder: 23 },
-  { name: 'Electric Cycles', sortOrder: 24, isActive: false },
-  { name: 'EV Batteries & Chargers', sortOrder: 25, isActive: false },
-  { name: 'EV Motors & Controllers', sortOrder: 26, isActive: false },
-  { name: 'EV Accessories', sortOrder: 27, isActive: false },
+  { name: 'Electric Cycles', sortOrder: 24, isActive: false, segmentName: EV_SEGMENT_NAME },
+  { name: 'EV Batteries & Chargers', sortOrder: 25, isActive: false, segmentName: EV_SEGMENT_NAME },
+  { name: 'EV Motors & Controllers', sortOrder: 26, isActive: false, segmentName: EV_SEGMENT_NAME },
+  { name: 'EV Accessories', sortOrder: 27, isActive: false, segmentName: EV_SEGMENT_NAME },
 ];
 
 async function seed() {
@@ -41,9 +45,24 @@ async function seed() {
   await mongoose.connect(uri);
   console.log("✅ Connected to MongoDB");
 
+  const evSegment = await Segment.findOneAndUpdate(
+    { name: EV_SEGMENT_NAME },
+    { $setOnInsert: { name: EV_SEGMENT_NAME, slug: slugify(EV_SEGMENT_NAME, { lower: true, strict: true }), isActive: true, sortOrder: 1 } },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
+  const defaultSegment = await Segment.findOneAndUpdate(
+    { name: DEFAULT_SEGMENT_NAME },
+    { $setOnInsert: { name: DEFAULT_SEGMENT_NAME, slug: slugify(DEFAULT_SEGMENT_NAME, { lower: true, strict: true }), isActive: true, sortOrder: 0 } },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
+
   for (const cat of CATEGORIES) {
+    const { segmentName, ...catFields } = cat;
+    const segment = segmentName === EV_SEGMENT_NAME ? evSegment._id : defaultSegment._id;
+
     const categoryData = {
-      ...cat,
+      ...catFields,
+      segment,
       slug: slugify(cat.name, {
         lower: true,
         strict: true,
@@ -51,7 +70,7 @@ async function seed() {
     };
 
     await Category.findOneAndUpdate(
-      { name: cat.name },
+      { name: cat.name, segment },
       { $setOnInsert: categoryData },
       {
         upsert: true,

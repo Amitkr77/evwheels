@@ -12,6 +12,7 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
 
     const categoryId = searchParams.get("categoryId");
+    const segmentId = searchParams.get("segmentId");
     const activeOnly = searchParams.get("active") !== "false";
 
     const filter = {};
@@ -22,8 +23,13 @@ export async function GET(req) {
       filter.category = categoryId;
     }
 
+    if (segmentId) {
+      filter.segment = segmentId;
+    }
+
     const subcategories = await Subcategory.find(filter)
       .populate("category", "name slug")
+      .populate("segment", "name slug")
       .sort({ sortOrder: 1 });
 
     return NextResponse.json({
@@ -97,6 +103,7 @@ export async function POST(req) {
     const subcategory = await Subcategory.create({
       name,
       category,
+      segment: categoryExists.segment,
       description: body.description || "",
       image: body.image || "",
       sortOrder: body.sortOrder || 0,

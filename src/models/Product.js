@@ -101,6 +101,16 @@ const ProductSchema = new mongoose.Schema(
       ref: "Subcategory",
     },
 
+    // Denormalized from category.segment — never set directly by clients,
+    // kept in sync via the pre("validate") hook below so segment-level
+    // queries/filters don't need a 2-hop populate through category.
+    segment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Segment",
+      required: true,
+      index: true,
+    },
+
     colors: [
       {
         type: String,
@@ -137,6 +147,7 @@ const ProductSchema = new mongoose.Schema(
 // Single-field indexes (kept for targeted lookups)
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ subcategory: 1 });
+ProductSchema.index({ segment: 1 });
 ProductSchema.index({ price: 1 });
 
 // Compound indexes for common query patterns
@@ -146,21 +157,34 @@ ProductSchema.index({ isActive: 1, createdAt: -1 });
 ProductSchema.index({ isActive: 1, featured: 1, createdAt: -1 });
 // Category + active listing
 ProductSchema.index({ isActive: 1, category: 1, createdAt: -1 });
+// Segment + active listing
+ProductSchema.index({ isActive: 1, segment: 1, createdAt: -1 });
 // Price range filter
 ProductSchema.index({ isActive: 1, price: 1 });
 // Text search (required for $text queries)
 ProductSchema.index({ title: "text", description: "text", brand: "text" });
 
-// Auto-generate slug
-ProductSchema.pre("validate", function () {
+// Derive segment from category + auto-generate slug
+ProductSchema.pre("validate", async function () {
+  if (this.isModified("category") || !this.segment) {
+    const Category = mongoose.models.Category || mongoose.model("Category");
+    const parent = await Category.findById(this.category)
+      .select("segment")
+      .lean();
+
+    if (!parent) {
+      this.invalidate("category", "Referenced category does not exist");
+    } else {
+      this.segment = parent.segment;
+    }
+  }
+
   if (!this.slug && this.title) {
     this.slug = slugify(this.title, {
       lower: true,
       strict: true,
     });
   }
-
-
 });
 
 export default mongoose.models.Product ||

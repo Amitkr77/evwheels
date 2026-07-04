@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { verifyAdmin } from "@/lib/adminAuth";
-import mongoose from "mongoose";
-import Subcategory from "@/models/Subcategory";
+import Segment from "@/models/Segment";
 import Category from "@/models/Category";
-import Product from "@/models/Product";
+import mongoose from "mongoose";
 
-// GET /api/subcategories/[id]
+// GET /api/segments/[id]
 export async function GET(req, { params }) {
     try {
         await connectDB();
@@ -15,48 +14,40 @@ export async function GET(req, { params }) {
 
         const isObjectId = mongoose.Types.ObjectId.isValid(id);
 
-        let subcategory;
+        let segment;
 
         if (isObjectId) {
-            subcategory = await Subcategory.findById(id)
-                .populate("category", "name slug")
-                .populate("segment", "name slug");
+            segment = await Segment.findById(id).populate(
+                "categoryCount"
+            );
         } else {
-            subcategory = await Subcategory.findOne({
-                slug: id,
-            })
-                .populate("category", "name slug")
-                .populate("segment", "name slug");
+            segment = await Segment.findOne({ slug: id }).populate(
+                "categoryCount"
+            );
         }
 
-        if (!subcategory) {
+        if (!segment) {
             return NextResponse.json(
-                { error: "Subcategory not found" },
+                { error: "Segment not found" },
                 { status: 404 }
             );
         }
 
-        // Optional: product count
-        const productCount = await Product.countDocuments({
-            subcategory: subcategory._id,
-        });
-
         return NextResponse.json({
             success: true,
-            subcategory,
-            productCount,
+            segment,
         });
     } catch (error) {
-        console.error("[subcategories/id]", error.message);
+        console.error("[segments/id]", error.message);
 
         return NextResponse.json(
-            { error: "Failed to fetch subcategory" },
+            { error: "Failed to fetch segment" },
             { status: 500 }
         );
     }
 }
 
-// PATCH /api/subcategories/[id]
+// PATCH /api/segments/[id] — update segment
 export async function PATCH(req, { params }) {
     try {
         const admin = await verifyAdmin(req);
@@ -74,7 +65,7 @@ export async function PATCH(req, { params }) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return NextResponse.json(
-                { error: "Invalid subcategory ID" },
+                { error: "Invalid segment ID" },
                 { status: 400 }
             );
         }
@@ -106,59 +97,38 @@ export async function PATCH(req, { params }) {
             updateData.sortOrder = Number(body.sortOrder);
         }
 
-        // Category change (important validation)
-        if (body.category !== undefined) {
-            const categoryExists = await Category.findById(
-                body.category
-            );
-
-            if (!categoryExists) {
-                return NextResponse.json(
-                    { error: "Category not found" },
-                    { status: 404 }
-                );
-            }
-
-            updateData.category = body.category;
-            // findByIdAndUpdate doesn't reliably re-run the document-level
-            // derive-segment hook, so recompute it explicitly here.
-            updateData.segment = categoryExists.segment;
-        }
-
-        const subcategory = await Subcategory.findByIdAndUpdate(
+        const segment = await Segment.findByIdAndUpdate(
             id,
             updateData,
             {
                 new: true,
                 runValidators: true,
             }
-        )
-            .populate("category", "name slug")
-            .populate("segment", "name slug");
+        );
 
-        if (!subcategory) {
+        if (!segment) {
             return NextResponse.json(
-                { error: "Subcategory not found" },
+                { error: "Segment not found" },
                 { status: 404 }
             );
         }
 
         return NextResponse.json({
             success: true,
-            message: "Subcategory updated successfully",
-            subcategory,
+            message: "Segment updated successfully",
+            segment,
         });
     } catch (error) {
-        console.error("[subcategories/id]", error.message);
+        console.error("[segments/id]", error.message);
 
         return NextResponse.json(
-            { error: "Failed to update subcategory" },
+            { error: "Failed to update segment" },
             { status: 500 }
         );
     }
 }
 
-// DELETE /api/subcategories/[id]
+// DELETE /api/segments/[id]
 export async function DELETE(req, { params }) {
     try {
         const admin = await verifyAdmin(req);
@@ -175,45 +145,44 @@ export async function DELETE(req, { params }) {
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return NextResponse.json(
-                { error: "Invalid subcategory ID" },
+                { error: "Invalid segment ID" },
                 { status: 400 }
             );
         }
 
-        // Check if products exist under this subcategory
-        const productCount = await Product.countDocuments({
-            subcategory: id,
+        // Check if segment has categories
+        const categoryCount = await Category.countDocuments({
+            segment: id,
         });
 
-        if (productCount > 0) {
+        if (categoryCount > 0) {
             return NextResponse.json(
                 {
                     error:
-                        "Cannot delete subcategory with existing products",
+                        "Cannot delete segment with existing categories",
                 },
                 { status: 400 }
             );
         }
 
-        const subcategory =
-            await Subcategory.findByIdAndDelete(id);
+        const segment = await Segment.findByIdAndDelete(id);
 
-        if (!subcategory) {
+        if (!segment) {
             return NextResponse.json(
-                { error: "Subcategory not found" },
+                { error: "Segment not found" },
                 { status: 404 }
             );
         }
 
         return NextResponse.json({
             success: true,
-            message: "Subcategory deleted successfully",
+            message: "Segment deleted successfully",
         });
     } catch (error) {
-        console.error("[subcategories/id]", error.message);
+        console.error("[segments/id]", error.message);
 
         return NextResponse.json(
-            { error: "Failed to delete subcategory" },
+            { error: "Failed to delete segment" },
             { status: 500 }
         );
     }

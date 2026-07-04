@@ -4,6 +4,7 @@ import { verifyAdmin } from "@/lib/adminAuth";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
 import Subcategory from "@/models/Subcategory";
+import Segment from "@/models/Segment";
 
 // GET /api/products
 export async function GET(req) {
@@ -19,6 +20,8 @@ export async function GET(req) {
     const categorySlug = searchParams.get("category");
     const categoryId = searchParams.get("categoryId");
     const subcategoryId = searchParams.get("subcategory");
+    const segmentId = searchParams.get("segmentId");
+    const segmentSlug = searchParams.get("segment");
     const featured = searchParams.get("featured");
     const brand = searchParams.get("brand");
     const search = searchParams.get("search");
@@ -51,6 +54,20 @@ export async function GET(req) {
     // Subcategory filter
     if (subcategoryId) {
       filter.subcategory = subcategoryId;
+    }
+
+    // Segment filter by slug
+    if (segmentSlug) {
+      const segment = await Segment.findOne({ slug: segmentSlug }).select("_id").lean();
+      if (!segment) {
+        return NextResponse.json({ error: "Segment not found" }, { status: 404 });
+      }
+      filter.segment = segment._id;
+    }
+
+    // Segment filter by id
+    if (segmentId) {
+      filter.segment = segmentId;
     }
 
     // Featured filter
@@ -110,6 +127,7 @@ export async function GET(req) {
       Product.find(filter)
         .populate("category", "name slug")
         .populate("subcategory", "name slug")
+        .populate("segment", "name slug")
         .sort(sort)
         .skip(skip)
         .limit(limit)
@@ -313,6 +331,7 @@ export async function POST(req) {
 
       category: body.category,
       subcategory: body.subcategory,
+      segment: category.segment,
 
       images,
       specifications,
@@ -332,6 +351,11 @@ export async function POST(req) {
 
     await product.populate(
       "subcategory",
+      "name slug"
+    );
+
+    await product.populate(
+      "segment",
       "name slug"
     );
 

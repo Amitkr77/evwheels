@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed:admin": "node --env-file=.env src/seeders/seedAdmin.js",
-    "seed:catalogue": "node --env-file=.env scripts/seed-catalogue.mjs"
+    "seed:catalogue": "node --env-file=.env scripts/seed-catalogue.mjs",
+    "migrate:segments": "node --env-file=.env scripts/migrate-add-segments.mjs"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",

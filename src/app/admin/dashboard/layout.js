@@ -12,6 +12,7 @@ import {
     BarChart3,
     Warehouse,
     Layers,
+    Layers3,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
@@ -27,6 +28,7 @@ export default function AdminDashboardLayout({ children }) {
         { icon: Home, label: "Dashboard", path: "/admin/dashboard" },
         { icon: ShoppingCart, label: "Orders", path: "/admin/dashboard/orders", },
         { icon: Package, label: "Products", path: "/admin/dashboard/products" },
+        { icon: Layers3, label: "Segments", path: "/admin/dashboard/segments" },
         { icon: LayoutGrid, label: "Categories", path: "/admin/dashboard/categories" },
         { icon: Layers, label: "Subcategories", path: "/admin/dashboard/subcategories" },
         { icon: Ticket, label: "Coupons", path: "/admin/dashboard/coupons" },

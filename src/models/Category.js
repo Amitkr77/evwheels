@@ -3,16 +3,21 @@ import slugify from "slugify";
 
 const CategorySchema = new mongoose.Schema(
   {
+    segment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Segment",
+      required: true,
+      index: true,
+    },
+
     name: {
       type: String,
       required: true,
       trim: true,
-      unique: true,
     },
 
     slug: {
       type: String,
-      unique: true,
       index: true,
     },
 
@@ -57,6 +62,12 @@ CategorySchema.pre("validate", function () {
   }
 
 });
+
+// Scope name/slug uniqueness to the parent segment (mirrors Subcategory's
+// {category,name}/{category,slug} convention) so the same category name can
+// exist under different segments.
+CategorySchema.index({ segment: 1, name: 1 }, { unique: true });
+CategorySchema.index({ segment: 1, slug: 1 }, { unique: true });
 
 // Count active products
 CategorySchema.virtual("productCount", {

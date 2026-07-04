@@ -21,11 +21,13 @@ export async function GET(req, { params }) {
       product = await Product.findById(id)
         .populate("category", "name slug")
         .populate("subcategory", "name slug")
+        .populate("segment", "name slug")
         .lean();
     } else {
       product = await Product.findOne({ slug: id })
         .populate("category", "name slug")
         .populate("subcategory", "name slug")
+        .populate("segment", "name slug")
         .lean();
     }
 
@@ -124,6 +126,9 @@ export async function PUT(req, { params }) {
         );
       }
       updateData.category = body.category;
+      // findByIdAndUpdate doesn't reliably re-run the document-level
+      // derive-segment hook, so recompute it explicitly here.
+      updateData.segment = category.segment;
     }
 
     // Subcategory validation
@@ -196,7 +201,8 @@ export async function PUT(req, { params }) {
       }
     )
       .populate("category", "name slug")
-      .populate("subcategory", "name slug");
+      .populate("subcategory", "name slug")
+      .populate("segment", "name slug");
 
     if (!product) {
       return NextResponse.json(

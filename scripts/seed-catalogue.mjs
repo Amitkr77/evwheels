@@ -43,10 +43,26 @@ console.log("✓  Connected to MongoDB\n");
 
 // ── Inline schemas ────────────────────────────────────────────────────────────
 
+const SegmentSchema = new mongoose.Schema(
+  {
+    name:        { type: String, required: true, trim: true, unique: true },
+    slug:        { type: String, unique: true, index: true },
+    image:       { type: String, default: "" },
+    description: { type: String, default: "" },
+    isActive:    { type: Boolean, default: true, index: true },
+    sortOrder:   { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
+SegmentSchema.pre("validate", function () {
+  if (!this.slug && this.name) this.slug = slugify(this.name);
+});
+
 const CategorySchema = new mongoose.Schema(
   {
-    name:      { type: String, required: true, trim: true, unique: true },
-    slug:      { type: String, unique: true, index: true },
+    segment:   { type: mongoose.Schema.Types.ObjectId, ref: "Segment", required: true, index: true },
+    name:      { type: String, required: true, trim: true },
+    slug:      { type: String, index: true },
     image:     { type: String, default: "" },
     description: { type: String, default: "" },
     isActive:  { type: Boolean, default: true, index: true },
@@ -58,10 +74,13 @@ const CategorySchema = new mongoose.Schema(
 CategorySchema.pre("validate", function () {
   if (!this.slug && this.name) this.slug = slugify(this.name);
 });
+CategorySchema.index({ segment: 1, name: 1 }, { unique: true });
+CategorySchema.index({ segment: 1, slug: 1 }, { unique: true });
 
 const SubcategorySchema = new mongoose.Schema(
   {
     category:    { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true, index: true },
+    segment:     { type: mongoose.Schema.Types.ObjectId, ref: "Segment", required: true, index: true },
     name:        { type: String, required: true, trim: true },
     slug:        { type: String, index: true },
     image:       { type: String, default: "" },
@@ -90,6 +109,7 @@ const ProductSchema = new mongoose.Schema(
     brand:            { type: String, required: true, trim: true },
     category:         { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     subcategory:      { type: mongoose.Schema.Types.ObjectId, ref: "Subcategory" },
+    segment:          { type: mongoose.Schema.Types.ObjectId, ref: "Segment", required: true, index: true },
     colors:           [{ type: String, trim: true }],
     moq:              { type: Number, default: 1, min: 1 },
     boxQty:           { type: Number, default: 1, min: 1 },
@@ -99,9 +119,19 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const Segment     = mongoose.models.Segment     || mongoose.model("Segment",     SegmentSchema);
 const Category    = mongoose.models.Category    || mongoose.model("Category",    CategorySchema);
 const Subcategory = mongoose.models.Subcategory || mongoose.model("Subcategory", SubcategorySchema);
 const Product     = mongoose.models.Product     || mongoose.model("Product",     ProductSchema);
+
+// Catalogue items don't carry segment info, so they all land in one default
+// segment; reassign categories to other segments via the admin UI afterward.
+const DEFAULT_SEGMENT_NAME = "Cycle Parts & Accessories";
+const defaultSegment = await Segment.findOneAndUpdate(
+  { name: DEFAULT_SEGMENT_NAME },
+  { $setOnInsert: { name: DEFAULT_SEGMENT_NAME, slug: slugify(DEFAULT_SEGMENT_NAME), isActive: true, sortOrder: 0 } },
+  { upsert: true, new: true, setDefaultsOnInsert: true }
+);
 
 // ── Load data ─────────────────────────────────────────────────────────────────
 
@@ -126,8 +156,8 @@ for (let i = 0; i < categoryNames.length; i++) {
   const name = categoryNames[i];
   const slug = slugify(name);
   const doc = await Category.findOneAndUpdate(
-    { name },
-    { $setOnInsert: { name, slug, isActive: true, sortOrder: i } },
+    { name, segment: defaultSegment._id },
+    { $setOnInsert: { name, segment: defaultSegment._id, slug, isActive: true, sortOrder: i } },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
   categoryMap[name] = doc._id;
@@ -152,7 +182,7 @@ for (const key of subcategoryKeys) {
   const slug = slugify(subName);
   const doc = await Subcategory.findOneAndUpdate(
     { category: categoryId, name: subName },
-    { $setOnInsert: { category: categoryId, name: subName, slug, isActive: true, sortOrder: 0 } },
+    { $setOnInsert: { category: categoryId, segment: defaultSegment._id, name: subName, slug, isActive: true, sortOrder: 0 } },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
   subcategoryMap[key] = doc._id;
@@ -186,6 +216,7 @@ for (const item of catalogue) {
     stock:            100,
     category:         categoryId,
     subcategory:      subcategoryId,
+    segment:          defaultSegment._id,
     isActive:         true,
     featured:         false,
     images:           [],
