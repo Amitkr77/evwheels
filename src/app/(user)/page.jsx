@@ -495,7 +495,7 @@ export default function Home() {
                       <p className="text-[13px] font-semibold text-neutral-900 leading-tight">
                         {cat.name}
                       </p>
-                      <p className="text-[11px] text-neutral-500 mt-0.5">{cat.sub}</p>
+                      <p className="text-[11px] text-neutral-600 mt-0.5">{cat.sub}</p>
                       <p className={`text-[11px] font-medium flex items-center gap-0.5 mt-2 ${cat.linkC}`}>
                         Shop now <ArrowRight size={9} />
                       </p>

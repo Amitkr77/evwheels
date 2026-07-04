@@ -81,18 +81,22 @@ export default function TopBar() {
         </div>
 
         {/* Right — dots (desktop) */}
-        <div className="hidden lg:flex items-center gap-1.5 shrink-0">
+        <div className="hidden lg:flex items-center shrink-0">
           {ANNOUNCEMENTS.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
-              className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                i === current
-                  ? "bg-[#19B5D8]"
-                  : "bg-neutral-600 hover:bg-neutral-400"
-              }`}
+              className="p-[9px] flex items-center justify-center"
               aria-label={`Go to announcement ${i + 1}`}
-            />
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                  i === current
+                    ? "bg-[#19B5D8]"
+                    : "bg-neutral-600 hover:bg-neutral-400"
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>

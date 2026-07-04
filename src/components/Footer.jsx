@@ -227,7 +227,7 @@ export default function Footer() {
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-[#0C7290] text-white rounded-full text-sm font-medium hover:bg-[#0a5f78] transition-colors flex items-center justify-center gap-2"
               >
                 <Newspaper size={15} />
                 Subscribe
