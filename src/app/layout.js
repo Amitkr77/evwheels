@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import AuthProvider from "@/providers/AuthProvider";
 
@@ -144,8 +145,10 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: websiteSchemaJSON }}
         />
         {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9J6P8DLC69" />
-        <script
+        <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-9J6P8DLC69" />
+        <Script
+          id="ga-init"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-9J6P8DLC69');`,
           }}

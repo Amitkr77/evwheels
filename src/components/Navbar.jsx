@@ -137,6 +137,7 @@ export default function Navbar() {
                     <img
                       src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80&auto=format&fit=crop"
                       alt="Cycle accessories"
+                      loading="lazy"
                       className="absolute inset-0 h-full w-full object-cover opacity-60"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
