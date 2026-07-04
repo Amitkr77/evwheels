@@ -94,7 +94,7 @@ export default function Footer() {
               </a>
             </div>
 
-            <div className="flex items-start gap-2 text-sm text-[#64748B]">
+            <div className="flex items-start gap-2 text-sm text-[#94A3B8]">
               <MapPin size={16} className="text-[#19B5D8] mt-0.5 shrink-0" />
               <span>Naubatpur, Patna, Bihar 801109</span>
             </div>
@@ -102,9 +102,9 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-xs font-bold text-white mb-6 uppercase tracking-widest">
+            <h3 className="text-xs font-bold text-white mb-6 uppercase tracking-widest">
               Quick Links
-            </h4>
+            </h3>
             <ul className="space-y-3.5 text-sm text-[#94A3B8]">
               <li>
                 <Link
@@ -151,9 +151,9 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="text-xs font-bold text-white mb-6 uppercase tracking-widest">
+            <h3 className="text-xs font-bold text-white mb-6 uppercase tracking-widest">
               Support
-            </h4>
+            </h3>
             <ul className="space-y-3.5 text-sm text-[#94A3B8]">
               <li className="flex items-center gap-2">
                 <Truck size={15} className="text-[#19B5D8] shrink-0" />
@@ -205,10 +205,10 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-xs font-bold text-white mb-6 uppercase tracking-widest flex items-center gap-2">
+            <h3 className="text-xs font-bold text-white mb-6 uppercase tracking-widest flex items-center gap-2">
               <Mail size={14} />
               Stay Updated
-            </h4>
+            </h3>
             <p className="text-sm text-[#94A3B8] mb-6 leading-relaxed">
               Get the latest on new models, offers, and Patna ride tips.
             </p>
@@ -253,7 +253,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-[#334155] pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-[#64748B]">
+        <div className="border-t border-[#334155] pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-[#94A3B8]">
           <p>© 2025 EVWheels. Crafted with care in Patna.</p>
 
           <div className="flex flex-wrap justify-center gap-6">

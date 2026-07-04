@@ -46,7 +46,7 @@ const HERO_CATS = [
     cardCls: "bg-red-50 hover:border-red-200",
     iconBg:  "bg-red-100",
     iconC:   "text-red-500",
-    linkC:   "text-red-400",
+    linkC:   "text-red-700",
   },
   {
     name:    "Lights & Reflectors",
@@ -56,7 +56,7 @@ const HERO_CATS = [
     cardCls: "bg-amber-50 hover:border-amber-200",
     iconBg:  "bg-amber-100",
     iconC:   "text-amber-500",
-    linkC:   "text-amber-400",
+    linkC:   "text-amber-700",
   },
   {
     name:    "Chains & Gears",
@@ -66,7 +66,7 @@ const HERO_CATS = [
     cardCls: "bg-[#F0FEFF] hover:border-[#19B5D8]/30",
     iconBg:  "bg-[#DDF8FD]",
     iconC:   "text-[#19B5D8]",
-    linkC:   "text-[#19B5D8]",
+    linkC:   "text-[#0C7290]",
   },
   {
     name:    "Tools & Kits",
@@ -76,7 +76,7 @@ const HERO_CATS = [
     cardCls: "bg-emerald-50 hover:border-emerald-200",
     iconBg:  "bg-emerald-100",
     iconC:   "text-emerald-600",
-    linkC:   "text-emerald-400",
+    linkC:   "text-emerald-700",
   },
 ];
 
@@ -130,7 +130,7 @@ function HeroSearch() {
       />
       <button
         type="submit"
-        className="mr-1.5 px-4 py-2 bg-[#19B5D8] text-white text-xs font-semibold rounded-full hover:bg-[#17a3c4] transition-colors shrink-0"
+        className="mr-1.5 px-4 py-2 bg-[#0C7290] text-white text-xs font-semibold rounded-full hover:bg-[#0a5f78] transition-colors shrink-0"
       >
         Search
       </button>
@@ -217,7 +217,7 @@ function FeaturedProducts() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="flex items-end justify-between mb-8 md:mb-10">
           <div>
-            <p className="text-[#19B5D8] text-[11px] font-semibold tracking-[0.2em] uppercase mb-2">
+            <p className="text-[#0C7290] text-[11px] font-semibold tracking-[0.2em] uppercase mb-2">
               New Arrivals
             </p>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
@@ -226,7 +226,7 @@ function FeaturedProducts() {
           </div>
           <Link
             href="/shop"
-            className="hidden sm:flex items-center gap-1 text-sm text-neutral-400 hover:text-neutral-900 transition-colors"
+            className="hidden sm:flex items-center gap-1 text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
           >
             View all <ArrowRight size={14} />
           </Link>
@@ -249,7 +249,7 @@ function FeaturedProducts() {
         </div>
 
         <div className="mt-8 sm:hidden text-center">
-          <Link href="/shop" className="text-sm font-medium text-[#19B5D8]">
+          <Link href="/shop" className="text-sm font-medium text-[#0C7290]">
             View all products →
           </Link>
         </div>
@@ -283,10 +283,12 @@ function ShowcaseSection() {
             transition={{ duration: 0.6 }}
             className="relative lg:w-[52%] rounded-2xl overflow-hidden min-h-[480px] md:min-h-[560px] flex items-end"
           >
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop"
               alt="EV Cycle"
-              className="absolute inset-0 w-full h-full object-cover"
+              fill
+              sizes="(max-width: 1024px) 100vw, 52vw"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/5" />
 
@@ -331,7 +333,7 @@ function ShowcaseSection() {
             className="lg:flex-1 flex flex-col"
           >
             <div className="mb-6">
-              <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-[0.2em] mb-1">
+              <p className="text-[11px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-1">
                 Top Picks
               </p>
               <h3 className="text-xl font-bold text-neutral-900">Trending right now</h3>
@@ -354,7 +356,7 @@ function ShowcaseSection() {
             </div>
 
             <div className="mt-5 pt-5 border-t border-neutral-100 flex items-center justify-between">
-              <p className="text-sm text-neutral-400">240+ products in stock</p>
+              <p className="text-sm text-neutral-500">240+ products in stock</p>
               <Link
                 href="/shop"
                 className="flex items-center gap-1 text-sm font-semibold text-neutral-900 hover:text-[#19B5D8] transition-colors"
@@ -393,7 +395,7 @@ export default function Home() {
               {/* Top content */}
               <div className="relative z-10">
                 {/* Offer badge */}
-                <div className="inline-flex items-center gap-1.5 bg-[#DDF8FD] text-[#19B5D8] text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5 border border-[#19B5D8]/15">
+                <div className="inline-flex items-center gap-1.5 bg-[#DDF8FD] text-[#0C7290] text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5 border border-[#19B5D8]/15">
                   <Truck size={11} />
                   Free delivery above ₹5,000 · COD Available
                 </div>
@@ -402,7 +404,7 @@ export default function Home() {
                 <h1 className="text-4xl sm:text-5xl md:text-[3.25rem] font-bold text-neutral-900 leading-[1.1] tracking-tight mb-4">
                   Cycle Parts.
                   <br />
-                  <span className="text-[#19B5D8]">Wholesale</span> Price.
+                  <span className="text-[#0C7290]">Wholesale</span> Price.
                 </h1>
 
                 <p className="text-neutral-500 text-[15px] leading-relaxed max-w-[440px] mb-7">
@@ -435,7 +437,7 @@ export default function Home() {
                 {HERO_STATS.map((s) => (
                   <div key={s.label}>
                     <p className="text-2xl font-bold text-neutral-900 leading-none">{s.num}</p>
-                    <p className="text-[11px] text-neutral-400 mt-1.5 tracking-wide">{s.label}</p>
+                    <p className="text-[11px] text-neutral-500 mt-1.5 tracking-wide">{s.label}</p>
                   </div>
                 ))}
               </div>
@@ -450,11 +452,14 @@ export default function Home() {
             >
               {/* Promo card */}
               <div className="relative bg-neutral-900 rounded-2xl overflow-hidden flex flex-col justify-between p-6 h-[150px] shrink-0">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80&auto=format&fit=crop"
                   alt=""
                   aria-hidden="true"
-                  className="absolute inset-0 w-full h-full object-cover opacity-20"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 360px"
+                  className="object-cover opacity-20"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/70 to-transparent" />
 
@@ -490,7 +495,7 @@ export default function Home() {
                       <p className="text-[13px] font-semibold text-neutral-900 leading-tight">
                         {cat.name}
                       </p>
-                      <p className="text-[11px] text-neutral-400 mt-0.5">{cat.sub}</p>
+                      <p className="text-[11px] text-neutral-500 mt-0.5">{cat.sub}</p>
                       <p className={`text-[11px] font-medium flex items-center gap-0.5 mt-2 ${cat.linkC}`}>
                         Shop now <ArrowRight size={9} />
                       </p>
@@ -513,7 +518,7 @@ export default function Home() {
                 <Icon size={16} className="text-[#19B5D8] shrink-0" strokeWidth={1.8} />
                 <div>
                   <p className="text-[12px] font-semibold text-white">{label}</p>
-                  <p className="text-[11px] text-white/35">{sub}</p>
+                  <p className="text-[11px] text-white/50">{sub}</p>
                 </div>
               </div>
             ))}
@@ -534,7 +539,7 @@ export default function Home() {
       <section className="py-20 md:py-24 bg-neutral-50 border-t border-neutral-100">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="max-w-md mb-12">
-            <p className="text-[#19B5D8] text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
+            <p className="text-[#0C7290] text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
               Why EVWheels
             </p>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
@@ -566,10 +571,12 @@ export default function Home() {
 
       {/* Image + CTA */}
       <section className="relative h-[65vh] md:h-[80vh] overflow-hidden flex items-center">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1621394457665-6e6d4961f686?q=80&w=1469&auto=format&fit=crop"
           alt="Cycling"
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
 
@@ -615,6 +622,7 @@ export default function Home() {
               href="https://www.instagram.com/evwheels_patna"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="EVWheels on Instagram"
               className="mb-4 w-14 h-14 rounded-2xl flex items-center justify-center"
               style={{
                 background: "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
@@ -625,13 +633,13 @@ export default function Home() {
               </svg>
             </a>
 
-            <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-[0.2em] mb-1">
+            <p className="text-[11px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-1">
               Follow our journey
             </p>
             <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 tracking-tight mb-1">
               @evwheels_patna
             </h2>
-            <p className="text-sm text-neutral-400">Cycle parts, dealer stories & daily updates from Patna</p>
+            <p className="text-sm text-neutral-500">Cycle parts, dealer stories & daily updates from Patna</p>
           </div>
 
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 md:gap-2">
@@ -654,10 +662,12 @@ export default function Home() {
                 transition={{ duration: 0.35, delay: i * 0.06 }}
                 className="group relative aspect-square overflow-hidden rounded-xl bg-neutral-100 block"
               >
-                <img
+                <Image
                   src={post.src}
                   alt={post.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  fill
+                  sizes="(max-width: 640px) 33vw, 16vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
                   <svg

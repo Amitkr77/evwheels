@@ -27,7 +27,7 @@ export default function ShopByCategory() {
         {/* Header */}
         <div className="flex items-end justify-between mb-10 md:mb-12">
           <div>
-            <p className="text-[#19B5D8] text-xs font-semibold tracking-widest uppercase mb-2">
+            <p className="text-[#0C7290] text-xs font-semibold tracking-widest uppercase mb-2">
               Browse
             </p>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900">
@@ -70,7 +70,7 @@ export default function ShopByCategory() {
         <div className="mt-8 sm:hidden text-center">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#19B5D8]"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#0C7290]"
           >
             View All Products <ArrowRight size={14} />
           </Link>
