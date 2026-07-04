@@ -144,11 +144,11 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: websiteSchemaJSON }}
         />
-        {/* Google Analytics */}
-        <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-9J6P8DLC69" />
+        {/* Google Analytics — deferred until the browser is idle so it doesn't compete with the initial render */}
+        <Script strategy="lazyOnload" src="https://www.googletagmanager.com/gtag/js?id=G-9J6P8DLC69" />
         <Script
           id="ga-init"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-9J6P8DLC69');`,
           }}
