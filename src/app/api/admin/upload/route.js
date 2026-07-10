@@ -8,6 +8,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Whitelisted server-side so clients can't write into arbitrary Cloudinary folders.
+const FOLDERS = {
+  segment: "evwheels/segments",
+  category: "evwheels/categories",
+  subcategory: "evwheels/subcategories",
+  product: "evwheels/products",
+};
+
 export async function POST(req) {
   const admin = await verifyAdmin(req);
   if (!admin)
@@ -15,9 +23,12 @@ export async function POST(req) {
 
   const formData = await req.formData();
   const file = formData.get("file");
+  const type = formData.get("type");
 
   if (!file)
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
+
+  const folder = FOLDERS[type] || FOLDERS.product;
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -25,7 +36,7 @@ export async function POST(req) {
   const result = await new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
-        { folder: "evwheels/products", resource_type: "image" },
+        { folder, resource_type: "image" },
         (err, res) => (err ? reject(err) : resolve(res))
       )
       .end(buffer);

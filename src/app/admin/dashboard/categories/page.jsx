@@ -14,6 +14,7 @@ import {
   FolderOpen,
   Loader2,
 } from "lucide-react";
+import ImageUploadField from "@/components/admin/ImageUploadField";
 
 const emptyForm = {
   name: "",
@@ -367,28 +368,12 @@ export default function CategoriesPage() {
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-neutral-600 mb-2">
-          Image URL
-        </label>
-        <input
-          type="text"
-          value={formData.image}
-          onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
-          placeholder="https://example.com/image.jpg"
-        />
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt="Preview"
-            className="mt-4 max-h-40 rounded-lg border border-neutral-200/60 object-cover"
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
-          />
-        )}
-      </div>
+      <ImageUploadField
+        value={formData.image}
+        onChange={(url) => setFormData({ ...formData, image: url })}
+        type="category"
+        label="Image"
+      />
 
       <div className="grid grid-cols-2 gap-6">
         <div>

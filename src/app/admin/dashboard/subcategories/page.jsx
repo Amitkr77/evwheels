@@ -14,6 +14,7 @@ import {
   Tag,
   AlertTriangle,
 } from "lucide-react";
+import ImageUploadField from "@/components/admin/ImageUploadField";
 
 const EMPTY_FORM = {
   name: "",
@@ -350,28 +351,14 @@ export default function SubcategoriesPage() {
         />
       </div>
 
-      {/* Image URL */}
-      <div>
-        <label className="block text-sm font-medium text-neutral-600 mb-2">
-          Image URL
-        </label>
-        <input
-          type="text"
-          value={formData.image}
-          onChange={(e) =>
-            setFormData({ ...formData, image: e.target.value })
-          }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
-          placeholder="https://..."
-        />
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt="Preview"
-            className="mt-3 max-h-36 rounded-lg border border-neutral-200/60"
-          />
-        )}
-      </div>
+      {/* Image */}
+      <ImageUploadField
+        value={formData.image}
+        onChange={(url) => setFormData({ ...formData, image: url })}
+        type="subcategory"
+        label="Image"
+        previewClassName="mt-3 max-h-36 rounded-lg border border-neutral-200/60"
+      />
 
       {/* Sort Order */}
       <div>
