@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { analytics } from "@/lib/analytics";
 
 export default function Settings() {
   const [user, setUser] = useState(null);
@@ -52,6 +53,10 @@ export default function Settings() {
         throw new Error(data.error || "Failed to save changes");
       }
       const updated = await res.json();
+      const fieldsChanged = [];
+      if (user?.name !== updated.name) fieldsChanged.push("name");
+      if (user?.phone !== updated.phone) fieldsChanged.push("phone");
+      analytics.track("Profile Updated", { fields_changed: fieldsChanged });
       setUser(updated);
       setMessage({ type: "success", text: "Profile updated successfully" });
     } catch (err) {

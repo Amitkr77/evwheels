@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import AuthProvider from "@/providers/AuthProvider";
+import PostHogProvider from "@/providers/PostHogProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -155,7 +156,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
-        <AuthProvider>{children}</AuthProvider>
+        <PostHogProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

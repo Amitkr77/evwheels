@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { useAuthStore } from "@/store/authStore";
+import { analytics } from "@/lib/analytics";
 
 export const useWishlistStore = create((set, get) => ({
   items: [],
@@ -29,6 +30,12 @@ export const useWishlistStore = create((set, get) => ({
       return;
     }
 
+    // Capture the product name before mutating state, for the remove-path
+    // tracking call (the item is about to disappear from `items`).
+    const existingItem = get().items.find(
+      (item) => item._id?.toString() === productId
+    );
+
     try {
       const res = await fetch("/api/user/wishlist", {
         method: "POST",
@@ -44,12 +51,23 @@ export const useWishlistStore = create((set, get) => ({
       if (wished) {
         // Refetch to get full product snapshot
         await get().fetchWishlist();
+        const addedItem = get().items.find(
+          (item) => item._id?.toString() === productId
+        );
+        analytics.track("Added to Wishlist", {
+          product_id: productId,
+          product_name: addedItem?.title,
+        });
       } else {
         set((state) => ({
           items: state.items.filter(
             (item) => item._id?.toString() !== productId
           ),
         }));
+        analytics.track("Removed from Wishlist", {
+          product_id: productId,
+          product_name: existingItem?.title,
+        });
       }
     } catch (err) {
       console.error("Wishlist toggle failed:", err);

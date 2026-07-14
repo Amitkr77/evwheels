@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useAuthStore } from "@/store/authStore";
+import { analytics } from "@/lib/analytics";
 
 export const useCartStore = create(
   persist(
@@ -55,13 +56,30 @@ export const useCartStore = create(
   },
 
   // Add to cart
-  addToCart: async (product, quantity = 1) => {
+  addToCart: async (product, quantity = 1, meta = {}) => {
     const { isAuthenticated } = useAuthStore.getState();
     const { items } = get();
 
     // Enforce MOQ — never add less than the minimum order quantity
     const moq = product.moq || 1;
     const effectiveQty = Math.max(quantity, moq);
+
+    const trackAdded = (totals) => {
+      analytics.track("Added to Cart", {
+        product_id: product._id,
+        slug: product.slug,
+        product_name: product.title,
+        category: product.category?.name || product.category,
+        brand: product.brand,
+        price: product.price,
+        currency: "INR",
+        stock: product.stock,
+        quantity: effectiveQty,
+        source: meta.source || "unknown",
+        cart_value: totals.totalPrice,
+        item_count: totals.totalQuantity,
+      });
+    };
 
     if (isAuthenticated) {
       try {
@@ -79,6 +97,7 @@ export const useCartStore = create(
           items: data.items,
           ...totals,
         });
+        trackAdded(totals);
       } catch (err) {
         console.error("Add to cart failed", err);
       }
@@ -114,6 +133,7 @@ export const useCartStore = create(
         items: updatedCart,
         ...totals,
       });
+      trackAdded(totals);
     }
   },
 
@@ -126,9 +146,22 @@ export const useCartStore = create(
       (i) => i.product?._id?.toString() === productId || i.productId === productId
     );
     const moq = cartItem?.product?.moq || 1;
+    const previousQuantity = cartItem?.quantity ?? 0;
+    const direction = quantity > previousQuantity ? "increase" : "decrease";
 
     if (quantity <= 0) return get().removeFromCart(productId);
     if (quantity < moq) return; // block going below MOQ
+
+    const trackUpdated = (totals) => {
+      analytics.track("Cart Updated", {
+        product_id: productId,
+        product_name: cartItem?.product?.title,
+        quantity,
+        direction,
+        cart_value: totals.totalPrice,
+        item_count: totals.totalQuantity,
+      });
+    };
 
     if (isAuthenticated) {
       try {
@@ -152,6 +185,7 @@ export const useCartStore = create(
           items: data.items,
           ...totals,
         });
+        trackUpdated(totals);
       } catch (err) {
         console.error("Update quantity failed", err);
       }
@@ -169,6 +203,7 @@ export const useCartStore = create(
         items: updatedCart,
         ...totals,
       });
+      trackUpdated(totals);
     }
   },
 
@@ -176,6 +211,22 @@ export const useCartStore = create(
   removeFromCart: async (productId) => {
     const { isAuthenticated } = useAuthStore.getState();
     const { items } = get();
+
+    // Capture the item's details before it's removed — needed for tracking.
+    const removedItem = items.find(
+      (i) => i.product?._id?.toString() === productId || i.productId === productId
+    );
+
+    const trackRemoved = (totals) => {
+      analytics.track("Removed from Cart", {
+        product_id: productId,
+        product_name: removedItem?.product?.title,
+        price: removedItem?.product?.price ?? removedItem?.price,
+        quantity: removedItem?.quantity ?? 0,
+        cart_value: totals.totalPrice,
+        item_count: totals.totalQuantity,
+      });
+    };
 
     if (isAuthenticated) {
       try {
@@ -199,6 +250,7 @@ export const useCartStore = create(
           items: data.items,
           ...totals,
         });
+        trackRemoved(totals);
       } catch (err) {
         console.error("Remove from cart failed", err);
       }
@@ -214,11 +266,19 @@ export const useCartStore = create(
         items: updatedCart,
         ...totals,
       });
+      trackRemoved(totals);
     }
   },
 
   // Clear cart
   clearCart: () => {
+    const { items, totalPrice, totalQuantity } = get();
+    if (items.length > 0) {
+      analytics.track("Cart Cleared", {
+        cart_value: totalPrice,
+        item_count: totalQuantity,
+      });
+    }
     localStorage.removeItem("guestCart");
     set({ items: [], totalQuantity: 0, totalPrice: 0 });
   },

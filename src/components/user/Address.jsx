@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Plus, Trash2, Star } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 const EMPTY_FORM = {
   fullName: "",
@@ -73,6 +74,12 @@ export default function Address() {
         const data = await res.json();
         throw new Error(data.error || "Failed to save address");
       }
+      const created = await res.json();
+      analytics.track("Address Added", {
+        address_id: created._id,
+        city: form.city,
+        state: form.state,
+      });
       await fetchAddresses();
       setForm(EMPTY_FORM);
       setShowForm(false);
@@ -91,6 +98,7 @@ export default function Address() {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to delete");
+      analytics.track("Address Deleted", { address_id: id });
       setAddresses((prev) => prev.filter((a) => a._id !== id));
     } catch (err) {
       setError(err.message);
@@ -106,6 +114,7 @@ export default function Address() {
         body: JSON.stringify({ isDefault: true }),
       });
       if (!res.ok) throw new Error("Failed to update");
+      analytics.track("Address Updated", { address_id: id, field: "isDefault" });
       await fetchAddresses();
     } catch (err) {
       setError(err.message);

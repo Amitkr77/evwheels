@@ -30,7 +30,7 @@ import {
   ChevronUp,
   Upload,
 } from "lucide-react";
-import ImageUploadField from "@/components/admin/ImageUploadField";
+import MultiImageUploadField from "@/components/admin/MultiImageUploadField";
 
 // ─── Empty form template ────────────────────────────────────────
 const EMPTY_FORM = {
@@ -43,7 +43,7 @@ const EMPTY_FORM = {
   stock: 0,
   warranty: 0,
   colors: "",
-  image: "",
+  images: [],
   specifications: [],
   featured: false,
   isActive: true,
@@ -244,15 +244,14 @@ function ProductForm({
         />
       </div>
 
-      {/* Image — URL input + Cloudinary upload */}
+      {/* Images — multi-upload gallery, first = cover image */}
       <div className="md:col-span-2">
-        <ImageUploadField
-          value={formData.image}
-          onChange={(url) => set("image", url)}
+        <MultiImageUploadField
+          value={formData.images}
+          onChange={(images) => set("images", images)}
           type="product"
-          label="Product Image"
-          inputClassName={inp}
-          previewClassName="max-h-36 rounded-xl border border-neutral-200/60 object-contain"
+          label="Product Images"
+          max={6}
         />
       </div>
 
@@ -430,6 +429,17 @@ export default function ProductsPage() {
     p.images?.[0]?.url ||
     p.image ||
     "";
+  // Normalizes to a plain array of URL strings — handles both the current
+  // schema (images: [String]) and a legacy shape some older docs may still
+  // have (images: [{ url, isPrimary }]).
+  const getImages = (p) => {
+    if (Array.isArray(p.images) && p.images.length > 0) {
+      return p.images
+        .map((img) => (typeof img === "string" ? img : img?.url))
+        .filter(Boolean);
+    }
+    return p.image ? [p.image] : [];
+  };
   const getName = (p) => p.name || p.title || "";
   const getCategoryName = (p) => {
     if (typeof p.category === "object" && p.category?.name)
@@ -674,7 +684,7 @@ export default function ProductsPage() {
           .split(",")
           .map((c) => c.trim())
           .filter(Boolean),
-        images: formData.image ? [formData.image.trim()] : [],
+        images: formData.images,
         specifications: formData.specifications.filter((s) => s.key.trim()),
         featured: formData.featured,
         isActive: formData.isActive,
@@ -742,7 +752,7 @@ export default function ProductsPage() {
           .split(",")
           .map((c) => c.trim())
           .filter(Boolean),
-        images: formData.image ? [formData.image.trim()] : [],
+        images: formData.images,
         specifications: formData.specifications.filter((s) => s.key.trim()),
         featured: formData.featured,
         isActive: formData.isActive,
@@ -946,7 +956,7 @@ export default function ProductsPage() {
       stock: getStock(product),
       warranty: product.warranty || 0,
       colors: Array.isArray(product.colors) ? product.colors.join(", ") : "",
-      image: getImage(product),
+      images: getImages(product),
       specifications: Array.isArray(product.specifications)
         ? product.specifications
         : [],
@@ -975,214 +985,8 @@ export default function ProductsPage() {
     });
   };
 
-  // ─── Form input component ───────────────────────────────────
-  const FormField = ({ label, required, children, span2 }) => (
-    <div className={span2 ? "md:col-span-2" : ""}>
-      <label className="block text-sm font-medium text-neutral-600 mb-2">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      {children}
-    </div>
-  );
-
   const inputClass =
     "w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm";
-  const selectClass =
-    "w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm bg-white";
-
-  // ─── Product form (shared for create & edit) ────────────────
-  const renderForm = (onSubmit, submitLabel) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <FormField label="Product Title" required>
-        <input
-          type="text"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className={inputClass}
-          placeholder="e.g. E-Moto X500"
-        />
-      </FormField>
-
-      <FormField label="Brand" required>
-        <input
-          type="text"
-          value={formData.brand}
-          onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-          className={inputClass}
-          placeholder="e.g. EVWheels"
-        />
-      </FormField>
-
-      <FormField label="Category" required>
-        <select
-          value={formData.category}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              category: e.target.value,
-              subcategory: "",
-            })
-          }
-          className={selectClass}
-        >
-          <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </FormField>
-
-      <FormField label="Subcategory" required>
-        <select
-          value={formData.subcategory}
-          onChange={(e) =>
-            setFormData({ ...formData, subcategory: e.target.value })
-          }
-          className={selectClass}
-          disabled={!formData.category}
-        >
-          <option value="">
-            {formData.category ? "Select Subcategory" : "Select a category first"}
-          </option>
-          {formSubcategories.map((sub) => (
-            <option key={sub._id} value={sub._id}>
-              {sub.name}
-            </option>
-          ))}
-        </select>
-      </FormField>
-
-      <FormField label="Description" required span2>
-        <textarea
-          value={formData.description}
-          onChange={(e) =>
-            setFormData({ ...formData, description: e.target.value })
-          }
-          className={`${inputClass} h-28 resize-none`}
-          placeholder="Detailed product description..."
-        />
-      </FormField>
-
-      <FormField label="Price (₹)" required>
-        <input
-          type="number"
-          value={formData.price}
-          onChange={(e) =>
-            setFormData({ ...formData, price: e.target.value })
-          }
-          className={inputClass}
-          placeholder="0"
-          min="0"
-          step="1"
-        />
-      </FormField>
-
-      <FormField label="Stock" required>
-        <input
-          type="number"
-          value={formData.stock}
-          onChange={(e) =>
-            setFormData({ ...formData, stock: e.target.value })
-          }
-          className={inputClass}
-          min="0"
-          placeholder="0"
-        />
-      </FormField>
-
-      <FormField label="Image URL" span2>
-        <input
-          type="text"
-          value={formData.image}
-          onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-          className={inputClass}
-          placeholder="https://example.com/image.jpg"
-        />
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt="Preview"
-            className="mt-3 max-h-40 rounded-lg border border-neutral-200/60 object-cover"
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
-          />
-        )}
-      </FormField>
-
-      <div className="md:col-span-2 flex items-center gap-8 pt-2">
-        <button
-          type="button"
-          onClick={() =>
-            setFormData({ ...formData, featured: !formData.featured })
-          }
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          {formData.featured ? (
-            <ToggleRight size={32} className="text-[#19B5D8]" />
-          ) : (
-            <ToggleLeft size={32} className="text-neutral-400" />
-          )}
-          <span
-            className={`text-sm font-medium ${
-              formData.featured ? "text-[#19B5D8]" : "text-neutral-500"
-            }`}
-          >
-            Featured
-          </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() =>
-            setFormData({ ...formData, isActive: !formData.isActive })
-          }
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          {formData.isActive ? (
-            <ToggleRight size={32} className="text-[#19B5D8]" />
-          ) : (
-            <ToggleLeft size={32} className="text-neutral-400" />
-          )}
-          <span
-            className={`text-sm font-medium ${
-              formData.isActive ? "text-[#19B5D8]" : "text-neutral-500"
-            }`}
-          >
-            Active
-          </span>
-        </button>
-      </div>
-
-      <div className="flex gap-4 pt-4 md:col-span-2">
-        <button
-          onClick={() => {
-            setShowCreateModal(false);
-            setEditProduct(null);
-            setFormData({ ...EMPTY_FORM });
-          }}
-          disabled={submitting}
-          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors disabled:opacity-50"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={onSubmit}
-          disabled={submitting}
-          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
-        >
-          {submitting && <Loader2 size={18} className="animate-spin" />}
-          {submitting
-            ? submitLabel === "Create Product"
-              ? "Creating..."
-              : "Updating..."
-            : submitLabel}
-        </button>
-      </div>
-    </div>
-  );
 
   // ─── Loading skeleton ───────────────────────────────────────
   const renderLoading = () => (

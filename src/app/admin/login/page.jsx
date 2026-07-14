@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, Shield, ArrowRight } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import { analytics } from "@/lib/analytics";
 
 export default function LoginPage() {
   const { login, checkAuth } = useAuthStore();
@@ -44,6 +45,7 @@ export default function LoginPage() {
         }
 
         login(data.user);
+        analytics.track("User Logged In", { method: "password" });
         await checkAuth();
         router.push("/admin/dashboard");
       } catch (err) {

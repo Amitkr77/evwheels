@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 const PAGE_SIZE = 24;
 
@@ -228,10 +229,37 @@ function ShopInner() {
       : "/api/products?limit=200";
     fetch(url)
       .then((r) => r.json())
-      .then((d) => setProducts(d.products || []))
+      .then((d) => {
+        setProducts(d.products || []);
+        // No real Category._id is available at this call site (CATEGORIES
+        // above is a static curated slug/label list for shop nav, not the
+        // DB collection) — slug doubles as category_id, which is still a
+        // stable, useful dimension for grouping in PostHog.
+        const cat = CATEGORIES.find((c) => c.slug === category) || CATEGORIES[0];
+        analytics.track("Category Viewed", {
+          category_id: cat.slug || "all",
+          category_name: cat.label,
+        });
+      })
       .catch(() => setProducts([]))
       .finally(() => setLoading(false));
   }, [category]);
+
+  // Search Performed — debounced so we don't fire an event per keystroke.
+  useEffect(() => {
+    if (!search) return;
+    const timer = setTimeout(() => {
+      analytics.track("Search Performed", {
+        query: search,
+        number_of_results: displayed.length,
+        filters: { category: category || null },
+        sort,
+        page: 1,
+      });
+    }, 400);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   const activeCat = CATEGORIES.find((c) => c.slug === category) || CATEGORIES[0];
   const priceObj = PRICE_RANGES.find((p) => p.label === priceRange) || PRICE_RANGES[0];

@@ -5,6 +5,7 @@ import Product from "@/models/Product";
 import Category from "@/models/Category";
 import Subcategory from "@/models/Subcategory";
 import Segment from "@/models/Segment";
+import { captureServerException } from "@/lib/analytics/posthog-server";
 
 // GET /api/products
 export async function GET(req) {
@@ -172,7 +173,7 @@ export async function GET(req) {
 
   } catch (error) {
     console.error("[products]", error.message);
-
+    captureServerException(error, { route: "products" });
 
     return NextResponse.json(
       {
@@ -372,7 +373,7 @@ export async function POST(req) {
 
   } catch (error) {
     console.error("[products]", error.message);
-
+    captureServerException(error, { route: "products" });
 
     return NextResponse.json(
       {

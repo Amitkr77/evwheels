@@ -1,10 +1,12 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import NotFoundTracker from "@/components/NotFoundTracker";
 
 export default function NotFound() {
   return (
     <>
+      <NotFoundTracker />
       <Navbar />
       <main className="min-h-screen bg-white flex items-center justify-center px-5 pt-20 pb-24 font-['Inter']">
         <div className="text-center max-w-lg mx-auto">

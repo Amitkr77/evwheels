@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Mail, ArrowLeft } from 'lucide-react'
+import { analytics } from '@/lib/analytics'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -29,6 +30,7 @@ export default function ForgotPasswordPage() {
       }
 
       setSubmitted(true)
+      analytics.track('Password Reset Requested', {})
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.')
     } finally {

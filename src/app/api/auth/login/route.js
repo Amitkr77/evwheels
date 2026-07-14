@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { signToken } from "@/lib/jwt";
 import { rateLimit } from "@/lib/rateLimit";
+import { captureServerException } from "@/lib/analytics/posthog-server";
 
 export async function POST(req) {
   if (rateLimit(req, { limit: 10, windowMs: 60_000, prefix: "login" }))
@@ -46,6 +47,8 @@ export async function POST(req) {
       name: user.name,
       email: user.email,
       isEmailVerified: user.isEmailVerified,
+      phone: user.phone,
+      created_at: user.createdAt,
     });
 
     // Strip password and sensitive fields from response
@@ -57,6 +60,8 @@ export async function POST(req) {
         email: user.email,
         role: user.role,
         isEmailVerified: user.isEmailVerified,
+        phone: user.phone,
+        created_at: user.createdAt,
       },
     });
 
@@ -72,6 +77,7 @@ export async function POST(req) {
     return response;
   } catch (error) {
     console.error("[auth/login]", error.message)
+    captureServerException(error, { route: "auth/login" });
     return NextResponse.json(
       { error: "Server error. Please try again later." },
       { status: 500 }

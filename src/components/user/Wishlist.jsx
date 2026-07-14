@@ -82,7 +82,7 @@ export default function Wishlist() {
                 }).format(item.price)}{" "}
               </div>
               <button
-                onClick={() => addToCart(item, 1)}
+                onClick={() => addToCart(item, 1, { source: "wishlist" })}
                 className="w-full py-3.5 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-colors"
               >
                 Add to Cart

@@ -5,6 +5,7 @@ import { sendEmail } from "@/lib/email/sendMail";
 import { welcomeTemplate } from "@/lib/email/templates/welcome";
 import { signToken } from "@/lib/jwt";
 import { rateLimit } from "@/lib/rateLimit";
+import { captureServerException } from "@/lib/analytics/posthog-server";
 
 export async function POST(req) {
   if (rateLimit(req, { limit: 5, windowMs: 60_000, prefix: "register" }))
@@ -92,6 +93,8 @@ export async function POST(req) {
       name: user.name,
       email: user.email,
       isEmailVerified: user.isEmailVerified,
+      phone: user.phone,
+      created_at: user.createdAt,
     });
 
     // Create response
@@ -104,6 +107,8 @@ export async function POST(req) {
           email: user.email,
           role: user.role,
           isEmailVerified: user.isEmailVerified,
+          phone: user.phone,
+          created_at: user.createdAt,
         },
       },
       { status: 201 }
@@ -121,6 +126,7 @@ export async function POST(req) {
     return response;
   } catch (error) {
     console.error("Registration error:", error);
+    captureServerException(error, { route: "auth/register" });
 
     // Mongo duplicate key error
     if (error.code === 11000) {

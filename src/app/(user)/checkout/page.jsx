@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { ShieldCheck, ChevronRight, MapPin, Plus, CheckCircle2, ArrowLeft } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 const INDIAN_STATES = [
   "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
@@ -66,6 +67,18 @@ export default function CheckoutPage() {
       .finally(() => setSummaryLoading(false));
   }, [mounted]);
 
+  // Checkout Started — fires once per real checkout visit with items in cart
+  const checkoutStartedTracked = useRef(false);
+  useEffect(() => {
+    if (!mounted || items.length === 0 || checkoutStartedTracked.current) return;
+    checkoutStartedTracked.current = true;
+    analytics.track("Checkout Started", {
+      cart_value: items.reduce((sum, i) => sum + (i.product?.price || 0) * i.quantity, 0),
+      item_count: items.reduce((sum, i) => sum + i.quantity, 0),
+      currency: "INR",
+    });
+  }, [mounted, items]);
+
   // Fetch saved addresses if logged in
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -108,6 +121,31 @@ export default function CheckoutPage() {
     if (submitting || !valid) { if (!valid) setError("Please fill in all shipping fields."); return; }
     setSubmitting(true);
     setError(null);
+
+    // The checkout form is a single page (no multi-step wizard, no shipping-
+    // method selector, no payment gateway yet — COD only), so these funnel
+    // steps are all fired together at the point the user commits to
+    // submitting, rather than at separate UI interactions that don't exist.
+    // Shipping Method Selected/Payment Method Selected use placeholder
+    // values ready to move to real onChange handlers once those UIs exist.
+    analytics.track("Shipping Address Added", {
+      city: addr.city,
+      state: addr.state,
+      country: addr.country,
+    });
+    analytics.track("Shipping Method Selected", { method: "Standard" });
+    analytics.track("Payment Method Selected", { method: paymentMethod });
+    analytics.track("Checkout Reviewed", {
+      cart_value: summary?.total || 0,
+      item_count: items.length,
+      currency: "INR",
+    });
+    analytics.track("Payment Initiated", {
+      order_value: summary?.total || 0,
+      currency: "INR",
+      payment_method: paymentMethod,
+    });
+
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
@@ -117,12 +155,38 @@ export default function CheckoutPage() {
       });
       const data = await res.json();
       if (res.ok) {
+        const orderProperties = {
+          order_id: data._id,
+          order_value: data.totalAmount,
+          tax: data.taxAmount || 0,
+          shipping: data.shippingAmount || 0,
+          discount: data.discountAmount || 0,
+          currency: "INR",
+          payment_method: data.paymentMethod,
+        };
+        analytics.track("Payment Successful", orderProperties);
+        analytics.track("Order Completed", {
+          ...orderProperties,
+          item_count: items.length,
+        });
         clearCart();
         router.push(`/order-success?id=${data._id}`);
       } else {
+        analytics.track("Payment Failed", {
+          error_message: data.error || "Failed to place order.",
+          payment_method: paymentMethod,
+        });
+        analytics.captureException(new Error(data.error || "Order placement failed"), {
+          page: "checkout",
+        });
         setError(data.error || "Failed to place order.");
       }
-    } catch {
+    } catch (err) {
+      analytics.track("Payment Failed", {
+        error_message: "Network error",
+        payment_method: paymentMethod,
+      });
+      analytics.captureException(err, { page: "checkout" });
       setError("Network error. Please try again.");
     } finally {
       setSubmitting(false);

@@ -1,16 +1,29 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import { analytics } from "@/lib/analytics";
 import Link from "next/link";
 
 function LoginForm() {
   const { login } = useAuthStore();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const emailVerifiedTracked = useRef(false);
+
+  // Email verification lands here via a server redirect
+  // (src/app/api/auth/verify-email/route.js -> /account/login?verified=true).
+  // Track once, then strip the query param so a refresh doesn't refire it.
+  useEffect(() => {
+    if (searchParams.get("verified") === "true" && !emailVerifiedTracked.current) {
+      emailVerifiedTracked.current = true;
+      analytics.track("Email Verified", {});
+      router.replace("/account/login");
+    }
+  }, [searchParams, router]);
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -46,6 +59,7 @@ function LoginForm() {
       }
 
       await login(data.user);
+      analytics.track("User Logged In", { method: "password" });
       const redirectTo = searchParams.get("redirect") || "/";
       window.location.href = redirectTo;
     } catch (err) {

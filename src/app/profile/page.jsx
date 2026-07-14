@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
+import { analytics } from "@/lib/analytics";
 
 import Myorders from "@/components/user/Myorders";
 import Wishlist from "@/components/user/Wishlist";
@@ -41,6 +42,11 @@ const UserDashboard = () => {
   const handleTabChange = (id) => {
     setVisited((prev) => new Set([...prev, id]));
     setActiveTab(id);
+    // /profile is tab-based with no URL/pathname change, so the automatic
+    // route-change pageview listener never fires again after the initial
+    // load — capture a manual view per tab so Orders/Wishlist/Addresses/
+    // Settings are each visible as their own view in PostHog.
+    analytics.page("/profile", { tab: TABS[id].label });
   };
 
   useEffect(() => {

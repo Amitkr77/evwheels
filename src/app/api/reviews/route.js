@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import Review from "@/models/Review";
 import Order from "@/models/Order";
 import { getUserId } from "@/lib/getUserId";
+import { captureServerException } from "@/lib/analytics/posthog-server";
 
 // Create a review
 export async function POST(req) {
@@ -10,31 +11,40 @@ export async function POST(req) {
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { productId, rating, comment } = await req.json();
-  await connectDB();
+  try {
+    const { productId, rating, comment } = await req.json();
+    await connectDB();
 
-  // Check if user purchased product
-  const hasPurchased = await Order.findOne({
-    user: userId,
-    "items.product": productId,
-    // orderStatus: "Delivered",
-  });
+    // Check if user purchased product
+    const hasPurchased = await Order.findOne({
+      user: userId,
+      "items.product": productId,
+      // orderStatus: "Delivered",
+    });
 
-  if (!hasPurchased)
+    if (!hasPurchased)
+      return NextResponse.json(
+        { error: "You must purchase before reviewing" },
+        { status: 400 }
+      );
+
+    const review = await Review.create({
+      user: userId,
+      product: productId,
+      rating,
+      comment,
+      status: "Pending",
+    });
+
+    return NextResponse.json(review);
+  } catch (error) {
+    console.error("[reviews]", error.message);
+    captureServerException(error, { route: "reviews", distinctId: userId });
     return NextResponse.json(
-      { error: "You must purchase before reviewing" },
-      { status: 400 }
+      { error: "Failed to submit review" },
+      { status: 500 }
     );
-
-  const review = await Review.create({
-    user: userId,
-    product: productId,
-    rating,
-    comment,
-    status: "Pending",
-  });
-
-  return NextResponse.json(review);
+  }
 }
 
 export async function GET(req) {

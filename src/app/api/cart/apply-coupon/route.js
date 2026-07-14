@@ -4,6 +4,7 @@ import Cart from "@/models/Cart";
 import Coupon from "@/models/Coupon";
 import { getCartSummary } from "@/lib/cartSummary";
 import { getUserId } from "@/lib/getUserId";
+import { captureServerException } from "@/lib/analytics/posthog-server";
 
 export async function POST(req) {
   const userId = await getUserId(req);
@@ -52,6 +53,7 @@ export async function POST(req) {
     return NextResponse.json({ message: "Coupon applied successfully", summary });
   } catch (err) {
     console.error("Apply coupon error:", err);
+    captureServerException(err, { route: "cart/apply-coupon", distinctId: userId });
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import Image from "next/image";
+import { analytics } from "@/lib/analytics";
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity } = useCartStore(); 
@@ -63,6 +64,11 @@ export default function CartPage() {
       }
       // Refetch summary now that coupon is saved on the cart
       await fetchSummary();
+      analytics.track("Coupon Applied", {
+        coupon: coupon.trim(),
+        discount: data.summary?.discount || 0,
+        currency: "INR",
+      });
     } catch {
       setCouponError("Could not apply coupon. Please try again.");
       setIsSummaryLoading(false);

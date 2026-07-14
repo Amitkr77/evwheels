@@ -17,6 +17,8 @@ export async function GET(req) {
       email: decoded.email,
       role: decoded.role,
       isEmailVerified: decoded.isEmailVerified,
+      phone: decoded.phone,
+      created_at: decoded.created_at,
     });
   } catch {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });

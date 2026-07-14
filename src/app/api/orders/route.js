@@ -10,6 +10,7 @@ import { orderConfirmationTemplate } from "@/lib/email/templates/orderConfirmati
 import { sendEmail } from "@/lib/email/sendMail";
 import { getUserId } from "@/lib/getUserId";
 import { newOrderAdminTemplate } from "@/lib/email/templates/newOrderAdmin";
+import { captureServerException } from "@/lib/analytics/posthog-server";
 
 export async function POST(req) {
   const userId = await getUserId(req);
@@ -147,6 +148,7 @@ export async function POST(req) {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
+    captureServerException(error, { route: "orders", distinctId: userId });
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }

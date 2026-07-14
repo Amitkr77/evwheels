@@ -9,6 +9,7 @@ import { useCartStore } from "@/store/cartStore";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { analytics } from "@/lib/analytics";
 
 export default function ProductDetailClient() {
   const params = useParams();
@@ -45,6 +46,21 @@ export default function ProductDetailClient() {
     }
     fetchProduct();
   }, [slug]);
+
+  useEffect(() => {
+    if (!product?._id) return;
+
+    analytics.track("Product Viewed", {
+      product_id: product._id,
+      slug: product.slug,
+      product_name: product.title,
+      category: product.category?.name,
+      brand: product.brand,
+      price: product.price,
+      currency: "INR",
+      stock: product.stock,
+    });
+  }, [product?._id]);
 
   useEffect(() => {
     if (!product?._id) return;
@@ -88,7 +104,7 @@ export default function ProductDetailClient() {
 
   const handleBuyNow = async () => {
     if (!product) return;
-    await addToCart(product, product.moq || 1);
+    await addToCart(product, product.moq || 1, { source: "buy_now" });
     router.push("/checkout");
   };
 
@@ -181,7 +197,7 @@ export default function ProductDetailClient() {
 
             <div className="flex gap-4">
               <button
-                onClick={() => addToCart(product, product.moq || 1)}
+                onClick={() => addToCart(product, product.moq || 1, { source: "pdp" })}
                 disabled={product.stock === 0}
                 className="px-8 py-4 bg-black text-white rounded-full cursor-pointer hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >

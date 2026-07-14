@@ -145,9 +145,10 @@ const ProductSchema = new mongoose.Schema(
 );
 
 // Single-field indexes (kept for targeted lookups)
+// Note: `segment` already gets a single-field index via `index: true` on
+// its schema definition above — no separate index() call needed for it.
 ProductSchema.index({ category: 1 });
 ProductSchema.index({ subcategory: 1 });
-ProductSchema.index({ segment: 1 });
 ProductSchema.index({ price: 1 });
 
 // Compound indexes for common query patterns

@@ -51,6 +51,8 @@ export async function POST(req) {
         name: user.name,
         email: user.email,
         isEmailVerified: user.isEmailVerified,
+        phone: user.phone,
+        created_at: user.createdAt,
       },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }

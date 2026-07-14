@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, User, Mail, Phone, Lock, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { analytics } from "@/lib/analytics";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -103,6 +104,18 @@ export default function RegisterPage() {
       if (!res.ok) {
         setServerMessage(data.error || "Registration failed. Please try again.");
       } else {
+        // The Zustand auth store isn't hydrated on this path (register
+        // doesn't call useAuthStore().login()) — identify directly from the
+        // register response so the new person profile exists immediately.
+        analytics.identify(data.user.id, {
+          email: data.user.email,
+          name: data.user.name,
+          phone: data.user.phone,
+          role: data.user.role,
+          created_at: data.user.created_at,
+        });
+        analytics.track("User Signed Up", { method: "password" });
+
         setServerMessage("Account created successfully! Redirecting to login...");
         setIsSuccess(true);
         setTimeout(() => router.push("/account/login"), 1500);

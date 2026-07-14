@@ -1,5 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Required alongside the /ingest rewrite below — PostHog's proxied
+  // requests rely on exact path matching without a trailing-slash redirect.
+  skipTrailingSlashRedirect: true,
+
+  // Reverse-proxy PostHog ingestion through our own origin (ad-blocker
+  // resilience, avoids adding external domains to CSP connect-src).
+  async rewrites() {
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: `${process.env.NEXT_PUBLIC_POSTHOG_ASSETS_HOST || "https://us-assets.i.posthog.com"}/static/:path*`,
+      },
+      {
+        source: "/ingest/:path*",
+        destination: `${process.env.NEXT_PUBLIC_POSTHOG_INGEST_HOST || "https://us.i.posthog.com"}/:path*`,
+      },
+    ];
+  },
+
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
