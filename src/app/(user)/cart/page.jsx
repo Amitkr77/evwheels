@@ -75,6 +75,24 @@ export default function CartPage() {
     }
   };
 
+  const removeCoupon = async () => {
+    const appliedCode = summary?.couponApplied;
+    setIsSummaryLoading(true);
+    try {
+      await fetch("/api/cart/apply-coupon", {
+        method: "DELETE",
+        credentials: "include",
+      });
+      await fetchSummary();
+      if (appliedCode) {
+        analytics.track("Coupon Removed", { coupon: appliedCode, currency: "INR" });
+      }
+      setCoupon("");
+    } catch {
+      setIsSummaryLoading(false);
+    }
+  };
+
   const handleQuantityChange = async (productId, newQty, moq = 1) => {
     if (newQty < moq) return;
     await updateQuantity(productId, newQty);
@@ -292,9 +310,17 @@ export default function CartPage() {
                       </div>
                       {couponError && <p className="text-red-600 text-sm mt-2">{couponError}</p>}
                       {summary?.couponApplied && (
-                        <p className="text-[#22C55E] text-sm font-medium mt-2">
-                          Coupon "{summary.couponApplied}" applied successfully!
-                        </p>
+                        <div className="flex items-center justify-between mt-2">
+                          <p className="text-[#22C55E] text-sm font-medium">
+                            Coupon "{summary.couponApplied}" applied!
+                          </p>
+                          <button
+                            onClick={removeCoupon}
+                            className="text-xs text-red-500 hover:text-red-700 font-medium transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       )}
                     </div>
 

@@ -191,6 +191,20 @@ export interface NotFoundProperties {
   pathname: string;
 }
 
+export interface ContactFormSubmittedProperties {
+  subject: string;
+}
+
+export interface CouponRemovedProperties {
+  coupon: string;
+  currency: Currency;
+}
+
+export interface LoginFailedProperties {
+  error_message: string;
+  method: "password" | "google";
+}
+
 // ─── The event map ──────────────────────────────────────────────────────────
 
 export interface AnalyticsEventMap {
@@ -243,6 +257,15 @@ export interface AnalyticsEventMap {
 
   // Errors
   "404 Viewed": NotFoundProperties;
+
+  // Contact
+  "Contact Form Submitted": ContactFormSubmittedProperties;
+
+  // Coupon removal
+  "Coupon Removed": CouponRemovedProperties;
+
+  // Auth failures
+  "Login Failed": LoginFailedProperties;
 }
 
 export type AnalyticsEventName = keyof AnalyticsEventMap;

@@ -4,6 +4,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { analytics } from "@/lib/analytics";
 import { motion } from "framer-motion";
 import {
   MapPin,
@@ -74,6 +75,7 @@ export default function ContactPage() {
     setTimeout(() => {
       setLoading(false);
       setSent(true);
+      analytics.track("Contact Form Submitted", { subject: form.subject });
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
     }, 1800);
   };
