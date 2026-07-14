@@ -54,7 +54,9 @@ function LoginForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Login failed. Please try again.");
+        const msg = data.error || "Login failed. Please try again.";
+        setError(msg);
+        analytics.track("Login Failed", { error_message: msg, method: "password" });
         return;
       }
 
@@ -63,7 +65,9 @@ function LoginForm() {
       const redirectTo = searchParams.get("redirect") || "/";
       window.location.href = redirectTo;
     } catch (err) {
-      setError("Something went wrong. Please try again later.");
+      const msg = "Something went wrong. Please try again later.";
+      setError(msg);
+      analytics.track("Login Failed", { error_message: msg, method: "password" });
     } finally {
       setIsPending(false);
     }
