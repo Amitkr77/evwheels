@@ -34,8 +34,6 @@ export function usePageViewTracking(): void {
 
     if (lastTrackedUrl.current === url) return;
 
-    // eslint-disable-next-line no-console
-    console.log("[DIAG] usePageViewTracking firing for", pathname);
     analytics.page(pathname, {
       url: typeof window !== "undefined" ? window.location.href : url,
       referrer: typeof document !== "undefined" ? document.referrer : undefined,
