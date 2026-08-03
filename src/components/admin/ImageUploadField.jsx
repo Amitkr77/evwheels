@@ -1,7 +1,16 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Loader2, ImagePlus, X } from "lucide-react";
+
+function deleteAsset(publicId) {
+  fetch("/api/admin/upload", {
+    method: "DELETE",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ publicId }),
+  }).catch(() => {});
+}
 
 // Shared Cloudinary image upload field for admin entity forms
 // (Segment, Category, Subcategory, Product). Uploads through
@@ -19,6 +28,21 @@ export default function ImageUploadField({
   const fileRef = useRef(null);
   const [uploading, setUploading] = useState(false);
 
+  // Tracks the url -> publicId for whatever this field instance itself
+  // uploaded (not a manually-pasted URL), so a replaced/removed/never-saved
+  // upload doesn't sit orphaned in Cloudinary.
+  const uploadedRef = useRef(new Map());
+  const valueRef = useRef(value);
+  useEffect(() => { valueRef.current = value; }, [value]);
+
+  useEffect(() => {
+    return () => {
+      for (const [url, publicId] of uploadedRef.current) {
+        if (url !== valueRef.current) deleteAsset(publicId);
+      }
+    };
+  }, []);
+
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -33,7 +57,16 @@ export default function ImageUploadField({
         body: fd,
       });
       if (!res.ok) throw new Error("Upload failed");
-      const { url } = await res.json();
+      const { url, publicId } = await res.json();
+      uploadedRef.current.set(url, publicId);
+
+      // Replacing a previous upload made through this same field — clean it up.
+      const previousPublicId = uploadedRef.current.get(value);
+      if (value && previousPublicId) {
+        uploadedRef.current.delete(value);
+        deleteAsset(previousPublicId);
+      }
+
       onChange(url);
     } catch (err) {
       alert("Image upload failed: " + err.message);
@@ -91,7 +124,14 @@ export default function ImageUploadField({
           />
           <button
             type="button"
-            onClick={() => onChange("")}
+            onClick={() => {
+              const publicId = uploadedRef.current.get(value);
+              if (publicId) {
+                uploadedRef.current.delete(value);
+                deleteAsset(publicId);
+              }
+              onChange("");
+            }}
             className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
           >
             <X size={12} />

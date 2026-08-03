@@ -1,7 +1,16 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Loader2, ImagePlus, X, GripVertical } from "lucide-react";
+
+function deleteAsset(publicId) {
+  fetch("/api/admin/upload", {
+    method: "DELETE",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ publicId }),
+  }).catch(() => {});
+}
 
 // Multi-image gallery upload for admin entity forms (currently: Product).
 // Uploads through /api/admin/upload, which routes to a whitelisted
@@ -21,6 +30,24 @@ export default function MultiImageUploadField({
   const dragIndex = useRef(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
 
+  // Tracks url -> publicId for every image uploaded through this field
+  // instance (not manually-pasted URLs), so we can clean up Cloudinary
+  // assets that get removed or never end up saved.
+  const uploadedRef = useRef(new Map());
+  const valueRef = useRef(value);
+  useEffect(() => { valueRef.current = value; }, [value]);
+
+  // On unmount (form saved or cancelled), delete anything we uploaded this
+  // session that isn't part of the final kept value.
+  useEffect(() => {
+    return () => {
+      const kept = new Set(valueRef.current);
+      for (const [url, publicId] of uploadedRef.current) {
+        if (!kept.has(url)) deleteAsset(publicId);
+      }
+    };
+  }, []);
+
   const remainingSlots = max - value.length;
 
   const uploadOne = async (file) => {
@@ -33,7 +60,8 @@ export default function MultiImageUploadField({
       body: fd,
     });
     if (!res.ok) throw new Error("Upload failed");
-    const { url } = await res.json();
+    const { url, publicId } = await res.json();
+    uploadedRef.current.set(url, publicId);
     return url;
   };
 
@@ -43,10 +71,13 @@ export default function MultiImageUploadField({
 
     setUploading(true);
     try {
-      const uploaded = await Promise.all(files.map(uploadOne));
-      onChange([...value, ...uploaded]);
-    } catch (err) {
-      alert("Image upload failed: " + err.message);
+      const results = await Promise.allSettled(files.map(uploadOne));
+      const uploaded = results.filter((r) => r.status === "fulfilled").map((r) => r.value);
+      const failed = results.filter((r) => r.status === "rejected");
+      if (uploaded.length) onChange([...value, ...uploaded]);
+      if (failed.length) {
+        alert(`${failed.length} of ${files.length} image(s) failed to upload. The rest were added.`);
+      }
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -65,7 +96,13 @@ export default function MultiImageUploadField({
   };
 
   const removeAt = (index) => {
+    const url = value[index];
     onChange(value.filter((_, i) => i !== index));
+    const publicId = uploadedRef.current.get(url);
+    if (publicId) {
+      uploadedRef.current.delete(url);
+      deleteAsset(publicId);
+    }
   };
 
   const handleDragStart = (index) => {

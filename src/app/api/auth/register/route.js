@@ -94,6 +94,7 @@ export async function POST(req) {
       isEmailVerified: user.isEmailVerified,
       phone: user.phone,
       created_at: user.createdAt,
+      tokenVersion: user.tokenVersion ?? 0,
     });
 
     // Create response

@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/db";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import { verifyAdmin } from "@/lib/adminAuth";
+import { LOW_STOCK_THRESHOLD } from "@/lib/constants";
+import { startOfDayIST, addDays } from "@/lib/timezone";
 
 export async function GET(req) {
     try {
@@ -15,10 +17,9 @@ export async function GET(req) {
         const period = searchParams.get("period") || "7d";
         const days = period === "30d" ? 30 : 7;
 
-        const now = new Date();
-        const today = new Date(now); today.setHours(0, 0, 0, 0);
-        const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
-        const chartStart = new Date(today); chartStart.setDate(today.getDate() - days);
+        const today = startOfDayIST();
+        const yesterday = addDays(today, -1);
+        const chartStart = addDays(today, -days);
 
         // Run all independent queries in parallel — was 10 sequential, now 5 parallel
         const [
@@ -94,7 +95,10 @@ export async function GET(req) {
         // Product counts (separate collection — run alongside above)
         const [totalProducts, lowStock] = await Promise.all([
             Product.countDocuments(),
-            Product.countDocuments({ stock: { $lt: 5 } }),
+            // Matches the same "low stock" definition as Reports/Inventory: stock
+            // above zero (that's "out of stock", counted separately) but at or
+            // below the threshold.
+            Product.countDocuments({ stock: { $gt: 0, $lte: LOW_STOCK_THRESHOLD } }),
         ]);
 
         const totalOrders   = counts[0]?.total[0]?.n   ?? 0;

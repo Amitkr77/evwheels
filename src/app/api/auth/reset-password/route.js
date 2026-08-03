@@ -46,6 +46,10 @@ export async function POST(req) {
     user.password = password;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
+    // Invalidate every session issued before this reset — a token stolen
+    // before the reset (the reason someone resets their password) must not
+    // keep working just because it hasn't expired yet.
+    user.tokenVersion = (user.tokenVersion ?? 0) + 1;
     await user.save();
 
     const jwtToken = await signToken({
@@ -56,6 +60,7 @@ export async function POST(req) {
       isEmailVerified: user.isEmailVerified,
       phone: user.phone,
       created_at: user.createdAt,
+      tokenVersion: user.tokenVersion,
     });
 
     const response = NextResponse.json({

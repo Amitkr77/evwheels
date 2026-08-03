@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import OrderDetailsModal from "./modal/OrderDetailsModal";
+import OrderStatusBadge from "./OrderStatusBadge";
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -17,7 +18,7 @@ export default function MyOrders() {
       if (!res.ok) throw new Error("Failed to fetch orders");
 
       const data = await res.json();
-      setOrders(data);
+      setOrders(Array.isArray(data.orders) ? data.orders : []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -71,17 +72,7 @@ export default function MyOrders() {
                   ₹{order.totalAmount.toLocaleString("en-IN")}
                 </p>
 
-                <span
-                  className={`px-3 py-1 text-xs rounded-full font-medium ${
-                    order.orderStatus === "DELIVERED"
-                      ? "bg-[#DDF8FD] text-[#19B5D8]"
-                      : order.orderStatus === "CANCELLED"
-                        ? "bg-red-50 text-red-700"
-                        : "bg-blue-50 text-blue-700"
-                  }`}
-                >
-                  {order.orderStatus}
-                </span>
+                <OrderStatusBadge status={order.orderStatus} />
               </div>
             </div>
 
@@ -105,19 +96,10 @@ export default function MyOrders() {
 
             <div className="mt-4 flex justify-end gap-4">
               <button
-                onClick={() => {
-                  setSelectedOrder(order);
-                }}
-                className="text-sm font-medium text-neutral-600 hover:underline"
-              >
-                View Details
-              </button>
-
-              <button
                 onClick={() => setSelectedOrder(order)}
                 className="text-sm font-medium text-[#19B5D8] hover:underline"
               >
-                Track Order
+                View Details
               </button>
             </div>
           </motion.div>

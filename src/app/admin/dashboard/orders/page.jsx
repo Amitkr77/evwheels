@@ -30,7 +30,7 @@ export default function OrdersPage() {
       try {
         const res = await fetch("/api/admin/orders", { credentials: "include" });
         const data = await res.json();
-        setOrders(Array.isArray(data) ? data : []);
+        setOrders(Array.isArray(data.orders) ? data.orders : []);
       } catch (err) {
         console.error("Orders fetch error:", err);
       } finally {

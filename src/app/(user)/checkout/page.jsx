@@ -197,14 +197,15 @@ function CheckoutContent() {
       });
       const data = await res.json();
       if (res.ok) {
+        const order = data.order;
         const orderProperties = {
-          order_id: data._id,
-          order_value: data.totalAmount,
-          tax: data.taxAmount || 0,
-          shipping: data.shippingAmount || 0,
-          discount: data.discountAmount || 0,
+          order_id: order._id,
+          order_value: order.totalAmount,
+          tax: order.taxAmount || 0,
+          shipping: order.shippingAmount || 0,
+          discount: order.discountAmount || 0,
           currency: "INR",
-          payment_method: data.paymentMethod,
+          payment_method: order.paymentMethod,
         };
         analytics.track("Payment Successful", orderProperties);
         analytics.track("Order Completed", {
@@ -213,7 +214,7 @@ function CheckoutContent() {
         });
         // Buy Now never touched the shared cart, so there's nothing to clear.
         if (!isBuyNow) clearCart();
-        router.push(`/order-success?id=${data._id}`);
+        router.push(`/order-success?id=${order._id}`);
       } else {
         analytics.track("Payment Failed", {
           error_message: data.error || "Failed to place order.",

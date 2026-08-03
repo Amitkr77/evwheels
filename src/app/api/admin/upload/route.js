@@ -17,30 +17,56 @@ const FOLDERS = {
 };
 
 export async function POST(req) {
-  const admin = await verifyAdmin(req);
-  if (!admin)
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const admin = await verifyAdmin(req);
+    if (!admin)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const formData = await req.formData();
-  const file = formData.get("file");
-  const type = formData.get("type");
+    const formData = await req.formData();
+    const file = formData.get("file");
+    const type = formData.get("type");
 
-  if (!file)
-    return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    if (!file)
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
-  const folder = FOLDERS[type] || FOLDERS.product;
+    const folder = FOLDERS[type] || FOLDERS.product;
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
-  const result = await new Promise((resolve, reject) => {
-    cloudinary.uploader
-      .upload_stream(
-        { folder, resource_type: "image" },
-        (err, res) => (err ? reject(err) : resolve(res))
-      )
-      .end(buffer);
-  });
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream(
+          { folder, resource_type: "image" },
+          (err, res) => (err ? reject(err) : resolve(res))
+        )
+        .end(buffer);
+    });
 
-  return NextResponse.json({ url: result.secure_url });
+    return NextResponse.json({ url: result.secure_url, publicId: result.public_id });
+  } catch (error) {
+    console.error("[admin/upload] POST", error.message);
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  }
+}
+
+// Cleans up an asset that was uploaded but never ended up attached to a saved
+// entity (form cancelled, image swapped out before saving, etc.) — without
+// this, every discarded upload sits in Cloudinary forever.
+export async function DELETE(req) {
+  try {
+    const admin = await verifyAdmin(req);
+    if (!admin)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const { publicId } = await req.json();
+    if (!publicId)
+      return NextResponse.json({ error: "publicId is required" }, { status: 400 });
+
+    await cloudinary.uploader.destroy(publicId);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("[admin/upload] DELETE", error.message);
+    return NextResponse.json({ error: "Failed to delete asset" }, { status: 500 });
+  }
 }

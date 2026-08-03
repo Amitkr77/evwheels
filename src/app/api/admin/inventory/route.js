@@ -5,8 +5,7 @@ import { verifyAdmin, verifyAdminStrict } from "@/lib/adminAuth";
 import Product from "@/models/Product";
 import InventoryLog from "@/models/InventoryLog";
 import { captureServerException } from "@/lib/analytics/posthog-server";
-
-const LOW_STOCK_THRESHOLD = 5;
+import { LOW_STOCK_THRESHOLD } from "@/lib/constants";
 
 // GET /api/admin/inventory?type=summary|low-stock|out-of-stock|logs&page=1&limit=20
 export async function GET(req) {

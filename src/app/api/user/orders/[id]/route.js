@@ -27,7 +27,7 @@ export async function GET(req, { params }) {
     if (!order)
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
 
-    return NextResponse.json(order);
+    return NextResponse.json({ success: true, order });
   } catch (error) {
     console.error("[user/orders/id] GET", error.message);
     captureServerException(error, { route: "user/orders/id" });
@@ -102,7 +102,7 @@ export async function PATCH(req, { params }) {
       session.endSession();
     }
 
-    return NextResponse.json({ message: "Order cancelled successfully" });
+    return NextResponse.json({ success: true, message: "Order cancelled successfully" });
   } catch (error) {
     console.error("[user/orders/id] PATCH", error.message);
     captureServerException(error, { route: "user/orders/id" });

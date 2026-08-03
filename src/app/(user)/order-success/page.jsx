@@ -53,7 +53,7 @@ export default function OrderConfirmationPage() {
         if (!res.ok) throw new Error("Failed to load order details");
         return res.json();
       })
-      .then(setOrder)
+      .then((data) => setOrder(data.order))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [orderId]);

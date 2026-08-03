@@ -12,7 +12,8 @@ export async function GET(req) {
   await connectDB();
 
   const orders = await Order.find({ user: userId })
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .limit(200);
 
-  return NextResponse.json(orders);
+  return NextResponse.json({ success: true, orders });
 }

@@ -87,14 +87,14 @@ export async function PATCH(req, { params }) {
         session.endSession();
       }
 
-      return NextResponse.json(order);
+      return NextResponse.json({ success: true, order });
     }
 
     order.orderStatus = orderStatus;
     order.statusHistory.push({ status: orderStatus, note });
     await order.save();
 
-    return NextResponse.json(order);
+    return NextResponse.json({ success: true, order });
   } catch (error) {
     console.error("[admin/orders/id]", error.message);
     captureServerException(error, { route: "admin/orders/id" });

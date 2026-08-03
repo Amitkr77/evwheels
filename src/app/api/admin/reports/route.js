@@ -4,17 +4,21 @@ import { verifyAdmin } from "@/lib/adminAuth";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
+import { LOW_STOCK_THRESHOLD } from "@/lib/constants";
+import { startOfDayIST, addDays } from "@/lib/timezone";
 
 function getPeriodStart(period) {
-  const now = new Date();
+  const today = startOfDayIST();
   switch (period) {
-    case "7d":  now.setDate(now.getDate() - 7); break;
-    case "90d": now.setDate(now.getDate() - 90); break;
-    case "1y":  now.setFullYear(now.getFullYear() - 1); break;
-    default:    now.setDate(now.getDate() - 30); // 30d default
+    case "7d":  return addDays(today, -7);
+    case "90d": return addDays(today, -90);
+    case "1y": {
+      const d = new Date(today);
+      d.setUTCFullYear(d.getUTCFullYear() - 1);
+      return d;
+    }
+    default: return addDays(today, -30); // 30d default
   }
-  now.setHours(0, 0, 0, 0);
-  return now;
 }
 
 export async function GET(req) {
@@ -33,7 +37,7 @@ export async function GET(req) {
 
   // ─── 1. Inventory Summary ────────────────────────────────────────────────
   if (type === "inventory-summary") {
-    const LOW_THRESHOLD = 5;
+    const LOW_THRESHOLD = LOW_STOCK_THRESHOLD;
 
     const [
       totalProducts,

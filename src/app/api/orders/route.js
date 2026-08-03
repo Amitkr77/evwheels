@@ -9,12 +9,15 @@ import { getCartSummary } from "@/lib/cartSummary";
 import User from "@/models/User";
 import { orderConfirmationTemplate } from "@/lib/email/templates/orderConfirmation";
 import { sendEmail } from "@/lib/email/sendMail";
-import { getUserId } from "@/lib/getUserId";
+import { getUserId, getUserIdStrict } from "@/lib/getUserId";
 import { newOrderAdminTemplate } from "@/lib/email/templates/newOrderAdmin";
 import { captureServerException } from "@/lib/analytics/posthog-server";
 
 export async function POST(req) {
-  const userId = await getUserId(req);
+  // Strict path: order placement moves money, so a token invalidated by a
+  // password reset must not still be able to place orders just because it
+  // hasn't expired yet.
+  const userId = await getUserIdStrict(req);
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -195,7 +198,7 @@ export async function POST(req) {
       }).catch((err) => console.error("Admin notification email failed:", err.message));
     }
 
-    return NextResponse.json(order);
+    return NextResponse.json({ success: true, order });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -224,5 +227,5 @@ export async function GET(req) {
     .limit(200)
     .lean();
 
-  return NextResponse.json(orders);
+  return NextResponse.json({ success: true, orders });
 }

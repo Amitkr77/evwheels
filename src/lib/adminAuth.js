@@ -21,7 +21,8 @@ export async function verifyAdminStrict(req) {
   if (!decoded || decoded.role !== "admin") return null;
 
   await connectDB();
-  const user = await User.findById(decoded.id).select("role").lean();
+  const user = await User.findById(decoded.id).select("role tokenVersion").lean();
   if (!user || user.role !== "admin") return null;
+  if ((decoded.tokenVersion ?? 0) !== (user.tokenVersion ?? 0)) return null;
   return decoded;
 }

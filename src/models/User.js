@@ -39,6 +39,14 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
 
+    // Bumped whenever all existing sessions must be invalidated (e.g. password
+    // reset). Embedded in every JWT; getUserIdStrict rejects tokens whose
+    // embedded value no longer matches this one.
+    tokenVersion: {
+      type: Number,
+      default: 0,
+    },
+
     // ─── Email Verification ───
     isEmailVerified: {
       type: Boolean,

@@ -20,6 +20,7 @@ import {
   ChevronRight,
   ArrowUpDown,
 } from "lucide-react";
+import { LOW_STOCK_THRESHOLD } from "@/lib/constants";
 
 const TABS = [
   { key: "overview", label: "Overview", icon: Package },
@@ -185,8 +186,8 @@ export default function InventoryPage() {
   const [logsPagination, setLogsPagination] = useState({ total: 0, page: 1, limit: 20, pages: 1 });
   const [loadingLogs, setLoadingLogs] = useState(false);
 
-  const [threshold, setThreshold] = useState(10);
-  const [thresholdInput, setThresholdInput] = useState("10");
+  const [threshold, setThreshold] = useState(LOW_STOCK_THRESHOLD);
+  const [thresholdInput, setThresholdInput] = useState(String(LOW_STOCK_THRESHOLD));
   const [thresholdError, setThresholdError] = useState("");
 
   // Modal state

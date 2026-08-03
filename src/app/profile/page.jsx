@@ -22,6 +22,8 @@ import Myorders from "@/components/user/Myorders";
 import Wishlist from "@/components/user/Wishlist";
 import Address from "@/components/user/Address";
 import Settings from "@/components/user/Settings";
+import UserAvatar from "@/components/user/UserAvatar";
+import OrderStatusBadge from "@/components/user/OrderStatusBadge";
 
 const TABS = [
   { icon: LayoutDashboard, label: "Overview",  id: 0 },
@@ -71,15 +73,6 @@ const UserDashboard = () => {
     if (h < 17) return "Good afternoon";
     return "Good evening";
   };
-
-  const getStatusStyle = (status) =>
-    ({
-      DELIVERED: "bg-[#DDF8FD] text-[#19B5D8]",
-      SHIPPED:   "bg-blue-50 text-blue-700",
-      PLACED:    "bg-amber-50 text-amber-700",
-      CONFIRMED: "bg-indigo-50 text-indigo-700",
-      CANCELLED: "bg-red-50 text-red-600",
-    }[status] || "bg-neutral-100 text-neutral-600");
 
   const handleLogout = async () => {
     if (confirm("Sign out of your account?")) {
@@ -175,9 +168,7 @@ const UserDashboard = () => {
               <p className="text-sm font-medium text-neutral-900 leading-none">{user.name || ""}</p>
               <p className="text-xs text-neutral-400 mt-0.5">{user.email || ""}</p>
             </div>
-            <div className="w-8 h-8 rounded-full bg-[#19B5D8] flex items-center justify-center text-white text-sm font-semibold ring-2 ring-[#DDF8FD]">
-              {user.name?.charAt(0)?.toUpperCase() || "U"}
-            </div>
+            <UserAvatar name={user.name} size="sm" className="ring-2 ring-[#DDF8FD]" />
           </div>
         </header>
 
@@ -279,11 +270,7 @@ const UserDashboard = () => {
                                     {formatDate(order.createdAt)}
                                   </td>
                                   <td className="px-5 py-4">
-                                    <span
-                                      className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full ${getStatusStyle(order.orderStatus)}`}
-                                    >
-                                      {order.orderStatus}
-                                    </span>
+                                    <OrderStatusBadge status={order.orderStatus} />
                                   </td>
                                   <td className="px-5 py-4 text-right">
                                     <p className="text-sm font-semibold text-neutral-900">
