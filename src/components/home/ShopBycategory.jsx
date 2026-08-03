@@ -22,7 +22,7 @@ const CATEGORIES = [
 export default function ShopByCategory() {
   return (
     <section className="py-20 md:py-28 bg-white border-t border-neutral-100">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
 
         {/* Header */}
         <div className="flex items-end justify-between mb-10 md:mb-12">

@@ -11,7 +11,12 @@ export async function GET(req) {
 
   const couponCode = req.nextUrl.searchParams.get("coupon");
 
-  const summary = await getCartSummary(userId, couponCode);
+  const buyNowProductId = req.nextUrl.searchParams.get("buyNow");
+  const overrideItems = buyNowProductId
+    ? [{ productId: buyNowProductId, quantity: parseInt(req.nextUrl.searchParams.get("qty"), 10) || 1 }]
+    : undefined;
+
+  const summary = await getCartSummary(userId, couponCode, overrideItems);
 
   if (!summary) return NextResponse.json({ items: [], subtotal: 0, total: 0 });
 

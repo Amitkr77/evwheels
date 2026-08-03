@@ -668,6 +668,14 @@ export default function ProductsPage() {
       showToast("Price must be greater than 0", "error");
       return;
     }
+    if (formData.stock !== "" && Number(formData.stock) < 0) {
+      showToast("Stock cannot be negative", "error");
+      return;
+    }
+    if (formData.warranty !== "" && Number(formData.warranty) < 0) {
+      showToast("Warranty cannot be negative", "error");
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -734,6 +742,14 @@ export default function ProductsPage() {
     }
     if (!formData.price || Number(formData.price) <= 0) {
       showToast("Price must be greater than 0", "error");
+      return;
+    }
+    if (formData.stock !== "" && Number(formData.stock) < 0) {
+      showToast("Stock cannot be negative", "error");
+      return;
+    }
+    if (formData.warranty !== "" && Number(formData.warranty) < 0) {
+      showToast("Warranty cannot be negative", "error");
       return;
     }
 
@@ -906,8 +922,12 @@ export default function ProductsPage() {
   const handleStockAdjust = async () => {
     if (!stockModal) return;
     const { type, quantity, reason } = stockModal;
-    if (!quantity || Number(quantity) <= 0) {
-      showToast("Quantity must be greater than 0", "error");
+    const qtyNum = Number(quantity);
+    if (quantity === "" || isNaN(qtyNum) || (type === "adjustment" ? qtyNum < 0 : qtyNum <= 0)) {
+      showToast(
+        type === "adjustment" ? "Quantity cannot be negative" : "Quantity must be greater than 0",
+        "error"
+      );
       return;
     }
 

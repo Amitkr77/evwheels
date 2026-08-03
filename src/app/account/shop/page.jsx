@@ -37,7 +37,7 @@ export default function Home() {
           ? 'bg-black/90 backdrop-blur-xl border-b border-lime-900/30'
           : 'bg-transparent'
       }`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between h-20">
+        <div className="max-w-8xl mx-auto px-6 lg:px-12 flex items-center justify-between h-20">
           <Link href="/" className="flex items-center gap-4">
             <div className="w-10 h-10 bg-lime-600 rounded-sm flex items-center justify-center text-black font-black text-2xl shadow-[0_0_20px_rgba(190,255,0,0.4)]">
               E
@@ -71,7 +71,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(190,255,0,0.08),transparent_40%)]" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full">
+        <div className="relative z-10 max-w-8xl mx-auto px-6 lg:px-12 w-full">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -143,7 +143,7 @@ export default function Home() {
 
       {/* ─── Performance Specs ─── */}
       <section id="specs" className="py-32 md:py-48 bg-black border-t border-lime-900/30">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="max-w-8xl mx-auto px-6 lg:px-12">
           <div className="text-center mb-20">
             <h2 className="text-6xl md:text-8xl font-black text-lime-400 tracking-tighter mb-6">
               RAW NUMBERS

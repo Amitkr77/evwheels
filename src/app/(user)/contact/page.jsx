@@ -133,7 +133,7 @@ export default function ContactPage() {
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#DDF8FD]/30 via-transparent to-[#DDF8FD]/20" />
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Text + Quick Actions */}
             <motion.div
@@ -254,7 +254,7 @@ export default function ContactPage() {
 
       {/* Info Cards */}
       <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             {contactCards.map((card, i) => (
               <motion.div
@@ -298,7 +298,7 @@ export default function ContactPage() {
 
       {/* Form + Quick Contact Sidebar */}
       <section className="py-16 md:py-24 bg-[#F8FAFC]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
             {/* Form */}
             <div className="lg:col-span-2">
@@ -611,7 +611,7 @@ export default function ContactPage() {
 
       {/* FAQ Section */}
       <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="text-center mb-12 md:mb-16">
             <span className="inline-block px-4 py-1.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm font-medium mb-4">
               ❓ FAQs
@@ -643,7 +643,7 @@ export default function ContactPage() {
 
       {/* Bottom CTA */}
       <section className="py-16 md:py-24 bg-[#F8FAFC]">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 text-center">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

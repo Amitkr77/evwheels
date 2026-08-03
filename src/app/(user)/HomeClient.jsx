@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,8 +19,10 @@ import {
   Sun,
   Wrench,
   Star,
+  Loader2,
 } from "lucide-react";
 import ShopByCategory from "@/components/home/ShopBycategory";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // ── Data ──────────────────────────────────────────────────
 const TRUST = [
@@ -116,34 +118,157 @@ const CARD_VARIANTS = {
 // ── Hero search bar ───────────────────────────────────────
 function HeroSearch() {
   const [q, setQ] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
+  const containerRef = useRef(null);
+  const debouncedQ = useDebounce(q, 300);
+
+  // Live results dropdown — fetches the real backend search so the
+  // homepage can surface matching products before the user even submits.
+  useEffect(() => {
+    const term = debouncedQ.trim();
+    if (!term) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    fetch(`/api/products?search=${encodeURIComponent(term)}&limit=5`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled) setResults(d.products || []);
+      })
+      .catch(() => {
+        if (!cancelled) setResults([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedQ]);
+
+  // Close the dropdown on outside click / Escape
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  const goToResults = (term) => {
+    const trimmed = term.trim();
+    if (trimmed) router.push(`/shop?search=${encodeURIComponent(trimmed)}`);
+    setOpen(false);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const term = q.trim();
-    if (term) router.push(`/shop?search=${encodeURIComponent(term)}`);
+    goToResults(q);
   };
 
+  const showDropdown = open && q.trim().length > 0;
+
   return (
-    <form
-      onSubmit={handleSearch}
-      className="flex items-center bg-neutral-50 border border-neutral-200 rounded-full overflow-hidden focus-within:border-[#19B5D8] focus-within:ring-2 focus-within:ring-[#19B5D8]/10 transition-all max-w-md"
-    >
-      <Search size={15} className="ml-4 text-neutral-400 shrink-0" />
-      <input
-        type="text"
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        placeholder="Search parts, accessories…"
-        className="flex-1 bg-transparent px-3 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none min-w-0"
-      />
-      <button
-        type="submit"
-        className="mr-1.5 px-4 py-2 bg-[#0C7290] text-white text-xs font-semibold rounded-full hover:bg-[#0a5f78] transition-colors shrink-0"
+    <div ref={containerRef} className="relative max-w-md">
+      <form
+        onSubmit={handleSearch}
+        className="flex items-center bg-neutral-50 border border-neutral-200 rounded-full overflow-hidden focus-within:border-[#19B5D8] focus-within:ring-2 focus-within:ring-[#19B5D8]/10 transition-all"
       >
-        Search
-      </button>
-    </form>
+        <Search size={15} className="ml-4 text-neutral-400 shrink-0" />
+        <input
+          type="text"
+          value={q}
+          onChange={(e) => {
+            setQ(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          placeholder="Search parts, accessories…"
+          className="flex-1 bg-transparent px-3 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none min-w-0"
+        />
+        <button
+          type="submit"
+          className="mr-1.5 px-4 py-2 bg-[#0C7290] text-white text-xs font-semibold rounded-full hover:bg-[#0a5f78] transition-colors shrink-0"
+        >
+          Search
+        </button>
+      </form>
+
+      {showDropdown && (
+        <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-neutral-200 rounded-2xl shadow-lg overflow-hidden z-30">
+          {loading ? (
+            <div className="flex items-center justify-center gap-2 py-6 text-sm text-neutral-500">
+              <Loader2 size={16} className="animate-spin" />
+              Searching…
+            </div>
+          ) : results.length > 0 ? (
+            <>
+              <ul className="max-h-80 overflow-y-auto">
+                {results.map((p) => (
+                  <li key={p._id}>
+                    <Link
+                      href={`/shop/${p.slug}`}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors"
+                    >
+                      <div className="relative w-10 h-10 rounded-lg bg-neutral-50 overflow-hidden shrink-0">
+                        {p.images?.[0] ? (
+                          <Image
+                            src={p.images[0]}
+                            alt={p.title}
+                            fill
+                            sizes="40px"
+                            className="object-contain"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-neutral-300 text-xs font-bold">
+                            {p.title?.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-neutral-900 truncate">{p.title}</p>
+                        <p className="text-xs text-neutral-500">
+                          ₹{Number(p.price).toLocaleString("en-IN")}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => goToResults(q)}
+                className="w-full text-left px-4 py-3 text-sm font-medium text-[#0C7290] border-t border-neutral-100 hover:bg-neutral-50 transition-colors"
+              >
+                See all results for “{q.trim()}”
+              </button>
+            </>
+          ) : (
+            <p className="px-4 py-5 text-sm text-neutral-500 text-center">
+              No products found for “{q.trim()}”
+            </p>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -198,7 +323,7 @@ function ProductCard({ p }) {
 function FeaturedProducts({ products }) {
   return (
     <section className="py-20 md:py-24 bg-white border-t border-neutral-100">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="flex items-end justify-between mb-8 md:mb-10">
           <div>
             <p className="text-[#0C7290] text-[11px] font-semibold tracking-[0.2em] uppercase mb-2">
@@ -244,7 +369,7 @@ function FeaturedProducts({ products }) {
 function ShowcaseSection({ products }) {
   return (
     <section className="border-t border-neutral-100">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 md:py-24">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 py-20 md:py-24">
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-stretch">
 
           <motion.div
@@ -347,7 +472,7 @@ export default function HomeClient({ featuredProducts, trendingProducts }) {
 
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className="bg-[#F8FAFC]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-16 md:pt-20 pb-6 md:pb-8">
+        <div className="max-w-8xl mx-auto px-4 sm:px-8 lg:px-12 pt-16 md:pt-20 pb-6 md:pb-8">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] gap-4 items-stretch">
 
             {/* ── Left: Main hero panel ───────────────────── */}
@@ -480,7 +605,7 @@ export default function HomeClient({ featuredProducts, trendingProducts }) {
 
       {/* ── Trust bar ────────────────────────────────────── */}
       <section className="bg-neutral-950 py-4 md:py-5">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-0 md:divide-x md:divide-white/8">
             {TRUST.map(({ icon: Icon, label, sub }) => (
               <div key={label} className="flex items-center gap-3 md:px-8 first:pl-0 last:pr-0">
@@ -506,7 +631,7 @@ export default function HomeClient({ featuredProducts, trendingProducts }) {
 
       {/* Why EVWheels */}
       <section className="py-20 md:py-24 bg-neutral-50 border-t border-neutral-100">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="max-w-md mb-12">
             <p className="text-[#0C7290] text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
               Why EVWheels
@@ -552,7 +677,7 @@ export default function HomeClient({ featuredProducts, trendingProducts }) {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 w-full">
+        <div className="relative z-10 max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 w-full">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -587,7 +712,7 @@ export default function HomeClient({ featuredProducts, trendingProducts }) {
 
       {/* Instagram */}
       <section className="py-16 md:py-20 bg-white border-t border-neutral-100">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
 
           <div className="flex flex-col items-center text-center mb-8 md:mb-10">
             <a

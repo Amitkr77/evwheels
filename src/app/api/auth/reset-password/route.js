@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
+import { signToken } from "@/lib/jwt";
+import { rateLimit } from "@/lib/rateLimit";
+import { getPasswordError } from "@/lib/validatePassword";
+import { captureServerException } from "@/lib/analytics/posthog-server";
 
 export async function POST(req) {
+  if (rateLimit(req, { limit: 5, windowMs: 60_000, prefix: "reset-password" }))
+    return NextResponse.json({ error: "Too many attempts. Please wait a minute." }, { status: 429 });
+
   try {
     const { token, password } = await req.json();
 
@@ -15,11 +21,9 @@ export async function POST(req) {
       );
     }
 
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: "Password must be at least 6 characters" },
-        { status: 400 }
-      );
+    const passwordError = getPasswordError(password);
+    if (passwordError) {
+      return NextResponse.json({ error: passwordError }, { status: 400 });
     }
 
     await connectDB();
@@ -44,19 +48,15 @@ export async function POST(req) {
     user.passwordResetExpires = undefined;
     await user.save();
 
-    const jwtToken = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-        name: user.name,
-        email: user.email,
-        isEmailVerified: user.isEmailVerified,
-        phone: user.phone,
-        created_at: user.createdAt,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const jwtToken = await signToken({
+      id: String(user._id),
+      role: user.role,
+      name: user.name,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+      phone: user.phone,
+      created_at: user.createdAt,
+    });
 
     const response = NextResponse.json({
       message: "Password has been reset successfully.",
@@ -73,6 +73,7 @@ export async function POST(req) {
     return response;
   } catch (error) {
     console.error("Reset password error:", error);
+    captureServerException(error, { route: "auth/reset-password" });
     return NextResponse.json(
       { error: "Server error. Please try again later." },
       { status: 500 }

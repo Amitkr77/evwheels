@@ -27,8 +27,12 @@ function ResetPasswordForm() {
       setError("Missing or invalid reset link. Please request a new one.");
       return;
     }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+      setError("Password must contain an uppercase letter, a lowercase letter, and a number.");
       return;
     }
     if (password !== confirmPassword) {

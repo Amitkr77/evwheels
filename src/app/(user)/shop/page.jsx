@@ -13,8 +13,18 @@ import {
   Search,
 } from "lucide-react";
 import { analytics } from "@/lib/analytics";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const PAGE_SIZE = 24;
+
+// Maps the UI's sort labels to the /api/products query params. "featured"
+// is intentionally omitted — during a search, no explicit sort means the
+// API falls back to relevance ranking (see src/app/api/products/route.js).
+const SORT_TO_API = {
+  newest: { sort: "createdAt", order: "desc" },
+  price_asc: { sort: "price", order: "asc" },
+  price_desc: { sort: "price", order: "desc" },
+};
 
 // ── Categories (mirrors Navbar + ShopByCategory) ───────────
 const CATEGORIES = [
@@ -198,19 +208,28 @@ function ShopInner() {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
   const [priceRange, setPriceRange] = useState("All Prices");
   const [sort, setSort] = useState("featured");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [serverPagination, setServerPagination] = useState({ total: 0, pages: 1 });
 
   // Read category from URL
   const urlCategory = searchParams.get("category") || "";
   const [category, setCategory] = useState(urlCategory);
 
-  // Sync URL → state on navigation
+  // Read search from URL — this is what makes the homepage hero search
+  // (which does router.push('/shop?search=...')) actually land with results,
+  // instead of the param being silently dropped.
+  const urlSearch = searchParams.get("search") || "";
+  const [search, setSearch] = useState(urlSearch);
+  const debouncedSearch = useDebounce(search, 400);
+  const isSearching = Boolean(debouncedSearch.trim());
+
+  // Sync URL → state on navigation (covers browser back/forward too)
   useEffect(() => {
     setCategory(searchParams.get("category") || "");
+    setSearch(searchParams.get("search") || "");
   }, [searchParams]);
 
   // Update URL when category changes
@@ -222,7 +241,25 @@ function ShopInner() {
     router.push(`/shop?${params.toString()}`, { scroll: false });
   }, [searchParams, router]);
 
+  // Push the debounced search term into the URL so it's shareable/bookmarkable
+  // and stays consistent with the homepage's own search hand-off.
   useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (debouncedSearch) params.set("search", debouncedSearch);
+    else params.delete("search");
+    const next = params.toString();
+    if (next !== searchParams.toString()) {
+      router.push(`/shop${next ? `?${next}` : ""}`, { scroll: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
+
+  // Default browse (no active search) — fetches up to 200 products for the
+  // current category; price/sort/pagination are derived client-side below.
+  // Unchanged from before, just skipped while a search is active.
+  useEffect(() => {
+    if (isSearching) return;
+    let cancelled = false;
     setLoading(true);
     const url = category
       ? `/api/products?category=${encodeURIComponent(category)}&limit=200`
@@ -230,6 +267,7 @@ function ShopInner() {
     fetch(url)
       .then((r) => r.json())
       .then((d) => {
+        if (cancelled) return;
         setProducts(d.products || []);
         // No real Category._id is available at this call site (CATEGORIES
         // above is a static curated slug/label list for shop nav, not the
@@ -241,49 +279,87 @@ function ShopInner() {
           category_name: cat.label,
         });
       })
-      .catch(() => setProducts([]))
-      .finally(() => setLoading(false));
-  }, [category]);
+      .catch(() => { if (!cancelled) setProducts([]); })
+      .finally(() => { if (!cancelled) setLoading(false); });
 
-  // Search Performed — debounced so we don't fire an event per keystroke.
+    return () => { cancelled = true; };
+  }, [category, isSearching]);
+
+  // Active search — real backend full-text search (title/description/brand),
+  // relevance-ranked by default, combined with category/price/sort, and
+  // properly server-paginated (search results can't be reasonably handled
+  // by fetching a fixed batch and filtering client-side).
   useEffect(() => {
-    if (!search) return;
-    const timer = setTimeout(() => {
-      analytics.track("Search Performed", {
-        query: search,
-        number_of_results: displayed.length,
-        filters: { category: category || null },
-        sort,
-        page: 1,
-      });
-    }, 400);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
+    const term = debouncedSearch.trim();
+    if (!term) return;
+
+    let cancelled = false;
+    setLoading(true);
+    const priceObj = PRICE_RANGES.find((p) => p.label === priceRange) || PRICE_RANGES[0];
+    const params = new URLSearchParams();
+    params.set("search", term);
+    if (category) params.set("category", category);
+    if (priceObj.min > 0) params.set("minPrice", String(priceObj.min));
+    if (priceObj.max !== Infinity) params.set("maxPrice", String(priceObj.max));
+    const sortApi = SORT_TO_API[sort];
+    if (sortApi) {
+      params.set("sort", sortApi.sort);
+      params.set("order", sortApi.order);
+    }
+    params.set("page", String(page));
+    params.set("limit", String(PAGE_SIZE));
+
+    fetch(`/api/products?${params.toString()}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled) return;
+        setProducts(d.products || []);
+        setServerPagination({
+          total: d.pagination?.total || 0,
+          pages: d.pagination?.pages || 1,
+        });
+        analytics.track("Search Performed", {
+          query: term,
+          number_of_results: d.pagination?.total ?? (d.products || []).length,
+          filters: { category: category || null },
+          sort,
+          page,
+        });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setProducts([]);
+        setServerPagination({ total: 0, pages: 1 });
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [debouncedSearch, category, priceRange, sort, page]);
 
   const activeCat = CATEGORIES.find((c) => c.slug === category) || CATEGORIES[0];
-  const priceObj = PRICE_RANGES.find((p) => p.label === priceRange) || PRICE_RANGES[0];
 
   const displayed = useMemo(() => {
+    if (isSearching) return products; // already filtered/sorted server-side
+    const priceObj = PRICE_RANGES.find((p) => p.label === priceRange) || PRICE_RANGES[0];
     let r = products.filter((p) => {
       const price = Number(p.price) || 0;
-      const inPrice = price >= priceObj.min && price <= priceObj.max;
-      const inSearch = !search || p.title?.toLowerCase().includes(search.toLowerCase());
-      return inPrice && inSearch;
+      return price >= priceObj.min && price <= priceObj.max;
     });
     if (sort === "newest") r = [...r].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     if (sort === "price_asc") r = [...r].sort((a, b) => Number(a.price) - Number(b.price));
     if (sort === "price_desc") r = [...r].sort((a, b) => Number(b.price) - Number(a.price));
     return r;
-  }, [products, priceObj, search, sort]);
+  }, [products, priceRange, sort, isSearching]);
 
-  const activeFilterCount = (priceRange !== "All Prices" ? 1 : 0) + (search ? 1 : 0);
+  const activeFilterCount =
+    (category ? 1 : 0) + (priceRange !== "All Prices" ? 1 : 0) + (search ? 1 : 0);
 
   // Reset to page 1 whenever filters/search/category/sort change
-  useEffect(() => { setPage(1); }, [category, priceRange, search, sort]);
+  useEffect(() => { setPage(1); }, [category, priceRange, debouncedSearch, sort]);
 
-  const totalPages = Math.ceil(displayed.length / PAGE_SIZE);
-  const paginated = displayed.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = isSearching ? serverPagination.pages : Math.ceil(displayed.length / PAGE_SIZE);
+  const paginated = isSearching ? products : displayed.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const resultsCount = isSearching ? serverPagination.total : displayed.length;
 
   const handlePageChange = (p) => {
     setPage(p);
@@ -295,7 +371,7 @@ function ShopInner() {
 
       {/* ── Page header ── */}
       <div className="border-b border-neutral-100 bg-white">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-8 md:py-10">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 py-8 md:py-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <p className="text-[11px] font-semibold text-[#19B5D8] uppercase tracking-[0.2em] mb-1">
@@ -315,7 +391,11 @@ function ShopInner() {
                 className="flex-1 bg-transparent text-sm outline-none text-neutral-700 placeholder:text-neutral-400"
               />
               {search && (
-                <button onClick={() => setSearch("")} className="text-neutral-400 hover:text-neutral-700">
+                <button
+                  onClick={() => setSearch("")}
+                  aria-label="Clear search"
+                  className="text-neutral-400 hover:text-neutral-700"
+                >
                   <X size={13} />
                 </button>
               )}
@@ -337,7 +417,7 @@ function ShopInner() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 mt-8">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 mt-8">
         <div className="flex gap-8 lg:gap-12">
 
           {/* ── Sidebar (desktop) ── */}
@@ -420,7 +500,11 @@ function ShopInner() {
                   placeholder="Search…"
                   className="flex-1 bg-transparent text-sm outline-none text-neutral-700 placeholder:text-neutral-400"
                 />
-                {search && <button onClick={() => setSearch("")}><X size={12} className="text-neutral-400" /></button>}
+                {search && (
+                  <button onClick={() => setSearch("")} aria-label="Clear search">
+                    <X size={12} className="text-neutral-400" />
+                  </button>
+                )}
               </div>
               {/* Filter button */}
               <button
@@ -440,7 +524,7 @@ function ShopInner() {
             {/* Result count + active sort (desktop) */}
             <div className="hidden lg:flex items-center justify-between mb-6">
               <p className="text-sm text-neutral-400">
-                {loading ? "Loading…" : `${displayed.length} product${displayed.length !== 1 ? "s" : ""}${totalPages > 1 ? ` · page ${page} of ${totalPages}` : ""}`}
+                {loading ? "Loading…" : `${resultsCount} product${resultsCount !== 1 ? "s" : ""}${totalPages > 1 ? ` · page ${page} of ${totalPages}` : ""}`}
               </p>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-neutral-400">Sort:</span>
@@ -458,15 +542,15 @@ function ShopInner() {
 
             {/* Mobile result count */}
             <p className="lg:hidden text-xs text-neutral-400 mb-4">
-              {!loading && `${displayed.length} products${totalPages > 1 ? ` · page ${page}/${totalPages}` : ""}`}
+              {!loading && `${resultsCount} products${totalPages > 1 ? ` · page ${page}/${totalPages}` : ""}`}
             </p>
 
             {/* Grid */}
             {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                 {Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)}
               </div>
-            ) : displayed.length === 0 ? (
+            ) : paginated.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 text-center">
                 <div className="w-16 h-16 rounded-2xl bg-neutral-100 flex items-center justify-center mb-5">
                   <Search size={24} className="text-neutral-300" />
@@ -482,7 +566,7 @@ function ShopInner() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                   {paginated.map((product, i) => (
                     <motion.div
                       key={product._id}
@@ -606,7 +690,7 @@ function ShopInner() {
                   onClick={() => setDrawerOpen(false)}
                   className="flex-1 py-3.5 bg-neutral-900 text-white rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors"
                 >
-                  View {!loading && `${displayed.length} `}products
+                  View {!loading && `${resultsCount} `}products
                 </button>
               </div>
             </motion.div>

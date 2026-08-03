@@ -42,7 +42,7 @@ export default function Home() {
             : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between h-20">
+        <div className="max-w-8xl mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between h-20">
           <Link href="/" className="flex items-center gap-3 group">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -107,7 +107,7 @@ export default function Home() {
           />
         </motion.div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 w-full">
+        <div className="relative z-10 max-w-8xl mx-auto px-5 sm:px-6 lg:px-8 w-full">
           <div className="max-w-4xl">
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-lg border border-white/10 text-white/90 text-sm font-medium mb-8">
               <Leaf size={16} className="text-[#7DE8F5]" /> Ride Clean • Ride
@@ -181,7 +181,7 @@ export default function Home() {
 
       {/* ─── Value highlights ─── */}
       <section className="py-24 md:py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="max-w-8xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-10 lg:gap-16">
             {[
               {

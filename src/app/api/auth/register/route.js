@@ -5,6 +5,7 @@ import { sendEmail } from "@/lib/email/sendMail";
 import { welcomeTemplate } from "@/lib/email/templates/welcome";
 import { signToken } from "@/lib/jwt";
 import { rateLimit } from "@/lib/rateLimit";
+import { getPasswordError } from "@/lib/validatePassword";
 import { captureServerException } from "@/lib/analytics/posthog-server";
 
 export async function POST(req) {
@@ -22,11 +23,9 @@ export async function POST(req) {
       );
     }
 
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: "Password must be at least 6 characters" },
-        { status: 400 }
-      );
+    const passwordError = getPasswordError(password);
+    if (passwordError) {
+      return NextResponse.json({ error: passwordError }, { status: 400 });
     }
 
     const normalizedEmail = email.trim().toLowerCase();

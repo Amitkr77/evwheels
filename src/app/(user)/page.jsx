@@ -1,6 +1,6 @@
 import HomeClient from "./HomeClient";
 
-const BASE_URL = "https://evwheels.in";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://evwheels.in";
 
 async function getProducts(limit) {
   try {

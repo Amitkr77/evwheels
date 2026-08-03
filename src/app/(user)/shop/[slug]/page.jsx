@@ -1,6 +1,12 @@
 import ProductDetailClient from "./ProductDetailClient";
 
-const BASE_URL = "https://evwheels.in";
+// JSON.stringify doesn't escape "</script>" — without this, a title/description
+// containing that literal string could break out of the JSON-LD tag and inject markup.
+function safeJsonLd(data) {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://evwheels.in";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -125,12 +131,12 @@ export default async function ProductDetailPage({ params }) {
       {productSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(productSchema) }}
         />
       )}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbSchema) }}
       />
       <ProductDetailClient />
     </>

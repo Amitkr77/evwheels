@@ -61,9 +61,13 @@ export default function OrderConfirmationPage() {
   const handleCopy = () => {
     const id = order?.id || order?._id;
     if (!id) return;
-    navigator.clipboard.writeText(id);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard
+      .writeText(id)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch((err) => console.error("Copy failed:", err));
   };
 
   if (loading) {
@@ -99,10 +103,12 @@ export default function OrderConfirmationPage() {
 
   const placedDate = new Date(order.createdAt);
   const estDelivery = getEstimatedDelivery(placedDate);
+  const isCancelled = order.orderStatus === "CANCELLED";
   const currentStep = stepIndex(order.orderStatus);
   const displayId = order.id || `#${order._id?.slice(-8).toUpperCase()}`;
   const addr = order.shippingAddress;
   const hasAddr = addr?.street || addr?.city;
+  const orderItems = order.items || [];
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] font-['Inter'] pb-20">
@@ -172,6 +178,11 @@ export default function OrderConfirmationPage() {
             transition={{ delay: 0.55 }}
             className="mt-8 px-1 sm:px-4"
           >
+            {isCancelled ? (
+              <div className="flex items-center justify-center gap-2 py-3 px-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm font-medium">
+                This order has been cancelled
+              </div>
+            ) : (
             <div className="relative flex items-start justify-between">
               {/* Track line */}
               <div className="absolute top-4 left-4 right-4 h-[2px] bg-neutral-200 z-0">
@@ -216,10 +227,13 @@ export default function OrderConfirmationPage() {
                 </div>
               ))}
             </div>
+            )}
 
             <div className="flex justify-between mt-4 text-xs text-neutral-500">
               <span>{formatDateTime(placedDate)}</span>
-              <span className="font-medium text-[#19B5D8]">Est. {estDelivery}</span>
+              {!isCancelled && (
+                <span className="font-medium text-[#19B5D8]">Est. {estDelivery}</span>
+              )}
             </div>
           </motion.div>
         </motion.div>
@@ -237,12 +251,12 @@ export default function OrderConfirmationPage() {
             <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-neutral-900">Items Ordered</h2>
               <span className="text-xs text-neutral-400">
-                {order.items.length} item{order.items.length !== 1 ? "s" : ""}
+                {orderItems.length} item{orderItems.length !== 1 ? "s" : ""}
               </span>
             </div>
 
             <div className="divide-y divide-neutral-100">
-              {order.items.map((item, index) => (
+              {orderItems.map((item, index) => (
                 <div
                   key={item.product?._id || index}
                   className="flex items-center gap-4 px-6 py-4"

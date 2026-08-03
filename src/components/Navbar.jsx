@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ShoppingBag, User, Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
@@ -83,12 +84,19 @@ export default function Navbar() {
             : "top-9 bg-white border-b border-neutral-200"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className={`text-xl font-bold tracking-tight transition-colors ${tx}`}>
-            EVWheels
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/black_logo.png"
+              alt="EVWheels"
+              width={160}
+              height={160}
+              priority
+              className="h-11 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop nav */}
@@ -248,7 +256,7 @@ export default function Navbar() {
 
             {/* Drawer header */}
             <div className="flex items-center justify-between px-5 h-16 border-b border-neutral-100 shrink-0">
-              <span className="font-bold text-neutral-900">EVWheels</span>
+              <Image src="/black_logo.png" alt="EVWheels" width={160} height={160} className="h-10 w-auto object-contain" />
               <button onClick={() => setMobileOpen(false)} className="text-neutral-400 hover:text-neutral-900 transition-colors">
                 <X size={20} />
               </button>

@@ -24,6 +24,7 @@ export default function CouponsPage() {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [formData, setFormData] = useState({ ...EMPTY_FORM });
   const [error, setError] = useState("");
+  const [deleteError, setDeleteError] = useState("");
 
   const fetchCoupons = async () => {
     setLoading(true);
@@ -62,9 +63,20 @@ export default function CouponsPage() {
     setEditCoupon(coupon);
   };
 
+  const validateForm = () => {
+    if (!formData.code.trim()) return "Code is required.";
+    if (!formData.expiryDate) return "Expiry date is required.";
+    if (new Date(formData.expiryDate) <= new Date()) return "Expiry date must be in the future.";
+    const value = Number(formData.discountValue);
+    if (isNaN(value) || value < 0) return "Discount value must be a positive number.";
+    if (formData.discountType === "percentage" && value > 100) return "Percentage discount cannot exceed 100.";
+    if (formData.usageLimit !== "" && Number(formData.usageLimit) < 1) return "Usage limit must be at least 1.";
+    return "";
+  };
+
   const handleCreate = async () => {
-    if (!formData.code.trim()) { setError("Code is required."); return; }
-    if (!formData.expiryDate) { setError("Expiry date is required."); return; }
+    const validationError = validateForm();
+    if (validationError) { setError(validationError); return; }
     setSubmitting(true);
     setError("");
     try {
@@ -94,7 +106,8 @@ export default function CouponsPage() {
   };
 
   const handleUpdate = async () => {
-    if (!formData.code.trim()) { setError("Code is required."); return; }
+    const validationError = validateForm();
+    if (validationError) { setError(validationError); return; }
     setSubmitting(true);
     setError("");
     try {
@@ -125,15 +138,21 @@ export default function CouponsPage() {
 
   const handleDelete = async () => {
     if (!deleteConfirm) return;
+    setDeleteError("");
     try {
-      await fetch(`/api/admin/coupons?id=${deleteConfirm._id}`, {
+      const res = await fetch(`/api/admin/coupons?id=${deleteConfirm._id}`, {
         method: "DELETE",
         credentials: "include",
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to delete coupon");
+      }
       setCoupons((prev) => prev.filter((c) => c._id !== deleteConfirm._id));
       setDeleteConfirm(null);
     } catch (err) {
       console.error("Delete error:", err);
+      setDeleteError(err.message);
     }
   };
 
@@ -179,6 +198,7 @@ export default function CouponsPage() {
             className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="20"
             min="0"
+            max={formData.discountType === "percentage" ? 100 : undefined}
           />
         </div>
       </div>
@@ -348,7 +368,7 @@ export default function CouponsPage() {
                             <Edit2 size={17} />
                           </button>
                           <button
-                            onClick={() => setDeleteConfirm(coupon)}
+                            onClick={() => { setDeleteConfirm(coupon); setDeleteError(""); }}
                             className="text-neutral-500 hover:text-red-600 transition-colors"
                             title="Delete coupon"
                           >
@@ -431,9 +451,12 @@ export default function CouponsPage() {
                 <span className="font-mono font-semibold text-neutral-900">{deleteConfirm.code}</span>?
                 This action cannot be undone.
               </p>
+              {deleteError && (
+                <p className="text-red-600 text-sm mb-4" role="alert">{deleteError}</p>
+              )}
               <div className="flex gap-4">
                 <button
-                  onClick={() => setDeleteConfirm(null)}
+                  onClick={() => { setDeleteConfirm(null); setDeleteError(""); }}
                   className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
                 >
                   Cancel

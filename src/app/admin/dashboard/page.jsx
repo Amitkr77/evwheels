@@ -36,19 +36,23 @@ function getGreeting() {
 export default function page() {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [period, setPeriod] = useState("7d");
 
   useEffect(() => {
     const fetchDashboard = async () => {
       setLoading(true);
+      setFetchError(false);
       try {
         const res = await fetch(`/api/admin/dashboard?period=${period}`, {
           credentials: "include",
         });
+        if (!res.ok) throw new Error("Failed to load dashboard");
         const data = await res.json();
         setDashboard(data);
       } catch (err) {
         console.error("Dashboard fetch error:", err);
+        setFetchError(true);
       } finally {
         setLoading(false);
       }
@@ -165,6 +169,12 @@ export default function page() {
         Here's what's happening with your store today
       </p>
 
+      {fetchError && (
+        <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-lg text-red-700 text-sm" role="alert">
+          Couldn't load dashboard data. Please refresh the page.
+        </div>
+      )}
+
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16">
         {stats.map((stat, i) => (
@@ -177,10 +187,8 @@ export default function page() {
               {stat.title}
             </div>
             <div
-              className={`text-3xl font-medium mt-2 ${
-                stats.value === dashboard?.insights?.topSellingProduct?.name
-                  ? "text-3xl"
-                  : "text-xl"
+              className={`font-medium mt-2 ${
+                stat.title === "Top Product" ? "text-xl" : "text-3xl"
               }`}
             >
               {stat.value}

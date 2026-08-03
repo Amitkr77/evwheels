@@ -22,19 +22,17 @@ export async function POST(req) {
 
     await connectDB();
 
-    const user = await User.findOne({ email }).select("+password");
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail }).select("+password");
 
-    // Generic error to prevent user enumeration
-    if (!user) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 400 }
-      );
-    }
+    // Always run a bcrypt compare, even for an unknown email, so response
+    // timing doesn't leak whether the address exists (dummy hash, not a real user's).
+    const isMatch = await bcrypt.compare(
+      password,
+      user?.password || "$2a$10$CwTycUXWue0Thq9StjUM0uJ8OqAeVSVfNCwtiV5cQVOKGcJ6f2eSK"
+    );
 
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
+    if (!user || !isMatch) {
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 400 }

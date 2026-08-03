@@ -22,7 +22,7 @@ export async function POST(req) {
 
     await connectDB();
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
 
     // Always return success to prevent email enumeration
     if (!user) {
@@ -40,15 +40,16 @@ export async function POST(req) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const resetLink = `${baseUrl}/account/reset-password?token=${resetToken}`;
 
-    // Send email
-    await sendEmail({
+    // Fire-and-forget: don't await, so response timing is the same whether
+    // the account exists or not (an awaited send would leak existence via latency).
+    sendEmail({
       to: user.email,
       subject: "Password Reset Request — EV Wheels",
       html: resetPasswordTemplate({ resetLink, name: user.name }),
       type: "password_reset",
       userId: user._id,
       metadata: { resetToken: "generated" },
-    });
+    }).catch((err) => console.error("Password reset email failed:", err.message));
 
     return NextResponse.json({
       message:

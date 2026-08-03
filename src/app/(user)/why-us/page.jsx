@@ -33,7 +33,7 @@ const staggerContainer = {
 export default function WhyUsPage() {
   return (
     <div className="min-h-screen bg-white font-['Inter'] pt-20 pb-20">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Hero Section */}
         <motion.div
           initial="hidden"

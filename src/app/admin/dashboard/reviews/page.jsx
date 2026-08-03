@@ -6,12 +6,13 @@ import { motion } from "framer-motion";
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [actionError, setActionError] = useState("");
 
   // Fetch all reviews
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/reviews");
+      const res = await fetch("/api/admin/reviews", { credentials: "include" });
       const data = await res.json();
       setReviews(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -26,39 +27,28 @@ export default function ReviewsPage() {
     fetchReviews();
   }, []);
 
-  // Approve a review
-  const approveReview = async (id) => {
+  const updateReviewStatus = async (id, status) => {
+    setActionError("");
     try {
       const res = await fetch(`/api/admin/reviews?id=${id}`, {
         method: "PATCH",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Approved" }),
+        body: JSON.stringify({ status }),
       });
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update review");
       setReviews((prev) =>
         prev.map((r) => (r._id === id ? { ...r, status: data.status } : r)),
       );
     } catch (err) {
-      console.error("Approve review error:", err);
+      console.error("Update review error:", err);
+      setActionError(err.message);
     }
   };
 
-  // Reject a review
-  const rejectReview = async (id) => {
-    try {
-      const res = await fetch(`/api/admin/reviews?id=${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Rejected" }),
-      });
-      const data = await res.json();
-      setReviews((prev) =>
-        prev.map((r) => (r._id === id ? { ...r, status: data.status } : r)),
-      );
-    } catch (err) {
-      console.error("Reject review error:", err);
-    }
-  };
+  const approveReview = (id) => updateReviewStatus(id, "Approved");
+  const rejectReview = (id) => updateReviewStatus(id, "Rejected");
 
   const renderReviewsTable = () => {
     if (!reviews.length)
@@ -162,6 +152,9 @@ export default function ReviewsPage() {
           Showing {reviews?.length || 0} reviews
         </div>
       </div>
+      {actionError && (
+        <p className="mb-4 text-sm text-red-600" role="alert">{actionError}</p>
+      )}
       {loading ? <p>Loading...</p> : renderReviewsTable()}
     </motion.div>
   );

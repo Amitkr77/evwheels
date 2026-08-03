@@ -24,20 +24,27 @@ export async function POST(req) {
       const productId = guestItem.productId || guestItem.product?._id;
       if (!productId) continue;
 
+      // Guest cart quantities come from client-controlled localStorage — never trust them raw.
+      const requestedQty = Math.floor(Number(guestItem.quantity));
+      if (!Number.isFinite(requestedQty) || requestedQty < 1) continue;
+
       const product = await Product.findById(productId).lean();
       if (!product || !product.isActive) continue;
+
+      const cappedQty = Math.min(requestedQty, product.stock ?? 999);
+      if (cappedQty < 1) continue;
 
       const existingIndex = userCart.items.findIndex(
         (item) => item.product.toString() === productId.toString()
       );
 
       if (existingIndex > -1) {
-        const newQty = userCart.items[existingIndex].quantity + (guestItem.quantity || 1);
+        const newQty = userCart.items[existingIndex].quantity + cappedQty;
         userCart.items[existingIndex].quantity = Math.min(newQty, product.stock ?? 999);
       } else {
         userCart.items.push({
           product: productId,
-          quantity: Math.min(guestItem.quantity || 1, product.stock ?? 999),
+          quantity: cappedQty,
         });
       }
     }

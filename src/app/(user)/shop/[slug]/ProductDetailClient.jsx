@@ -20,14 +20,19 @@ export default function ProductDetailClient() {
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   const [reviews, setReviews] = useState([]);
   const [loadingReviews, setLoadingReviews] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchProduct() {
+      setLoading(true);
       try {
         const res = await fetch(`/api/products/${slug}`);
+        if (cancelled) return;
 
         if (!res.ok) {
           setProduct(null);
@@ -36,15 +41,22 @@ export default function ProductDetailClient() {
         }
 
         const data = await res.json();
+        if (cancelled) return;
         setProduct(data.product);
+        setSelectedImage(0);
       } catch (error) {
+        if (cancelled) return;
         console.error("Failed to fetch product:", error);
         setProduct(null);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
     fetchProduct();
+
+    return () => {
+      cancelled = true;
+    };
   }, [slug]);
 
   useEffect(() => {
@@ -65,20 +77,30 @@ export default function ProductDetailClient() {
   useEffect(() => {
     if (!product?._id) return;
 
+    let cancelled = false;
+    setLoadingReviews(true);
+    setReviews([]);
+
     const fetchReviews = async () => {
       try {
         const res = await fetch(`/api/reviews?id=${product._id}`);
         const data = await res.json();
+        if (cancelled) return;
         setReviews(Array.isArray(data) ? data : []);
       } catch (err) {
+        if (cancelled) return;
         console.error("Failed to fetch reviews", err);
       } finally {
-        setLoadingReviews(false);
+        if (!cancelled) setLoadingReviews(false);
       }
     };
 
     fetchReviews();
-  }, [product]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [product?._id]);
 
   if (loading) {
     return (
@@ -102,15 +124,17 @@ export default function ProductDetailClient() {
       s.key.toLowerCase().includes(key.toLowerCase())
     )?.value;
 
-  const handleBuyNow = async () => {
+  const handleBuyNow = () => {
     if (!product) return;
-    await addToCart(product, product.moq || 1, { source: "buy_now" });
-    router.push("/checkout");
+    // Buy Now is an isolated single-item checkout — it must never touch the
+    // shared cart, so we route straight to checkout with just this product
+    // instead of calling addToCart().
+    router.push(`/checkout?buyNow=${product._id}&qty=${product.moq || 1}`);
   };
 
   return (
     <div className="min-h-screen bg-white pt-20 pb-20">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="max-w-8xl mx-auto px-6 lg:px-12">
 
         {/* Breadcrumb */}
         <nav className="mb-10 mt-4 text-sm text-neutral-600" aria-label="Breadcrumb">
@@ -135,7 +159,7 @@ export default function ProductDetailClient() {
           >
             <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-neutral-100">
               <Image
-                src={product.images?.[0] || "/logo.png"}
+                src={product.images?.[selectedImage] || product.images?.[0] || "/logo.png"}
                 alt={product.title}
                 fill
                 className="object-cover"
@@ -147,9 +171,14 @@ export default function ProductDetailClient() {
             {product.images?.length > 1 && (
               <div className="flex gap-3 mt-4 overflow-x-auto pb-1">
                 {product.images.map((img, i) => (
-                  <div
+                  <button
                     key={i}
-                    className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100 border border-neutral-200"
+                    type="button"
+                    onClick={() => setSelectedImage(i)}
+                    aria-label={`View image ${i + 1}`}
+                    className={`relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100 border cursor-pointer transition-colors ${
+                      selectedImage === i ? "border-[#19B5D8] border-2" : "border-neutral-200"
+                    }`}
                   >
                     <Image
                       src={img}
@@ -158,7 +187,7 @@ export default function ProductDetailClient() {
                       className="object-cover"
                       sizes="80px"
                     />
-                  </div>
+                  </button>
                 ))}
               </div>
             )}

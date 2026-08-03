@@ -79,7 +79,7 @@ export default function HeroSlider() {
 
           {/* Content */}
           <div className="relative z-20 h-full flex items-center">
-            <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 w-full">
+            <div className="max-w-8xl mx-auto px-6 sm:px-10 lg:px-12 w-full">
               <div className="max-w-3xl">
                 <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-2 text-sm text-white mb-6">
                   ⚡ Premium Electric Mobility

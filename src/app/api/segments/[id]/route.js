@@ -10,7 +10,7 @@ export async function GET(req, { params }) {
     try {
         await connectDB();
 
-        const { id } = params;
+        const { id } = await params;
 
         const isObjectId = mongoose.Types.ObjectId.isValid(id);
 
@@ -60,7 +60,7 @@ export async function PATCH(req, { params }) {
 
         await connectDB();
 
-        const { id } = params;
+        const { id } = await params;
         const body = await req.json();
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -141,7 +141,7 @@ export async function DELETE(req, { params }) {
 
         await connectDB();
 
-        const { id } = params;
+        const { id } = await params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return NextResponse.json(

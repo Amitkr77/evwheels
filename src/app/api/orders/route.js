@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Cart from "@/models/Cart";
+import Coupon from "@/models/Coupon";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import { getCartSummary } from "@/lib/cartSummary";
@@ -17,15 +18,27 @@ export async function POST(req) {
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { shippingAddress, couponCode, paymentMethod } = await req.json();
+  const body = await req.json();
+  const { shippingAddress, paymentMethod, buyNow } = body;
+  const couponCode = typeof body.couponCode === "string" ? body.couponCode : undefined;
 
   if (!shippingAddress?.fullName || !shippingAddress?.phone || !shippingAddress?.street ||
       !shippingAddress?.city || !shippingAddress?.state || !shippingAddress?.postalCode) {
     return NextResponse.json({ error: "All shipping address fields are required" }, { status: 400 });
   }
 
+  for (const [field, max] of [["fullName", 100], ["street", 200], ["city", 100], ["state", 100]]) {
+    if (typeof shippingAddress[field] !== "string" || shippingAddress[field].length > max) {
+      return NextResponse.json({ error: `Invalid ${field}` }, { status: 400 });
+    }
+  }
+
   if (!["COD", "CARD"].includes(paymentMethod)) {
     return NextResponse.json({ error: "Invalid payment method" }, { status: 400 });
+  }
+
+  if (buyNow?.productId && !(Number.isInteger(buyNow.quantity ?? 1) && (buyNow.quantity ?? 1) >= 1)) {
+    return NextResponse.json({ error: "Invalid quantity" }, { status: 400 });
   }
 
   await connectDB();
@@ -38,10 +51,18 @@ export async function POST(req) {
   const session = await mongoose.startSession();
   session.startTransaction();
 
+  const overrideItems = buyNow?.productId
+    ? [{ productId: buyNow.productId, quantity: buyNow.quantity || 1 }]
+    : undefined;
+
   try {
     // Compute summary outside the transaction (read-only, no locks needed)
-    const summary = await getCartSummary(userId, couponCode);
-    if (!summary?.items?.length) throw new Error("Cart is empty");
+    const summary = await getCartSummary(userId, couponCode, overrideItems);
+    if (!summary?.items?.length) {
+      const err = new Error(overrideItems ? "Product not found" : "Cart is empty");
+      err.expected = true;
+      throw err;
+    }
 
     const productIds = summary.items.map((item) => item.product._id);
 
@@ -59,9 +80,26 @@ export async function POST(req) {
     // Validate stock and apply decrements
     for (const item of summary.items) {
       const product = productMap[item.product._id.toString()];
-      if (!product) throw new Error("Product not found");
-      if (product.stock < item.quantity)
-        throw new Error(`Insufficient stock for ${product.title}`);
+      if (!product) {
+        const err = new Error("Product not found");
+        err.expected = true;
+        throw err;
+      }
+      if (!product.isActive) {
+        const err = new Error(`${product.title} is no longer available`);
+        err.expected = true;
+        throw err;
+      }
+      if (product.stock < item.quantity) {
+        const err = new Error(`Insufficient stock for ${product.title}`);
+        err.expected = true;
+        throw err;
+      }
+      if (item.quantity < (product.moq || 1)) {
+        const err = new Error(`${product.title} requires a minimum order of ${product.moq}`);
+        err.expected = true;
+        throw err;
+      }
       product.stock -= item.quantity;
     }
 
@@ -72,10 +110,13 @@ export async function POST(req) {
 
     // Use a collision-resistant ID from timestamp + random suffix instead of a DB read
     const orderId = `#ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
-    const paymentStatus = paymentMethod === "COD" ? "PENDING" : "PAID";
+    // No payment gateway is wired in yet — CARD orders must stay PENDING until a real
+    // payment is verified server-side. Do not mark PAID on the client's say-so alone.
+    const paymentStatus = "PENDING";
 
-    // Create order and clear cart in parallel inside the transaction
-    const [[order]] = await Promise.all([
+    // Create the order — and clear the cart alongside it, unless this is a Buy Now
+    // order, which never touched the persisted cart in the first place.
+    const dbOps = [
       Order.create(
         [
           {
@@ -94,8 +135,18 @@ export async function POST(req) {
         ],
         { session }
       ),
-      Cart.updateOne({ user: userId }, { $set: { items: [], couponCode: null } }, { session }),
-    ]);
+    ];
+    if (!overrideItems) {
+      dbOps.push(
+        Cart.updateOne({ user: userId }, { $set: { items: [], couponCode: null } }, { session })
+      );
+    }
+    if (summary.couponId) {
+      dbOps.push(
+        Coupon.updateOne({ _id: summary.couponId }, { $inc: { usedCount: 1 } }, { session })
+      );
+    }
+    const [[order]] = await Promise.all(dbOps);
 
     await session.commitTransaction();
     session.endSession();
@@ -149,7 +200,15 @@ export async function POST(req) {
     await session.abortTransaction();
     session.endSession();
     captureServerException(error, { route: "orders", distinctId: userId });
-    return NextResponse.json({ error: error.message }, { status: 400 });
+
+    if (error.expected) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    console.error("[orders] unexpected error:", error.message);
+    return NextResponse.json(
+      { error: "Could not place order. Please try again." },
+      { status: 500 }
+    );
   }
 }
 
@@ -162,6 +221,7 @@ export async function GET(req) {
 
   const orders = await Order.find({ user: userId })
     .sort({ createdAt: -1 })
+    .limit(200)
     .lean();
 
   return NextResponse.json(orders);

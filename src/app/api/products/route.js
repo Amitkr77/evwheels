@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { verifyAdmin } from "@/lib/adminAuth";
 import Product from "@/models/Product";
@@ -7,6 +8,10 @@ import Subcategory from "@/models/Subcategory";
 import Segment from "@/models/Segment";
 import { captureServerException } from "@/lib/analytics/posthog-server";
 
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 // GET /api/products
 export async function GET(req) {
   try {
@@ -14,8 +19,8 @@ export async function GET(req) {
     
     const { searchParams } = new URL(req.url);
 
-    const page = Number(searchParams.get("page")) || 1;
-    const limit = Number(searchParams.get("limit")) || 10;
+    const page = Math.max(1, Number(searchParams.get("page")) || 1);
+    const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit")) || 10));
     const skip = (page - 1) * limit;
 
     const categorySlug = searchParams.get("category");
@@ -27,7 +32,8 @@ export async function GET(req) {
     const brand = searchParams.get("brand");
     const search = searchParams.get("search");
     const inStock = searchParams.get("inStock") === "true";
-    const isAdmin = searchParams.get("admin") === "true";
+    const requestedAdmin = searchParams.get("admin") === "true";
+    const isAdmin = requestedAdmin && Boolean(await verifyAdmin(req));
 
     const minPrice = Number(searchParams.get("minPrice")) || 0;
     const maxPrice = Number(searchParams.get("maxPrice")) || 0;
@@ -49,11 +55,17 @@ export async function GET(req) {
 
     // Category filter by id
     if (categoryId) {
+      if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+        return NextResponse.json({ error: "Invalid category ID" }, { status: 400 });
+      }
       filter.category = categoryId;
     }
 
     // Subcategory filter
     if (subcategoryId) {
+      if (!mongoose.Types.ObjectId.isValid(subcategoryId)) {
+        return NextResponse.json({ error: "Invalid subcategory ID" }, { status: 400 });
+      }
       filter.subcategory = subcategoryId;
     }
 
@@ -68,6 +80,9 @@ export async function GET(req) {
 
     // Segment filter by id
     if (segmentId) {
+      if (!mongoose.Types.ObjectId.isValid(segmentId)) {
+        return NextResponse.json({ error: "Invalid segment ID" }, { status: 400 });
+      }
       filter.segment = segmentId;
     }
 
@@ -79,7 +94,7 @@ export async function GET(req) {
     // Brand filter
     if (brand) {
       filter.brand = {
-        $regex: brand,
+        $regex: escapeRegex(brand),
         $options: "i",
       };
     }
@@ -114,11 +129,18 @@ export async function GET(req) {
     let sort = {};
 
     if (search) {
-      sort = {
-        score: {
-          $meta: "textScore",
-        },
-      };
+      // Relevance-rank by default during a text search, but let an
+      // explicitly-requested sort (e.g. "Price: Low to High") still win —
+      // otherwise sort controls silently do nothing while searching.
+      if (searchParams.has("sort")) {
+        sort[sortBy] = sortOrder;
+      } else {
+        sort = {
+          score: {
+            $meta: "textScore",
+          },
+        };
+      }
     } else {
       sort[sortBy] = sortOrder;
     }
@@ -243,6 +265,16 @@ export async function POST(req) {
         {
           status: 400,
         }
+      );
+    }
+
+    if (
+      !mongoose.Types.ObjectId.isValid(body.category) ||
+      !mongoose.Types.ObjectId.isValid(body.subcategory)
+    ) {
+      return NextResponse.json(
+        { error: "Invalid category or subcategory ID" },
+        { status: 400 }
       );
     }
 

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Suspense, useEffect, useState, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { ShieldCheck, ChevronRight, MapPin, Plus, CheckCircle2, ArrowLeft } from "lucide-react";
@@ -22,22 +23,46 @@ const EMPTY_ADDR = { fullName: "", phone: "", street: "", city: "", state: "", p
 
 const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
-function Field({ label, children, span2 }) {
+function Field({ label, id, children, span2 }) {
   return (
     <div className={span2 ? "sm:col-span-2" : ""}>
-      <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-1.5">{label}</label>
+      <label htmlFor={id} className="block text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-1.5">{label}</label>
       {children}
     </div>
   );
 }
 
+const PHONE_REGEX = /^\+?\d{9,15}$/;
+const PIN_REGEX = /^\d{6}$/;
+
 const inputCls = "w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] focus:ring-2 focus:ring-[#19B5D8]/10 transition-colors placeholder:text-neutral-300";
 const selectCls = `${inputCls} appearance-none cursor-pointer`;
 
 export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-neutral-50 pt-24 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-neutral-200 border-t-[#19B5D8] rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <CheckoutContent />
+    </Suspense>
+  );
+}
+
+function CheckoutContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { items, clearCart } = useCartStore();
   const { isAuthenticated } = useAuthStore();
+
+  // "Buy Now" is an isolated single-item checkout — arrives via query params and
+  // must never read from or clear the shared cart.
+  const buyNowProductId = searchParams.get("buyNow");
+  const buyNowQty = parseInt(searchParams.get("qty"), 10) || 1;
+  const isBuyNow = Boolean(buyNowProductId);
 
   // Hydration guard — prevents "0 items" flash before Zustand loads
   const [mounted, setMounted] = useState(false);
@@ -45,6 +70,10 @@ export default function CheckoutPage() {
   const [summaryLoading, setSummaryLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  // What to actually show/order: the Buy Now product (from the summary override)
+  // or the real cart, depending on how checkout was reached.
+  const displayItems = (isBuyNow ? (summary?.items || []) : items).filter((i) => i.product);
 
   // Saved addresses
   const [savedAddresses, setSavedAddresses] = useState([]);
@@ -56,28 +85,29 @@ export default function CheckoutPage() {
 
   useEffect(() => { setMounted(true); }, []);
 
-  // Fetch cart summary
+  // Fetch cart summary (or the Buy Now single-item summary)
   useEffect(() => {
     if (!mounted) return;
     setSummaryLoading(true);
-    fetch("/api/cart/summary", { credentials: "include" })
+    const qs = isBuyNow ? `?buyNow=${buyNowProductId}&qty=${buyNowQty}` : "";
+    fetch(`/api/cart/summary${qs}`, { credentials: "include" })
       .then((r) => r.json())
       .then((d) => setSummary(d))
       .catch(() => {})
       .finally(() => setSummaryLoading(false));
-  }, [mounted]);
+  }, [mounted, isBuyNow, buyNowProductId, buyNowQty]);
 
-  // Checkout Started — fires once per real checkout visit with items in cart
+  // Checkout Started — fires once per real checkout visit with items to order
   const checkoutStartedTracked = useRef(false);
   useEffect(() => {
-    if (!mounted || items.length === 0 || checkoutStartedTracked.current) return;
+    if (!mounted || displayItems.length === 0 || checkoutStartedTracked.current) return;
     checkoutStartedTracked.current = true;
     analytics.track("Checkout Started", {
-      cart_value: items.reduce((sum, i) => sum + (i.product?.price || 0) * i.quantity, 0),
-      item_count: items.reduce((sum, i) => sum + i.quantity, 0),
+      cart_value: displayItems.reduce((sum, i) => sum + (i.product?.price || 0) * i.quantity, 0),
+      item_count: displayItems.reduce((sum, i) => sum + i.quantity, 0),
       currency: "INR",
     });
-  }, [mounted, items]);
+  }, [mounted, displayItems]);
 
   // Fetch saved addresses if logged in
   useEffect(() => {
@@ -117,8 +147,16 @@ export default function CheckoutPage() {
 
   const valid = addr.fullName && addr.phone && addr.street && addr.city && addr.state && addr.postalCode;
 
+  const getAddressError = () => {
+    if (!valid) return "Please fill in all shipping fields.";
+    if (!PHONE_REGEX.test(addr.phone.trim())) return "Please enter a valid phone number.";
+    if (!PIN_REGEX.test(addr.postalCode.trim())) return "PIN code must be 6 digits.";
+    return null;
+  };
+
   const placeOrder = async () => {
-    if (submitting || !valid) { if (!valid) setError("Please fill in all shipping fields."); return; }
+    const addressError = getAddressError();
+    if (submitting || addressError) { if (addressError) setError(addressError); return; }
     setSubmitting(true);
     setError(null);
 
@@ -137,7 +175,7 @@ export default function CheckoutPage() {
     analytics.track("Payment Method Selected", { method: paymentMethod });
     analytics.track("Checkout Reviewed", {
       cart_value: summary?.total || 0,
-      item_count: items.length,
+      item_count: displayItems.length,
       currency: "INR",
     });
     analytics.track("Payment Initiated", {
@@ -151,7 +189,11 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ shippingAddress: addr, paymentMethod }),
+        body: JSON.stringify({
+          shippingAddress: addr,
+          paymentMethod,
+          buyNow: isBuyNow ? { productId: buyNowProductId, quantity: buyNowQty } : undefined,
+        }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -167,9 +209,10 @@ export default function CheckoutPage() {
         analytics.track("Payment Successful", orderProperties);
         analytics.track("Order Completed", {
           ...orderProperties,
-          item_count: items.length,
+          item_count: displayItems.length,
         });
-        clearCart();
+        // Buy Now never touched the shared cart, so there's nothing to clear.
+        if (!isBuyNow) clearCart();
         router.push(`/order-success?id=${data._id}`);
       } else {
         analytics.track("Payment Failed", {
@@ -193,8 +236,9 @@ export default function CheckoutPage() {
     }
   };
 
-  // Show skeleton while Zustand hydrates
-  if (!mounted) {
+  // Show skeleton while Zustand hydrates, or while the Buy Now summary is loading
+  // (its item list only exists once that fetch resolves, unlike the cart's)
+  if (!mounted || (isBuyNow && summaryLoading)) {
     return (
       <div className="min-h-screen bg-neutral-50 pt-24 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-neutral-200 border-t-[#19B5D8] rounded-full animate-spin" />
@@ -202,14 +246,20 @@ export default function CheckoutPage() {
     );
   }
 
-  if (items.length === 0) {
+  if (displayItems.length === 0) {
     return (
       <div className="min-h-screen bg-neutral-50 pt-24 flex flex-col items-center justify-center text-center px-6 gap-4">
         <div className="w-16 h-16 rounded-2xl bg-neutral-100 flex items-center justify-center mb-2">
           <ShieldCheck size={28} className="text-neutral-300" />
         </div>
-        <h2 className="text-2xl font-bold text-neutral-900">Your cart is empty</h2>
-        <p className="text-neutral-500 text-sm max-w-xs">Add some products before proceeding to checkout.</p>
+        <h2 className="text-2xl font-bold text-neutral-900">
+          {isBuyNow ? "Product not found" : "Your cart is empty"}
+        </h2>
+        <p className="text-neutral-500 text-sm max-w-xs">
+          {isBuyNow
+            ? "This product is no longer available."
+            : "Add some products before proceeding to checkout."}
+        </p>
         <Link href="/shop" className="mt-2 inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white rounded-full text-sm font-semibold hover:bg-neutral-800 transition-colors">
           <ArrowLeft size={15} /> Browse Products
         </Link>
@@ -290,23 +340,23 @@ export default function CheckoutPage() {
                   </span>
                 </div>
                 <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Field label="Full Name *" span2>
-                    <input name="fullName" value={addr.fullName} onChange={handleAddrChange} className={inputCls} placeholder="e.g. Rahul Kumar" />
+                  <Field label="Full Name *" id="fullName" span2>
+                    <input id="fullName" name="fullName" value={addr.fullName} onChange={handleAddrChange} className={inputCls} placeholder="e.g. Rahul Kumar" />
                   </Field>
-                  <Field label="Phone *" span2>
-                    <input name="phone" value={addr.phone} onChange={handleAddrChange} type="tel" className={inputCls} placeholder="+91 98765 43210" />
+                  <Field label="Phone *" id="phone" span2>
+                    <input id="phone" name="phone" value={addr.phone} onChange={handleAddrChange} type="tel" className={inputCls} placeholder="+91 98765 43210" />
                   </Field>
-                  <Field label="Street Address *" span2>
-                    <input name="street" value={addr.street} onChange={handleAddrChange} className={inputCls} placeholder="House no., street, area" />
+                  <Field label="Street Address *" id="street" span2>
+                    <input id="street" name="street" value={addr.street} onChange={handleAddrChange} className={inputCls} placeholder="House no., street, area" />
                   </Field>
-                  <Field label="City *">
-                    <input name="city" value={addr.city} onChange={handleAddrChange} className={inputCls} placeholder="Patna" />
+                  <Field label="City *" id="city">
+                    <input id="city" name="city" value={addr.city} onChange={handleAddrChange} className={inputCls} placeholder="Patna" />
                   </Field>
-                  <Field label="PIN Code *">
-                    <input name="postalCode" value={addr.postalCode} onChange={handleAddrChange} className={inputCls} placeholder="800001" maxLength={6} />
+                  <Field label="PIN Code *" id="postalCode">
+                    <input id="postalCode" name="postalCode" value={addr.postalCode} onChange={handleAddrChange} className={inputCls} placeholder="800001" maxLength={6} inputMode="numeric" />
                   </Field>
-                  <Field label="State *" span2>
-                    <select name="state" value={addr.state} onChange={handleAddrChange} className={selectCls}>
+                  <Field label="State *" id="state" span2>
+                    <select id="state" name="state" value={addr.state} onChange={handleAddrChange} className={selectCls}>
                       <option value="">Select State</option>
                       {INDIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
                     </select>
@@ -372,26 +422,28 @@ export default function CheckoutPage() {
             <div className="sticky top-24 bg-white border border-neutral-100 rounded-2xl overflow-hidden">
               <div className="px-5 py-4 border-b border-neutral-100">
                 <span className="text-sm font-semibold text-neutral-900">
-                  Order Summary ({items.length} item{items.length !== 1 ? "s" : ""})
+                  Order Summary ({displayItems.length} item{displayItems.length !== 1 ? "s" : ""})
                 </span>
               </div>
 
               {/* Items */}
               <div className="p-5 space-y-4 max-h-72 overflow-y-auto">
-                {items.map(({ product, quantity }) => (
+                {displayItems.map(({ product, quantity }) => (
                   <div key={product._id} className="flex items-center gap-3">
                     <div className="w-14 h-14 rounded-xl border border-neutral-100 bg-neutral-50 shrink-0 relative overflow-hidden">
-                      <img
-                        src={product?.images?.[0] || "/logo.png"}
-                        alt={product?.title}
-                        className="w-full h-full object-contain p-1"
+                      <Image
+                        src={product.images?.[0] || "/logo.png"}
+                        alt={product.title || "Product"}
+                        fill
+                        sizes="56px"
+                        className="object-contain p-1"
                       />
                       <span className="absolute -top-1 -right-1 w-4 h-4 bg-neutral-900 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                         {quantity}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-neutral-800 line-clamp-2 leading-snug">{product?.title}</p>
+                      <p className="text-xs font-medium text-neutral-800 line-clamp-2 leading-snug">{product.title}</p>
                     </div>
                     <p className="text-sm font-bold text-neutral-900 shrink-0">
                       {fmt(product.price * quantity)}

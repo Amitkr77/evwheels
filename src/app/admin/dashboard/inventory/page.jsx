@@ -187,6 +187,7 @@ export default function InventoryPage() {
 
   const [threshold, setThreshold] = useState(10);
   const [thresholdInput, setThresholdInput] = useState("10");
+  const [thresholdError, setThresholdError] = useState("");
 
   // Modal state
   const [showAdjustModal, setShowAdjustModal] = useState(false);
@@ -330,8 +331,16 @@ export default function InventoryPage() {
 
   // ─── Handle Adjust Submit ───────────────────────────────────────────
   const handleAdjustSubmit = async () => {
-    if (!adjustForm.productId || !adjustForm.type || !adjustForm.quantity) {
+    if (!adjustForm.productId || !adjustForm.type || adjustForm.quantity === "") {
       setAdjustError("Please fill all required fields.");
+      return;
+    }
+    const qtyNum = Number(adjustForm.quantity);
+    const isValidQty = adjustForm.type === "adjustment" ? qtyNum >= 0 : qtyNum > 0;
+    if (isNaN(qtyNum) || !isValidQty) {
+      setAdjustError(
+        adjustForm.type === "adjustment" ? "Quantity cannot be negative" : "Quantity must be greater than 0"
+      );
       return;
     }
     setSubmitting(true);
@@ -387,10 +396,13 @@ export default function InventoryPage() {
   // ─── Threshold Update ───────────────────────────────────────────────
   const handleThresholdApply = () => {
     const val = Number(thresholdInput);
-    if (val > 0) {
-      setThreshold(val);
-      if (activeTab === "low-stock") fetchLowStock(1);
+    if (!Number.isInteger(val) || val <= 0) {
+      setThresholdError("Threshold must be a positive whole number");
+      return;
     }
+    setThresholdError("");
+    setThreshold(val);
+    if (activeTab === "low-stock") fetchLowStock(1);
   };
 
   // ─── Summary Cards Config ───────────────────────────────────────────
@@ -498,13 +510,16 @@ export default function InventoryPage() {
             <p className="text-sm text-neutral-500 mt-1">
               Products with stock at or below this value are flagged as low stock
             </p>
+            {thresholdError && (
+              <p className="text-sm text-red-600 mt-1" role="alert">{thresholdError}</p>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <input
               type="number"
               min="1"
               value={thresholdInput}
-              onChange={(e) => setThresholdInput(e.target.value)}
+              onChange={(e) => { setThresholdInput(e.target.value); setThresholdError(""); }}
               className="w-24 px-4 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-center text-sm"
             />
             <button
@@ -1065,7 +1080,7 @@ export default function InventoryPage() {
                 </button>
                 <button
                   onClick={handleAdjustSubmit}
-                  disabled={submitting || !adjustForm.productId || !adjustForm.quantity}
+                  disabled={submitting || !adjustForm.productId || adjustForm.quantity === ""}
                   className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {submitting ? (

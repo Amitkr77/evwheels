@@ -3,6 +3,12 @@ import { persist } from "zustand/middleware";
 import { useAuthStore } from "@/store/authStore";
 import { analytics } from "@/lib/analytics";
 
+// Guest cart items are keyed by `productId`, but some code paths (and persisted
+// older carts) only set `item.product._id` — match on whichever is present so
+// items added one way can still be found, updated, and removed the other way.
+const getItemProductId = (item) =>
+  item.productId || item.product?._id?.toString();
+
 export const useCartStore = create(
   persist(
     (set, get) => ({
@@ -10,13 +16,16 @@ export const useCartStore = create(
   totalQuantity: 0,
   totalPrice: 0,
 
-  // Calculate totals
+  // Calculate totals — skip items whose referenced product was deleted
+  // (populate() returns null) so the badge count matches what's actually chargeable.
   calculateTotals: (items) => {
-    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+    const valid = items.filter((item) => item.price != null || item.product);
 
-    const totalPrice = items.reduce(
+    const totalQuantity = valid.reduce((sum, item) => sum + item.quantity, 0);
+
+    const totalPrice = valid.reduce(
       (sum, item) =>
-        sum + (item.price || item.product?.price || 0) * item.quantity,
+        sum + (item.price ?? item.product?.price ?? 0) * item.quantity,
       0
     );
 
@@ -102,15 +111,13 @@ export const useCartStore = create(
         console.error("Add to cart failed", err);
       }
     } else {
-      const existing = items.find(
-        (item) => item.productId === product._id || item.product?._id === product._id
-      );
+      const existing = items.find((item) => getItemProductId(item) === product._id);
 
       let updatedCart;
 
       if (existing) {
         updatedCart = items.map((item) =>
-          item.productId === product._id
+          getItemProductId(item) === product._id
             ? { ...item, quantity: item.quantity + effectiveQty }
             : item
         );
@@ -142,15 +149,13 @@ export const useCartStore = create(
     const { isAuthenticated } = useAuthStore.getState();
     const { items } = get();
 
-    const cartItem = items.find(
-      (i) => i.product?._id?.toString() === productId || i.productId === productId
-    );
+    const cartItem = items.find((i) => getItemProductId(i) === productId);
     const moq = cartItem?.product?.moq || 1;
     const previousQuantity = cartItem?.quantity ?? 0;
     const direction = quantity > previousQuantity ? "increase" : "decrease";
 
     if (quantity <= 0) return get().removeFromCart(productId);
-    if (quantity < moq) return; // block going below MOQ
+    if (quantity < moq) return { ok: false, error: `Minimum order quantity is ${moq}` };
 
     const trackUpdated = (totals) => {
       analytics.track("Cart Updated", {
@@ -175,7 +180,7 @@ export const useCartStore = create(
         if (!res.ok) {
           const err = await res.json();
           console.error("Update quantity failed:", err.error);
-          return;
+          return { ok: false, error: err.error || "Failed to update quantity" };
         }
 
         const data = await res.json();
@@ -186,13 +191,15 @@ export const useCartStore = create(
           ...totals,
         });
         trackUpdated(totals);
+        return { ok: true };
       } catch (err) {
         console.error("Update quantity failed", err);
+        return { ok: false, error: "Network error — please try again" };
       }
     } else {
       // Guest cart — update localStorage
       const updatedCart = items.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item
+        getItemProductId(item) === productId ? { ...item, quantity } : item
       );
 
       localStorage.setItem("guestCart", JSON.stringify(updatedCart));
@@ -204,6 +211,7 @@ export const useCartStore = create(
         ...totals,
       });
       trackUpdated(totals);
+      return { ok: true };
     }
   },
 
@@ -213,9 +221,7 @@ export const useCartStore = create(
     const { items } = get();
 
     // Capture the item's details before it's removed — needed for tracking.
-    const removedItem = items.find(
-      (i) => i.product?._id?.toString() === productId || i.productId === productId
-    );
+    const removedItem = items.find((i) => getItemProductId(i) === productId);
 
     const trackRemoved = (totals) => {
       analytics.track("Removed from Cart", {
@@ -256,7 +262,7 @@ export const useCartStore = create(
       }
     } else {
       // Guest cart — update localStorage
-      const updatedCart = items.filter((item) => item.productId !== productId);
+      const updatedCart = items.filter((item) => getItemProductId(item) !== productId);
 
       localStorage.setItem("guestCart", JSON.stringify(updatedCart));
 

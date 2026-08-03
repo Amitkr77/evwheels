@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
-import { verifyAdmin } from "@/lib/adminAuth";
+import { verifyAdmin, verifyAdminStrict } from "@/lib/adminAuth";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
 import Subcategory from "@/models/Subcategory";
+import Order from "@/models/Order";
 
 // GET /api/products/[id] — get product by ID or slug
 export async function GET(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     let product;
 
@@ -64,7 +65,7 @@ export async function PUT(req, { params }) {
 
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -118,6 +119,12 @@ export async function PUT(req, { params }) {
 
     // Category validation
     if (body.category !== undefined) {
+      if (!mongoose.Types.ObjectId.isValid(body.category)) {
+        return NextResponse.json(
+          { error: "Invalid category ID" },
+          { status: 400 }
+        );
+      }
       const category = await Category.findById(body.category);
       if (!category) {
         return NextResponse.json(
@@ -133,6 +140,13 @@ export async function PUT(req, { params }) {
 
     // Subcategory validation
     if (body.subcategory !== undefined) {
+      if (!mongoose.Types.ObjectId.isValid(body.subcategory)) {
+        return NextResponse.json(
+          { error: "Invalid subcategory ID" },
+          { status: 400 }
+        );
+      }
+
       const catId = body.category;
 
       const productDoc = await Product.findById(id);
@@ -229,7 +243,7 @@ export async function PUT(req, { params }) {
 // DELETE /api/products/[id]
 export async function DELETE(req, { params }) {
   try {
-    const admin = await verifyAdmin(req);
+    const admin = await verifyAdminStrict(req);
     if (!admin) {
       return NextResponse.json(
         { error: "Unauthorized" },
@@ -239,12 +253,20 @@ export async function DELETE(req, { params }) {
 
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { error: "Invalid product ID" },
         { status: 400 }
+      );
+    }
+
+    const orderCount = await Order.countDocuments({ "items.product": id });
+    if (orderCount > 0) {
+      return NextResponse.json(
+        { error: "Cannot delete a product that appears in existing orders. Deactivate it instead." },
+        { status: 409 }
       );
     }
 

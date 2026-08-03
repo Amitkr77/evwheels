@@ -8,7 +8,7 @@ export async function PATCH(req, { params }) {
     if (!userId)
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
 
     await connectDB();
@@ -39,7 +39,7 @@ export async function DELETE(req, { params }) {
     if (!userId)
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { id } = params;
+    const { id } = await params;
 
     await connectDB();
 

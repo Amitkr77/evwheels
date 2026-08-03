@@ -17,12 +17,19 @@ import Image from "next/image";
 import { analytics } from "@/lib/analytics";
 
 export default function CartPage() {
-  const { items, removeFromCart, updateQuantity } = useCartStore(); 
+  const items = useCartStore((s) => s.items);
+  const removeFromCart = useCartStore((s) => s.removeFromCart);
+  const updateQuantity = useCartStore((s) => s.updateQuantity);
 
   const [summary, setSummary] = useState(null);
   const [coupon, setCoupon] = useState("");
   const [isSummaryLoading, setIsSummaryLoading] = useState(true);
   const [couponError, setCouponError] = useState("");
+  const [removeCouponError, setRemoveCouponError] = useState("");
+  const [pendingIds, setPendingIds] = useState(() => new Set());
+  const [itemErrors, setItemErrors] = useState({});
+
+  const visibleItems = items.filter((item) => item.product);
 
   const fetchSummary = useCallback(async () => {
     setIsSummaryLoading(true);
@@ -78,30 +85,49 @@ export default function CartPage() {
   const removeCoupon = async () => {
     const appliedCode = summary?.couponApplied;
     setIsSummaryLoading(true);
+    setRemoveCouponError("");
     try {
-      await fetch("/api/cart/apply-coupon", {
+      const res = await fetch("/api/cart/apply-coupon", {
         method: "DELETE",
         credentials: "include",
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to remove coupon");
+      }
       await fetchSummary();
       if (appliedCode) {
         analytics.track("Coupon Removed", { coupon: appliedCode, currency: "INR" });
       }
       setCoupon("");
-    } catch {
+    } catch (err) {
+      setRemoveCouponError(err.message || "Failed to remove coupon");
       setIsSummaryLoading(false);
     }
   };
 
   const handleQuantityChange = async (productId, newQty, moq = 1) => {
-    if (newQty < moq) return;
-    await updateQuantity(productId, newQty);
+    if (newQty < moq || pendingIds.has(productId)) return;
+
+    setPendingIds((prev) => new Set(prev).add(productId));
+    setItemErrors((prev) => ({ ...prev, [productId]: null }));
+
+    const result = await updateQuantity(productId, newQty);
+
+    setPendingIds((prev) => {
+      const next = new Set(prev);
+      next.delete(productId);
+      return next;
+    });
+    if (result && !result.ok) {
+      setItemErrors((prev) => ({ ...prev, [productId]: result.error }));
+    }
   };
 
-  if (items.length === 0) {
+  if (visibleItems.length === 0) {
     return (
       <main className="flex-grow bg-[#F8FAFC] min-h-screen pt-24 pb-20">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 text-center py-20">
+        <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 text-center py-20">
           <ShoppingCart size={64} className="mx-auto text-neutral-400 mb-6" strokeWidth={1.2} />
           <h2 className="text-3xl font-medium mb-4">Your cart is empty</h2>
           <p className="text-neutral-600 mb-8 max-w-md mx-auto">
@@ -121,7 +147,7 @@ export default function CartPage() {
 
   return (
     <main className="flex-grow bg-[#F8FAFC] min-h-screen pt-24 pb-20">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-10 border-b border-neutral-200/70 mb-12">
           <div>
@@ -129,7 +155,7 @@ export default function CartPage() {
               Your Shopping Cart
             </h1>
             <p className="text-lg text-neutral-600 font-light">
-              {items.length} item{items.length !== 1 ? "s" : ""}
+              {visibleItems.length} item{visibleItems.length !== 1 ? "s" : ""}
             </p>
           </div>
           <Link
@@ -153,8 +179,10 @@ export default function CartPage() {
               </div>
             )}
 
-            {items.map((item) => {
+            {visibleItems.map((item) => {
               const { product, quantity } = item;
+              const isPending = pendingIds.has(product._id);
+              const itemError = itemErrors[product._id];
               return (
                 <div
                   key={product._id}
@@ -197,7 +225,7 @@ export default function CartPage() {
                             <div className="flex items-center border border-neutral-300 rounded-lg overflow-hidden">
                               <button
                                 onClick={() => handleQuantityChange(product._id, quantity - 1, product.moq || 1)}
-                                disabled={quantity <= (product.moq || 1)}
+                                disabled={isPending || quantity <= (product.moq || 1)}
                                 aria-label="Decrease quantity"
                                 className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed"
                               >
@@ -206,8 +234,9 @@ export default function CartPage() {
                               <span className="w-12 text-center text-sm font-medium">{quantity}</span>
                               <button
                                 onClick={() => handleQuantityChange(product._id, quantity + 1, product.moq || 1)}
+                                disabled={isPending || quantity >= (product.stock ?? Infinity)}
                                 aria-label="Increase quantity"
-                                className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100"
+                                className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed"
                               >
                                 <Plus size={16} />
                               </button>
@@ -216,6 +245,9 @@ export default function CartPage() {
                               <span className="text-xs text-[#19B5D8] font-medium text-center">
                                 Min. {product.moq} pcs
                               </span>
+                            )}
+                            {itemError && (
+                              <span className="text-xs text-red-600" role="alert">{itemError}</span>
                             )}
                           </div>
 
@@ -309,6 +341,7 @@ export default function CartPage() {
                         </button>
                       </div>
                       {couponError && <p className="text-red-600 text-sm mt-2">{couponError}</p>}
+                      {removeCouponError && <p className="text-red-600 text-sm mt-2">{removeCouponError}</p>}
                       {summary?.couponApplied && (
                         <div className="flex items-center justify-between mt-2">
                           <p className="text-[#22C55E] text-sm font-medium">
@@ -341,11 +374,6 @@ export default function CartPage() {
                     </div>
                   </>
                 )}
-              </div>
-
-              {/* Trust badges – optional on mobile */}
-              <div className="hidden lg:grid grid-cols-3 gap-4">
-                {/* ... keep your trust badges ... */}
               </div>
             </div>
           </div>

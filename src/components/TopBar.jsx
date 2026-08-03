@@ -37,7 +37,7 @@ export default function TopBar() {
         scrolled ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-full flex items-center justify-between gap-4">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 h-full flex items-center justify-between gap-4">
         {/* Left — contact info (desktop only) */}
         <div className="hidden lg:flex items-center gap-5 shrink-0">
           <a
