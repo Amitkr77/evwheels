@@ -22,8 +22,6 @@ import {
   TrendingUp,
   TrendingDown,
   Loader2,
-  ToggleLeft,
-  ToggleRight,
   Star,
   ChevronDown,
   ChevronUp,
@@ -32,6 +30,7 @@ import {
 import MultiImageUploadField from "@/components/admin/MultiImageUploadField";
 import { useToast } from "@/components/admin/Toast";
 import { useConfirm } from "@/components/admin/ConfirmDialog";
+import StatusToggle from "@/components/admin/StatusToggle";
 
 // ─── Empty form template ────────────────────────────────────────
 const EMPTY_FORM = {
@@ -311,43 +310,21 @@ function ProductForm({
 
       {/* Toggles */}
       <div className="md:col-span-2 flex items-center gap-8 pt-4 border-t border-neutral-100">
-        <button
-          type="button"
+        <StatusToggle
+          size="md"
+          checked={formData.featured}
           onClick={() => set("featured", !formData.featured)}
-          className="flex items-center gap-2"
-        >
-          {formData.featured ? (
-            <ToggleRight size={30} className="text-[#19B5D8]" />
-          ) : (
-            <ToggleLeft size={30} className="text-neutral-300" />
-          )}
-          <span
-            className={`text-sm font-medium ${
-              formData.featured ? "text-[#19B5D8]" : "text-neutral-500"
-            }`}
-          >
-            Featured
-          </span>
-        </button>
+          ariaLabel="Toggle featured status"
+          labelOn="Featured"
+          labelOff="Featured"
+        />
 
-        <button
-          type="button"
+        <StatusToggle
+          size="md"
+          checked={formData.isActive}
           onClick={() => set("isActive", !formData.isActive)}
-          className="flex items-center gap-2"
-        >
-          {formData.isActive ? (
-            <ToggleRight size={30} className="text-[#19B5D8]" />
-          ) : (
-            <ToggleLeft size={30} className="text-neutral-300" />
-          )}
-          <span
-            className={`text-sm font-medium ${
-              formData.isActive ? "text-[#19B5D8]" : "text-neutral-500"
-            }`}
-          >
-            Active
-          </span>
-        </button>
+          ariaLabel="Toggle active status"
+        />
       </div>
 
       {/* Actions */}
@@ -1571,6 +1548,7 @@ export default function ProductsPage() {
 
           <button
             onClick={clearSelection}
+            aria-label="Clear selection"
             className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors"
           >
             <X size={18} />
@@ -1751,10 +1729,13 @@ export default function ProductsPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.2 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="product-create-title"
               className="bg-white rounded-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-medium">
+                <h2 id="product-create-title" className="text-3xl font-medium">
                   Add New Product
                 </h2>
                 <button
@@ -1762,6 +1743,7 @@ export default function ProductsPage() {
                     setShowCreateModal(false);
                     setFormData({ ...EMPTY_FORM });
                   }}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
                   <X size={24} />
@@ -1794,10 +1776,13 @@ export default function ProductsPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.2 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="product-edit-title"
               className="bg-white rounded-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-medium">
+                <h2 id="product-edit-title" className="text-3xl font-medium">
                   Edit Product
                 </h2>
                 <button
@@ -1805,6 +1790,7 @@ export default function ProductsPage() {
                     setEditProduct(null);
                     setFormData({ ...EMPTY_FORM });
                   }}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
                   <X size={24} />
@@ -1837,14 +1823,18 @@ export default function ProductsPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.2 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="stock-adjust-title"
               className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-medium">
+                <h2 id="stock-adjust-title" className="text-2xl font-medium">
                   Adjust Stock
                 </h2>
                 <button
                   onClick={() => setStockModal(null)}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
                   <X size={24} />

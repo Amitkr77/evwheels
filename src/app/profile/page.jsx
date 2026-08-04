@@ -108,10 +108,14 @@ const UserDashboard = () => {
         </div>
 
         {/* Nav tabs */}
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto" role="tablist" aria-label="Account sections">
           {TABS.map((tab) => (
             <button
               key={tab.id}
+              id={`dtab-${tab.id}`}
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              aria-controls={`panel-${tab.id}`}
               onClick={() => handleTabChange(tab.id)}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-xl transition-all ${
                 activeTab === tab.id
@@ -182,6 +186,9 @@ const UserDashboard = () => {
               {/* ── Overview ──────────────────────────────────── */}
               {activeTab === 0 && (
                 <motion.div
+                  id="panel-0"
+                  role="tabpanel"
+                  aria-labelledby="dtab-0"
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35 }}
@@ -294,7 +301,13 @@ const UserDashboard = () => {
                 { id: 4, el: <Settings /> },
               ].map(({ id, el }) =>
                 visited.has(id) ? (
-                  <div key={id} className={activeTab === id ? "" : "hidden"}>
+                  <div
+                    key={id}
+                    id={`panel-${id}`}
+                    role="tabpanel"
+                    aria-labelledby={`dtab-${id}`}
+                    className={activeTab === id ? "" : "hidden"}
+                  >
                     {el}
                   </div>
                 ) : null
@@ -305,10 +318,14 @@ const UserDashboard = () => {
       </div>
 
       {/* ── Mobile Bottom Tab Bar ───────────────────────── */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200/70 flex items-center lg:hidden z-30">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200/70 flex items-center lg:hidden z-30" role="tablist" aria-label="Account sections">
         {TABS.map((tab) => (
           <button
             key={tab.id}
+            id={`mtab-${tab.id}`}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            aria-controls={`panel-${tab.id}`}
             onClick={() => handleTabChange(tab.id)}
             className={`flex-1 flex flex-col items-center gap-1 py-2.5 transition-colors ${
               activeTab === tab.id ? "text-[#19B5D8]" : "text-neutral-400 hover:text-neutral-600"

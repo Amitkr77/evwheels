@@ -8,8 +8,6 @@ import {
   Trash2,
   X,
   Search,
-  ToggleLeft,
-  ToggleRight,
   ArrowUpDown,
   Layers3,
   Loader2,
@@ -17,6 +15,7 @@ import {
 import ImageUploadField from "@/components/admin/ImageUploadField";
 import { useToast } from "@/components/admin/Toast";
 import { useConfirm } from "@/components/admin/ConfirmDialog";
+import StatusToggle from "@/components/admin/StatusToggle";
 
 const emptyForm = {
   name: "",
@@ -381,35 +380,12 @@ export default function SegmentsPage() {
           <label className="block text-sm font-medium text-neutral-600 mb-2">
             Status
           </label>
-          <button
-            type="button"
-            onClick={() =>
-              setFormData({ ...formData, isActive: !formData.isActive })
-            }
-            className="flex items-center gap-3 mt-1 cursor-pointer"
-          >
-            {formData.isActive ? (
-              <>
-                <ToggleRight
-                  size={36}
-                  className="text-[#19B5D8] transition-colors"
-                />
-                <span className="text-sm font-medium text-[#19B5D8]">
-                  Active
-                </span>
-              </>
-            ) : (
-              <>
-                <ToggleLeft
-                  size={36}
-                  className="text-neutral-400 transition-colors"
-                />
-                <span className="text-sm font-medium text-neutral-500">
-                  Inactive
-                </span>
-              </>
-            )}
-          </button>
+          <StatusToggle
+            size="md"
+            checked={formData.isActive}
+            onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
+            ariaLabel="Toggle active status"
+          />
         </div>
       </div>
 
@@ -591,37 +567,12 @@ export default function SegmentsPage() {
                   </span>
                 </td>
                 <td className="py-5 px-6">
-                  <button
+                  <StatusToggle
+                    checked={segment.isActive}
                     onClick={() => handleToggleActive(segment)}
-                    className="flex items-center gap-2 cursor-pointer group"
-                    title={
-                      segment.isActive
-                        ? "Click to deactivate"
-                        : "Click to activate"
-                    }
-                  >
-                    {segment.isActive ? (
-                      <>
-                        <ToggleRight
-                          size={28}
-                          className="text-[#19B5D8] group-hover:text-[#19B5D8] transition-colors"
-                        />
-                        <span className="text-xs font-medium text-[#19B5D8] group-hover:text-[#19B5D8]">
-                          Active
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <ToggleLeft
-                          size={28}
-                          className="text-neutral-400 group-hover:text-neutral-500 transition-colors"
-                        />
-                        <span className="text-xs font-medium text-neutral-500 group-hover:text-neutral-600">
-                          Inactive
-                        </span>
-                      </>
-                    )}
-                  </button>
+                    ariaLabel={`Toggle ${segment.name} active status`}
+                    title={segment.isActive ? "Click to deactivate" : "Click to activate"}
+                  />
                 </td>
                 <td className="py-5 px-6 text-sm text-neutral-600">
                   {segment.sortOrder ?? 0}
@@ -711,10 +662,13 @@ export default function SegmentsPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.2 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="segment-create-title"
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-medium">
+                <h2 id="segment-create-title" className="text-3xl font-medium">
                   Create Segment
                 </h2>
                 <button
@@ -722,6 +676,7 @@ export default function SegmentsPage() {
                     setShowCreateModal(false);
                     setFormData({ ...emptyForm });
                   }}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
                   <X size={24} />
@@ -742,10 +697,13 @@ export default function SegmentsPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ duration: 0.2 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="segment-edit-title"
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-medium">
+                <h2 id="segment-edit-title" className="text-3xl font-medium">
                   Edit Segment
                 </h2>
                 <button
@@ -753,6 +711,7 @@ export default function SegmentsPage() {
                     setEditSegment(null);
                     setFormData({ ...emptyForm });
                   }}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
                   <X size={24} />

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Loader2, ImagePlus, X, GripVertical } from "lucide-react";
+import { Loader2, ImagePlus, X, GripVertical, ChevronLeft, ChevronRight } from "lucide-react";
 
 function deleteAsset(publicId) {
   fetch("/api/admin/upload", {
@@ -128,12 +128,23 @@ export default function MultiImageUploadField({
     setDragOverIndex(null);
   };
 
+  // Drag-and-drop has no keyboard or screen-reader equivalent on its own —
+  // these buttons let anyone reorder (and re-pick the cover image) without
+  // a mouse.
+  const moveImage = (index, delta) => {
+    const target = index + delta;
+    if (target < 0 || target >= value.length) return;
+    const next = [...value];
+    [next[index], next[target]] = [next[target], next[index]];
+    onChange(next);
+  };
+
   return (
     <div>
       <label className="block text-sm font-medium text-neutral-600 mb-2">
         {label} {required && <span className="text-red-500">*</span>}{" "}
         <span className="text-xs font-normal text-neutral-400">
-          ({value.length}/{max} — drag to reorder, first is the cover image)
+          ({value.length}/{max} — drag or use the arrows to reorder, first is the cover image)
         </span>
       </label>
 
@@ -175,6 +186,29 @@ export default function MultiImageUploadField({
               >
                 <X size={11} />
               </button>
+
+              {/* Keyboard-accessible reorder controls — dragging alone leaves
+                  keyboard and screen-reader users with no way to reorder. */}
+              <div className="absolute bottom-1 right-1 flex gap-0.5">
+                <button
+                  type="button"
+                  onClick={() => moveImage(i, -1)}
+                  disabled={i === 0}
+                  aria-label={`Move image ${i + 1} earlier`}
+                  className="w-5 h-5 flex items-center justify-center bg-black/50 text-white rounded hover:bg-black/70 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft size={12} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveImage(i, 1)}
+                  disabled={i === value.length - 1}
+                  aria-label={`Move image ${i + 1} later`}
+                  className="w-5 h-5 flex items-center justify-center bg-black/50 text-white rounded hover:bg-black/70 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight size={12} />
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -408,12 +408,16 @@ export default function CouponsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="coupon-create-title"
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-medium">Create Coupon</h2>
+                <h2 id="coupon-create-title" className="text-3xl font-medium">Create Coupon</h2>
                 <button
                   onClick={() => setShowCreateModal(false)}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600"
                 >
                   <X size={24} />
@@ -433,12 +437,16 @@ export default function CouponsPage() {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="coupon-edit-title"
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-medium">Edit Coupon</h2>
+                <h2 id="coupon-edit-title" className="text-3xl font-medium">Edit Coupon</h2>
                 <button
                   onClick={() => setEditCoupon(null)}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600"
                 >
                   <X size={24} />

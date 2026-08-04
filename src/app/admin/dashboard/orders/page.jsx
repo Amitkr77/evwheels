@@ -220,19 +220,23 @@ export default function OrdersPage() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="order-details-drawer-title"
               className="fixed right-0 top-0 h-full w-full max-w-xl bg-white shadow-2xl z-50 overflow-y-auto"
             >
               <div className="p-8">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                   <div>
-                    <h2 className="text-2xl font-medium">Order Details</h2>
+                    <h2 id="order-details-drawer-title" className="text-2xl font-medium">Order Details</h2>
                     <p className="text-sm text-neutral-500 mt-1 font-mono">
                       {selectedOrder.id || selectedOrder._id?.toString().slice(-8)}
                     </p>
                   </div>
                   <button
                     onClick={() => setSelectedOrder(null)}
+                    aria-label="Close order details"
                     className="text-neutral-400 hover:text-neutral-600 transition-colors"
                   >
                     <X size={24} />

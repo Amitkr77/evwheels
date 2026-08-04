@@ -15,32 +15,32 @@ import {
   Disc,
   Link2,
   Cog,
-  Handshake,
+  GripHorizontal,
   Lightbulb,
   Lock,
   ShieldHalf,
   Armchair,
   CircleDot,
-  Hammer,
   CircleDashed,
 } from "lucide-react";
 import Link from "next/link";
 
 // Mirrors the real categories used by the Shop page and Navbar — this page
 // filters into the actual catalog, so it can't invent categories the store
-// doesn't carry.
+// doesn't carry. Same icon set as ShopByCategory on the homepage, so a
+// category reads the same wherever it shows up.
 const CATEGORIES = [
   { slug: "bells", label: "Bells", icon: Bell },
   { slug: "brakes", label: "Brakes", icon: Disc },
   { slug: "chains", label: "Chains", icon: Link2 },
   { slug: "gear-sets", label: "Gear Sets", icon: Cog },
-  { slug: "handlebar-parts", label: "Handlebar Parts", icon: Handshake },
+  { slug: "handlebar-parts", label: "Handlebar Parts", icon: GripHorizontal },
   { slug: "lights-reflectors", label: "Lights & Reflectors", icon: Lightbulb },
   { slug: "locks-security", label: "Locks & Security", icon: Lock },
   { slug: "mudguards-fenders", label: "Mudguards", icon: ShieldHalf },
   { slug: "saddles-seats", label: "Saddles & Seats", icon: Armchair },
   { slug: "tyres-tubes", label: "Tyres & Tubes", icon: CircleDot },
-  { slug: "tools-maintenance", label: "Tools & Maintenance", icon: Hammer },
+  { slug: "tools-maintenance", label: "Tools & Maintenance", icon: Wrench },
   { slug: "wheels-hubs", label: "Wheels & Hubs", icon: CircleDashed },
 ];
 

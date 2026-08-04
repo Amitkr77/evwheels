@@ -706,10 +706,13 @@ export default function SubcategoriesPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="subcategory-create-title"
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-medium">
+                <h2 id="subcategory-create-title" className="text-3xl font-medium">
                   New Subcategory
                 </h2>
                 <button
@@ -717,6 +720,7 @@ export default function SubcategoriesPage() {
                     setShowCreateModal(false);
                     setFormData({ ...EMPTY_FORM });
                   }}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
                   <X size={24} />
@@ -736,10 +740,13 @@ export default function SubcategoriesPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="subcategory-edit-title"
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-medium">
+                <h2 id="subcategory-edit-title" className="text-3xl font-medium">
                   Edit Subcategory
                 </h2>
                 <button
@@ -747,6 +754,7 @@ export default function SubcategoriesPage() {
                     setEditItem(null);
                     setFormData({ ...EMPTY_FORM });
                   }}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
                   <X size={24} />

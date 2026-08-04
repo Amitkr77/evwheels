@@ -855,15 +855,19 @@ export default function InventoryPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="stock-adjustment-title"
               className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-medium">
+                <h2 id="stock-adjustment-title" className="text-2xl font-medium">
                   Stock Adjustment
                 </h2>
                 <button
                   onClick={() => setShowAdjustModal(false)}
+                  aria-label="Close"
                   className="text-neutral-400 hover:text-neutral-600 transition-colors"
                 >
                   <X size={24} />
