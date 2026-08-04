@@ -20,14 +20,26 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
+import { ToastProvider } from "@/components/admin/Toast";
+import { ConfirmDialogProvider, useConfirm } from "@/components/admin/ConfirmDialog";
 
-
-export default function AdminDashboardLayout({ children }) {
+function DashboardShell({ children }) {
     const { isAuthenticated, user, logout, isLoading } = useAuthStore();
+    const confirm = useConfirm();
 
     const router = useRouter();
     const currentPath = usePathname();
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+    const handleLogout = async () => {
+        const ok = await confirm({
+            title: "Sign out?",
+            message: "You'll need to sign in again to access the admin dashboard.",
+            confirmLabel: "Sign Out",
+            tone: "default",
+        });
+        if (ok) logout();
+    };
 
     const sidebarItems = [
         { icon: Home, label: "Dashboard", path: "/admin/dashboard" },
@@ -90,7 +102,7 @@ export default function AdminDashboardLayout({ children }) {
                     </div>
                 </div>
                 <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="text-neutral-500 hover:text-red-600 transition-colors"
                     aria-label="Logout"
                 >
@@ -205,5 +217,15 @@ export default function AdminDashboardLayout({ children }) {
                 <main className="flex-1 overflow-y-auto p-6">{children}</main>
             </div>
         </div>
+    );
+}
+
+export default function AdminDashboardLayout({ children }) {
+    return (
+        <ToastProvider>
+            <ConfirmDialogProvider>
+                <DashboardShell>{children}</DashboardShell>
+            </ConfirmDialogProvider>
+        </ToastProvider>
     );
 }

@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Plus, Edit2, X, Loader2 } from "lucide-react";
+import { useToast } from "@/components/admin/Toast";
+import { useConfirm } from "@/components/admin/ConfirmDialog";
 
 const EMPTY_FORM = {
   code: "",
@@ -15,16 +17,17 @@ const EMPTY_FORM = {
 };
 
 export default function CouponsPage() {
+  const showToast = useToast();
+  const confirmDialog = useConfirm();
+
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editCoupon, setEditCoupon] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [formData, setFormData] = useState({ ...EMPTY_FORM });
   const [error, setError] = useState("");
-  const [deleteError, setDeleteError] = useState("");
 
   const fetchCoupons = async () => {
     setLoading(true);
@@ -98,6 +101,7 @@ export default function CouponsPage() {
       if (!res.ok) { setError(data.error || "Failed to create coupon."); return; }
       setCoupons((prev) => [data, ...prev]);
       setShowCreateModal(false);
+      showToast("Coupon created successfully!");
     } catch {
       setError("Something went wrong.");
     } finally {
@@ -129,6 +133,7 @@ export default function CouponsPage() {
       if (!res.ok) { setError(data.error || "Failed to update coupon."); return; }
       setCoupons((prev) => prev.map((c) => (c._id === editCoupon._id ? data : c)));
       setEditCoupon(null);
+      showToast("Coupon updated successfully!");
     } catch {
       setError("Something went wrong.");
     } finally {
@@ -136,11 +141,21 @@ export default function CouponsPage() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!deleteConfirm) return;
-    setDeleteError("");
+  const handleDelete = async (coupon) => {
+    const ok = await confirmDialog({
+      title: "Delete Coupon",
+      message: (
+        <>
+          Delete coupon <span className="font-mono font-semibold">{coupon.code}</span>?
+          This action cannot be undone.
+        </>
+      ),
+      confirmLabel: "Delete",
+    });
+    if (!ok) return;
+
     try {
-      const res = await fetch(`/api/admin/coupons?id=${deleteConfirm._id}`, {
+      const res = await fetch(`/api/admin/coupons?id=${coupon._id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -148,11 +163,11 @@ export default function CouponsPage() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || "Failed to delete coupon");
       }
-      setCoupons((prev) => prev.filter((c) => c._id !== deleteConfirm._id));
-      setDeleteConfirm(null);
+      setCoupons((prev) => prev.filter((c) => c._id !== coupon._id));
+      showToast("Coupon deleted successfully!");
     } catch (err) {
       console.error("Delete error:", err);
-      setDeleteError(err.message);
+      showToast(err.message, "error");
     }
   };
 
@@ -368,7 +383,7 @@ export default function CouponsPage() {
                             <Edit2 size={17} />
                           </button>
                           <button
-                            onClick={() => { setDeleteConfirm(coupon); setDeleteError(""); }}
+                            onClick={() => handleDelete(coupon)}
                             className="text-neutral-500 hover:text-red-600 transition-colors"
                             title="Delete coupon"
                           >
@@ -435,43 +450,6 @@ export default function CouponsPage() {
         )}
       </AnimatePresence>
 
-      {/* Delete Confirm Modal */}
-      <AnimatePresence>
-        {deleteConfirm && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
-            >
-              <h3 className="text-2xl font-medium mb-4">Delete Coupon</h3>
-              <p className="text-neutral-600 mb-8">
-                Delete coupon{" "}
-                <span className="font-mono font-semibold text-neutral-900">{deleteConfirm.code}</span>?
-                This action cannot be undone.
-              </p>
-              {deleteError && (
-                <p className="text-red-600 text-sm mb-4" role="alert">{deleteError}</p>
-              )}
-              <div className="flex gap-4">
-                <button
-                  onClick={() => { setDeleteConfirm(null); setDeleteError(""); }}
-                  className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="flex-1 py-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
-                >
-                  Delete
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

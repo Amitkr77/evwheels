@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, X, Loader2 } from "lucide-react";
+import { useToast } from "@/components/admin/Toast";
+import { useConfirm } from "@/components/admin/ConfirmDialog";
 
 const STATUS_OPTIONS = ["PLACED", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
 
@@ -14,6 +16,9 @@ const STATUS_COLORS = {
 };
 
 export default function OrdersPage() {
+  const showToast = useToast();
+  const confirmDialog = useConfirm();
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,6 +64,19 @@ export default function OrdersPage() {
 
   const handleStatusUpdate = async () => {
     if (!selectedOrder || newStatus === selectedOrder.orderStatus) return;
+
+    // Cancelling is a different order of consequence than any other status
+    // change on this dropdown — it needs its own pause, not the same
+    // one-click path as marking an order Shipped or Delivered.
+    if (newStatus === "CANCELLED") {
+      const ok = await confirmDialog({
+        title: "Cancel Order",
+        message: <>Cancel order <strong>{selectedOrder.id || selectedOrder._id}</strong>? This can&rsquo;t be undone from here.</>,
+        confirmLabel: "Cancel Order",
+      });
+      if (!ok) return;
+    }
+
     setUpdatingStatus(true);
     setStatusError("");
     try {
@@ -78,6 +96,7 @@ export default function OrdersPage() {
         prev.map((o) => (o._id === selectedOrder._id ? updatedOrder : o))
       );
       setSelectedOrder(updatedOrder);
+      showToast("Order status updated!");
     } catch {
       setStatusError("Something went wrong.");
     } finally {

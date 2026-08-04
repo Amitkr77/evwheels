@@ -101,14 +101,14 @@ function LoginForm() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-5 py-3 rounded-lg text-sm">
+            <div role="alert" className="bg-red-50 border border-red-200 text-red-700 px-5 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
+            <label htmlFor="login-email" className="block text-sm font-medium text-neutral-600 mb-2">
               Email
             </label>
             <div className="relative">
@@ -117,6 +117,7 @@ function LoginForm() {
                 size={20}
               />
               <input
+                id="login-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value.trim())}
@@ -130,7 +131,7 @@ function LoginForm() {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
+            <label htmlFor="login-password" className="block text-sm font-medium text-neutral-600 mb-2">
               Password
             </label>
             <div className="relative">
@@ -139,6 +140,7 @@ function LoginForm() {
                 size={20}
               />
               <input
+                id="login-password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -150,6 +152,7 @@ function LoginForm() {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
+                aria-label={showPassword ? "Hide password" : "Show password"}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-900 transition-colors"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -159,8 +162,9 @@ function LoginForm() {
 
           {/* Remember + Forgot */}
           <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label htmlFor="login-remember" className="flex items-center gap-2 cursor-pointer">
               <input
+                id="login-remember"
                 type="checkbox"
                 className="w-4 h-4 rounded border-neutral-300 text-[#19B5D8] focus:ring-[#19B5D8]"
               />

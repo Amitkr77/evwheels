@@ -102,6 +102,7 @@ export default function Settings() {
 
         {message && (
           <div
+            role="alert"
             className={`mb-8 px-4 py-3 rounded-lg text-sm ${
               message.type === "success"
                 ? "bg-[#DDF8FD] border border-[#19B5D8]/20 text-[#19B5D8]"
@@ -114,10 +115,11 @@ export default function Settings() {
 
         <div className="grid sm:grid-cols-2 gap-8">
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
+            <label htmlFor="settings-name" className="block text-sm font-medium text-neutral-600 mb-2">
               Full Name
             </label>
             <input
+              id="settings-name"
               type="text"
               name="name"
               value={form.name}
@@ -127,10 +129,11 @@ export default function Settings() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
+            <label htmlFor="settings-email" className="block text-sm font-medium text-neutral-600 mb-2">
               Email <span className="text-neutral-400 font-light">(cannot be changed)</span>
             </label>
             <input
+              id="settings-email"
               type="email"
               value={user?.email || ""}
               disabled
@@ -139,10 +142,11 @@ export default function Settings() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
+            <label htmlFor="settings-phone" className="block text-sm font-medium text-neutral-600 mb-2">
               Phone
             </label>
             <input
+              id="settings-phone"
               type="tel"
               name="phone"
               value={form.phone}

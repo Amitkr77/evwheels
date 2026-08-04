@@ -15,7 +15,10 @@ import {
   BoxIcon,
   CircleDollarSign,
   Activity,
+  Download,
 } from "lucide-react";
+import { downloadCSV } from "@/lib/csv";
+import { useToast } from "@/components/admin/Toast";
 
 const TABS = [
   { key: "inventory-summary", label: "Inventory Summary", icon: Package },
@@ -38,7 +41,10 @@ const formatCurrency = (val) =>
 const formatNumber = (val) =>
   val != null ? Number(val).toLocaleString("en-IN") : "0";
 
+const MONTH_NAMES = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 export default function ReportsPage() {
+  const showToast = useToast();
   const [activeTab, setActiveTab] = useState("inventory-summary");
   const [period, setPeriod] = useState("30d");
   const [data, setData] = useState({});
@@ -83,6 +89,78 @@ export default function ReportsPage() {
 
   const isLoading = loading[activeTab];
   const reportData = data[activeTab];
+
+  // ─── CSV export — each tab exports the table it's actually showing ───
+  const EXPORT_CONFIG = {
+    "inventory-summary": (d) => ({
+      filename: `inventory-category-breakdown-${period}`,
+      rows: d?.categoryBreakdown || [],
+      columns: [
+        { label: "Category", key: "name" },
+        { label: "Product Count", key: "count" },
+        { label: "Total Stock", key: "totalStock" },
+        { label: "Avg Price (INR)", key: (r) => Math.round(r.avgPrice || 0) },
+      ],
+    }),
+    sales: (d) => ({
+      filename: `daily-revenue-${period}`,
+      rows: d?.dailyRevenue || [],
+      columns: [
+        { label: "Date", key: "_id" },
+        { label: "Revenue (INR)", key: "revenue" },
+      ],
+    }),
+    "product-performance": (d) => ({
+      filename: `product-performance-${period}-page${d?.pagination?.page || 1}`,
+      rows: d?.products || [],
+      columns: [
+        { label: "Product Name", key: (r) => r.name || "Unknown Product" },
+        { label: "Units Sold", key: "totalSold" },
+        { label: "Revenue (INR)", key: "revenue" },
+        { label: "Order Count", key: "orderCount" },
+        { label: "Current Stock", key: (r) => (r.stock != null ? r.stock : "") },
+      ],
+    }),
+    "best-selling": (d) => ({
+      filename: `best-selling-${period}`,
+      rows: d?.products || [],
+      columns: [
+        { label: "Rank", key: (_, i) => i + 1 },
+        { label: "Product Name", key: (r) => r.name || "Unknown Product" },
+        { label: "Units Sold", key: "totalSold" },
+        { label: "Revenue (INR)", key: "revenue" },
+      ],
+    }),
+    "revenue-summary": (d) => ({
+      filename: `monthly-revenue-${period}`,
+      rows: d?.monthly ? [...d.monthly].reverse() : [],
+      columns: [
+        { label: "Month", key: (r) => `${MONTH_NAMES[r._id?.month] || r._id?.month} ${r._id?.year}` },
+        { label: "Revenue (INR)", key: "revenue" },
+        { label: "Orders", key: "orders" },
+        { label: "Avg Order Value (INR)", key: (r) => (r.orders > 0 ? Math.round(r.revenue / r.orders) : 0) },
+      ],
+    }),
+  };
+
+  const handleExport = () => {
+    const config = EXPORT_CONFIG[activeTab]?.(reportData);
+    if (!config || config.rows.length === 0) {
+      showToast("Nothing to export yet.", "error");
+      return;
+    }
+    // Rank/index-aware columns (best-selling's "Rank") need the row index,
+    // which plain row[key] lookups don't have — pass it through explicitly.
+    const rows = config.rows.map((row, i) => ({ __row: row, __index: i }));
+    const columns = config.columns.map((c) => ({
+      label: c.label,
+      key: (wrapped) =>
+        typeof c.key === "function" ? c.key(wrapped.__row, wrapped.__index) : wrapped.__row[c.key],
+    }));
+    downloadCSV(config.filename, rows, columns);
+  };
+
+  const canExport = Boolean(EXPORT_CONFIG[activeTab]?.(reportData)?.rows?.length);
 
   // ─── Shared stat card ───
   const StatCard = ({ icon: Icon, title, value, subtitle, color = "emerald" }) => {
@@ -753,21 +831,34 @@ export default function ReportsPage() {
           })}
         </div>
 
-        {/* Period selector */}
-        <div className="flex items-center gap-1 bg-neutral-100 rounded-lg p-1">
-          {PERIODS.map((p) => (
-            <button
-              key={p.key}
-              onClick={() => setPeriod(p.key)}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                period === p.key
-                  ? "bg-white text-[#19B5D8] shadow-sm"
-                  : "text-neutral-600 hover:text-neutral-800"
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
+        <div className="flex items-center gap-3">
+          {/* Period selector */}
+          <div className="flex items-center gap-1 bg-neutral-100 rounded-lg p-1">
+            {PERIODS.map((p) => (
+              <button
+                key={p.key}
+                onClick={() => setPeriod(p.key)}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                  period === p.key
+                    ? "bg-white text-[#19B5D8] shadow-sm"
+                    : "text-neutral-600 hover:text-neutral-800"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Export */}
+          <button
+            onClick={handleExport}
+            disabled={!canExport}
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border border-neutral-200 text-neutral-700 hover:bg-neutral-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            title={activeTab === "product-performance" ? "Exports the current page only" : "Export this table as CSV"}
+          >
+            <Download size={16} />
+            <span className="hidden sm:inline">Export CSV</span>
+          </button>
         </div>
       </div>
 

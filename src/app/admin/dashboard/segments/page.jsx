@@ -15,6 +15,8 @@ import {
   Loader2,
 } from "lucide-react";
 import ImageUploadField from "@/components/admin/ImageUploadField";
+import { useToast } from "@/components/admin/Toast";
+import { useConfirm } from "@/components/admin/ConfirmDialog";
 
 const emptyForm = {
   name: "",
@@ -25,6 +27,9 @@ const emptyForm = {
 };
 
 export default function SegmentsPage() {
+  const showToast = useToast();
+  const confirmDialog = useConfirm();
+
   const [segments, setSegments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +39,6 @@ export default function SegmentsPage() {
   // Modal states
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editSegment, setEditSegment] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [formData, setFormData] = useState({ ...emptyForm });
   const [submitting, setSubmitting] = useState(false);
 
@@ -48,11 +52,11 @@ export default function SegmentsPage() {
       setSegments(data.segments || []);
     } catch (err) {
       console.error("Segment fetch error:", err);
-      alert("Failed to load segments. Please try again.");
+      showToast("Failed to load segments. Please try again.", "error");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showToast]);
 
   useEffect(() => {
     fetchSegments();
@@ -115,6 +119,18 @@ export default function SegmentsPage() {
   // ─── Toggle active/inactive ───
   const handleToggleActive = async (segment) => {
     const newStatus = !segment.isActive;
+
+    // Deactivating a segment can cascade to every category and product
+    // beneath it — worth a pause. Reactivating only restores visibility.
+    if (!newStatus) {
+      const ok = await confirmDialog({
+        title: "Deactivate Segment",
+        message: <>Deactivate <strong>{segment.name}</strong>? Its categories and products may disappear from the storefront immediately.</>,
+        confirmLabel: "Deactivate",
+      });
+      if (!ok) return;
+    }
+
     // Optimistic update
     setSegments((prev) =>
       prev.map((s) =>
@@ -147,14 +163,14 @@ export default function SegmentsPage() {
         )
       );
       console.error(err);
-      alert("Error toggling status: " + err.message);
+      showToast("Error toggling status: " + err.message, "error");
     }
   };
 
   // ─── Create segment ───
   const handleCreate = async () => {
     if (!formData.name.trim()) {
-      alert("Segment name is required.");
+      showToast("Segment name is required.", "error");
       return;
     }
 
@@ -182,10 +198,10 @@ export default function SegmentsPage() {
       setSegments((prev) => [...prev, created]);
       setShowCreateModal(false);
       setFormData({ ...emptyForm });
-      alert("Segment created successfully!");
+      showToast("Segment created successfully!");
     } catch (err) {
       console.error(err);
-      alert("Error creating segment: " + err.message);
+      showToast("Error creating segment: " + err.message, "error");
     } finally {
       setSubmitting(false);
     }
@@ -194,7 +210,7 @@ export default function SegmentsPage() {
   // ─── Update segment ───
   const handleUpdate = async () => {
     if (!formData.name.trim()) {
-      alert("Segment name is required.");
+      showToast("Segment name is required.", "error");
       return;
     }
 
@@ -224,21 +240,46 @@ export default function SegmentsPage() {
       );
       setEditSegment(null);
       setFormData({ ...emptyForm });
-      alert("Segment updated successfully!");
+      showToast("Segment updated successfully!");
     } catch (err) {
       console.error(err);
-      alert("Error updating segment: " + err.message);
+      showToast("Error updating segment: " + err.message, "error");
     } finally {
       setSubmitting(false);
     }
   };
 
   // ─── Delete segment ───
-  const handleDelete = async () => {
-    if (!deleteConfirm) return;
+  const handleDelete = async (segment) => {
+    const ok = await confirmDialog({
+      title: "Delete Segment",
+      message: (
+        <>
+          Are you sure you want to delete <strong>{segment.name}</strong>?
+          This action cannot be undone.
+        </>
+      ),
+      confirmLabel: "Delete",
+      blocked:
+        segment.categoryCount > 0
+          ? {
+              reason: (
+                <>
+                  This segment has{" "}
+                  <strong>
+                    {segment.categoryCount} categor{segment.categoryCount !== 1 ? "ies" : "y"}
+                  </strong>{" "}
+                  assigned to it. Reassign the categories first, or
+                  deactivate the segment instead.
+                </>
+              ),
+            }
+          : null,
+    });
+    if (!ok) return;
 
     try {
-      const res = await fetch(`/api/segments/${deleteConfirm._id}`, {
+      const res = await fetch(`/api/segments/${segment._id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -248,15 +289,11 @@ export default function SegmentsPage() {
         throw new Error(errData.error || "Failed to delete segment");
       }
 
-      setSegments((prev) =>
-        prev.filter((s) => s._id !== deleteConfirm._id)
-      );
-      setDeleteConfirm(null);
-      alert("Segment deleted successfully!");
+      setSegments((prev) => prev.filter((s) => s._id !== segment._id));
+      showToast("Segment deleted successfully!");
     } catch (err) {
       console.error(err);
-      alert("Error deleting segment: " + err.message);
-      setDeleteConfirm(null);
+      showToast("Error deleting segment: " + err.message, "error");
     }
   };
 
@@ -599,7 +636,7 @@ export default function SegmentsPage() {
                       <Edit2 size={17} />
                     </button>
                     <button
-                      onClick={() => setDeleteConfirm(segment)}
+                      onClick={() => handleDelete(segment)}
                       className="text-neutral-500 hover:text-red-600 transition-colors"
                       title="Delete segment"
                     >
@@ -727,81 +764,6 @@ export default function SegmentsPage() {
         )}
       </AnimatePresence>
 
-      {/* ─── Delete Confirmation Modal ─── */}
-      <AnimatePresence>
-        {deleteConfirm && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-medium">
-                  Delete Segment
-                </h2>
-                <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="text-neutral-400 hover:text-neutral-600 transition-colors"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="mb-8">
-                <p className="text-neutral-600 mb-4">
-                  Are you sure you want to delete{" "}
-                  <span className="font-semibold text-neutral-900">
-                    {deleteConfirm.name}
-                  </span>
-                  ? This action cannot be undone.
-                </p>
-
-                {deleteConfirm.categoryCount > 0 && (
-                  <div className="bg-red-50 border border-red-200/60 rounded-lg p-4 flex items-start gap-3">
-                    <Trash2
-                      size={20}
-                      className="text-red-500 flex-shrink-0 mt-0.5"
-                    />
-                    <div>
-                      <p className="text-sm font-medium text-red-800">
-                        Cannot delete
-                      </p>
-                      <p className="text-sm text-red-700 mt-1">
-                        This segment has{" "}
-                        <span className="font-semibold">
-                          {deleteConfirm.categoryCount} categor
-                          {deleteConfirm.categoryCount !== 1 ? "ies" : "y"}
-                        </span>{" "}
-                        assigned to it. Reassign the categories first, or
-                        deactivate the segment instead.
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDelete}
-                  disabled={deleteConfirm.categoryCount > 0}
-                  className="flex-1 py-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Delete
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

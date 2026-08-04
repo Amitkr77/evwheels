@@ -12,10 +12,7 @@ import {
   Mail,
   Clock,
   MessageCircle,
-  Linkedin,
-  Twitter,
   Instagram,
-  Youtube,
   CheckCircle,
 } from "lucide-react";
 
@@ -31,6 +28,7 @@ export default function ContactPage() {
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const validate = () => {
     const e = {};
@@ -66,18 +64,32 @@ export default function ContactPage() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     setLoading(true);
-    // Simulate API call (replace with real /api/contact endpoint)
-    setTimeout(() => {
-      setLoading(false);
+    setSubmitError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setSubmitError(data.error || "Something went wrong. Please try again.");
+        setLoading(false);
+        return;
+      }
       setSent(true);
       analytics.track("Contact Form Submitted", { subject: form.subject });
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
-    }, 1800);
+    } catch {
+      setSubmitError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const contactCards = [
@@ -85,16 +97,15 @@ export default function ContactPage() {
       icon: <MapPin size={24} />,
       title: "Visit Our Office",
       lines: [
-        "Boring Road Crossing",
-        "Near Boring Canal Road",
-        "Patna, Bihar 800001",
+        "Naubatpur",
+        "Patna, Bihar 801109",
       ],
     },
     {
       icon: <Phone size={24} />,
       title: "Call / WhatsApp",
-      lines: ["+91 98765 43210"],
-      link: "tel:+919876543210",
+      lines: ["+91 8298922623"],
+      link: "tel:+918298922623",
     },
     {
       icon: <Mail size={24} />,
@@ -158,7 +169,7 @@ export default function ContactPage() {
               {/* Quick Contact Chips */}
               <div className="flex flex-wrap gap-4 mb-10">
                 <a
-                  href="https://wa.me/919876543210"
+                  href="https://wa.me/918298922623"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
@@ -176,27 +187,18 @@ export default function ContactPage() {
                 </a>
               </div>
 
-              {/* Social Links */}
-              <div className="flex items-center gap-5">
-                <span className="text-sm font-medium text-neutral-600">
-                  Follow Us:
-                </span>
-                {[
-                  { icon: Linkedin, href: "#", color: "#0077b5" },
-                  { icon: Twitter, href: "#", color: "#1da1f2" },
-                  { icon: Instagram, href: "#", color: "#e4405f" },
-                  { icon: Youtube, href: "#", color: "#ff0000" },
-                ].map((s, i) => (
-                  <a
-                    key={i}
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-neutral-500 hover:text-[#19B5D8] transition-colors"
-                  >
-                    <s.icon size={20} />
-                  </a>
-                ))}
+              {/* Social links removed until real EVWheels profiles exist —
+                  placeholder href="#" icons were worse than no icons at all. */}
+              <div className="flex items-center gap-2 text-sm text-neutral-500">
+                <Instagram size={16} className="text-[#19B5D8]" />
+                <a
+                  href="https://www.instagram.com/evwheels_patna"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-[#19B5D8] transition-colors font-medium"
+                >
+                  @evwheels_patna
+                </a>
               </div>
             </motion.div>
 
@@ -219,15 +221,14 @@ export default function ContactPage() {
                     <p className="text-sm text-neutral-600">
                       Naubatpur
                       <br />
-                      Patna, Bihar 800001
+                      Patna, Bihar 801109
                     </p>
                   </div>
                 </div>
 
-                {/* Replace with your actual Google Maps embed link for Patna location */}
                 <iframe
                   title="EVWheels Patna Service Center"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3601.8628301705185!2d84.95174357568274!3d25.476255377532443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f2b321b9ab4c21%3A0xae6bf3a2035f6e3e!2sFancy%20Cycle%20Store!5e0!3m2!1sen!2sin!4v1782821434554!5m2!1sen!2sin"
+                  src="https://www.google.com/maps?q=Naubatpur,+Patna,+Bihar+801109&output=embed"
                   width="100%"
                   height="240"
                   style={{ border: 0, borderRadius: "12px" }}
@@ -237,7 +238,7 @@ export default function ContactPage() {
 
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 text-sm">
                   <Link
-                    href="https://maps.google.com/?q=Boring+Road+Patna+Bihar"
+                    href="https://maps.google.com/?q=Naubatpur,+Patna,+Bihar+801109"
                     target="_blank"
                     rel="noreferrer"
                     className="text-[#19B5D8] hover:underline font-medium flex items-center gap-1.5"
@@ -320,7 +321,7 @@ export default function ContactPage() {
                   </p>
                   <div className="flex flex-col sm:flex-row justify-center gap-4">
                     <Link
-                      href="https://wa.me/919876543210"
+                      href="https://wa.me/918298922623"
                       target="_blank"
                       rel="noreferrer"
                       className="flex items-center justify-center gap-2 px-8 py-4 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
@@ -349,38 +350,44 @@ export default function ContactPage() {
                     {/* Name + Phone */}
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-neutral-600 mb-2">
+                        <label htmlFor="contact-name" className="block text-sm font-medium text-neutral-600 mb-2">
                           Full Name <span className="text-red-600">*</span>
                         </label>
                         <input
+                          id="contact-name"
                           type="text"
                           name="name"
                           value={form.name}
                           onChange={handleChange}
                           placeholder="Your full name"
+                          aria-invalid={Boolean(errors.name)}
+                          aria-describedby={errors.name ? "contact-name-error" : undefined}
                           className={`w-full px-5 py-4 border ${errors.name ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
                         />
                         {errors.name && (
-                          <p className="mt-2 text-sm text-red-600">
+                          <p id="contact-name-error" role="alert" className="mt-2 text-sm text-red-600">
                             {errors.name}
                           </p>
                         )}
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-neutral-600 mb-2">
+                        <label htmlFor="contact-phone" className="block text-sm font-medium text-neutral-600 mb-2">
                           Phone Number
                         </label>
                         <input
+                          id="contact-phone"
                           type="tel"
                           name="phone"
                           value={form.phone}
                           onChange={handleChange}
                           placeholder="+91 98765 43210"
+                          aria-invalid={Boolean(errors.phone)}
+                          aria-describedby={errors.phone ? "contact-phone-error" : undefined}
                           className={`w-full px-5 py-4 border ${errors.phone ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
                         />
                         {errors.phone && (
-                          <p className="mt-2 text-sm text-red-600">
+                          <p id="contact-phone-error" role="alert" className="mt-2 text-sm text-red-600">
                             {errors.phone}
                           </p>
                         )}
@@ -389,19 +396,22 @@ export default function ContactPage() {
 
                     {/* Email */}
                     <div>
-                      <label className="block text-sm font-medium text-neutral-600 mb-2">
+                      <label htmlFor="contact-email" className="block text-sm font-medium text-neutral-600 mb-2">
                         Email Address <span className="text-red-600">*</span>
                       </label>
                       <input
+                        id="contact-email"
                         type="email"
                         name="email"
                         value={form.email}
                         onChange={handleChange}
                         placeholder="your@email.com"
+                        aria-invalid={Boolean(errors.email)}
+                        aria-describedby={errors.email ? "contact-email-error" : undefined}
                         className={`w-full px-5 py-4 border ${errors.email ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
                       />
                       {errors.email && (
-                        <p className="mt-2 text-sm text-red-600">
+                        <p id="contact-email-error" role="alert" className="mt-2 text-sm text-red-600">
                           {errors.email}
                         </p>
                       )}
@@ -409,14 +419,17 @@ export default function ContactPage() {
 
                     {/* Subject */}
                     <div>
-                      <label className="block text-sm font-medium text-neutral-600 mb-2">
+                      <label htmlFor="contact-subject" className="block text-sm font-medium text-neutral-600 mb-2">
                         I'm Interested In{" "}
                         <span className="text-red-600">*</span>
                       </label>
                       <select
+                        id="contact-subject"
                         name="subject"
                         value={form.subject}
                         onChange={handleChange}
+                        aria-invalid={Boolean(errors.subject)}
+                        aria-describedby={errors.subject ? "contact-subject-error" : undefined}
                         className={`w-full px-5 py-4 border ${errors.subject ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
                       >
                         <option value="">Select an option...</option>
@@ -429,7 +442,7 @@ export default function ContactPage() {
                         <option>General Inquiry</option>
                       </select>
                       {errors.subject && (
-                        <p className="mt-2 text-sm text-red-600">
+                        <p id="contact-subject-error" role="alert" className="mt-2 text-sm text-red-600">
                           {errors.subject}
                         </p>
                       )}
@@ -437,27 +450,36 @@ export default function ContactPage() {
 
                     {/* Message */}
                     <div>
-                      <label className="block text-sm font-medium text-neutral-600 mb-2">
+                      <label htmlFor="contact-message" className="block text-sm font-medium text-neutral-600 mb-2">
                         Your Message <span className="text-red-600">*</span>
                       </label>
                       <textarea
+                        id="contact-message"
                         name="message"
                         maxLength={500}
                         value={form.message}
                         onChange={handleChange}
                         placeholder="Tell us about your needs or questions..."
                         rows={5}
+                        aria-invalid={Boolean(errors.message)}
+                        aria-describedby={errors.message ? "contact-message-error" : undefined}
                         className={`w-full px-5 py-4 border ${errors.message ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none`}
                       />
                       <div className="flex justify-between text-xs text-neutral-500 mt-2">
                         <span>{form.message.length} / 500 characters</span>
                       </div>
                       {errors.message && (
-                        <p className="mt-2 text-sm text-red-600">
+                        <p id="contact-message-error" role="alert" className="mt-2 text-sm text-red-600">
                           {errors.message}
                         </p>
                       )}
                     </div>
+
+                    {submitError && (
+                      <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mt-4">
+                        {submitError}
+                      </p>
+                    )}
 
                     <button
                       type="submit"
@@ -516,7 +538,7 @@ export default function ContactPage() {
                   Instant reply from our Patna team
                 </p>
                 <Link
-                  href="https://wa.me/919876543210"
+                  href="https://wa.me/918298922623"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 px-8 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
@@ -540,11 +562,9 @@ export default function ContactPage() {
                       <strong className="text-neutral-900 block">
                         EVWheels
                       </strong>
-                      Boring Road Crossing
+                      Naubatpur
                       <br />
-                      Near Boring Canal Road
-                      <br />
-                      Patna, Bihar 800001
+                      Patna, Bihar 801109
                     </div>
                   </div>
 
@@ -573,7 +593,7 @@ export default function ContactPage() {
                         Call / WhatsApp
                       </strong>
                       <Link
-                        href="tel:+919876543210"
+                        href="tel:+918298922623"
                         className="hover:text-[#19B5D8] transition-colors"
                       >
                         +91 8298922623{" "}
@@ -660,7 +680,7 @@ export default function ContactPage() {
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
-                href="https://wa.me/919876543210"
+                href="https://wa.me/918298922623"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2 px-8 py-4 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"

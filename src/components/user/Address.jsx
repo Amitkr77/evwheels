@@ -137,7 +137,7 @@ export default function Address() {
       </div>
 
       {error && (
-        <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+        <div role="alert" className="mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
           {error}
         </div>
       )}
@@ -204,22 +204,26 @@ export default function Address() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="address-modal-title"
             className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
           >
-            <h2 className="text-3xl font-medium mb-8">
+            <h2 id="address-modal-title" className="text-3xl font-medium mb-8">
               Add New Address
             </h2>
 
             {error && (
-              <div className="mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+              <div role="alert" className="mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-1.5">Full Name *</label>
+                <label htmlFor="addr-fullName" className="block text-sm font-medium text-neutral-600 mb-1.5">Full Name *</label>
                 <input
+                  id="addr-fullName"
                   type="text"
                   name="fullName"
                   value={form.fullName}
@@ -229,8 +233,9 @@ export default function Address() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-1.5">Phone *</label>
+                <label htmlFor="addr-phone" className="block text-sm font-medium text-neutral-600 mb-1.5">Phone *</label>
                 <input
+                  id="addr-phone"
                   type="tel"
                   name="phone"
                   value={form.phone}
@@ -240,8 +245,9 @@ export default function Address() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-1.5">Address Line *</label>
+                <label htmlFor="addr-addressLine" className="block text-sm font-medium text-neutral-600 mb-1.5">Address Line *</label>
                 <textarea
+                  id="addr-addressLine"
                   name="addressLine"
                   value={form.addressLine}
                   onChange={handleChange}
@@ -251,10 +257,11 @@ export default function Address() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-600 mb-1.5">City *</label>
+                  <label htmlFor="addr-city" className="block text-sm font-medium text-neutral-600 mb-1.5">City *</label>
                   <input
+                    id="addr-city"
                     type="text"
                     name="city"
                     value={form.city}
@@ -263,8 +270,9 @@ export default function Address() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-600 mb-1.5">PIN Code *</label>
+                  <label htmlFor="addr-postalCode" className="block text-sm font-medium text-neutral-600 mb-1.5">PIN Code *</label>
                   <input
+                    id="addr-postalCode"
                     type="text"
                     name="postalCode"
                     value={form.postalCode}
@@ -275,8 +283,9 @@ export default function Address() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-1.5">State *</label>
+                <label htmlFor="addr-state" className="block text-sm font-medium text-neutral-600 mb-1.5">State *</label>
                 <select
+                  id="addr-state"
                   name="state"
                   value={form.state}
                   onChange={handleChange}

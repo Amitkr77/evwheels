@@ -122,7 +122,7 @@ export default function ShippingPolicyPage() {
         <div className="p-6 bg-[#DDF8FD] rounded-2xl border border-[#19B5D8]/20">
           <h2 className="text-lg font-semibold text-neutral-900 mb-2">Need help with your delivery?</h2>
           <p className="text-neutral-600 text-sm mb-4">
-            Call or WhatsApp us at <a href="tel:+919876543210" className="text-[#19B5D8] hover:underline font-medium">+91 98765 43210</a>, or visit our <Link href="/contact" className="text-[#19B5D8] hover:underline">Contact page</Link>.
+            Call or WhatsApp us at <a href="tel:+918298922623" className="text-[#19B5D8] hover:underline font-medium">+91 8298922623</a>, or visit our <Link href="/contact" className="text-[#19B5D8] hover:underline">Contact page</Link>.
           </p>
           <p className="text-neutral-500 text-xs">Support hours: Monday – Saturday, 10:00 AM – 7:00 PM</p>
         </div>

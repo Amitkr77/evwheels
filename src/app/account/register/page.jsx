@@ -172,6 +172,7 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {serverMessage && (
             <div
+              role="alert"
               className={`p-4 rounded-lg text-center text-sm font-medium border ${
                 isSuccess
                   ? "bg-[#DDF8FD] text-[#1297B5] border-[#19B5D8]/30"
@@ -184,7 +185,7 @@ export default function RegisterPage() {
 
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
+            <label htmlFor="name" className="block text-sm font-medium text-neutral-600 mb-2">
               Full Name
             </label>
             <div className="relative">
@@ -203,14 +204,14 @@ export default function RegisterPage() {
               />
             </div>
             {errors.name && (
-              <p className="mt-2 text-sm text-red-600">{errors.name}</p>
+              <p role="alert" className="mt-2 text-sm text-red-600">{errors.name}</p>
             )}
           </div>
 
           {/* Email + Phone */}
           <div className="grid gap-6 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-neutral-600 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-neutral-600 mb-2">
                 Email
               </label>
               <div className="relative">
@@ -229,12 +230,12 @@ export default function RegisterPage() {
                 />
               </div>
               {errors.email && (
-                <p className="mt-2 text-sm text-red-600">{errors.email}</p>
+                <p role="alert" className="mt-2 text-sm text-red-600">{errors.email}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-600 mb-2">
+              <label htmlFor="phone" className="block text-sm font-medium text-neutral-600 mb-2">
                 Phone
               </label>
               <div className="relative">
@@ -253,14 +254,14 @@ export default function RegisterPage() {
                 />
               </div>
               {errors.phone && (
-                <p className="mt-2 text-sm text-red-600">{errors.phone}</p>
+                <p role="alert" className="mt-2 text-sm text-red-600">{errors.phone}</p>
               )}
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-neutral-600 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-neutral-600 mb-2">
               Password
             </label>
             <div className="relative">
@@ -303,7 +304,7 @@ export default function RegisterPage() {
               </div>
             )}
             {errors.password && (
-              <p className="mt-2 text-sm text-red-600">{errors.password}</p>
+              <p role="alert" className="mt-2 text-sm text-red-600">{errors.password}</p>
             )}
           </div>
 

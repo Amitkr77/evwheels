@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Heart, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useCartStore } from "@/store/cartStore";
 import Image from "next/image";
+import { formatCurrency } from "@/lib/format";
 
 export default function Wishlist() {
   const { items, isLoading, fetchWishlist, toggleWishlist } =
@@ -27,7 +29,13 @@ export default function Wishlist() {
       <div className="text-center py-16">
         <h2 className="text-2xl font-medium mb-4">Your wishlist is empty</h2>
         <p className="text-neutral-600 mb-8">Start adding items you love ♥</p>
-        {/* You can add a "Browse Products" button here */}
+        <Link
+          href="/shop"
+          className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition-colors"
+        >
+          Browse Products
+          <ArrowRight size={18} />
+        </Link>
       </div>
     );
   }
@@ -76,10 +84,7 @@ export default function Wishlist() {
                 {item.title}
               </h3>
               <div className="text-xl md:text-2xl font-light text-[#19B5D8] mb-5">
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "INR",
-                }).format(item.price)}{" "}
+                {formatCurrency(item.price)}
               </div>
               <button
                 onClick={() => addToCart(item, 1, { source: "wishlist" })}

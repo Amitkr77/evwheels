@@ -17,7 +17,7 @@ const NOT_ELIGIBLE = [
 ];
 
 const STEPS = [
-  { step: "01", title: "Initiate Return", desc: "Contact us at support@evwheels.in or call +91 98765 43210 within 30 days of delivery with your order number and reason for return." },
+  { step: "01", title: "Initiate Return", desc: "Contact us at support@evwheels.in or call +91 8298922623 within 30 days of delivery with your order number and reason for return." },
   { step: "02", title: "Return Approved", desc: "Our team will review your request and respond within 2 business days. We may ask for photos of the product." },
   { step: "03", title: "Ship It Back", desc: "We'll arrange pickup from your address. Please pack the product securely in its original packaging." },
   { step: "04", title: "Inspection", desc: "Once we receive the returned item, our team inspects it within 2–3 business days." },
@@ -134,7 +134,7 @@ export default function ReturnsPage() {
         <div className="p-6 bg-[#DDF8FD] rounded-2xl border border-[#19B5D8]/20">
           <h2 className="text-lg font-semibold text-neutral-900 mb-2">Ready to return or have questions?</h2>
           <p className="text-neutral-600 text-sm mb-4">
-            Email us at <a href="mailto:support@evwheels.in" className="text-[#19B5D8] hover:underline font-medium">support@evwheels.in</a> or call <a href="tel:+919876543210" className="text-[#19B5D8] hover:underline font-medium">+91 98765 43210</a>. Our team is available Monday – Saturday, 10 AM – 7 PM.
+            Email us at <a href="mailto:support@evwheels.in" className="text-[#19B5D8] hover:underline font-medium">support@evwheels.in</a> or call <a href="tel:+918298922623" className="text-[#19B5D8] hover:underline font-medium">+91 8298922623</a>. Our team is available Monday – Saturday, 10 AM – 7 PM.
           </p>
           <Link
             href="/contact"

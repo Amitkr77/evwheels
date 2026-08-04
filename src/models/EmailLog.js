@@ -23,6 +23,7 @@ const emailLogSchema = new mongoose.Schema(
         "email_verification",
         "new_order_admin",
         "newsletter",
+        "contact_form",
         "other",
       ],
       default: "other",

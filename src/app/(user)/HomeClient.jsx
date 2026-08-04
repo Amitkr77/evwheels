@@ -803,7 +803,7 @@ export default function HomeClient({ featuredProducts, trendingProducts }) {
 
       {/* WhatsApp float */}
       <a
-        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}`}
+        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918298922623"}`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"

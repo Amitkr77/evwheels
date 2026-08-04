@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { analytics } from "@/lib/analytics";
+import { formatCurrency } from "@/lib/format";
 
 import Myorders from "@/components/user/Myorders";
 import Wishlist from "@/components/user/Wishlist";
@@ -58,9 +59,6 @@ const UserDashboard = () => {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
-
-  const formatCurrency = (n) =>
-    new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(n);
 
   const formatDate = (iso) =>
     new Date(iso).toLocaleDateString("en-IN", {

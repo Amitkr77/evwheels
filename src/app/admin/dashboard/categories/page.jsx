@@ -15,6 +15,8 @@ import {
   Loader2,
 } from "lucide-react";
 import ImageUploadField from "@/components/admin/ImageUploadField";
+import { useToast } from "@/components/admin/Toast";
+import { useConfirm } from "@/components/admin/ConfirmDialog";
 
 const emptyForm = {
   name: "",
@@ -26,6 +28,9 @@ const emptyForm = {
 };
 
 export default function CategoriesPage() {
+  const showToast = useToast();
+  const confirmDialog = useConfirm();
+
   const [categories, setCategories] = useState([]);
   const [segments, setSegments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +42,6 @@ export default function CategoriesPage() {
   // Modal states
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editCategory, setEditCategory] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [formData, setFormData] = useState({ ...emptyForm });
   const [submitting, setSubmitting] = useState(false);
 
@@ -51,11 +55,11 @@ export default function CategoriesPage() {
       setCategories(data.categories || []);
     } catch (err) {
       console.error("Category fetch error:", err);
-      alert("Failed to load categories. Please try again.");
+      showToast("Failed to load categories. Please try again.", "error");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showToast]);
 
   // ─── Fetch segments (for dropdowns) ───
   const fetchSegments = useCallback(async () => {
@@ -137,6 +141,19 @@ export default function CategoriesPage() {
   // ─── Toggle active/inactive ───
   const handleToggleActive = async (category) => {
     const newStatus = !category.isActive;
+
+    // Deactivating a category can pull every product under it off the
+    // storefront at once — worth a pause. Reactivating only restores
+    // visibility, so it can stay a single click.
+    if (!newStatus) {
+      const ok = await confirmDialog({
+        title: "Deactivate Category",
+        message: <>Deactivate <strong>{category.name}</strong>? Its products may disappear from the storefront immediately.</>,
+        confirmLabel: "Deactivate",
+      });
+      if (!ok) return;
+    }
+
     // Optimistic update
     setCategories((prev) =>
       prev.map((c) =>
@@ -169,14 +186,14 @@ export default function CategoriesPage() {
         )
       );
       console.error(err);
-      alert("Error toggling status: " + err.message);
+      showToast("Error toggling status: " + err.message, "error");
     }
   };
 
   // ─── Create category ───
   const handleCreate = async () => {
     if (!formData.name.trim() || !formData.segment) {
-      alert("Name and Segment are required.");
+      showToast("Name and Segment are required.", "error");
       return;
     }
 
@@ -205,10 +222,10 @@ export default function CategoriesPage() {
       setCategories((prev) => [...prev, created]);
       setShowCreateModal(false);
       setFormData({ ...emptyForm });
-      alert("Category created successfully!");
+      showToast("Category created successfully!");
     } catch (err) {
       console.error(err);
-      alert("Error creating category: " + err.message);
+      showToast("Error creating category: " + err.message, "error");
     } finally {
       setSubmitting(false);
     }
@@ -217,7 +234,7 @@ export default function CategoriesPage() {
   // ─── Update category ───
   const handleUpdate = async () => {
     if (!formData.name.trim() || !formData.segment) {
-      alert("Name and Segment are required.");
+      showToast("Name and Segment are required.", "error");
       return;
     }
 
@@ -248,21 +265,46 @@ export default function CategoriesPage() {
       );
       setEditCategory(null);
       setFormData({ ...emptyForm });
-      alert("Category updated successfully!");
+      showToast("Category updated successfully!");
     } catch (err) {
       console.error(err);
-      alert("Error updating category: " + err.message);
+      showToast("Error updating category: " + err.message, "error");
     } finally {
       setSubmitting(false);
     }
   };
 
   // ─── Delete category ───
-  const handleDelete = async () => {
-    if (!deleteConfirm) return;
+  const handleDelete = async (category) => {
+    const ok = await confirmDialog({
+      title: "Delete Category",
+      message: (
+        <>
+          Are you sure you want to delete <strong>{category.name}</strong>?
+          This action cannot be undone.
+        </>
+      ),
+      confirmLabel: "Delete",
+      blocked:
+        category.productCount > 0
+          ? {
+              reason: (
+                <>
+                  This category has{" "}
+                  <strong>
+                    {category.productCount} product{category.productCount !== 1 ? "s" : ""}
+                  </strong>{" "}
+                  assigned to it. Remove or reassign the products first, or
+                  deactivate the category instead.
+                </>
+              ),
+            }
+          : null,
+    });
+    if (!ok) return;
 
     try {
-      const res = await fetch(`/api/categories/${deleteConfirm._id}`, {
+      const res = await fetch(`/api/categories/${category._id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -272,15 +314,11 @@ export default function CategoriesPage() {
         throw new Error(errData.error || "Failed to delete category");
       }
 
-      setCategories((prev) =>
-        prev.filter((c) => c._id !== deleteConfirm._id)
-      );
-      setDeleteConfirm(null);
-      alert("Category deleted successfully!");
+      setCategories((prev) => prev.filter((c) => c._id !== category._id));
+      showToast("Category deleted successfully!");
     } catch (err) {
       console.error(err);
-      alert("Error deleting category: " + err.message);
-      setDeleteConfirm(null);
+      showToast("Error deleting category: " + err.message, "error");
     }
   };
 
@@ -660,7 +698,7 @@ export default function CategoriesPage() {
                       <Edit2 size={17} />
                     </button>
                     <button
-                      onClick={() => setDeleteConfirm(category)}
+                      onClick={() => handleDelete(category)}
                       className="text-neutral-500 hover:text-red-600 transition-colors"
                       title="Delete category"
                     >
@@ -802,81 +840,6 @@ export default function CategoriesPage() {
         )}
       </AnimatePresence>
 
-      {/* ─── Delete Confirmation Modal ─── */}
-      <AnimatePresence>
-        {deleteConfirm && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-medium">
-                  Delete Category
-                </h2>
-                <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="text-neutral-400 hover:text-neutral-600 transition-colors"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="mb-8">
-                <p className="text-neutral-600 mb-4">
-                  Are you sure you want to delete{" "}
-                  <span className="font-semibold text-neutral-900">
-                    {deleteConfirm.name}
-                  </span>
-                  ? This action cannot be undone.
-                </p>
-
-                {deleteConfirm.productCount > 0 && (
-                  <div className="bg-red-50 border border-red-200/60 rounded-lg p-4 flex items-start gap-3">
-                    <Trash2
-                      size={20}
-                      className="text-red-500 flex-shrink-0 mt-0.5"
-                    />
-                    <div>
-                      <p className="text-sm font-medium text-red-800">
-                        Cannot delete
-                      </p>
-                      <p className="text-sm text-red-700 mt-1">
-                        This category has{" "}
-                        <span className="font-semibold">
-                          {deleteConfirm.productCount} product
-                          {deleteConfirm.productCount !== 1 ? "s" : ""}
-                        </span>{" "}
-                        assigned to it. Remove or reassign the products first,
-                        or deactivate the category instead.
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDelete}
-                  disabled={deleteConfirm.productCount > 0}
-                  className="flex-1 py-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Delete
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

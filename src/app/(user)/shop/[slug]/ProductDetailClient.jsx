@@ -280,7 +280,7 @@ export default function ProductDetailClient() {
                 >
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-medium">{review.user?.name}</span>
-                    <span className="text-yellow-500">
+                    <span className="text-yellow-500" role="img" aria-label={`${review.rating} out of 5 stars`}>
                       {"⭐".repeat(Math.min(review.rating, 5))}
                     </span>
                   </div>
@@ -297,7 +297,7 @@ export default function ProductDetailClient() {
 
       {/* WhatsApp Button */}
       <a
-        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}`}
+        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918298922623"}`}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-8 right-8 w-14 h-14 bg-[#19B5D8] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"

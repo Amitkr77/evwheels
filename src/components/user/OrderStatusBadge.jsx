@@ -1,5 +1,7 @@
 "use client";
 
+import { humanizeStatus } from "@/lib/format";
+
 // Shared status→color mapping — previously reimplemented independently in
 // profile/page.jsx, Myorders.jsx, and OrderTracker.jsx with different (and
 // less complete) sets of colors.
@@ -17,7 +19,7 @@ export default function OrderStatusBadge({ status, className = "" }) {
     <span
       className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full ${style} ${className}`}
     >
-      {status}
+      {humanizeStatus(status)}
     </span>
   );
 }

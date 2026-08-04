@@ -10,7 +10,7 @@ const SECTIONS = [
 • Device and browser information for security and analytics
 • Communications you send us (support emails, contact form submissions)
 
-We do not collect payment card details directly — payments are handled by our trusted payment partners.`,
+We currently accept Cash on Delivery only, so we do not collect or store any payment card details. When online payment is introduced, card details will be handled directly by our payment processor and never stored on our servers.`,
   },
   {
     title: "How We Use Your Information",
@@ -28,7 +28,7 @@ We do not sell or rent your personal data to any third party.`,
     title: "Sharing of Information",
     content: `Your information may be shared with:
 • Delivery partners (for shipping and last-mile logistics)
-• Payment processors (for secure transaction processing)
+• Payment processors (once online payment is available, for secure transaction processing)
 • Service providers who operate our website infrastructure
 
 All third parties are contractually required to protect your data and use it only for the stated purpose.`,

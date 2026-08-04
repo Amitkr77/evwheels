@@ -1,8 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import OrderDetailsModal from "./modal/OrderDetailsModal";
 import OrderStatusBadge from "./OrderStatusBadge";
+import { formatCurrency } from "@/lib/format";
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -36,13 +39,22 @@ export default function MyOrders() {
 
   if (orders.length === 0) {
     return (
-      <p className="text-center py-20 text-gray-500">You have no orders yet.</p>
+      <div className="text-center py-20">
+        <p className="text-neutral-500 mb-8">You have no orders yet.</p>
+        <Link
+          href="/shop"
+          className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition-colors"
+        >
+          Browse Products
+          <ArrowRight size={18} />
+        </Link>
+      </div>
     );
   }
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-4xl mb-10">My Orders</h1>
+      <h1 className="text-4xl md:text-5xl font-medium mb-10">My Orders</h1>
 
       <div className="space-y-6">
         {orders.map((order) => (
@@ -69,7 +81,7 @@ export default function MyOrders() {
 
               <div className="mt-2 md:mt-0 flex items-center gap-6">
                 <p className="font-medium text-lg">
-                  ₹{order.totalAmount.toLocaleString("en-IN")}
+                  {formatCurrency(order.totalAmount)}
                 </p>
 
                 <OrderStatusBadge status={order.orderStatus} />
@@ -88,7 +100,7 @@ export default function MyOrders() {
                   </div>
 
                   <p className="font-medium">
-                    ₹{(item.price * item.quantity).toLocaleString("en-IN")}
+                    {formatCurrency(item.price * item.quantity)}
                   </p>
                 </div>
               ))}

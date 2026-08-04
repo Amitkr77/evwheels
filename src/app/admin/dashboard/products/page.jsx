@@ -22,7 +22,6 @@ import {
   TrendingUp,
   TrendingDown,
   Loader2,
-  AlertTriangle,
   ToggleLeft,
   ToggleRight,
   Star,
@@ -31,6 +30,8 @@ import {
   Upload,
 } from "lucide-react";
 import MultiImageUploadField from "@/components/admin/MultiImageUploadField";
+import { useToast } from "@/components/admin/Toast";
+import { useConfirm } from "@/components/admin/ConfirmDialog";
 
 // ─── Empty form template ────────────────────────────────────────
 const EMPTY_FORM = {
@@ -404,19 +405,14 @@ export default function ProductsPage() {
   // ─── Modal states ────────────────────────────────────────────
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [stockModal, setStockModal] = useState(null);
   const [actionMenuId, setActionMenuId] = useState(null);
   const [formData, setFormData] = useState({ ...EMPTY_FORM });
   const [formSubcategories, setFormSubcategories] = useState([]);
 
-  // ─── Toast state ─────────────────────────────────────────────
-  const [toast, setToast] = useState(null);
-
-  const showToast = (message, type = "success") => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
+  // ─── Toast / confirm (shared across the admin dashboard) ──────
+  const showToast = useToast();
+  const confirmDialog = useConfirm();
 
   // ─── Helper accessors ────────────────────────────────────────
   const getPrice = (p) => p.price?.base ?? p.price ?? 0;
@@ -799,10 +795,22 @@ export default function ProductsPage() {
   };
 
   // ─── Delete product ─────────────────────────────────────────
-  const handleDelete = async () => {
-    if (!deleteConfirm) return;
+  const handleDelete = async (product) => {
+    const ok = await confirmDialog({
+      title: "Delete Product",
+      description: "This action cannot be undone.",
+      message: (
+        <>
+          Are you sure you want to delete <strong>{getName(product)}</strong>?
+          All product data will be permanently removed.
+        </>
+      ),
+      confirmLabel: "Delete",
+    });
+    if (!ok) return;
+
     try {
-      const res = await fetch(`/api/products/${deleteConfirm._id}`, {
+      const res = await fetch(`/api/products/${product._id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -810,10 +818,9 @@ export default function ProductsPage() {
         const errData = await res.json();
         throw new Error(errData.error || "Failed to delete product");
       }
-      setDeleteConfirm(null);
       setSelectedIds((prev) => {
         const next = new Set(prev);
-        next.delete(deleteConfirm._id);
+        next.delete(product._id);
         return next;
       });
       showToast("Product deleted successfully!");
@@ -821,7 +828,6 @@ export default function ProductsPage() {
     } catch (err) {
       console.error(err);
       showToast(err.message, "error");
-      setDeleteConfirm(null);
     }
   };
 
@@ -851,6 +857,18 @@ export default function ProductsPage() {
   // ─── Archive / Unarchive product ────────────────────────────
   const handleArchiveToggle = async (product) => {
     const action = product.isActive ? "deactivate" : "activate";
+
+    // Deactivating pulls a live product off the storefront immediately —
+    // activating only adds visibility back, so only the former needs a pause.
+    if (action === "deactivate") {
+      const ok = await confirmDialog({
+        title: "Deactivate Product",
+        message: <>Deactivate <strong>{product.title}</strong>? It will be hidden from the storefront immediately.</>,
+        confirmLabel: "Deactivate",
+      });
+      if (!ok) return;
+    }
+
     try {
       const res = await fetch("/api/admin/products/bulk", {
         method: "POST",
@@ -877,14 +895,34 @@ export default function ProductsPage() {
   };
 
   // ─── Bulk action handler ────────────────────────────────────
+  // Actions that pull live products off the storefront get the same pause
+  // as delete — everything else (activate/unarchive/feature) only adds
+  // visibility, which is lower-risk to fire immediately.
+  const BULK_ACTION_CONFIRMS = {
+    delete: (n) => ({
+      title: "Delete Products",
+      message: <>Delete <strong>{n} product{n !== 1 ? "s" : ""}</strong>? This cannot be undone.</>,
+      confirmLabel: "Delete",
+    }),
+    deactivate: (n) => ({
+      title: "Deactivate Products",
+      message: <>Deactivate <strong>{n} product{n !== 1 ? "s" : ""}</strong>? They&rsquo;ll be hidden from the storefront immediately.</>,
+      confirmLabel: "Deactivate",
+    }),
+    archive: (n) => ({
+      title: "Archive Products",
+      message: <>Archive <strong>{n} product{n !== 1 ? "s" : ""}</strong>? They&rsquo;ll be hidden from the storefront immediately.</>,
+      confirmLabel: "Archive",
+    }),
+  };
+
   const handleBulkAction = async () => {
     if (!bulkAction || selectedIds.size === 0) return;
 
-    if (bulkAction === "delete") {
-      const confirmed = window.confirm(
-        `Delete ${selectedIds.size} product(s)? This cannot be undone.`
-      );
-      if (!confirmed) return;
+    const confirmOptions = BULK_ACTION_CONFIRMS[bulkAction]?.(selectedIds.size);
+    if (confirmOptions) {
+      const ok = await confirmDialog(confirmOptions);
+      if (!ok) return;
     }
 
     setBulkSubmitting(true);
@@ -1374,7 +1412,7 @@ export default function ProductsPage() {
                                 <hr className="my-1 border-neutral-100" />
                                 <button
                                   onClick={() => {
-                                    setDeleteConfirm(product);
+                                    handleDelete(product);
                                     setActionMenuId(null);
                                   }}
                                   className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
@@ -1542,32 +1580,6 @@ export default function ProductsPage() {
     );
   };
 
-  // ─── Toast notification ─────────────────────────────────────
-  const renderToast = () => {
-    if (!toast) return null;
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -20, opacity: 0 }}
-          className={`fixed top-6 right-6 z-[100] px-6 py-3.5 rounded-xl shadow-lg text-sm font-medium flex items-center gap-3 ${
-            toast.type === "error"
-              ? "bg-red-600 text-white"
-              : "bg-[#19B5D8] text-white"
-          }`}
-        >
-          {toast.type === "error" ? (
-            <AlertTriangle size={18} />
-          ) : (
-            <CheckSquare size={18} />
-          )}
-          {toast.message}
-        </motion.div>
-      </AnimatePresence>
-    );
-  };
-
   // ─── Main render ────────────────────────────────────────────
   return (
     <section>
@@ -1730,9 +1742,6 @@ export default function ProductsPage() {
       {/* ─── Bulk Action Bar ─── */}
       {renderBulkBar()}
 
-      {/* ─── Toast ─── */}
-      {renderToast()}
-
       {/* ─── Create Product Modal ─── */}
       <AnimatePresence>
         {showCreateModal && (
@@ -1814,58 +1823,6 @@ export default function ProductsPage() {
                 submitting={submitting}
                 submitLabel="Update Product"
               />
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* ─── Delete Confirmation Modal ─── */}
-      <AnimatePresence>
-        {deleteConfirm && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle size={24} className="text-red-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-neutral-900">
-                    Delete Product
-                  </h3>
-                  <p className="text-sm text-neutral-500 mt-1">
-                    This action cannot be undone.
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-neutral-700 mb-8">
-                Are you sure you want to delete{" "}
-                <span className="font-semibold">
-                  {getName(deleteConfirm)}
-                </span>
-                ? All product data will be permanently removed.
-              </p>
-
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="flex-1 py-3.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
-                >
-                  Delete
-                </button>
-              </div>
             </motion.div>
           </div>
         )}

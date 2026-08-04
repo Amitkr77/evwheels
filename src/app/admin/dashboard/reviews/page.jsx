@@ -2,11 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useToast } from "@/components/admin/Toast";
+import { useConfirm } from "@/components/admin/ConfirmDialog";
 
 export default function ReviewsPage() {
+  const showToast = useToast();
+  const confirmDialog = useConfirm();
+
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [actionError, setActionError] = useState("");
 
   // Fetch all reviews
   const fetchReviews = async () => {
@@ -28,7 +32,6 @@ export default function ReviewsPage() {
   }, []);
 
   const updateReviewStatus = async (id, status) => {
-    setActionError("");
     try {
       const res = await fetch(`/api/admin/reviews?id=${id}`, {
         method: "PATCH",
@@ -41,14 +44,25 @@ export default function ReviewsPage() {
       setReviews((prev) =>
         prev.map((r) => (r._id === id ? { ...r, status: data.status } : r)),
       );
+      showToast(status === "Approved" ? "Review approved!" : "Review rejected.");
     } catch (err) {
       console.error("Update review error:", err);
-      setActionError(err.message);
+      showToast(err.message, "error");
     }
   };
 
   const approveReview = (id) => updateReviewStatus(id, "Approved");
-  const rejectReview = (id) => updateReviewStatus(id, "Rejected");
+
+  // Rejecting hides the review permanently — there's no "reopen" action in
+  // this UI once it's set, so this is the one action here worth a pause.
+  const rejectReview = async (id) => {
+    const ok = await confirmDialog({
+      title: "Reject Review",
+      message: "It will no longer be shown, and there's no way to undo this from here.",
+      confirmLabel: "Reject",
+    });
+    if (ok) updateReviewStatus(id, "Rejected");
+  };
 
   const renderReviewsTable = () => {
     if (!reviews.length)
@@ -94,7 +108,7 @@ export default function ReviewsPage() {
                 <td className="py-6 px-6">
                   {review.user?.name || review.user?.email}
                 </td>
-                <td className="py-6 px-6 text-amber-700 font-medium">
+                <td className="py-6 px-6 text-amber-700 font-medium" role="img" aria-label={`${review.rating} out of 5 stars`}>
                   {"★".repeat(review.rating)}
                 </td>
                 <td className="py-6 px-6 text-neutral-600 max-w-md line-clamp-2">
@@ -152,9 +166,6 @@ export default function ReviewsPage() {
           Showing {reviews?.length || 0} reviews
         </div>
       </div>
-      {actionError && (
-        <p className="mb-4 text-sm text-red-600" role="alert">{actionError}</p>
-      )}
       {loading ? <p>Loading...</p> : renderReviewsTable()}
     </motion.div>
   );

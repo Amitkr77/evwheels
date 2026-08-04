@@ -41,18 +41,18 @@ export default function TopBar() {
         {/* Left — contact info (desktop only) */}
         <div className="hidden lg:flex items-center gap-5 shrink-0">
           <a
-            href="tel:+919876543210"
+            href="tel:+918298922623"
             className="flex items-center gap-1.5 text-neutral-300 hover:text-white transition-colors"
           >
             <Phone size={12} />
             +91 8298922623{" "}
           </a>
           <a
-            href="mailto:info@evwheels.in"
+            href="mailto:support@evwheels.in"
             className="flex items-center gap-1.5 text-neutral-300 hover:text-white transition-colors"
           >
             <Mail size={12} />
-            info@evwheels.in
+            support@evwheels.in
           </a>
         </div>
 

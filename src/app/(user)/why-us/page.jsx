@@ -144,7 +144,7 @@ export default function WhyUsPage() {
               {
                 icon: <HeartHandshake size={28} />,
                 title: "Ride & Return Policy",
-                desc: "Not satisfied in first 7 days? Return it hassle-free (conditions apply).",
+                desc: "Not satisfied in the first 30 days? Return it hassle-free (conditions apply).",
               },
               {
                 icon: <Battery size={28} />,
@@ -295,7 +295,7 @@ export default function WhyUsPage() {
             </Link>
 
             <Link
-              href="https://wa.me/919876543210"
+              href="https://wa.me/918298922623"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-[#19B5D8] text-[#19B5D8] rounded-full text-lg font-medium hover:bg-[#DDF8FD] transition-colors"

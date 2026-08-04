@@ -15,6 +15,7 @@ function ResetPasswordForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -93,18 +94,19 @@ function ResetPasswordForm() {
         {!success ? (
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-5 py-3 rounded-lg text-sm">
+              <div role="alert" className="bg-red-50 border border-red-200 text-red-700 px-5 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-neutral-600 mb-2">
+              <label htmlFor="reset-password" className="block text-sm font-medium text-neutral-600 mb-2">
                 New Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" size={20} />
                 <input
+                  id="reset-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -117,6 +119,7 @@ function ResetPasswordForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-900 transition-colors"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -125,21 +128,30 @@ function ResetPasswordForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-600 mb-2">
+              <label htmlFor="reset-confirm-password" className="block text-sm font-medium text-neutral-600 mb-2">
                 Confirm Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" size={20} />
                 <input
-                  type={showPassword ? "text" : "password"}
+                  id="reset-confirm-password"
+                  type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+                  className="w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
                   placeholder="••••••••"
                   autoComplete="new-password"
                   disabled={loading}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-900 transition-colors"
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 

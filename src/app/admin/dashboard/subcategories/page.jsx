@@ -12,9 +12,10 @@ import {
   ChevronUp,
   ArrowUpDown,
   Tag,
-  AlertTriangle,
 } from "lucide-react";
 import ImageUploadField from "@/components/admin/ImageUploadField";
+import { useToast } from "@/components/admin/Toast";
+import { useConfirm } from "@/components/admin/ConfirmDialog";
 
 const EMPTY_FORM = {
   name: "",
@@ -26,6 +27,9 @@ const EMPTY_FORM = {
 };
 
 export default function SubcategoriesPage() {
+  const showToast = useToast();
+  const confirmDialog = useConfirm();
+
   // ─── Data state ───
   const [subcategories, setSubcategories] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -35,8 +39,6 @@ export default function SubcategoriesPage() {
   // ─── UI state ───
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editItem, setEditItem] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [deleteError, setDeleteError] = useState("");
 
   // ─── Filter / search / sort state ───
   const [searchQuery, setSearchQuery] = useState("");
@@ -145,6 +147,18 @@ export default function SubcategoriesPage() {
   // ─── Toggle active/inactive ───
   const handleToggleActive = async (item) => {
     const newStatus = !item.isActive;
+
+    // Deactivating can pull its products off the storefront immediately —
+    // reactivating only restores visibility, so only this direction needs a pause.
+    if (!newStatus) {
+      const ok = await confirmDialog({
+        title: "Deactivate Subcategory",
+        message: <>Deactivate <strong>{item.name}</strong>? Its products may disappear from the storefront immediately.</>,
+        confirmLabel: "Deactivate",
+      });
+      if (!ok) return;
+    }
+
     // Optimistic update
     setSubcategories((prev) =>
       prev.map((s) =>
@@ -174,14 +188,14 @@ export default function SubcategoriesPage() {
         )
       );
       console.error("Toggle active error:", err);
-      alert("Error updating status: " + err.message);
+      showToast("Error updating status: " + err.message, "error");
     }
   };
 
   // ─── Create subcategory ───
   const handleCreate = async () => {
     if (!formData.name.trim() || !formData.category) {
-      alert("Name and Category are required.");
+      showToast("Name and Category are required.", "error");
       return;
     }
     setSubmitting(true);
@@ -207,9 +221,10 @@ export default function SubcategoriesPage() {
       setSubcategories((prev) => [created.subcategory || created, ...prev]);
       setShowCreateModal(false);
       setFormData({ ...EMPTY_FORM });
+      showToast("Subcategory created successfully!");
     } catch (err) {
       console.error("Create error:", err);
-      alert("Error creating subcategory: " + err.message);
+      showToast("Error creating subcategory: " + err.message, "error");
     } finally {
       setSubmitting(false);
     }
@@ -218,7 +233,7 @@ export default function SubcategoriesPage() {
   // ─── Update subcategory ───
   const handleUpdate = async () => {
     if (!formData.name.trim() || !formData.category) {
-      alert("Name and Category are required.");
+      showToast("Name and Category are required.", "error");
       return;
     }
     setSubmitting(true);
@@ -246,19 +261,27 @@ export default function SubcategoriesPage() {
       );
       setEditItem(null);
       setFormData({ ...EMPTY_FORM });
+      showToast("Subcategory updated successfully!");
     } catch (err) {
       console.error("Update error:", err);
-      alert("Error updating subcategory: " + err.message);
+      showToast("Error updating subcategory: " + err.message, "error");
     } finally {
       setSubmitting(false);
     }
   };
 
   // ─── Delete subcategory ───
-  const handleDelete = async (id) => {
-    setDeleteError("");
+  const handleDelete = async (item) => {
+    const ok = await confirmDialog({
+      title: "Delete Subcategory",
+      description: "This action cannot be undone.",
+      message: <>Are you sure you want to delete <strong>{item.name}</strong>?</>,
+      confirmLabel: "Delete",
+    });
+    if (!ok) return;
+
     try {
-      const res = await fetch(`/api/subcategories/${id}`, {
+      const res = await fetch(`/api/subcategories/${item._id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -266,11 +289,11 @@ export default function SubcategoriesPage() {
         const errData = await res.json();
         throw new Error(errData.error || "Failed to delete subcategory");
       }
-      setSubcategories((prev) => prev.filter((s) => s._id !== id));
-      setDeleteConfirm(null);
+      setSubcategories((prev) => prev.filter((s) => s._id !== item._id));
+      showToast("Subcategory deleted successfully!");
     } catch (err) {
       console.error("Delete error:", err);
-      setDeleteError(err.message);
+      showToast(err.message, "error");
     }
   };
 
@@ -593,10 +616,7 @@ export default function SubcategoriesPage() {
                         <Edit2 size={18} />
                       </button>
                       <button
-                        onClick={() => {
-                          setDeleteError("");
-                          setDeleteConfirm(sub);
-                        }}
+                        onClick={() => handleDelete(sub)}
                         className="text-red-500 hover:text-red-700 transition-colors"
                         aria-label={`Delete ${sub.name}`}
                       >
@@ -738,62 +758,6 @@ export default function SubcategoriesPage() {
         )}
       </AnimatePresence>
 
-      {/* ─── Delete Confirmation Modal ─── */}
-      <AnimatePresence>
-        {deleteConfirm && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-5">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle size={24} className="text-red-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium text-neutral-900">
-                    Delete Subcategory
-                  </h3>
-                  <p className="text-sm text-neutral-500 mt-1">
-                    This action cannot be undone.
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-neutral-700 mb-6">
-                Are you sure you want to delete{" "}
-                <span className="font-semibold">{deleteConfirm.name}</span>?
-              </p>
-
-              {deleteError && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-lg text-red-700 text-sm">
-                  {deleteError}
-                </div>
-              )}
-
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    setDeleteConfirm(null);
-                    setDeleteError("");
-                  }}
-                  className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleDelete(deleteConfirm._id)}
-                  className="flex-1 py-3.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
-                >
-                  Delete
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

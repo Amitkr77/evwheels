@@ -92,21 +92,21 @@ const orgSchema = {
   logo: `${BASE_URL}/logo.png`,
   contactPoint: {
     "@type": "ContactPoint",
-    telephone: "+91-9876543210",
+    telephone: "+91-8298922623",
     contactType: "customer service",
     areaServed: "IN",
     availableLanguage: ["English", "Hindi"],
   },
   address: {
     "@type": "PostalAddress",
+    streetAddress: "Naubatpur",
     addressLocality: "Patna",
     addressRegion: "Bihar",
+    postalCode: "801109",
     addressCountry: "IN",
   },
   sameAs: [
-    "https://www.instagram.com/evwheels",
-    "https://www.facebook.com/evwheels",
-    "https://twitter.com/evwheels",
+    "https://www.instagram.com/evwheels_patna",
   ],
 };
 

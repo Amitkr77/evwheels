@@ -1,51 +1,47 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Wrench,
   Search,
   Info,
   ArrowRight,
-  Bike,
-  Zap,
   QrCode,
   BookOpen,
   Headphones,
   MapPin,
-  BatteryCharging,
-  Circle,
-  Cpu,
-  Settings,
-  LayoutGrid,
+  Bell,
+  Disc,
+  Link2,
+  Cog,
+  Handshake,
+  Lightbulb,
+  Lock,
+  ShieldHalf,
+  Armchair,
+  CircleDot,
+  Hammer,
+  CircleDashed,
 } from "lucide-react";
 import Link from "next/link";
 
-const MODELS = [
-  {
-    icon: Bike,
-    badge: "2023 Series",
-    name: "Urban Glide X1",
-    type: "City Commuter E-Bike",
-    parts: 42,
-  },
-  {
-    icon: Zap,
-    badge: "Pro Edition",
-    name: "VoltX Scooter",
-    type: "Long Range E-Scooter",
-    parts: 28,
-  },
-  {
-    icon: Bike,
-    badge: "Off-Road",
-    name: "Ranger 500",
-    type: "Mountain E-Bike",
-    parts: 56,
-  },
-  {
-    icon: Zap,
-    badge: "Legacy",
-    name: "City Mate V1",
-    type: "Compact Moped",
-    parts: 15,
-  },
+// Mirrors the real categories used by the Shop page and Navbar — this page
+// filters into the actual catalog, so it can't invent categories the store
+// doesn't carry.
+const CATEGORIES = [
+  { slug: "bells", label: "Bells", icon: Bell },
+  { slug: "brakes", label: "Brakes", icon: Disc },
+  { slug: "chains", label: "Chains", icon: Link2 },
+  { slug: "gear-sets", label: "Gear Sets", icon: Cog },
+  { slug: "handlebar-parts", label: "Handlebar Parts", icon: Handshake },
+  { slug: "lights-reflectors", label: "Lights & Reflectors", icon: Lightbulb },
+  { slug: "locks-security", label: "Locks & Security", icon: Lock },
+  { slug: "mudguards-fenders", label: "Mudguards", icon: ShieldHalf },
+  { slug: "saddles-seats", label: "Saddles & Seats", icon: Armchair },
+  { slug: "tyres-tubes", label: "Tyres & Tubes", icon: CircleDot },
+  { slug: "tools-maintenance", label: "Tools & Maintenance", icon: Hammer },
+  { slug: "wheels-hubs", label: "Wheels & Hubs", icon: CircleDashed },
 ];
 
 const IDENTIFY_STEPS = [
@@ -62,7 +58,7 @@ const IDENTIFY_STEPS = [
   {
     icon: Headphones,
     title: "Ask our experts",
-    desc: "Send us a photo of your bike, and we'll help you identify it instantly.",
+    desc: "Send us a photo of your bike over WhatsApp and our team will help you identify the right parts.",
   },
 ];
 
@@ -73,16 +69,20 @@ const SERIAL_LOCATIONS = [
   "Battery Mount",
 ];
 
-const CATEGORIES = [
-  { icon: BatteryCharging, label: "Batteries" },
-  { icon: Circle, label: "Tires & Tubes" },
-  { icon: Zap, label: "Chargers" },
-  { icon: Cpu, label: "Controllers" },
-  { icon: Settings, label: "Brakes" },
-  { icon: LayoutGrid, label: "View All" },
-];
-
 export default function SupportPage() {
+  const router = useRouter();
+  const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
+
+  const handleCheckFit = (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (category) params.set("category", category);
+    if (brand.trim()) params.set("search", brand.trim());
+    const qs = params.toString();
+    router.push(qs ? `/shop?${qs}` : "/shop");
+  };
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-['Inter']">
       {/* ─── Hero / Part Finder ─────────────────────────────────── */}
@@ -100,52 +100,48 @@ export default function SupportPage() {
               <span className="text-[#19B5D8]">for your ride.</span>
             </h1>
             <p className="text-neutral-500 font-light text-lg leading-relaxed">
-              Don&apos;t guess. Select your model below to instantly filter our
-              catalog for compatible parts, batteries, and upgrades guaranteed to
-              work.
+              Pick a category and, if you know it, the brand — we&apos;ll filter
+              our live catalog down to what fits.
             </p>
           </div>
 
-          <div className="bg-neutral-50 border border-neutral-200/70 rounded-2xl p-5 shadow-sm">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <form
+            onSubmit={handleCheckFit}
+            className="bg-neutral-50 border border-neutral-200/70 rounded-2xl p-5 shadow-sm"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
+                <label htmlFor="finder-category" className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
                   Category
                 </label>
-                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20">
-                  <option value="">Select Type</option>
-                  <option>E-Bikes</option>
-                  <option>E-Scooters</option>
-                  <option>Accessories</option>
+                <select
+                  id="finder-category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20"
+                >
+                  <option value="">All categories</option>
+                  {CATEGORIES.map((c) => (
+                    <option key={c.slug} value={c.slug}>{c.label}</option>
+                  ))}
                 </select>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
-                  Brand
+                <label htmlFor="finder-brand" className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
+                  Brand <span className="normal-case font-normal text-neutral-400">(optional)</span>
                 </label>
-                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20">
-                  <option value="">Select Brand</option>
-                  <option>EvWheels</option>
-                  <option>Urban Glide</option>
-                  <option>Mountain King</option>
-                  <option>VoltX</option>
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wide ml-1">
-                  Model
-                </label>
-                <select className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20">
-                  <option value="">Select Model</option>
-                  <option>Glide X1</option>
-                  <option>Glide X2 Pro</option>
-                  <option>Ranger 500</option>
-                  <option>City Commuter</option>
-                </select>
+                <input
+                  id="finder-brand"
+                  type="text"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                  placeholder="e.g. Shimano"
+                  className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20"
+                />
               </div>
               <div className="flex items-end">
                 <button
-                  type="button"
+                  type="submit"
                   className="w-full py-3.5 bg-[#19B5D8] hover:bg-[#1297B5] text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
                 >
                   <Search size={18} />
@@ -153,75 +149,62 @@ export default function SupportPage() {
                 </button>
               </div>
             </div>
-          </div>
+          </form>
 
           <p className="flex items-center justify-center gap-2 mt-5 text-sm text-neutral-500 font-light">
             <Info size={15} />
-            Not sure about your model?{" "}
-            <span className="text-[#19B5D8] underline underline-offset-4 cursor-pointer hover:text-[#19B5D8] transition-colors">
+            Not sure what you need?{" "}
+            <a
+              href="#identify"
+              className="text-[#19B5D8] underline underline-offset-4 hover:text-[#1297B5] transition-colors"
+            >
               Find your serial number
-            </span>
+            </a>
           </p>
         </div>
       </section>
 
-      {/* ─── Popular Models ──────────────────────────────────────── */}
+      {/* ─── Browse by Category ──────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-4 md:px-8 py-16 md:py-24">
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
           <div>
             <h2 className="text-3xl font-medium text-neutral-900 mb-2">
-              Popular Models
+              Browse by Category
             </h2>
             <p className="text-neutral-500 font-light">
-              Browse parts for our best-selling vehicles.
+              Every category in our catalog — jump straight in.
             </p>
           </div>
           <Link
-            href="/products"
+            href="/shop"
             className="flex items-center gap-1 text-sm font-medium text-[#19B5D8] hover:gap-2 transition-all"
           >
-            View all models <ArrowRight size={16} />
+            View all products <ArrowRight size={16} />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {MODELS.map((m) => (
-            <div
-              key={m.name}
-              className="group bg-white border border-neutral-200/70 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {CATEGORIES.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/shop?category=${cat.slug}`}
+              className="group flex flex-col items-center gap-3 p-6 rounded-xl bg-white border border-neutral-200/70 hover:border-[#19B5D8]/50 hover:shadow-md transition-all text-center"
             >
-              <div className="h-44 bg-neutral-50 flex items-center justify-center relative group-hover:bg-[#DDF8FD]/40 transition-colors">
-                <m.icon
-                  size={56}
-                  strokeWidth={1.2}
-                  className="text-neutral-300 group-hover:text-[#19B5D8] transition-colors"
-                />
-                <span className="absolute top-4 right-4 bg-white border border-neutral-200 px-2 py-1 rounded text-xs font-medium text-neutral-700 shadow-sm">
-                  {m.badge}
-                </span>
-              </div>
-              <div className="p-5">
-                <h3 className="font-medium text-neutral-900 mb-1 group-hover:text-[#19B5D8] transition-colors">
-                  {m.name}
-                </h3>
-                <p className="text-sm text-neutral-500 font-light mb-4">{m.type}</p>
-                <div className="flex items-center justify-between pt-4 border-t border-neutral-100">
-                  <span className="text-xs text-neutral-400">
-                    {m.parts} compatible parts
-                  </span>
-                  <ArrowRight
-                    size={16}
-                    className="text-[#19B5D8] group-hover:translate-x-0.5 transition-transform"
-                  />
-                </div>
-              </div>
-            </div>
+              <cat.icon
+                size={28}
+                strokeWidth={1.4}
+                className="text-neutral-400 group-hover:text-[#19B5D8] transition-colors"
+              />
+              <span className="font-medium text-sm text-neutral-700">
+                {cat.label}
+              </span>
+            </Link>
           ))}
         </div>
       </section>
 
       {/* ─── Identify Your Model ─────────────────────────────────── */}
-      <section className="bg-neutral-50/70 border-y border-neutral-200/70 py-16">
+      <section id="identify" className="bg-neutral-50/70 border-y border-neutral-200/70 py-16 scroll-mt-24">
         <div className="max-w-5xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -267,36 +250,17 @@ export default function SupportPage() {
                   </div>
                 ))}
               </div>
-              <button className="w-full mt-6 py-3 border border-neutral-200 hover:border-[#19B5D8] hover:text-[#19B5D8] text-neutral-700 font-medium rounded-xl transition-colors text-sm">
-                Download Identification Guide
-              </button>
+              <a
+                href="https://wa.me/918298922623?text=Hi%20EVWheels%2C%20I%20need%20help%20identifying%20my%20bike%20model%20so%20I%20can%20find%20the%20right%20parts."
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-2 w-full mt-6 py-3 border border-neutral-200 hover:border-[#19B5D8] hover:text-[#19B5D8] text-neutral-700 font-medium rounded-xl transition-colors text-sm"
+              >
+                <Headphones size={16} />
+                Ask us on WhatsApp
+              </a>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ─── Browse by Category ──────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-4 md:px-8 py-16 md:py-24">
-        <h2 className="text-3xl font-medium text-neutral-900 mb-10 text-center">
-          Browse Compatibility by Category
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.label}
-              href="/products"
-              className="group flex flex-col items-center gap-3 p-6 rounded-xl bg-white border border-neutral-200/70 hover:border-[#19B5D8]/50 hover:shadow-md transition-all"
-            >
-              <cat.icon
-                size={28}
-                strokeWidth={1.4}
-                className="text-neutral-400 group-hover:text-[#19B5D8] transition-colors"
-              />
-              <span className="font-medium text-sm text-neutral-700 text-center">
-                {cat.label}
-              </span>
-            </Link>
-          ))}
         </div>
       </section>
     </div>
