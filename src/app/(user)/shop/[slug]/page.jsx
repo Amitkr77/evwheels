@@ -102,28 +102,45 @@ export default async function ProductDetailPage({ params }) {
           warranty: `${product.warranty} months manufacturer warranty`,
         }),
         ...(product.colors?.length > 0 && { color: product.colors.join(", ") }),
-        category: product.category?.name || "Electric Cycles",
+        ...(product.category?.name && { category: product.category.name }),
       }
     : null;
+
+  // Mirrors the on-page breadcrumb — Home / Category / Subcategory? / Product,
+  // built from the product's real category & subcategory instead of a fixed
+  // "Electric Cycles" crumb pointing at a /cycles route that doesn't exist.
+  const breadcrumbItems = [{ name: "Home", item: BASE_URL }];
+
+  if (product?.category?.slug) {
+    breadcrumbItems.push({
+      name: product.category.name,
+      item: `${BASE_URL}/shop?category=${product.category.slug}`,
+    });
+  } else {
+    breadcrumbItems.push({ name: "Shop", item: `${BASE_URL}/shop` });
+  }
+
+  if (product?.subcategory?.name) {
+    breadcrumbItems.push({
+      name: product.subcategory.name,
+      item: `${BASE_URL}/shop?category=${product.category?.slug || ""}&subcategory=${product.subcategory._id}`,
+    });
+  }
+
+  breadcrumbItems.push({
+    name: product?.title || slug,
+    item: `${BASE_URL}/shop/${slug}`,
+  });
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: BASE_URL },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Electric Cycles",
-        item: `${BASE_URL}/cycles`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: product?.title || slug,
-        item: `${BASE_URL}/shop/${slug}`,
-      },
-    ],
+    itemListElement: breadcrumbItems.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.item,
+    })),
   };
 
   return (

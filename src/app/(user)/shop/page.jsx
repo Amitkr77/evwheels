@@ -4,7 +4,6 @@ import { useEffect, useState, useMemo, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import {
   SlidersHorizontal,
   X,
@@ -14,6 +13,7 @@ import {
 } from "lucide-react";
 import { analytics } from "@/lib/analytics";
 import { useDebounce } from "@/hooks/useDebounce";
+import ProductCard from "@/components/shop/ProductCard";
 
 const PAGE_SIZE = 24;
 
@@ -26,22 +26,7 @@ const SORT_TO_API = {
   price_desc: { sort: "price", order: "desc" },
 };
 
-// ── Categories (mirrors Navbar + ShopByCategory) ───────────
-const CATEGORIES = [
-  { slug: "", label: "All Products" },
-  { slug: "bells", label: "Bells" },
-  { slug: "brakes", label: "Brakes" },
-  { slug: "chains", label: "Chains" },
-  { slug: "gear-sets", label: "Gear Sets" },
-  { slug: "handlebar-parts", label: "Handlebar Parts" },
-  { slug: "lights-reflectors", label: "Lights & Reflectors" },
-  { slug: "locks-security", label: "Locks & Security" },
-  { slug: "mudguards-fenders", label: "Mudguards" },
-  { slug: "saddles-seats", label: "Saddles & Seats" },
-  { slug: "tyres-tubes", label: "Tyres & Tubes" },
-  { slug: "tools-maintenance", label: "Tools & Maintenance" },
-  { slug: "wheels-hubs", label: "Wheels & Hubs" },
-];
+const ALL_PRODUCTS_ENTRY = { slug: "", label: "All Products" };
 
 const PRICE_RANGES = [
   { label: "All Prices", min: 0, max: Infinity },
@@ -58,52 +43,6 @@ const SORT_OPTIONS = [
   { label: "Price: High to Low", value: "price_desc" },
 ];
 
-// ── Product card ───────────────────────────────────────────
-function ProductCard({ product }) {
-  return (
-    <Link
-      href={`/shop/${product.slug}`}
-      className="group flex flex-col bg-white border border-neutral-100 rounded-xl overflow-hidden hover:border-neutral-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.07)] transition-all duration-200"
-    >
-      <div className="relative bg-neutral-50 p-4 aspect-square overflow-hidden">
-        {product.images?.[0] ? (
-          <Image
-            src={product.images[0]}
-            alt={product.title}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain group-hover:scale-[1.04] transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-5xl font-black text-neutral-100 select-none uppercase">
-              {product.title?.charAt(0)}
-            </span>
-          </div>
-        )}
-        {(product.moq || 1) > 1 && (
-          <span className="absolute top-2.5 right-2.5 bg-neutral-900 text-white text-[9px] font-semibold tracking-wide px-2 py-0.5 rounded-md">
-            MOQ {product.moq}
-          </span>
-        )}
-      </div>
-      <div className="px-3.5 pb-3.5 pt-3 flex flex-col gap-1.5">
-        <h3 className="text-[13px] font-medium text-neutral-800 line-clamp-2 leading-snug">
-          {product.title}
-        </h3>
-        <div className="flex items-center justify-between pt-0.5">
-          <p className="text-sm font-bold text-neutral-900">
-            ₹{Number(product.price).toLocaleString("en-IN")}
-          </p>
-          <span className="text-[11px] text-neutral-400 group-hover:text-[#19B5D8] transition-colors">
-            View →
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 function SkeletonCard() {
   return (
     <div className="rounded-xl border border-neutral-100 overflow-hidden animate-pulse">
@@ -118,10 +57,10 @@ function SkeletonCard() {
 }
 
 // ── Sidebar category list ──────────────────────────────────
-function CategoryList({ active, onChange }) {
+function CategoryList({ active, onChange, categories }) {
   return (
     <div className="flex flex-col gap-0.5">
-      {CATEGORIES.map((cat) => (
+      {categories.map((cat) => (
         <button
           key={cat.slug}
           onClick={() => onChange(cat.slug)}
@@ -214,9 +153,31 @@ function ShopInner() {
   const [page, setPage] = useState(1);
   const [serverPagination, setServerPagination] = useState({ total: 0, pages: 1 });
 
+  // Real categories from the DB, not a hardcoded list — this was silently
+  // drifting out of sync with whatever admin actually has configured.
+  const [categories, setCategories] = useState([ALL_PRODUCTS_ENTRY]);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/categories")
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled) return;
+        const real = (d.categories || []).map((c) => ({ slug: c.slug, label: c.name }));
+        setCategories([ALL_PRODUCTS_ENTRY, ...real]);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
   // Read category from URL
   const urlCategory = searchParams.get("category") || "";
   const [category, setCategory] = useState(urlCategory);
+
+  // Read subcategory from URL — only reachable today via a product's
+  // breadcrumb link (no sidebar UI for it), so it's an ID (matching what
+  // /api/products?subcategory= expects), not a slug.
+  const urlSubcategory = searchParams.get("subcategory") || "";
+  const [subcategory, setSubcategory] = useState(urlSubcategory);
 
   // Read search from URL — this is what makes the homepage hero search
   // (which does router.push('/shop?search=...')) actually land with results,
@@ -229,15 +190,20 @@ function ShopInner() {
   // Sync URL → state on navigation (covers browser back/forward too)
   useEffect(() => {
     setCategory(searchParams.get("category") || "");
+    setSubcategory(searchParams.get("subcategory") || "");
     setSearch(searchParams.get("search") || "");
   }, [searchParams]);
 
-  // Update URL when category changes
+  // Update URL when category changes — picking a top-level category from the
+  // sidebar also clears any subcategory drill-down, since it may not belong
+  // to the newly-selected category.
   const handleCategoryChange = useCallback((slug) => {
     setCategory(slug);
+    setSubcategory("");
     const params = new URLSearchParams(searchParams.toString());
     if (slug) params.set("category", slug);
     else params.delete("category");
+    params.delete("subcategory");
     router.push(`/shop?${params.toString()}`, { scroll: false });
   }, [searchParams, router]);
 
@@ -261,19 +227,16 @@ function ShopInner() {
     if (isSearching) return;
     let cancelled = false;
     setLoading(true);
-    const url = category
-      ? `/api/products?category=${encodeURIComponent(category)}&limit=200`
-      : "/api/products?limit=200";
-    fetch(url)
+    const params = new URLSearchParams();
+    if (category) params.set("category", category);
+    if (subcategory) params.set("subcategory", subcategory);
+    params.set("limit", "200");
+    fetch(`/api/products?${params.toString()}`)
       .then((r) => r.json())
       .then((d) => {
         if (cancelled) return;
         setProducts(d.products || []);
-        // No real Category._id is available at this call site (CATEGORIES
-        // above is a static curated slug/label list for shop nav, not the
-        // DB collection) — slug doubles as category_id, which is still a
-        // stable, useful dimension for grouping in PostHog.
-        const cat = CATEGORIES.find((c) => c.slug === category) || CATEGORIES[0];
+        const cat = categories.find((c) => c.slug === category) || ALL_PRODUCTS_ENTRY;
         analytics.track("Category Viewed", {
           category_id: cat.slug || "all",
           category_name: cat.label,
@@ -283,7 +246,11 @@ function ShopInner() {
       .finally(() => { if (!cancelled) setLoading(false); });
 
     return () => { cancelled = true; };
-  }, [category, isSearching]);
+    // categories is intentionally omitted — it only affects the analytics
+    // label below, not the fetch itself, and including it would refire this
+    // whole product fetch a second time once the category list arrives.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, subcategory, isSearching]);
 
   // Active search — real backend full-text search (title/description/brand),
   // relevance-ranked by default, combined with category/price/sort, and
@@ -299,6 +266,7 @@ function ShopInner() {
     const params = new URLSearchParams();
     params.set("search", term);
     if (category) params.set("category", category);
+    if (subcategory) params.set("subcategory", subcategory);
     if (priceObj.min > 0) params.set("minPrice", String(priceObj.min));
     if (priceObj.max !== Infinity) params.set("maxPrice", String(priceObj.max));
     const sortApi = SORT_TO_API[sort];
@@ -334,9 +302,9 @@ function ShopInner() {
       .finally(() => { if (!cancelled) setLoading(false); });
 
     return () => { cancelled = true; };
-  }, [debouncedSearch, category, priceRange, sort, page]);
+  }, [debouncedSearch, category, subcategory, priceRange, sort, page]);
 
-  const activeCat = CATEGORIES.find((c) => c.slug === category) || CATEGORIES[0];
+  const activeCat = categories.find((c) => c.slug === category) || ALL_PRODUCTS_ENTRY;
 
   const displayed = useMemo(() => {
     if (isSearching) return products; // already filtered/sorted server-side
@@ -355,7 +323,7 @@ function ShopInner() {
     (category ? 1 : 0) + (priceRange !== "All Prices" ? 1 : 0) + (search ? 1 : 0);
 
   // Reset to page 1 whenever filters/search/category/sort change
-  useEffect(() => { setPage(1); }, [category, priceRange, debouncedSearch, sort]);
+  useEffect(() => { setPage(1); }, [category, subcategory, priceRange, debouncedSearch, sort]);
 
   const totalPages = isSearching ? serverPagination.pages : Math.ceil(displayed.length / PAGE_SIZE);
   const paginated = isSearching ? products : displayed.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -428,7 +396,7 @@ function ShopInner() {
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-400 mb-3 px-1">
                 Categories
               </p>
-              <CategoryList active={category} onChange={handleCategoryChange} />
+              <CategoryList active={category} onChange={handleCategoryChange} categories={categories} />
             </div>
 
             {/* Price */}
@@ -618,7 +586,7 @@ function ShopInner() {
                     Category
                   </p>
                   <div className="grid grid-cols-2 gap-1.5">
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                       <button
                         key={cat.slug}
                         onClick={() => { handleCategoryChange(cat.slug); setDrawerOpen(false); }}

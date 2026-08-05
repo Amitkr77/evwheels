@@ -397,11 +397,6 @@ export default function ProductsPage() {
   const getMoq = (p) => p.inventory?.moq ?? p.moq ?? 1;
   const getBoxQty = (p) => p.inventory?.boxQty ?? p.boxQty ?? 1;
   const getIsFeatured = (p) => p.isFeatured ?? p.featured ?? false;
-  const getImage = (p) =>
-    p.images?.find((i) => i.isPrimary)?.url ||
-    p.images?.[0]?.url ||
-    p.image ||
-    "";
   // Normalizes to a plain array of URL strings — handles both the current
   // schema (images: [String]) and a legacy shape some older docs may still
   // have (images: [{ url, isPrimary }]).
@@ -413,6 +408,10 @@ export default function ProductsPage() {
     }
     return p.image ? [p.image] : [];
   };
+  // The table thumbnail was reading p.images[0].url, which only works for
+  // the legacy object shape — on the real string-array schema every field
+  // it checked was undefined, so no thumbnail ever rendered.
+  const getImage = (p) => getImages(p)[0] || "";
   const getName = (p) => p.name || p.title || "";
   const getCategoryName = (p) => {
     if (typeof p.category === "object" && p.category?.name)

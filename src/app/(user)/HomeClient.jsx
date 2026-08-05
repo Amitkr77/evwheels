@@ -22,6 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import ShopByCategory from "@/components/home/ShopBycategory";
+import ProductCard from "@/components/shop/ProductCard";
 import { useDebounce } from "@/hooks/useDebounce";
 
 // ── Data ──────────────────────────────────────────────────
@@ -272,53 +273,6 @@ function HeroSearch() {
   );
 }
 
-// ── Clean product card ─────────────────────────────────────
-function ProductCard({ p }) {
-  return (
-    <Link
-      href={`/shop/${p.slug}`}
-      className="group flex flex-col bg-white border border-neutral-100 rounded-xl overflow-hidden hover:border-neutral-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-all duration-200"
-    >
-      <div className="relative bg-neutral-50 p-4 aspect-square overflow-hidden">
-        {p.images?.[0] ? (
-          <Image
-            src={p.images[0]}
-            alt={p.title}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain group-hover:scale-[1.04] transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-5xl font-black text-neutral-100 select-none uppercase">
-              {p.title?.charAt(0)}
-            </span>
-          </div>
-        )}
-        {(p.moq || 1) > 1 && (
-          <span className="absolute top-2.5 right-2.5 bg-neutral-900 text-white text-[9px] font-semibold tracking-wide px-2 py-0.5 rounded-md">
-            MOQ {p.moq}
-          </span>
-        )}
-      </div>
-
-      <div className="px-3.5 pb-3.5 pt-3 flex flex-col gap-1.5">
-        <h3 className="text-[13px] font-medium text-neutral-800 line-clamp-2 leading-snug">
-          {p.title}
-        </h3>
-        <div className="flex items-center justify-between pt-0.5">
-          <p className="text-sm font-bold text-neutral-900">
-            ₹{Number(p.price).toLocaleString("en-IN")}
-          </p>
-          <span className="text-[11px] text-neutral-400 group-hover:text-[#19B5D8] transition-colors">
-            View →
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 // ── Featured Products ──────────────────────────────────────
 function FeaturedProducts({ products }) {
   return (
@@ -350,7 +304,7 @@ function FeaturedProducts({ products }) {
         >
           {products.map((p) => (
             <motion.div key={p._id} variants={CARD_VARIANTS}>
-              <ProductCard p={p} />
+              <ProductCard product={p} />
             </motion.div>
           ))}
         </motion.div>
@@ -444,7 +398,7 @@ function ShowcaseSection({ products }) {
             >
               {products.map((p) => (
                 <motion.div key={p._id} variants={CARD_VARIANTS}>
-                  <ProductCard p={p} />
+                  <ProductCard product={p} />
                 </motion.div>
               ))}
             </motion.div>

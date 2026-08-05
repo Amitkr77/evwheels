@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { analytics } from "@/lib/analytics";
+import ProductCard from "@/components/shop/ProductCard";
 
 export default function ProductDetailClient() {
   const params = useParams();
@@ -24,6 +25,9 @@ export default function ProductDetailClient() {
 
   const [reviews, setReviews] = useState([]);
   const [loadingReviews, setLoadingReviews] = useState(true);
+
+  const [recommended, setRecommended] = useState([]);
+  const [loadingRecommended, setLoadingRecommended] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -102,6 +106,41 @@ export default function ProductDetailClient() {
     };
   }, [product?._id]);
 
+  // "You may also like" — same category when we have one, otherwise fall
+  // back to general newest products so the section still has something to
+  // show rather than rendering nothing at all.
+  useEffect(() => {
+    if (!product?._id) return;
+
+    let cancelled = false;
+    setLoadingRecommended(true);
+
+    const categorySlug = product.category?.slug;
+    const url = categorySlug
+      ? `/api/products?category=${encodeURIComponent(categorySlug)}&limit=9`
+      : "/api/products?sort=createdAt&order=desc&limit=9";
+
+    fetch(url)
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled) return;
+        const others = (d.products || [])
+          .filter((p) => p._id !== product._id)
+          .slice(0, 8);
+        setRecommended(others);
+      })
+      .catch(() => {
+        if (!cancelled) setRecommended([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingRecommended(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [product?._id, product?.category?.slug]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
@@ -136,17 +175,44 @@ export default function ProductDetailClient() {
     <div className="min-h-screen bg-white pt-20 pb-20">
       <div className="max-w-8xl mx-auto px-6 lg:px-12">
 
-        {/* Breadcrumb */}
+        {/* Breadcrumb — the product's real category/subcategory, not a
+            hardcoded "Cycles" that had nothing to do with the actual catalog. */}
         <nav className="mb-10 mt-4 text-sm text-neutral-600" aria-label="Breadcrumb">
           <ol className="flex items-center gap-3">
             <li>
-              <Link href="/">Home</Link>
+              <Link href="/" className="hover:text-[#19B5D8] transition-colors">Home</Link>
             </li>
             <li>/</li>
-            <li>
-              <Link href="/shop">Cycles</Link>
-            </li>
-            <li>/</li>
+            {product.category?.slug ? (
+              <>
+                <li>
+                  <Link href={`/shop?category=${product.category.slug}`} className="hover:text-[#19B5D8] transition-colors">
+                    {product.category.name}
+                  </Link>
+                </li>
+                <li>/</li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link href="/shop" className="hover:text-[#19B5D8] transition-colors">Shop</Link>
+                </li>
+                <li>/</li>
+              </>
+            )}
+            {product.subcategory?.name && (
+              <>
+                <li>
+                  <Link
+                    href={`/shop?category=${product.category?.slug || ""}&subcategory=${product.subcategory._id}`}
+                    className="hover:text-[#19B5D8] transition-colors"
+                  >
+                    {product.subcategory.name}
+                  </Link>
+                </li>
+                <li>/</li>
+              </>
+            )}
             <li className="text-neutral-900 font-medium">{product.title}</li>
           </ol>
         </nav>
@@ -293,6 +359,32 @@ export default function ProductDetailClient() {
             </div>
           )}
         </div>
+
+        {/* You may also like */}
+        {(loadingRecommended || recommended.length > 0) && (
+          <div className="mt-24">
+            <h2 className="text-3xl font-medium mb-8">You May Also Like</h2>
+            {loadingRecommended ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="rounded-xl border border-neutral-100 overflow-hidden animate-pulse">
+                    <div className="aspect-square bg-neutral-100" />
+                    <div className="px-3.5 pb-3.5 pt-3 space-y-2">
+                      <div className="h-3 bg-neutral-100 rounded w-full" />
+                      <div className="h-3 bg-neutral-100 rounded w-2/3" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                {recommended.map((p) => (
+                  <ProductCard key={p._id} product={p} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* WhatsApp Button */}
