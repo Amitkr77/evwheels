@@ -18,6 +18,7 @@ import {
     X,
     Image as ImageIcon,
     Sparkles,
+    Truck,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
@@ -52,6 +53,7 @@ function DashboardShell({ children }) {
         { icon: Layers, label: "Subcategories", path: "/admin/dashboard/subcategories" },
         { icon: Sparkles, label: "Showcase", path: "/admin/dashboard/showcase" },
         { icon: ImageIcon, label: "Banners", path: "/admin/dashboard/banners" },
+        { icon: Truck, label: "Shipping", path: "/admin/dashboard/shipping" },
         { icon: Ticket, label: "Coupons", path: "/admin/dashboard/coupons" },
         { icon: Star, label: "Reviews", path: "/admin/dashboard/reviews", },
         { icon: Warehouse, label: "Inventory", path: "/admin/dashboard/inventory" },

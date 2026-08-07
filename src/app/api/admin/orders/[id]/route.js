@@ -4,8 +4,10 @@ import { connectDB } from "@/lib/db";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import InventoryLog from "@/models/InventoryLog";
+import User from "@/models/User";
 import { verifyAdminStrict } from "@/lib/adminAuth";
 import { captureServerException } from "@/lib/analytics/posthog-server";
+import { createShiprocketOrder, cancelOrders as cancelShiprocketOrders } from "@/lib/shiprocket";
 
 const VALID_STATUSES = ["PLACED", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
 const TERMINAL_STATUSES = ["DELIVERED", "CANCELLED"];
@@ -93,6 +95,45 @@ export async function PATCH(req, { params }) {
     order.orderStatus = orderStatus;
     order.statusHistory.push({ status: orderStatus, note });
     await order.save();
+
+    // When admin confirms an order, auto-push it to Shiprocket (fire-and-forget).
+    // Failures are logged but don't break the status update response.
+    if (orderStatus === "CONFIRMED" && !order.shiprocket?.orderId) {
+      User.findById(order.user)
+        .select("email name phone")
+        .lean()
+        .then((user) => {
+          if (!user) return;
+          return createShiprocketOrder(order, user);
+        })
+        .then((result) => {
+          if (!result?.success) {
+            console.error("[orders/id] Shiprocket auto-create failed:", result?.error);
+            return;
+          }
+          const { order_id, shipment_id } = result.data;
+          return Order.findByIdAndUpdate(order._id, {
+            $set: {
+              "shiprocket.orderId": String(order_id),
+              "shiprocket.shipmentId": String(shipment_id),
+              "shiprocket.shippingStatus": "NEW",
+              "shiprocket.pickupStatus": 0,
+            },
+          });
+        })
+        .catch((err) => console.error("[orders/id] Shiprocket background error:", err.message));
+    }
+
+    // When admin cancels, also cancel in Shiprocket if one was created
+    if (orderStatus === "CANCELLED" && order.shiprocket?.orderId) {
+      cancelShiprocketOrders([order.shiprocket.orderId])
+        .then((result) => {
+          if (!result.success) {
+            console.error("[orders/id] Shiprocket cancel failed:", result.error);
+          }
+        })
+        .catch((err) => console.error("[orders/id] Shiprocket cancel error:", err.message));
+    }
 
     return NextResponse.json({ success: true, order });
   } catch (error) {

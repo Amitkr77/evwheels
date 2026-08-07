@@ -77,6 +77,34 @@ const orderSchema = new mongoose.Schema(
     discountAmount: Number,
     taxAmount: Number,
     shippingAmount: Number,
+
+    // ── Shiprocket shipping integration ──────────────────────────────────────
+    shiprocket: {
+      _id: false,
+      orderId: String,           // Shiprocket's internal order_id
+      shipmentId: String,        // Shiprocket's shipment_id
+      awbCode: String,           // Air Waybill code (assigned by courier)
+      courierName: String,       // e.g. "Delhivery", "DTDC"
+      courierCompanyId: Number,  // Shiprocket courier_company_id
+      trackingUrl: String,       // Direct courier tracking URL
+      shippingStatus: String,    // Latest status string from Shiprocket
+      pickupStatus: Number,      // 0 = not requested, 1 = scheduled, 2 = picked up
+      labelUrl: String,          // PDF label URL
+      invoiceUrl: String,        // PDF invoice URL
+      etd: Date,                 // Estimated time of delivery
+      syncedAt: Date,            // Last time we pulled tracking updates
+    },
+
+    // Ordered list of courier scan events from Shiprocket / courier
+    trackingHistory: [
+      {
+        _id: false,
+        status: String,
+        date: { type: Date, default: Date.now },
+        location: String,
+        remark: String,
+      },
+    ],
   },
   { timestamps: true }
 );

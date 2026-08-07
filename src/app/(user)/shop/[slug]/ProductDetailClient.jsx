@@ -11,6 +11,7 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { analytics } from "@/lib/analytics";
 import ProductCard from "@/components/shop/ProductCard";
+import PincodeChecker from "@/components/shop/PincodeChecker";
 
 export default function ProductDetailClient() {
   const params = useParams();
@@ -306,6 +307,10 @@ export default function ProductDetailClient() {
               >
                 Buy Now
               </button>
+            </div>
+
+            <div className="mt-6">
+              <PincodeChecker cod={true} />
             </div>
           </motion.div>
         </div>

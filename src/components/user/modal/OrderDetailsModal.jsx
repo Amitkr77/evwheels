@@ -33,7 +33,7 @@ export default function OrderDetailsModal({ order, onClose }) {
         </div>
 
         {/* Tracker */}
-        <OrderTracker status={order.orderStatus} />
+        <OrderTracker status={order.orderStatus} orderId={order._id?.toString()} />
 
         {/* Items */}
         <div className="mt-6 space-y-3">
