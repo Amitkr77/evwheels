@@ -51,6 +51,7 @@ export async function POST(req) {
     const segment = body.segment;
     const description = (body.description || "").slice(0, 500);
     const image = (body.image || "").slice(0, 500);
+    const icon = (body.icon || "").slice(0, 500);
     const isActive = typeof body.isActive === "boolean" ? body.isActive : true;
     const sortOrder = Number(body.sortOrder) || 0;
 
@@ -102,6 +103,7 @@ export async function POST(req) {
       segment,
       description,
       image,
+      icon,
       isActive,
       sortOrder,
     });

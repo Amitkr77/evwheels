@@ -22,6 +22,7 @@ const emptyForm = {
   segment: "",
   description: "",
   image: "",
+  icon: "",
   isActive: true,
   sortOrder: 0,
 };
@@ -207,6 +208,7 @@ export default function CategoriesPage() {
           segment: formData.segment,
           description: formData.description,
           image: formData.image,
+          icon: formData.icon,
           isActive: formData.isActive,
           sortOrder: Number(formData.sortOrder) || 0,
         }),
@@ -248,6 +250,7 @@ export default function CategoriesPage() {
           segment: formData.segment,
           description: formData.description,
           image: formData.image,
+          icon: formData.icon,
           isActive: formData.isActive,
           sortOrder: Number(formData.sortOrder) || 0,
         }),
@@ -328,6 +331,7 @@ export default function CategoriesPage() {
       segment: category.segment?._id || category.segment || "",
       description: category.description || "",
       image: category.image || "",
+      icon: category.icon || "",
       isActive: category.isActive ?? true,
       sortOrder: category.sortOrder ?? 0,
     });
@@ -411,6 +415,19 @@ export default function CategoriesPage() {
         type="category"
         label="Image"
       />
+
+      <div>
+        <ImageUploadField
+          value={formData.icon}
+          onChange={(url) => setFormData({ ...formData, icon: url })}
+          type="categoryIcon"
+          label="Icon"
+          previewClassName="mt-4 max-h-16 rounded-lg border border-neutral-200/60 object-contain"
+        />
+        <p className="text-xs text-neutral-400 mt-1.5">
+          Small square glyph shown in category tiles and menus — separate from the banner image above. Falls back to a default icon if left empty.
+        </p>
+      </div>
 
       <div className="grid grid-cols-2 gap-6">
         <div>
@@ -592,23 +609,33 @@ export default function CategoriesPage() {
               >
                 <td className="py-5 px-6">
                   <div className="flex items-center gap-3">
-                    {category.image ? (
-                      <img
-                        src={category.image}
-                        alt={category.name}
-                        className="w-10 h-10 rounded-lg object-cover border border-neutral-200/60 flex-shrink-0"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          e.target.nextSibling.style.display = "flex";
-                        }}
-                      />
-                    ) : null}
-                    <div
-                      className={`w-10 h-10 rounded-lg bg-neutral-100 items-center justify-center text-neutral-400 text-xs flex-shrink-0 ${
-                        category.image ? "hidden" : "flex"
-                      }`}
-                    >
-                      N/A
+                    <div className="relative w-10 h-10 flex-shrink-0">
+                      {category.image ? (
+                        <img
+                          src={category.image}
+                          alt={category.name}
+                          className="w-10 h-10 rounded-lg object-cover border border-neutral-200/60"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            e.target.nextSibling.style.display = "flex";
+                          }}
+                        />
+                      ) : null}
+                      <div
+                        className={`w-10 h-10 rounded-lg bg-neutral-100 items-center justify-center text-neutral-400 text-xs ${
+                          category.image ? "hidden" : "flex"
+                        }`}
+                      >
+                        N/A
+                      </div>
+                      {category.icon && (
+                        <img
+                          src={category.icon}
+                          alt=""
+                          className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white object-cover bg-white"
+                          onError={(e) => { e.target.style.display = "none"; }}
+                        />
+                      )}
                     </div>
                     <span className="font-medium text-neutral-900">
                       {category.name}

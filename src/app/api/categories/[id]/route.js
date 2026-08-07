@@ -104,6 +104,11 @@ export async function PATCH(req, { params }) {
             updateData.image = body.image;
         }
 
+        // Icon
+        if (body.icon !== undefined) {
+            updateData.icon = body.icon;
+        }
+
         // Active
         if (body.isActive !== undefined) {
             updateData.isActive = body.isActive;

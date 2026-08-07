@@ -26,6 +26,13 @@ const CategorySchema = new mongoose.Schema(
       default: "",
     },
 
+    // Small square glyph used in nav/category-grid tiles — distinct from
+    // `image`, which is the larger banner/thumbnail shown on category pages.
+    icon: {
+      type: String,
+      default: "",
+    },
+
     description: {
       type: String,
       default: "",

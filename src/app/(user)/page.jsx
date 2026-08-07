@@ -17,15 +17,10 @@ async function getProducts(limit) {
 }
 
 export default async function Home() {
-  const [featuredProducts, trendingProducts] = await Promise.all([
-    getProducts(8),
-    getProducts(4),
-  ]);
+  // Popular Products now fetches its own tabs from /api/showcase client-side
+  // — only the EV Showcase section's "Trending right now" panel still needs
+  // a server-fetched list.
+  const trendingProducts = await getProducts(4);
 
-  return (
-    <HomeClient
-      featuredProducts={featuredProducts}
-      trendingProducts={trendingProducts}
-    />
-  );
+  return <HomeClient trendingProducts={trendingProducts} />;
 }

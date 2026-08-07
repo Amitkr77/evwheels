@@ -12,8 +12,10 @@ cloudinary.config({
 const FOLDERS = {
   segment: "evwheels/segments",
   category: "evwheels/categories",
+  categoryIcon: "evwheels/category-icons",
   subcategory: "evwheels/subcategories",
   product: "evwheels/products",
+  banner: "evwheels/banners",
 };
 
 export async function POST(req) {

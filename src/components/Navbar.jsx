@@ -4,9 +4,33 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, User, Menu, X, ChevronDown, ArrowRight } from "lucide-react";
+import {
+  ShoppingBag,
+  User,
+  Menu,
+  X,
+  ChevronDown,
+  ArrowRight,
+  Heart,
+  Search,
+  LayoutDashboard,
+  Package,
+  Settings,
+  LogOut,
+} from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
+import UserAvatar from "@/components/user/UserAvatar";
+import HeaderSearch from "@/components/HeaderSearch";
+
+// Shared account-menu destinations — used by both the desktop dropdown and
+// the mobile drawer's auth footer, so the two never drift out of sync.
+const ACCOUNT_LINKS = [
+  { label: "Profile", href: "/profile", icon: LayoutDashboard },
+  { label: "Orders", href: "/profile?tab=orders", icon: Package },
+  { label: "Wishlist", href: "/profile?tab=wishlist", icon: Heart },
+  { label: "Settings", href: "/profile?tab=settings", icon: Settings },
+];
 
 const SHOP_CATEGORIES = [
   { name: "Bells", href: "/shop?category=bells" },
@@ -37,6 +61,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileShopOpen, setMobileShopOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [userDropOpen, setUserDropOpen] = useState(false);
   const userDropRef = useRef(null);
 
@@ -53,6 +78,7 @@ export default function Navbar() {
   useEffect(() => {
     setMobileOpen(false);
     setMobileShopOpen(false);
+    setMobileSearchOpen(false);
     setUserDropOpen(false);
   }, [pathname]);
 
@@ -174,8 +200,31 @@ export default function Navbar() {
             ))}
           </div>
 
+          {/* Search — desktop, inline in the header */}
+          <div className="hidden lg:block flex-1 max-w-xs mx-4">
+            <HeaderSearch />
+          </div>
+
           {/* Right actions */}
           <div className="flex items-center gap-3">
+
+            {/* Search — mobile/tablet toggle */}
+            <button
+              className={`lg:hidden transition-colors ${tx} ${hx}`}
+              onClick={() => setMobileSearchOpen((p) => !p)}
+              aria-label="Toggle search"
+            >
+              {mobileSearchOpen ? <X size={20} strokeWidth={1.8} /> : <Search size={20} strokeWidth={1.8} />}
+            </button>
+
+            {/* Wishlist */}
+            <Link
+              href="/profile?tab=wishlist"
+              className={`transition-colors ${tx} ${hx}`}
+              aria-label="Wishlist"
+            >
+              <Heart size={20} strokeWidth={1.8} />
+            </Link>
 
             {/* Cart */}
             <Link
@@ -198,25 +247,38 @@ export default function Navbar() {
               <div className="relative hidden sm:block" ref={userDropRef}>
                 <button
                   onClick={() => setUserDropOpen((p) => !p)}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${tx} ${hx}`}
+                  className={`flex items-center gap-2 px-2 py-1.5 text-sm font-medium rounded-lg transition-colors ${tx} ${hx}`}
                 >
-                  <User size={18} strokeWidth={1.8} />
-                  <span className="hidden md:block max-w-[72px] truncate">
+                  <UserAvatar name={user?.name} size="sm" />
+                  <span className="hidden md:block max-w-[80px] truncate">
                     {user?.name?.split(" ")[0]}
                   </span>
                   <ChevronDown size={13} className={`transition-transform duration-200 ${userDropOpen ? "rotate-180" : ""}`} />
                 </button>
 
                 {userDropOpen && (
-                  <div className="absolute right-0 top-full mt-1.5 w-52 bg-white rounded-xl shadow-xl border border-neutral-100 py-1 text-sm overflow-hidden z-50">
+                  <div className="absolute right-0 top-full mt-1.5 w-56 bg-white rounded-xl shadow-xl border border-neutral-100 py-1 text-sm overflow-hidden z-50">
                     <div className="px-4 py-3 border-b border-neutral-100">
+                      <p className="text-[10px] font-semibold uppercase tracking-wider text-[#19B5D8] mb-1">
+                        My Account
+                      </p>
                       <p className="font-semibold text-neutral-900 truncate">{user?.name}</p>
                       <p className="text-xs text-neutral-400 mt-0.5 truncate">{user?.email}</p>
                     </div>
-                    <Link href="/profile" className="block px-4 py-2.5 text-neutral-700 hover:bg-neutral-50 transition-colors" onClick={() => setUserDropOpen(false)}>My Profile</Link>
-                    <Link href="/cart" className="block px-4 py-2.5 text-neutral-700 hover:bg-neutral-50 transition-colors" onClick={() => setUserDropOpen(false)}>My Cart</Link>
+                    {ACCOUNT_LINKS.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-neutral-700 hover:bg-neutral-50 hover:text-[#19B5D8] transition-colors"
+                        onClick={() => setUserDropOpen(false)}
+                      >
+                        <link.icon size={15} strokeWidth={1.8} />
+                        {link.label}
+                      </Link>
+                    ))}
                     <div className="border-t border-neutral-100 mt-1">
-                      <button onClick={() => { logout(); setUserDropOpen(false); }} className="w-full text-left px-4 py-2.5 text-red-500 hover:bg-red-50 transition-colors">
+                      <button onClick={() => { logout(); setUserDropOpen(false); }} className="w-full flex items-center gap-2.5 text-left px-4 py-2.5 text-red-500 hover:bg-red-50 transition-colors">
+                        <LogOut size={15} strokeWidth={1.8} />
                         Sign Out
                       </button>
                     </div>
@@ -243,6 +305,13 @@ export default function Navbar() {
             </button>
           </div>
         </div>
+
+        {/* Search — mobile/tablet expanding bar */}
+        {mobileSearchOpen && (
+          <div className="lg:hidden pb-4">
+            <HeaderSearch />
+          </div>
+        )}
       </div>
 
       {/* ── Mobile drawer ── */}
@@ -315,13 +384,28 @@ export default function Navbar() {
             <div className="px-4 py-5 border-t border-neutral-100 shrink-0">
               {isAuthenticated ? (
                 <div>
-                  <div className="px-3 py-2 mb-2">
-                    <p className="text-sm font-semibold text-neutral-900">{user?.name}</p>
-                    <p className="text-xs text-neutral-400 truncate">{user?.email}</p>
+                  <div className="flex items-center gap-3 px-3 py-2 mb-2">
+                    <UserAvatar name={user?.name} size="sm" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-neutral-900 truncate">{user?.name}</p>
+                      <p className="text-xs text-neutral-400 truncate">{user?.email}</p>
+                    </div>
                   </div>
-                  <Link href="/profile" className="flex items-center h-11 px-3 text-sm text-neutral-700 hover:text-[#19B5D8] transition-colors" onClick={() => setMobileOpen(false)}>My Profile</Link>
-                  <Link href="/cart" className="flex items-center h-11 px-3 text-sm text-neutral-700 hover:text-[#19B5D8] transition-colors" onClick={() => setMobileOpen(false)}>My Cart</Link>
-                  <button onClick={() => { logout(); setMobileOpen(false); }} className="flex items-center h-11 px-3 w-full text-left text-sm text-red-500 hover:text-red-600 transition-colors">Sign Out</button>
+                  {ACCOUNT_LINKS.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="flex items-center gap-2.5 h-11 px-3 text-sm text-neutral-700 hover:text-[#19B5D8] transition-colors"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      <link.icon size={16} strokeWidth={1.8} />
+                      {link.label}
+                    </Link>
+                  ))}
+                  <button onClick={() => { logout(); setMobileOpen(false); }} className="flex items-center gap-2.5 h-11 px-3 w-full text-left text-sm text-red-500 hover:text-red-600 transition-colors">
+                    <LogOut size={16} strokeWidth={1.8} />
+                    Sign Out
+                  </button>
                 </div>
               ) : (
                 <Link

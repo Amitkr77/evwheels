@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   Home,
   Package,
@@ -13,7 +13,7 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { analytics } from "@/lib/analytics";
@@ -34,11 +34,26 @@ const TABS = [
   { icon: User,            label: "Profile",   id: 4 },
 ];
 
+// Lets links elsewhere in the app (header account menu, empty-state CTAs)
+// deep-link straight to a tab via /profile?tab=wishlist instead of always
+// landing on Overview. "settings" and "profile" both point at the same tab —
+// the dashboard's "Profile" tab is where account details actually get edited.
+const TAB_KEY_TO_ID = {
+  overview: 0,
+  orders: 1,
+  wishlist: 2,
+  addresses: 3,
+  settings: 4,
+  profile: 4,
+};
+
 const UserDashboard = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const logout = useAuthStore((state) => state.logout);
-  const [activeTab, setActiveTab]   = useState(0);
-  const [visited,   setVisited]     = useState(new Set([0]));
+  const initialTab = TAB_KEY_TO_ID[searchParams.get("tab")] ?? 0;
+  const [activeTab, setActiveTab]   = useState(initialTab);
+  const [visited,   setVisited]     = useState(new Set([initialTab]));
   const [dashboard, setDashboard]   = useState(null);
   const [loading,   setLoading]     = useState(true);
 
@@ -340,4 +355,16 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default function ProfilePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="w-10 h-10 border-[3px] border-[#DDF8FD] border-t-[#19B5D8] rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <UserDashboard />
+    </Suspense>
+  );
+}

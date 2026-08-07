@@ -16,6 +16,8 @@ import {
     Layers3,
     Menu,
     X,
+    Image as ImageIcon,
+    Sparkles,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
@@ -48,6 +50,8 @@ function DashboardShell({ children }) {
         { icon: Layers3, label: "Segments", path: "/admin/dashboard/segments" },
         { icon: LayoutGrid, label: "Categories", path: "/admin/dashboard/categories" },
         { icon: Layers, label: "Subcategories", path: "/admin/dashboard/subcategories" },
+        { icon: Sparkles, label: "Showcase", path: "/admin/dashboard/showcase" },
+        { icon: ImageIcon, label: "Banners", path: "/admin/dashboard/banners" },
         { icon: Ticket, label: "Coupons", path: "/admin/dashboard/coupons" },
         { icon: Star, label: "Reviews", path: "/admin/dashboard/reviews", },
         { icon: Warehouse, label: "Inventory", path: "/admin/dashboard/inventory" },

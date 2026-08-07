@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -15,15 +14,14 @@ import {
   Zap,
   Leaf,
   BarChart3,
-  Search,
   Sun,
   Wrench,
   Star,
-  Loader2,
 } from "lucide-react";
-import ShopByCategory from "@/components/home/ShopBycategory";
+import PopularProducts from "@/components/home/PopularProducts";
+import FeaturedAndCategories from "@/components/home/FeaturedAndCategories";
+import PromoBanners from "@/components/home/PromoBanners";
 import ProductCard from "@/components/shop/ProductCard";
-import { useDebounce } from "@/hooks/useDebounce";
 
 // ── Data ──────────────────────────────────────────────────
 const TRUST = [
@@ -115,209 +113,6 @@ const CARD_VARIANTS = {
   hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
-
-// ── Hero search bar ───────────────────────────────────────
-function HeroSearch() {
-  const [q, setQ] = useState("");
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const router = useRouter();
-  const containerRef = useRef(null);
-  const debouncedQ = useDebounce(q, 300);
-
-  // Live results dropdown — fetches the real backend search so the
-  // homepage can surface matching products before the user even submits.
-  useEffect(() => {
-    const term = debouncedQ.trim();
-    if (!term) {
-      setResults([]);
-      setLoading(false);
-      return;
-    }
-
-    let cancelled = false;
-    setLoading(true);
-    fetch(`/api/products?search=${encodeURIComponent(term)}&limit=5`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (!cancelled) setResults(d.products || []);
-      })
-      .catch(() => {
-        if (!cancelled) setResults([]);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [debouncedQ]);
-
-  // Close the dropdown on outside click / Escape
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    const handleEscape = (e) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, []);
-
-  const goToResults = (term) => {
-    const trimmed = term.trim();
-    if (trimmed) router.push(`/shop?search=${encodeURIComponent(trimmed)}`);
-    setOpen(false);
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    goToResults(q);
-  };
-
-  const showDropdown = open && q.trim().length > 0;
-
-  return (
-    <div ref={containerRef} className="relative max-w-md">
-      <form
-        onSubmit={handleSearch}
-        className="flex items-center bg-neutral-50 border border-neutral-200 rounded-full overflow-hidden focus-within:border-[#19B5D8] focus-within:ring-2 focus-within:ring-[#19B5D8]/10 transition-all"
-      >
-        <Search size={15} className="ml-4 text-neutral-400 shrink-0" />
-        <input
-          type="text"
-          value={q}
-          onChange={(e) => {
-            setQ(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          placeholder="Search parts, accessories…"
-          className="flex-1 bg-transparent px-3 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none min-w-0"
-        />
-        <button
-          type="submit"
-          className="mr-1.5 px-4 py-2 bg-[#0C7290] text-white text-xs font-semibold rounded-full hover:bg-[#0a5f78] transition-colors shrink-0"
-        >
-          Search
-        </button>
-      </form>
-
-      {showDropdown && (
-        <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-neutral-200 rounded-2xl shadow-lg overflow-hidden z-30">
-          {loading ? (
-            <div className="flex items-center justify-center gap-2 py-6 text-sm text-neutral-500">
-              <Loader2 size={16} className="animate-spin" />
-              Searching…
-            </div>
-          ) : results.length > 0 ? (
-            <>
-              <ul className="max-h-80 overflow-y-auto">
-                {results.map((p) => (
-                  <li key={p._id}>
-                    <Link
-                      href={`/shop/${p.slug}`}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors"
-                    >
-                      <div className="relative w-10 h-10 rounded-lg bg-neutral-50 overflow-hidden shrink-0">
-                        {p.images?.[0] ? (
-                          <Image
-                            src={p.images[0]}
-                            alt={p.title}
-                            fill
-                            sizes="40px"
-                            className="object-contain"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-neutral-300 text-xs font-bold">
-                            {p.title?.charAt(0)}
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-neutral-900 truncate">{p.title}</p>
-                        <p className="text-xs text-neutral-500">
-                          ₹{Number(p.price).toLocaleString("en-IN")}
-                        </p>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                onClick={() => goToResults(q)}
-                className="w-full text-left px-4 py-3 text-sm font-medium text-[#0C7290] border-t border-neutral-100 hover:bg-neutral-50 transition-colors"
-              >
-                See all results for “{q.trim()}”
-              </button>
-            </>
-          ) : (
-            <p className="px-4 py-5 text-sm text-neutral-500 text-center">
-              No products found for “{q.trim()}”
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ── Featured Products ──────────────────────────────────────
-function FeaturedProducts({ products }) {
-  return (
-    <section className="py-20 md:py-24 bg-white border-t border-neutral-100">
-      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
-        <div className="flex items-end justify-between mb-8 md:mb-10">
-          <div>
-            <p className="text-[#0C7290] text-[11px] font-semibold tracking-[0.2em] uppercase mb-2">
-              New Arrivals
-            </p>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
-              Featured Products
-            </h2>
-          </div>
-          <Link
-            href="/shop"
-            className="hidden sm:flex items-center gap-1 text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
-          >
-            View all <ArrowRight size={14} />
-          </Link>
-        </div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          variants={GRID_VARIANTS}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"
-        >
-          {products.map((p) => (
-            <motion.div key={p._id} variants={CARD_VARIANTS}>
-              <ProductCard product={p} />
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <div className="mt-8 sm:hidden text-center">
-          <Link href="/shop" className="text-sm font-medium text-[#0C7290]">
-            View all products →
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ── EV Showcase + Product cards side-by-side ──────────────
 function ShowcaseSection({ products }) {
@@ -420,7 +215,7 @@ function ShowcaseSection({ products }) {
 }
 
 // ── Page ──────────────────────────────────────────────────
-export default function HomeClient({ featuredProducts, trendingProducts }) {
+export default function HomeClient({ trendingProducts }) {
   return (
     <div className="bg-white text-neutral-900">
 
@@ -460,11 +255,8 @@ export default function HomeClient({ featuredProducts, trendingProducts }) {
                   lights, helmets & more. Serving dealers across Bihar & Jharkhand.
                 </p>
 
-                {/* Inline search */}
-                <HeroSearch />
-
                 {/* CTA row */}
-                <div className="flex flex-wrap gap-3 mt-5">
+                <div className="flex flex-wrap gap-3">
                   <Link
                     href="/shop"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white text-sm font-semibold rounded-full hover:bg-neutral-800 transition-colors shadow-sm"
@@ -574,14 +366,17 @@ export default function HomeClient({ featuredProducts, trendingProducts }) {
         </div>
       </section>
 
-      {/* Featured Products */}
-      <FeaturedProducts products={featuredProducts} />
+      {/* Popular Products */}
+      <PopularProducts />
 
       {/* EV Showcase + product cards */}
       <ShowcaseSection products={trendingProducts} />
 
-      {/* Shop by Category */}
-      <ShopByCategory />
+      {/* Trending product + Shop by Category, side by side */}
+      <FeaturedAndCategories />
+
+      {/* Promotional banners */}
+      <PromoBanners />
 
       {/* Why EVWheels */}
       <section className="py-20 md:py-24 bg-neutral-50 border-t border-neutral-100">
