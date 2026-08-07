@@ -8,6 +8,8 @@
  * All public methods return { success: boolean, data?, error?: string }.
  */
 
+import crypto from "crypto";
+
 const BASE_URL =
   process.env.SHIPROCKET_API_BASE_URL || "https://apiv2.shiprocket.in/v1/external";
 
@@ -318,8 +320,6 @@ export async function getShippingRates({ pickupPincode, deliveryPincode, weightK
 }
 
 // ─── Webhook verification ─────────────────────────────────────────────────────
-
-import crypto from "crypto";
 
 /**
  * Verify the HMAC-SHA256 signature that Shiprocket attaches to webhook requests.
