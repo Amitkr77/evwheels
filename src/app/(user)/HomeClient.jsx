@@ -14,9 +14,9 @@ import {
   Zap,
   Leaf,
   BarChart3,
-  Sun,
-  Wrench,
-  Star,
+  Battery,
+  Gauge,
+  Settings,
 } from "lucide-react";
 import PopularProducts from "@/components/home/PopularProducts";
 import FeaturedAndCategories from "@/components/home/FeaturedAndCategories";
@@ -24,97 +24,208 @@ import PromoBanners from "@/components/home/PromoBanners";
 import ProductCard from "@/components/shop/ProductCard";
 
 // ── Data ──────────────────────────────────────────────────
+
 const TRUST = [
-  { icon: Truck,       label: "Free Delivery",    sub: "Orders above ₹5,000" },
-  { icon: ShieldCheck, label: "Genuine Products",  sub: "100% authentic" },
-  { icon: Package,     label: "240+ Products",     sub: "Across 23 categories" },
-  { icon: MapPin,      label: "Bihar & Jharkhand", sub: "Pan-state delivery" },
+  { icon: Truck,       label: "Free Delivery",          sub: "Orders above ₹5,000" },
+  { icon: ShieldCheck, label: "Genuine Products",        sub: "100% authentic" },
+  { icon: Zap,         label: "In-House Manufactured",   sub: "Cycles & lithium batteries" },
+  { icon: MapPin,      label: "Pan-India Delivery",      sub: "From Patna, to everywhere" },
 ];
 
 const HERO_STATS = [
-  { num: "240+", label: "Products" },
-  { num: "23",   label: "Categories" },
-  { num: "500+", label: "Dealers served" },
+  { num: "5",         label: "Product lines" },
+  { num: "500+",      label: "Dealers served" },
+  { num: "Pan-India", label: "Delivery" },
 ];
 
+// Right panel: 4 of 5 product lines as quick-nav cards
 const HERO_CATS = [
   {
-    name:    "Brakes & Safety",
-    sub:     "Disc, rim & pads",
-    href:    "/shop?category=brakes",
-    icon:    ShieldCheck,
-    cardCls: "bg-red-50 hover:border-red-200",
-    iconBg:  "bg-red-100",
-    iconC:   "text-red-500",
-    linkC:   "text-red-700",
-  },
-  {
-    name:    "Lights & Reflectors",
-    sub:     "LED front & rear",
-    href:    "/shop?category=lights-reflectors",
-    icon:    Sun,
-    cardCls: "bg-amber-50 hover:border-amber-200",
-    iconBg:  "bg-amber-100",
-    iconC:   "text-amber-500",
-    linkC:   "text-amber-700",
-  },
-  {
-    name:    "Chains & Gears",
-    sub:     "Shimano & more",
-    href:    "/shop?category=chains",
-    icon:    Wrench,
+    name:    "Electric Cycles",
+    sub:     "In-house manufactured",
+    href:    "/shop?category=electric-cycles",
+    icon:    Zap,
     cardCls: "bg-[#F0FEFF] hover:border-[#19B5D8]/30",
     iconBg:  "bg-[#DDF8FD]",
     iconC:   "text-[#19B5D8]",
     linkC:   "text-[#0C7290]",
   },
   {
-    name:    "Tools & Kits",
-    sub:     "Workshop essentials",
-    href:    "/shop?category=tools-maintenance",
+    name:    "Electric Scooters",
+    sub:     "Assembled, ready-to-ride",
+    href:    "/shop?category=electric-scooters",
+    icon:    Gauge,
+    cardCls: "bg-indigo-50 hover:border-indigo-200",
+    iconBg:  "bg-indigo-100",
+    iconC:   "text-indigo-500",
+    linkC:   "text-indigo-700",
+  },
+  {
+    name:    "Conversion Kits",
+    sub:     "Electrify your cycle",
+    href:    "/shop?category=conversion-kits",
+    icon:    Settings,
+    cardCls: "bg-violet-50 hover:border-violet-200",
+    iconBg:  "bg-violet-100",
+    iconC:   "text-violet-500",
+    linkC:   "text-violet-700",
+  },
+  {
+    name:    "Parts & Accessories",
+    sub:     "240+ genuine SKUs",
+    href:    "/shop",
     icon:    Package,
-    cardCls: "bg-emerald-50 hover:border-emerald-200",
-    iconBg:  "bg-emerald-100",
-    iconC:   "text-emerald-600",
-    linkC:   "text-emerald-700",
+    cardCls: "bg-amber-50 hover:border-amber-200",
+    iconBg:  "bg-amber-100",
+    iconC:   "text-amber-500",
+    linkC:   "text-amber-700",
+  },
+];
+
+// All 5 product lines — used in ProductLinesSection
+const PRODUCT_LINES = [
+  {
+    icon:   Zap,
+    label:  "Electric Cycles",
+    desc:   "Manufactured in-house at our Patna facility. Lightweight frames, pedal-assist motors, up to 80 km range.",
+    href:   "/shop?category=electric-cycles",
+    bg:     "bg-[#DDF8FD]",
+    iconC:  "text-[#0C7290]",
+    border: "border-[#19B5D8]/20",
+  },
+  {
+    icon:   Gauge,
+    label:  "Electric Scooters",
+    desc:   "Assembled by us. Built for daily commutes, delivery riders, and last-mile travel across Indian roads.",
+    href:   "/shop?category=electric-scooters",
+    bg:     "bg-indigo-50",
+    iconC:  "text-indigo-600",
+    border: "border-indigo-200",
+  },
+  {
+    icon:   Battery,
+    label:  "Lithium-Ion Batteries",
+    desc:   "We manufacture the batteries ourselves — the safety-critical component most EV brands simply outsource.",
+    href:   "/shop?category=batteries",
+    bg:     "bg-emerald-50",
+    iconC:  "text-emerald-600",
+    border: "border-emerald-200",
+  },
+  {
+    icon:   Settings,
+    label:  "Conversion Kits",
+    desc:   "Motor, battery, controller and hardware. Convert your existing cycle into a fully electric one.",
+    href:   "/shop?category=conversion-kits",
+    bg:     "bg-violet-50",
+    iconC:  "text-violet-600",
+    border: "border-violet-200",
+  },
+  {
+    icon:   Package,
+    label:  "Parts & Accessories",
+    desc:   "240+ genuine parts across 23 categories — Shimano, disc brakes, lights, helmets, and scooter spare parts.",
+    href:   "/shop",
+    bg:     "bg-amber-50",
+    iconC:  "text-amber-600",
+    border: "border-amber-200",
   },
 ];
 
 const WHY = [
   {
-    n: "01",
-    title: "Wholesale Pricing",
-    desc: "Direct-from-source pricing. No middlemen, no markups — honest wholesale rates for dealers across Bihar.",
+    n:     "01",
+    title: "In-House Manufacturing",
+    desc:  "We build our electric cycles and lithium-ion batteries from the ground up at our Patna facility. Not imported. Not rebadged. Engineered and assembled by us.",
   },
   {
-    n: "02",
-    title: "Bulk Ready",
-    desc: "MOQ-based ordering across 240+ SKUs. Bells to hydraulic disc brakes — everything stocked and dispatch-ready.",
+    n:     "02",
+    title: "Full-Stack EV Supplier",
+    desc:  "Electric cycles, scooters, batteries, conversion kits, and 240+ spare parts — one brand, every EV need. No juggling between vendors.",
   },
   {
-    n: "03",
-    title: "Local Support",
-    desc: "Based in Patna, serving Bihar & Jharkhand. Same-day response, real people, real accountability.",
+    n:     "03",
+    title: "Retail + Wholesale",
+    desc:  "Individual riders shop at listed prices. Dealers get wholesale rates and bulk quotes. Both ship Pan-India, fast, from Patna.",
   },
 ];
 
 const EV_FEATURES = [
-  { icon: Zap,      label: "Electric Assist", desc: "Pedal-assist motors up to 250W" },
-  { icon: Leaf,     label: "Zero Emissions",  desc: "Clean commute, reduced carbon footprint" },
-  { icon: BarChart3, label: "80 km Range",    desc: "Single charge on flat terrain" },
+  { icon: Zap,       label: "Electric Assist", desc: "Pedal-assist motors up to 250W" },
+  { icon: Leaf,      label: "Zero Emissions",  desc: "Clean commute, reduced carbon footprint" },
+  { icon: BarChart3, label: "80 km Range",     desc: "Single charge on flat terrain" },
 ];
 
-// Shared stagger variants — one viewport observer per grid instead of one per card
 const GRID_VARIANTS = {
   hidden: {},
   show: { transition: { staggerChildren: 0.06 } },
 };
 const CARD_VARIANTS = {
   hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
 
-// ── EV Showcase + Product cards side-by-side ──────────────
+// ── Product Lines Section ─────────────────────────────────
+
+function ProductLinesSection() {
+  return (
+    <section className="py-16 md:py-20 border-t border-neutral-100">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
+
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-10">
+          <div>
+            <p className="text-[#0C7290] text-[11px] font-semibold tracking-[0.2em] uppercase mb-2">
+              What We Make &amp; Sell
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 tracking-tight">
+              Five product lines.{" "}
+              <span className="text-neutral-400 font-medium">One brand.</span>
+            </h2>
+          </div>
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-700 hover:text-[#19B5D8] transition-colors shrink-0"
+          >
+            Browse all products <ArrowRight size={14} />
+          </Link>
+        </div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={GRID_VARIANTS}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3"
+        >
+          {PRODUCT_LINES.map((line) => (
+            <motion.div key={line.label} variants={CARD_VARIANTS} className="h-full">
+              <Link
+                href={line.href}
+                className={`group flex flex-col gap-4 p-5 rounded-2xl border h-full ${line.bg} ${line.border} hover:shadow-md transition-all`}
+              >
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-white/70 border ${line.border}`}>
+                  <line.icon size={18} className={line.iconC} strokeWidth={1.8} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-[14px] font-bold text-neutral-900 mb-1.5 leading-snug">
+                    {line.label}
+                  </h3>
+                  <p className="text-[12px] text-neutral-600 leading-relaxed">{line.desc}</p>
+                </div>
+                <p className={`text-[12px] font-semibold flex items-center gap-1 ${line.iconC} group-hover:gap-2 transition-all`}>
+                  Explore <ArrowRight size={11} />
+                </p>
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}
+
+// ── EV Showcase + Trending products side-by-side ──────────
+
 function ShowcaseSection({ products }) {
   return (
     <section className="border-t border-neutral-100">
@@ -130,7 +241,7 @@ function ShowcaseSection({ products }) {
           >
             <Image
               src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop"
-              alt="EV Cycle"
+              alt="EVWheels electric range"
               fill
               sizes="(max-width: 1024px) 100vw, 52vw"
               className="object-cover"
@@ -139,16 +250,15 @@ function ShowcaseSection({ products }) {
 
             <div className="relative z-10 p-7 md:p-10 w-full">
               <p className="text-[#19B5D8] text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
-                EV Cycle Range
+                Our EV Range
               </p>
               <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight mb-4">
-                The future of
-                <br />two-wheeled travel.
+                Cycles. Scooters.
+                <br />Built by us.
               </h2>
               <p className="text-sm text-white/55 leading-relaxed mb-7 max-w-sm">
-                Our electric cycle range blends lightweight aluminium frames with
-                reliable pedal-assist motors — built for daily commutes, last-mile
-                delivery, and everything in between.
+                Electric cycles and scooters designed for Indian roads — in-house
+                manufactured, assembled in Patna, backed by batteries we build ourselves.
               </p>
 
               <div className="grid grid-cols-3 gap-3 mb-7">
@@ -162,10 +272,10 @@ function ShowcaseSection({ products }) {
               </div>
 
               <Link
-                href="/shop"
+                href="/shop?category=electric-cycles"
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-neutral-900 rounded-full text-sm font-semibold hover:bg-neutral-100 transition-colors"
               >
-                Explore EV Cycles <ArrowRight size={14} />
+                Explore EV Range <ArrowRight size={14} />
               </Link>
             </div>
           </motion.div>
@@ -208,6 +318,7 @@ function ShowcaseSection({ products }) {
               </Link>
             </div>
           </motion.div>
+
         </div>
       </div>
     </section>
@@ -215,6 +326,7 @@ function ShowcaseSection({ products }) {
 }
 
 // ── Page ──────────────────────────────────────────────────
+
 export default function HomeClient({ trendingProducts }) {
   return (
     <div className="bg-white text-neutral-900">
@@ -224,44 +336,41 @@ export default function HomeClient({ trendingProducts }) {
         <div className="max-w-8xl mx-auto px-4 sm:px-8 lg:px-12 pt-16 md:pt-20 pb-6 md:pb-8">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] gap-4 items-stretch">
 
-            {/* ── Left: Main hero panel ───────────────────── */}
+            {/* Left: Main hero panel */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, ease: "easeOut" }}
               className="relative bg-white rounded-2xl border border-neutral-100 overflow-hidden flex flex-col justify-between p-7 sm:p-9 md:p-10 min-h-[400px] md:min-h-[460px]"
             >
-              {/* Decorative blobs */}
               <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-gradient-to-br from-[#DDF8FD] to-white opacity-60 -translate-y-1/3 translate-x-1/3 pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-52 h-52 rounded-full bg-[#F0FEFF] opacity-50 translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
-              {/* Top content */}
               <div className="relative z-10">
-                {/* Offer badge */}
                 <div className="inline-flex items-center gap-1.5 bg-[#DDF8FD] text-[#0C7290] text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5 border border-[#19B5D8]/15">
-                  <Truck size={11} />
-                  Free delivery above ₹5,000 · COD Available
+                  <Zap size={11} />
+                  In-house manufactured · COD Available · Pan-India Delivery
                 </div>
 
-                {/* Headline */}
                 <h1 className="text-4xl sm:text-5xl md:text-[3.25rem] font-bold text-neutral-900 leading-[1.1] tracking-tight mb-4">
-                  Cycle Parts.
+                  Electric Cycles
+                  <br />&amp; Scooters.
                   <br />
-                  <span className="text-[#0C7290]">Wholesale</span> Price.
+                  <span className="text-[#0C7290]">Made in Patna.</span>
                 </h1>
 
-                <p className="text-neutral-500 text-[15px] leading-relaxed max-w-[440px] mb-7">
-                  240+ accessories across 23 categories — Shimano, disc brakes,
-                  lights, helmets & more. Serving dealers across Bihar & Jharkhand.
+                <p className="text-neutral-500 text-[15px] leading-relaxed max-w-[460px] mb-7">
+                  We manufacture electric cycles and lithium batteries in-house. Assemble
+                  e-scooters. Supply conversion kits and 240+ accessories — retail or
+                  wholesale, delivered Pan-India.
                 </p>
 
-                {/* CTA row */}
                 <div className="flex flex-wrap gap-3">
                   <Link
                     href="/shop"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white text-sm font-semibold rounded-full hover:bg-neutral-800 transition-colors shadow-sm"
                   >
-                    Browse Catalogue <ArrowRight size={14} />
+                    Shop Now <ArrowRight size={14} />
                   </Link>
                   <Link
                     href="/contact"
@@ -272,7 +381,6 @@ export default function HomeClient({ trendingProducts }) {
                 </div>
               </div>
 
-              {/* Bottom stats */}
               <div className="relative z-10 flex items-center gap-8 sm:gap-12 pt-6 mt-6 border-t border-neutral-100">
                 {HERO_STATS.map((s) => (
                   <div key={s.label}>
@@ -283,14 +391,13 @@ export default function HomeClient({ trendingProducts }) {
               </div>
             </motion.div>
 
-            {/* ── Right: Promo banner + category cards ────── */}
+            {/* Right: Promo card + 4 product line cards */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.12, ease: "easeOut" }}
               className="flex flex-col gap-3"
             >
-              {/* Promo card */}
               <div className="relative bg-neutral-900 rounded-2xl overflow-hidden flex flex-col justify-between p-6 h-[150px] shrink-0">
                 <Image
                   src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80&auto=format&fit=crop"
@@ -305,22 +412,21 @@ export default function HomeClient({ trendingProducts }) {
 
                 <div className="relative z-10">
                   <span className="inline-flex items-center gap-1.5 bg-[#19B5D8]/20 text-[#19B5D8] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#19B5D8]/30 mb-2">
-                    <Star size={9} fill="currentColor" />
-                    NEW ARRIVALS
+                    <Zap size={9} fill="currentColor" />
+                    IN-HOUSE MANUFACTURED
                   </span>
-                  <p className="text-white font-bold text-lg leading-snug">Fresh stock just in</p>
-                  <p className="text-white/45 text-xs mt-0.5">240+ SKUs available now</p>
+                  <p className="text-white font-bold text-lg leading-snug">Built by us, for you</p>
+                  <p className="text-white/45 text-xs mt-0.5">Cycles, scooters &amp; batteries</p>
                 </div>
 
                 <Link
                   href="/shop"
                   className="relative z-10 inline-flex items-center gap-1 text-[#19B5D8] text-xs font-semibold hover:underline"
                 >
-                  Browse all <ArrowRight size={11} />
+                  Explore range <ArrowRight size={11} />
                 </Link>
               </div>
 
-              {/* 2×2 Category grid */}
               <div className="grid grid-cols-2 gap-3 flex-1">
                 {HERO_CATS.map((cat) => (
                   <Link
@@ -332,9 +438,7 @@ export default function HomeClient({ trendingProducts }) {
                       <cat.icon size={17} strokeWidth={1.9} className={cat.iconC} />
                     </div>
                     <div>
-                      <p className="text-[13px] font-semibold text-neutral-900 leading-tight">
-                        {cat.name}
-                      </p>
+                      <p className="text-[13px] font-semibold text-neutral-900 leading-tight">{cat.name}</p>
                       <p className="text-[11px] text-neutral-600 mt-0.5">{cat.sub}</p>
                       <p className={`text-[11px] font-medium flex items-center gap-0.5 mt-2 ${cat.linkC}`}>
                         Shop now <ArrowRight size={9} />
@@ -366,19 +470,22 @@ export default function HomeClient({ trendingProducts }) {
         </div>
       </section>
 
-      {/* Popular Products */}
+      {/* ── Five product lines ───────────────────────────── */}
+      <ProductLinesSection />
+
+      {/* ── Popular Products ─────────────────────────────── */}
       <PopularProducts />
 
-      {/* EV Showcase + product cards */}
+      {/* ── EV Showcase + trending products ─────────────── */}
       <ShowcaseSection products={trendingProducts} />
 
-      {/* Trending product + Shop by Category, side by side */}
+      {/* ── Featured product + Shop by Category ─────────── */}
       <FeaturedAndCategories />
 
-      {/* Promotional banners */}
+      {/* ── Promotional banners ──────────────────────────── */}
       <PromoBanners />
 
-      {/* Why EVWheels */}
+      {/* ── Why EVWheels ─────────────────────────────────── */}
       <section className="py-20 md:py-24 bg-neutral-50 border-t border-neutral-100">
         <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="max-w-md mb-12">
@@ -386,8 +493,8 @@ export default function HomeClient({ trendingProducts }) {
               Why EVWheels
             </p>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
-              Built for dealers,
-              <br />not casual buyers.
+              More than a
+              <br />parts shop.
             </h2>
           </div>
 
@@ -404,9 +511,7 @@ export default function HomeClient({ trendingProducts }) {
                 variants={CARD_VARIANTS}
                 className="p-6 rounded-xl bg-white border border-neutral-100"
               >
-                <p className="text-4xl font-black text-neutral-100 mb-4 select-none leading-none">
-                  {item.n}
-                </p>
+                <p className="text-4xl font-black text-neutral-100 mb-4 select-none leading-none">{item.n}</p>
                 <h3 className="text-[15px] font-bold text-neutral-900 mb-1.5">{item.title}</h3>
                 <p className="text-sm text-neutral-500 leading-relaxed">{item.desc}</p>
               </motion.div>
@@ -415,11 +520,11 @@ export default function HomeClient({ trendingProducts }) {
         </div>
       </section>
 
-      {/* Image + CTA */}
+      {/* ── Image + CTA ──────────────────────────────────── */}
       <section className="relative h-[65vh] md:h-[80vh] overflow-hidden flex items-center">
         <Image
           src="https://images.unsplash.com/photo-1621394457665-6e6d4961f686?q=80&w=1469&auto=format&fit=crop"
-          alt="Cycling"
+          alt="Electric mobility"
           fill
           sizes="100vw"
           className="object-cover"
@@ -435,31 +540,33 @@ export default function HomeClient({ trendingProducts }) {
             className="max-w-lg"
           >
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight leading-tight mb-4">
-              Start ordering
-              <br />today.
+              Start your EV
+              <br />journey today.
             </h2>
             <p className="text-white/55 text-base mb-8 leading-relaxed">
-              Create an account and access wholesale rates on 240+ cycle accessories.
+              Electric cycles and scooters built in Patna. Conversion kits for your
+              existing cycle. 240+ spare parts and accessories. Retail pricing or
+              wholesale rates — you choose.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/shop"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-neutral-900 rounded-full text-sm font-semibold hover:bg-neutral-100 transition-colors"
               >
-                Browse Catalogue <ArrowRight size={14} />
+                Explore Our Range <ArrowRight size={14} />
               </Link>
               <Link
-                href="/account/register"
+                href="/contact"
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-full text-sm font-medium hover:bg-white/8 transition-colors"
               >
-                Create Account
+                Get Wholesale Quote
               </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Instagram */}
+      {/* ── Instagram ────────────────────────────────────── */}
       <section className="py-16 md:py-20 bg-white border-t border-neutral-100">
         <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
 
@@ -470,22 +577,15 @@ export default function HomeClient({ trendingProducts }) {
               rel="noopener noreferrer"
               aria-label="EVWheels on Instagram"
               className="mb-4 w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{
-                background: "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
-              }}
+              style={{ background: "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)" }}
             >
               <svg viewBox="0 0 24 24" fill="white" className="w-7 h-7">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
               </svg>
             </a>
-
-            <p className="text-[11px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-1">
-              Follow our journey
-            </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 tracking-tight mb-1">
-              @evwheels_patna
-            </h2>
-            <p className="text-sm text-neutral-500">Cycle parts, dealer stories & daily updates from Patna</p>
+            <p className="text-[11px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-1">Follow our journey</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 tracking-tight mb-1">@evwheels_patna</h2>
+            <p className="text-sm text-neutral-500">EV cycles, scooters, dealer stories &amp; updates from Patna</p>
           </div>
 
           <motion.div
@@ -496,12 +596,12 @@ export default function HomeClient({ trendingProducts }) {
             className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 md:gap-2"
           >
             {[
-              { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop", alt: "Cycle accessories" },
+              { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop", alt: "Electric cycle" },
               { src: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80&auto=format&fit=crop", alt: "Cycling road" },
               { src: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80&auto=format&fit=crop", alt: "Cyclist outdoors" },
               { src: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&q=80&auto=format&fit=crop", alt: "Mountain biking" },
               { src: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600&q=80&auto=format&fit=crop", alt: "Cycling gear" },
-              { src: "https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?w=600&q=80&auto=format&fit=crop", alt: "Cycle parts" },
+              { src: "https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?w=600&q=80&auto=format&fit=crop", alt: "EV parts" },
             ].map((post, i) => (
               <motion.a
                 key={i}
@@ -519,11 +619,7 @@ export default function HomeClient({ trendingProducts }) {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="white"
-                    className="w-7 h-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  >
+                  <svg viewBox="0 0 24 24" fill="white" className="w-7 h-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
                   </svg>
                 </div>
@@ -537,9 +633,7 @@ export default function HomeClient({ trendingProducts }) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-opacity hover:opacity-90"
-              style={{
-                background: "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
-              }}
+              style={{ background: "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)" }}
             >
               <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
@@ -547,10 +641,11 @@ export default function HomeClient({ trendingProducts }) {
               Follow us on Instagram
             </a>
           </div>
+
         </div>
       </section>
 
-      {/* WhatsApp float */}
+      {/* ── WhatsApp float ────────────────────────────────── */}
       <a
         href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918298922623"}`}
         target="_blank"
@@ -560,6 +655,7 @@ export default function HomeClient({ trendingProducts }) {
       >
         <MessageCircle size={22} className="text-white" />
       </a>
+
     </div>
   );
 }
