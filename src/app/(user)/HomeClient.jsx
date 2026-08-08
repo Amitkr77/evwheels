@@ -411,7 +411,7 @@ function PromoCarousel() {
 
 function ProductLinesSection() {
   return (
-    <section className="py-16 md:py-20 border-t border-neutral-100">
+    <section className="py-10 md:py-12 border-t border-neutral-100">
       <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-10">
           <div>
@@ -484,7 +484,7 @@ function ProductLinesSection() {
 function ShowcaseSection({ products }) {
   return (
     <section className="border-t border-neutral-100">
-      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 py-20 md:py-24">
+      <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12 py-12 md:py-16">
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-stretch">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
@@ -716,7 +716,7 @@ export default function HomeClient({ trendingProducts }) {
       <PromoBanners />
 
       {/* ── Why EVWheels ─────────────────────────────────── */}
-      <section className="py-20 md:py-24 bg-neutral-50 border-t border-neutral-100">
+      <section className="py-10 md:py-14 bg-neutral-50 border-t border-neutral-100">
         <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="max-w-md mb-12">
             <p className="text-[#0C7290] text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
