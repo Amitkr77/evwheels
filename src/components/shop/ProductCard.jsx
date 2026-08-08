@@ -4,23 +4,23 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
-// Shared product tile — used on the homepage, the shop listing, and the
-// product detail page's "You may also like" rail, so the card only needs
-// fixing (and only looks) one way everywhere it appears.
 export default function ProductCard({ product }) {
+  const inStock = product.stock > 0;
+
   return (
     <Link
       href={`/shop/${product.slug}`}
-      className="group flex flex-col bg-white border border-neutral-100 rounded-xl overflow-hidden hover:border-neutral-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.07)] transition-all duration-200"
+      className="group h-full flex flex-col bg-white rounded-2xl overflow-hidden border border-neutral-100 hover:border-[#19B5D8]/25 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] transition-all duration-300"
     >
-      <div className="relative bg-neutral-50 p-4 aspect-square overflow-hidden">
+      {/* Image */}
+      <div className="relative h-[190px] bg-neutral-50 overflow-hidden shrink-0">
         {product.images?.[0] ? (
           <Image
             src={product.images[0]}
             alt={product.title}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain group-hover:scale-[1.04] transition-transform duration-500"
+            sizes="(max-width: 640px) 58vw, (max-width: 1024px) 240px, 240px"
+            className="object-cover group-hover:scale-[0.95] transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -30,26 +30,46 @@ export default function ProductCard({ product }) {
           </div>
         )}
 
+        {/* Category chip — top-left */}
+        {product.category?.name && (
+          <span className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-sm text-[10px] font-semibold text-neutral-500 px-2.5 py-1 rounded-full border border-neutral-100 leading-none">
+            {product.category.name}
+          </span>
+        )}
+
+        {/* MOQ badge — top-right */}
         {(product.moq || 1) > 1 && (
-          <span className="absolute top-2.5 right-2.5 bg-neutral-900 text-white text-[9px] font-semibold tracking-wide px-2 py-0.5 rounded-md">
+          <span className="absolute top-2.5 right-2.5 bg-neutral-900 text-white text-[9px] font-semibold tracking-wide px-2 py-1 rounded-full leading-none">
             MOQ {product.moq}
           </span>
         )}
 
-        {/* View affordance — a quiet icon that appears on hover/focus instead
-            of a permanent "View →" label competing with the price. */}
-        <div className="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:translate-y-0 transition-all duration-200">
-          <ArrowUpRight size={15} className="text-neutral-700" />
+        {/* Hover affordance — teal circle */}
+        <div className="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-[#19B5D8] flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-250 shadow-md">
+          <ArrowUpRight size={14} className="text-white" strokeWidth={2.2} />
         </div>
       </div>
 
-      <div className="px-3.5 pb-3.5 pt-3 flex flex-col gap-1.5">
-        <h3 className="text-[13px] font-medium text-neutral-800 line-clamp-2 leading-snug">
+      {/* Content */}
+      <div className="flex flex-col gap-2.5 p-4 flex-1">
+        <h3 className="text-[13px] font-semibold text-neutral-800 line-clamp-2 leading-snug flex-1">
           {product.title}
         </h3>
-        <p className="text-sm font-bold text-neutral-900">
-          ₹{Number(product.price).toLocaleString("en-IN")}
-        </p>
+
+        <div className="flex items-center justify-between gap-2 mt-auto">
+          <p className="text-[15px] font-bold text-neutral-900 tracking-tight">
+            ₹{Number(product.price).toLocaleString("en-IN")}
+          </p>
+          <span
+            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full leading-none ${
+              inStock
+                ? "text-emerald-700 bg-emerald-50"
+                : "text-red-500 bg-red-50"
+            }`}
+          >
+            {inStock ? "In stock" : "Sold out"}
+          </span>
+        </div>
       </div>
     </Link>
   );

@@ -44,7 +44,7 @@ export default function Carousel({ children, itemClassName = "" }) {
       >
         {Array.isArray(children) &&
           children.map((child, i) => (
-            <div key={i} className={`snap-start shrink-0 ${itemClassName}`}>
+            <div key={i} className={`snap-start shrink-0 flex flex-col ${itemClassName}`}>
               {child}
             </div>
           ))}

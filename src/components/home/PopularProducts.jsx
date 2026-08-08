@@ -14,11 +14,12 @@ const TABS = [
 
 function SkeletonCard() {
   return (
-    <div className="w-[46vw] sm:w-[220px] rounded-xl border border-neutral-100 overflow-hidden animate-pulse">
-      <div className="aspect-square bg-neutral-100" />
-      <div className="px-3.5 pb-3.5 pt-3 space-y-2">
-        <div className="h-3 bg-neutral-100 rounded w-full" />
-        <div className="h-3 bg-neutral-100 rounded w-2/3" />
+    <div className="w-[58vw] sm:w-[240px] rounded-2xl border border-neutral-100 overflow-hidden animate-pulse">
+      <div className="h-[190px] bg-neutral-100" />
+      <div className="p-4 space-y-2.5">
+        <div className="h-3 bg-neutral-100 rounded-full w-full" />
+        <div className="h-3 bg-neutral-100 rounded-full w-2/3" />
+        <div className="h-4 bg-neutral-100 rounded-full w-1/2 mt-1" />
       </div>
     </div>
   );
@@ -112,7 +113,7 @@ export default function PopularProducts() {
             No products here yet.
           </p>
         ) : (
-          <Carousel itemClassName="w-[46vw] sm:w-[220px]">
+          <Carousel itemClassName="w-[58vw] sm:w-[240px]">
             {products.map((p) => (
               <ProductCard key={p._id} product={p} />
             ))}
