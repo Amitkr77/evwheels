@@ -1,6 +1,23 @@
 export const metadata = {
   title: "Shipping Policy",
-  description: "Free shipping on all electric cycles across Bihar. Standard delivery in 4–8 business days. Know our delivery process.",
+  description:
+    "Free shipping on all electric cycles across Bihar. Standard delivery in 4–8 business days. Know our delivery zones, tracking process, and what happens if your order is delayed.",
   alternates: { canonical: "https://evwheels.in/shipping-policy" },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "Shipping Policy | EVWheels",
+    description:
+      "Free shipping on all electric cycles across Bihar. 4–8 business day delivery. Find out about tracking, delivery zones, and more.",
+    url: "https://evwheels.in/shipping-policy",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Shipping Policy | EVWheels",
+    description: "Free shipping on all electric cycles across Bihar. 4–8 business day delivery.",
+  },
 };
-export default function ShippingLayout({ children }) { return children; }
+
+export default function ShippingLayout({ children }) {
+  return children;
+}

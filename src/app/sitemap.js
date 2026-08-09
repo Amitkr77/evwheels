@@ -14,7 +14,7 @@ export default async function sitemap() {
   ];
 
   try {
-    const res = await fetch(`${BASE_URL}/api/products?limit=500&inStock=false`, {
+    const res = await fetch(`${BASE_URL}/api/products?limit=500`, {
       next: { revalidate: 3600 },
     });
 

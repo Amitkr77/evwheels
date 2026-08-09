@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
 
 // JSON.stringify doesn't escape "</script>" — without this, a title/description
@@ -64,12 +65,16 @@ export default async function ProductDetailPage({ params }) {
     const res = await fetch(`${BASE_URL}/api/products/${slug}`, {
       next: { revalidate: 3600 },
     });
+    if (res.status === 404) {
+      notFound();
+    }
     if (res.ok) {
       const data = await res.json();
-      product = data.product;
+      product = data.product ?? null;
+      if (!product) notFound();
     }
   } catch {
-    // render client fallback
+    // Network error — let the client component attempt its own fetch
   }
 
   const productSchema = product
