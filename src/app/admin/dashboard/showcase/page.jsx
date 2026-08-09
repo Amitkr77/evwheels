@@ -224,9 +224,9 @@ export default function ShowcasePage() {
   return (
     <section>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <div className="mb-10">
-          <h1 className="text-4xl md:text-5xl font-medium">Homepage Showcase</h1>
-          <p className="text-neutral-500 text-sm mt-2">
+        <div className="mb-7">
+          <h1 className="text-xl font-semibold text-neutral-900">Homepage Showcase</h1>
+          <p className="text-neutral-500 text-sm mt-1">
             Curate what appears in the landing page&rsquo;s featured product card and Popular Products carousel. Changes go live immediately.
           </p>
         </div>

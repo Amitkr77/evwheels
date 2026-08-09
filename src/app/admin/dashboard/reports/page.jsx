@@ -2,6 +2,20 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Bar, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
 import {
   BarChart3,
   TrendingUp,
@@ -19,6 +33,19 @@ import {
 } from "lucide-react";
 import { downloadCSV } from "@/lib/csv";
 import { useToast } from "@/components/admin/Toast";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+);
 
 const TABS = [
   { key: "inventory-summary", label: "Inventory Summary", icon: Package },
@@ -193,46 +220,65 @@ export default function ReportsPage() {
     );
   };
 
-  // ─── CSS Bar Chart component ───
-  const CSSBarChart = ({ items, valueKey = "revenue", labelKey = "_id", maxBars = 20 }) => {
-    const visible = items?.slice(0, maxBars) || [];
-    if (!visible.length) {
+  // ─── Chart.js Bar component (replaces CSSBarChart) ───
+  const ChartBar = ({ items, valueKey = "revenue", labelKey = "_id" }) => {
+    if (!items?.length) {
       return (
         <div className="py-12 text-center text-neutral-400 text-sm">
           No chart data available
         </div>
       );
     }
-    const maxVal = Math.max(...visible.map((d) => d[valueKey] || 0), 1);
+    const labels = items.map((d) => {
+      const raw = typeof labelKey === "function" ? labelKey(d) : (d[labelKey] || "");
+      // For date strings like "2024-08-01", show "08/01"
+      return raw.length > 5 ? raw.slice(5).replace("-", "/") : raw;
+    });
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: "Revenue (₹)",
+          data: items.map((d) => d[valueKey] || 0),
+          backgroundColor: "rgba(25,181,216,0.7)",
+          hoverBackgroundColor: "#19B5D8",
+          borderRadius: 5,
+          borderSkipped: false,
+        },
+      ],
+    };
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#0c4a6e",
+          padding: 10,
+          displayColors: false,
+          callbacks: { label: (ctx) => "₹" + ctx.raw.toLocaleString("en-IN") },
+        },
+      },
+      scales: {
+        y: {
+          grid: { color: "#f3f4f6" },
+          border: { color: "transparent" },
+          ticks: {
+            color: "#9ca3af",
+            font: { size: 11 },
+            callback: (v) => v >= 1000 ? "₹" + Math.round(v / 1000) + "k" : "₹" + v,
+          },
+        },
+        x: {
+          grid: { display: false },
+          border: { color: "#f3f4f6" },
+          ticks: { color: "#9ca3af", font: { size: 11 }, maxRotation: 0 },
+        },
+      },
+    };
     return (
-      <div className="flex items-end gap-1.5 h-56">
-        {visible.map((item, i) => {
-          const pct = ((item[valueKey] || 0) / maxVal) * 100;
-          const label =
-            typeof labelKey === "function"
-              ? labelKey(item)
-              : item[labelKey] || "";
-          const shortLabel = label.length > 5 ? label.slice(5) : label;
-          return (
-            <div
-              key={i}
-              className="flex-1 flex flex-col items-center gap-1 min-w-0"
-              title={`${label}: ${formatCurrency(item[valueKey])}`}
-            >
-              <div className="w-full relative" style={{ height: "200px" }}>
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: `${pct}%` }}
-                  transition={{ duration: 0.5, delay: i * 0.03 }}
-                  className="absolute bottom-0 left-0 right-0 bg-[#19B5D8]/80 hover:bg-[#1297B5] rounded-t transition-colors"
-                />
-              </div>
-              <span className="text-[10px] text-neutral-500 truncate w-full text-center">
-                {shortLabel}
-              </span>
-            </div>
-          );
-        })}
+      <div className="h-56">
+        <Bar data={data} options={options} />
       </div>
     );
   };
@@ -410,7 +456,7 @@ export default function ReportsPage() {
           <h3 className="text-xl font-medium mb-6">
             Daily Revenue
           </h3>
-          <CSSBarChart
+          <ChartBar
             items={d.dailyRevenue}
             valueKey="revenue"
             labelKey="_id"
@@ -697,6 +743,65 @@ export default function ReportsPage() {
           />
         </div>
 
+        {/* Monthly Revenue Line Chart */}
+        {d.monthly?.length > 1 && (() => {
+          const reversed = [...d.monthly].reverse();
+          const lineData = {
+            labels: reversed.map((m) => `${monthNames[m._id?.month] || m._id?.month} ${m._id?.year}`),
+            datasets: [
+              {
+                label: "Revenue (₹)",
+                data: reversed.map((m) => m.revenue || 0),
+                borderColor: "#19B5D8",
+                backgroundColor: "rgba(25,181,216,0.08)",
+                borderWidth: 2.5,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointBackgroundColor: "#19B5D8",
+                pointHoverRadius: 6,
+              },
+            ],
+          };
+          const lineOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: "#0c4a6e",
+                padding: 10,
+                displayColors: false,
+                callbacks: { label: (ctx) => "₹" + ctx.raw.toLocaleString("en-IN") },
+              },
+            },
+            scales: {
+              y: {
+                grid: { color: "#f3f4f6" },
+                border: { color: "transparent" },
+                ticks: {
+                  color: "#9ca3af",
+                  font: { size: 11 },
+                  callback: (v) => v >= 1000 ? "₹" + Math.round(v / 1000) + "k" : "₹" + v,
+                },
+              },
+              x: {
+                grid: { display: false },
+                border: { color: "#f3f4f6" },
+                ticks: { color: "#9ca3af", font: { size: 11 } },
+              },
+            },
+          };
+          return (
+            <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8 mb-6">
+              <h3 className="text-xl font-medium mb-6">Monthly Revenue Trend</h3>
+              <div className="h-56">
+                <Line data={lineData} options={lineOptions} />
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Monthly Revenue Breakdown */}
         <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8">
           <h3 className="text-xl font-medium mb-6">
@@ -796,10 +901,11 @@ export default function ReportsPage() {
       transition={{ duration: 0.5 }}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-10">
-        <h1 className="text-4xl md:text-5xl font-medium">
-          Reports &amp; Analytics
-        </h1>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-7">
+        <div>
+          <h1 className="text-xl font-semibold text-neutral-900">Reports &amp; Analytics</h1>
+          <p className="text-sm text-neutral-500 mt-0.5">Track revenue, sales, and inventory performance</p>
+        </div>
       </div>
 
       {/* Tab Navigation + Period Selector */}
