@@ -62,7 +62,7 @@ export default function PromoBanners() {
   const displayBanners = banners.length > 0 ? banners : FALLBACK_BANNERS;
 
   return (
-    <section className="py-16 md:py-20 bg-neutral-50 border-t border-neutral-100">
+    <section className="py-10 md:py-12 bg-neutral-50 border-t border-neutral-100">
       <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {loading

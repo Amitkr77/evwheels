@@ -64,7 +64,7 @@ export default function PopularProducts() {
   const products = productsByTab[activeTab] || [];
 
   return (
-    <section className="py-20 md:py-24 bg-white border-t border-neutral-100">
+    <section className="py-10 md:py-12 bg-white border-t border-neutral-100">
       <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8 md:mb-10">
           <div>

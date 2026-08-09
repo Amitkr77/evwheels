@@ -327,7 +327,7 @@ export default function FeaturedAndCategories() {
   const activeProduct  = activeCategory ? (products[activeCategory.slug] ?? null) : null;
 
   return (
-    <section className="py-16 md:py-24 bg-white border-t border-neutral-100">
+    <section className="py-10 md:py-14 bg-white border-t border-neutral-100">
       <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
 
         {/* Header */}

@@ -18,6 +18,9 @@ import {
   Gauge,
   Settings,
 } from "lucide-react";
+
+// Maps icon name strings (stored in DB) to icon components for hero slides
+const ICON_MAP = { Zap, Battery, Settings, Package, Gauge };
 import PopularProducts from "@/components/home/PopularProducts";
 import FeaturedAndCategories from "@/components/home/FeaturedAndCategories";
 import PromoBanners from "@/components/home/PromoBanners";
@@ -214,17 +217,31 @@ const HERO_SLIDES = [
   },
 ];
 
-function HeroSlider() {
+function HeroSlider({ slides: dbSlides }) {
+  // Normalise DB slides (which use headline0/headline1) into the same shape
+  // as the hardcoded HERO_SLIDES so the render code is uniform.
+  const slides = dbSlides && dbSlides.length > 0
+    ? dbSlides.map((s) => ({
+        badgeIcon: ICON_MAP[s.badgeIcon] || Zap,
+        badge:     s.badge,
+        headline:  [s.headline0, s.headline1],
+        accent:    s.accent,
+        desc:      s.description,
+        cta1:      { label: s.cta1Label, href: s.cta1Href },
+        cta2:      { label: s.cta2Label, href: s.cta2Href },
+      }))
+    : HERO_SLIDES;
+
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     const id = setInterval(() => {
-      setActive((prev) => (prev + 1) % HERO_SLIDES.length);
+      setActive((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(id);
-  }, []);
+  }, [slides.length]);
 
-  const slide = HERO_SLIDES[active];
+  const slide = slides[active];
   const BadgeIcon = slide.badgeIcon;
 
   return (
@@ -261,18 +278,20 @@ function HeroSlider() {
             >
               {slide.cta1.label} <ArrowRight size={14} />
             </Link>
-            <Link
-              href={slide.cta2.href}
-              className="inline-flex items-center gap-2 px-6 py-3 border border-neutral-200 text-neutral-700 text-sm font-medium rounded-full hover:bg-neutral-50 hover:border-neutral-300 transition-colors"
-            >
-              {slide.cta2.label}
-            </Link>
+            {slide.cta2?.label && slide.cta2?.href && (
+              <Link
+                href={slide.cta2.href}
+                className="inline-flex items-center gap-2 px-6 py-3 border border-neutral-200 text-neutral-700 text-sm font-medium rounded-full hover:bg-neutral-50 hover:border-neutral-300 transition-colors"
+              >
+                {slide.cta2.label}
+              </Link>
+            )}
           </div>
         </motion.div>
       </AnimatePresence>
 
       <div className="flex items-center gap-2">
-        {HERO_SLIDES.map((_, i) => (
+        {slides.map((_, i) => (
           <button
             key={i}
             type="button"
@@ -595,7 +614,7 @@ function ShowcaseSection({ products }) {
 
 // ── Page ──────────────────────────────────────────────────
 
-export default function HomeClient({ trendingProducts }) {
+export default function HomeClient({ trendingProducts, heroSlides, instagramPosts }) {
   return (
     <div className="bg-white text-neutral-900">
       {/* ── Hero ─────────────────────────────────────────── */}
@@ -612,7 +631,7 @@ export default function HomeClient({ trendingProducts }) {
               <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-gradient-to-br from-[#DDF8FD] to-white opacity-60 -translate-y-1/3 translate-x-1/3 pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-52 h-52 rounded-full bg-[#F0FEFF] opacity-50 translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
-              <HeroSlider />
+              <HeroSlider slides={heroSlides} />
 
               <div className="relative z-10 flex items-center gap-8 sm:gap-12 pt-6 mt-6 border-t border-neutral-100">
                 {HERO_STATS.map((s) => (
@@ -805,7 +824,7 @@ export default function HomeClient({ trendingProducts }) {
       </section>
 
       {/* ── Instagram ────────────────────────────────────── */}
-      <section className="py-16 md:py-20 bg-white border-t border-neutral-100">
+      <section className="py-10 md:py-14 bg-white border-t border-neutral-100">
         <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="flex flex-col items-center text-center mb-8 md:mb-10">
             <a
@@ -834,66 +853,52 @@ export default function HomeClient({ trendingProducts }) {
             </p>
           </div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            variants={GRID_VARIANTS}
-            className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 md:gap-2"
-          >
-            {[
-              {
-                src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop",
-                alt: "Electric cycle",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80&auto=format&fit=crop",
-                alt: "Cycling road",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80&auto=format&fit=crop",
-                alt: "Cyclist outdoors",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&q=80&auto=format&fit=crop",
-                alt: "Mountain biking",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600&q=80&auto=format&fit=crop",
-                alt: "Cycling gear",
-              },
-              {
-                src: "https://images.unsplash.com/photo-1593764592116-bfb2a97c642a?w=600&q=80&auto=format&fit=crop",
-                alt: "EV parts",
-              },
-            ].map((post, i) => (
-              <motion.a
-                key={i}
+          {instagramPosts && instagramPosts.length > 0 ? (
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              variants={GRID_VARIANTS}
+              className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 md:gap-2"
+            >
+              {instagramPosts.map((post, i) => (
+                <motion.a
+                  key={post._id || i}
+                  href={post.link || "https://www.instagram.com/evwheels_patna"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variants={CARD_VARIANTS}
+                  className="group relative aspect-square overflow-hidden rounded-xl bg-neutral-100 block"
+                  title={post.caption || ""}
+                >
+                  <Image
+                    src={post.imageUrl}
+                    alt={post.caption || `EVWheels post ${i + 1}`}
+                    fill
+                    sizes="(max-width: 640px) 33vw, 16vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" fill="white" className="w-7 h-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                    </svg>
+                  </div>
+                </motion.a>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <p className="text-sm text-neutral-400 mb-3">No posts added yet.</p>
+              <a
                 href="https://www.instagram.com/evwheels_patna"
                 target="_blank"
                 rel="noopener noreferrer"
-                variants={CARD_VARIANTS}
-                className="group relative aspect-square overflow-hidden rounded-xl bg-neutral-100 block"
+                className="text-sm font-medium text-[#19B5D8] hover:underline"
               >
-                <Image
-                  src={post.src}
-                  alt={post.alt}
-                  fill
-                  sizes="(max-width: 640px) 33vw, 16vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="white"
-                    className="w-7 h-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  >
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                  </svg>
-                </div>
-              </motion.a>
-            ))}
-          </motion.div>
+                Visit @evwheels_patna on Instagram →
+              </a>
+            </div>
+          )}
 
           <div className="mt-8 text-center">
             <a

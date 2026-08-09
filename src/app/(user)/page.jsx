@@ -15,7 +15,7 @@ async function fetchCategory(slug, limit) {
   try {
     const res = await fetch(
       `${BASE_URL}/api/products?category=${slug}&limit=${limit}&sort=createdAt&order=desc`,
-      { next: { revalidate: 0 } } // no cache — random pick should vary per request
+      { next: { revalidate: 0 } }
     );
     if (!res.ok) return [];
     const data = await res.json();
@@ -35,12 +35,36 @@ function shuffle(arr) {
   return a;
 }
 
-export default async function Home() {
-  // Try all slug variants in parallel — each fetches up to 8 products so we
-  // have a decent pool to pick from when a category has more than 4.
-  const results = await Promise.all(EV_SLUGS.map((s) => fetchCategory(s, 8)));
+async function fetchHeroSlides() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/hero-slides`, { next: { revalidate: 60 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.slides || [];
+  } catch {
+    return [];
+  }
+}
 
-  // Flatten + deduplicate by _id (same product may appear under multiple slugs)
+async function fetchInstagramPosts() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/instagram-posts`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.posts || [];
+  } catch {
+    return [];
+  }
+}
+
+export default async function Home() {
+  const [results, heroSlides, instagramPosts] = await Promise.all([
+    Promise.all(EV_SLUGS.map((s) => fetchCategory(s, 8))),
+    fetchHeroSlides(),
+    fetchInstagramPosts(),
+  ]);
+
+  // Flatten + deduplicate by _id
   const seen = new Set();
   const pool = results.flat().filter((p) => {
     if (!p._id || seen.has(p._id)) return false;
@@ -48,8 +72,13 @@ export default async function Home() {
     return true;
   });
 
-  // Shuffle so the 4 chosen products change on every page load
   const trendingProducts = shuffle(pool).slice(0, 4);
 
-  return <HomeClient trendingProducts={trendingProducts} />;
+  return (
+    <HomeClient
+      trendingProducts={trendingProducts}
+      heroSlides={heroSlides}
+      instagramPosts={instagramPosts}
+    />
+  );
 }
