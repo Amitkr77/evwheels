@@ -1,3 +1,12 @@
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home",   item: "https://evwheels.in" },
+    { "@type": "ListItem", position: 2, name: "Privacy Policy", item: "https://evwheels.in/privacy-policy" },
+  ],
+};
+
 export const metadata = {
   title: "Privacy Policy",
   description:
@@ -19,5 +28,13 @@ export const metadata = {
 };
 
 export default function PrivacyLayout({ children }) {
-  return children;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      {children}
+    </>
+  );
 }

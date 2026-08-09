@@ -1,3 +1,12 @@
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home",   item: "https://evwheels.in" },
+    { "@type": "ListItem", position: 2, name: "Terms of Service", item: "https://evwheels.in/terms" },
+  ],
+};
+
 export const metadata = {
   title: "Terms of Service",
   description:
@@ -19,5 +28,13 @@ export const metadata = {
 };
 
 export default function TermsLayout({ children }) {
-  return children;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      {children}
+    </>
+  );
 }
