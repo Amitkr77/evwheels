@@ -425,156 +425,189 @@ export default function Navbar() {
         </div>
 
         {/* ── Mobile drawer ─────────────────────────────────── */}
-        {mobileOpen && (
-          <>
-            <div
-              className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden"
-              onClick={() => setMobileOpen(false)}
-            />
+        <AnimatePresence>
+          {mobileOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-black/50 z-[150] lg:hidden"
+                onClick={() => setMobileOpen(false)}
+              />
 
-            <div className="fixed top-0 right-0 h-full w-72 max-w-[85vw] bg-white z-50 shadow-2xl flex flex-col lg:hidden">
-
-              {/* Header */}
-              <div className="flex items-center justify-between px-5 h-16 border-b border-neutral-100 shrink-0">
-                <Image
-                  src="/black_logo.png"
-                  alt="EVWheels"
-                  width={140}
-                  height={140}
-                  className="h-10 w-auto object-contain"
-                />
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-100 hover:text-neutral-900 transition-colors"
-                >
-                  <X size={17} />
-                </button>
-              </div>
-
-              {/* Nav items */}
-              <div className="flex-1 overflow-y-auto py-2">
-
-                {/* Shop accordion */}
-                <button
-                  onClick={() => setMobileShopOpen((p) => !p)}
-                  className="flex items-center justify-between w-full px-5 py-3.5 text-[15px] font-semibold text-neutral-800 hover:text-[#0C7290] transition-colors"
-                >
-                  Shop
-                  <ChevronDown
-                    size={14}
-                    strokeWidth={2.2}
-                    className={`text-neutral-400 transition-transform duration-200 ${mobileShopOpen ? "rotate-180" : ""}`}
+              {/* Drawer — slides in from LEFT */}
+              <motion.div
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", damping: 28, stiffness: 300 }}
+                className="fixed top-0 left-0 h-full w-72 max-w-[85vw] bg-white z-[200] flex flex-col lg:hidden"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between px-5 h-[60px] border-b border-neutral-100 shrink-0">
+                  <Image
+                    src="/black_logo.png"
+                    alt="EVWheels"
+                    width={120}
+                    height={40}
+                    className="h-8 w-auto object-contain"
                   />
-                </button>
+                  <button
+                    onClick={() => setMobileOpen(false)}
+                    className="w-8 h-8 flex items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 transition-colors"
+                    aria-label="Close menu"
+                  >
+                    <X size={17} />
+                  </button>
+                </div>
 
-                {mobileShopOpen && (
-                  <div className="px-3 pb-3">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-400 px-2 pb-2">
-                      EV Products
-                    </p>
-                    <div className="space-y-0.5 mb-4">
-                      {EV_LINKS.map((ev) => (
-                        <Link
-                          key={ev.name}
-                          href={ev.href}
-                          className="flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-[#F0FEFF] transition-colors"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          <div className="w-7 h-7 rounded-lg bg-[#DDF8FD] flex items-center justify-center shrink-0">
-                            <ev.icon size={13} className="text-[#0C7290]" strokeWidth={1.8} />
+                {/* Nav */}
+                <div className="flex-1 overflow-y-auto py-3 px-2">
+
+                  {/* Shop accordion */}
+                  <button
+                    onClick={() => setMobileShopOpen((p) => !p)}
+                    className="flex items-center justify-between w-full px-3 py-3 rounded-xl text-[14px] font-semibold text-neutral-800 hover:bg-neutral-50 hover:text-[#0C7290] transition-colors"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#DDF8FD]">
+                        <ShoppingBag size={15} className="text-[#0C7290]" strokeWidth={1.8} />
+                      </span>
+                      Shop
+                    </span>
+                    <ChevronDown
+                      size={14}
+                      strokeWidth={2.2}
+                      className={`text-neutral-400 transition-transform duration-200 ${mobileShopOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {mobileShopOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.22, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-2 pb-2 pt-1">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-400 px-2 pb-2">
+                            EV Products
+                          </p>
+                          <div className="space-y-0.5 mb-3">
+                            {EV_LINKS.map((ev) => (
+                              <Link
+                                key={ev.name}
+                                href={ev.href}
+                                className="flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-[#F0FEFF] transition-colors"
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                <div className="w-7 h-7 rounded-lg bg-[#DDF8FD] flex items-center justify-center shrink-0">
+                                  <ev.icon size={13} className="text-[#0C7290]" strokeWidth={1.8} />
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="text-[13px] font-medium text-neutral-800 leading-tight">{ev.name}</p>
+                                  <p className="text-[11px] text-neutral-400 leading-tight truncate">{ev.sub}</p>
+                                </div>
+                              </Link>
+                            ))}
                           </div>
-                          <span className="text-[13.5px] font-medium text-neutral-800">{ev.name}</span>
-                        </Link>
-                      ))}
-                    </div>
 
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-400 px-2 pb-2">
-                      Parts & Accessories
-                    </p>
-                    <div className="grid grid-cols-2 gap-0.5">
-                      {PART_CATS.map((cat) => (
-                        <Link
-                          key={cat.name}
-                          href={cat.href}
-                          className="px-2 py-2 text-[12px] text-neutral-600 hover:text-[#19B5D8] hover:bg-neutral-50 rounded-lg transition-colors"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          {cat.name}
-                        </Link>
-                      ))}
-                    </div>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-neutral-400 px-2 pb-2">
+                            Parts & Accessories
+                          </p>
+                          <div className="grid grid-cols-2 gap-0.5">
+                            {PART_CATS.map((cat) => (
+                              <Link
+                                key={cat.name}
+                                href={cat.href}
+                                className="px-2 py-2 text-[12px] text-neutral-600 hover:text-[#19B5D8] hover:bg-neutral-50 rounded-lg transition-colors"
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                {cat.name}
+                              </Link>
+                            ))}
+                          </div>
 
+                          <Link
+                            href="/shop"
+                            className="flex items-center gap-1.5 px-2 pt-3 pb-1 text-[12.5px] font-semibold text-[#19B5D8]"
+                            onClick={() => setMobileOpen(false)}
+                          >
+                            All Products <ArrowRight size={12} />
+                          </Link>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <div className="mx-2 my-2 h-px bg-neutral-100" />
+
+                  {[
+                    { label: "Why EVWheels", href: "/why-us" },
+                    { label: "Contact",      href: "/contact" },
+                    { label: "Support",      href: "/support" },
+                  ].map((link) => (
                     <Link
-                      href="/shop"
-                      className="flex items-center gap-1.5 px-2 pt-4 text-[13px] font-semibold text-[#19B5D8]"
+                      key={link.href}
+                      href={link.href}
+                      className="flex items-center px-3 py-3 rounded-xl text-[14px] font-medium text-neutral-700 hover:text-[#19B5D8] hover:bg-neutral-50 transition-colors"
                       onClick={() => setMobileOpen(false)}
                     >
-                      All Products <ArrowRight size={12} />
+                      {link.label}
                     </Link>
-                  </div>
-                )}
+                  ))}
+                </div>
 
-                <div className="mx-5 my-1 h-px bg-neutral-100" />
-
-                {[
-                  { label: "Contact", href: "/contact" },
-                  { label: "Support", href: "/support" },
-                ].map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="flex items-center px-5 py-3.5 text-[14px] font-medium text-neutral-700 hover:text-[#19B5D8] transition-colors"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-
-              {/* Auth footer */}
-              <div className="px-4 pb-6 pt-3 border-t border-neutral-100 shrink-0">
-                {isAuthenticated ? (
-                  <div>
-                    <div className="flex items-center gap-3 px-1 py-2 mb-1">
-                      <UserAvatar name={user?.name} size="sm" />
-                      <div className="min-w-0">
-                        <p className="text-[13px] font-semibold text-neutral-900 truncate">{user?.name}</p>
-                        <p className="text-[11px] text-neutral-400 truncate">{user?.email}</p>
+                {/* Auth footer */}
+                <div className="px-4 pb-6 pt-3 border-t border-neutral-100 shrink-0">
+                  {isAuthenticated ? (
+                    <div>
+                      <div className="flex items-center gap-3 px-1 py-2 mb-2">
+                        <UserAvatar name={user?.name} size="sm" />
+                        <div className="min-w-0">
+                          <p className="text-[13px] font-semibold text-neutral-900 truncate">{user?.name}</p>
+                          <p className="text-[11px] text-neutral-400 truncate">{user?.email}</p>
+                        </div>
                       </div>
-                    </div>
-                    {ACCOUNT_LINKS.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="flex items-center gap-3 px-1 py-3 text-[13px] text-neutral-700 hover:text-[#19B5D8] transition-colors"
-                        onClick={() => setMobileOpen(false)}
+                      {ACCOUNT_LINKS.map((link) => (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className="flex items-center gap-3 px-1 py-2.5 text-[13px] text-neutral-700 hover:text-[#19B5D8] transition-colors"
+                          onClick={() => setMobileOpen(false)}
+                        >
+                          <link.icon size={15} strokeWidth={1.8} className="shrink-0 text-neutral-400" />
+                          {link.label}
+                        </Link>
+                      ))}
+                      <button
+                        onClick={() => { logout(); setMobileOpen(false); }}
+                        className="flex items-center gap-3 px-1 py-2.5 w-full text-left text-[13px] text-red-500 hover:text-red-600 transition-colors"
                       >
-                        <link.icon size={15} strokeWidth={1.8} className="shrink-0" />
-                        {link.label}
-                      </Link>
-                    ))}
-                    <button
-                      onClick={() => { logout(); setMobileOpen(false); }}
-                      className="flex items-center gap-3 px-1 py-3 w-full text-left text-[13px] text-red-500 hover:text-red-600 transition-colors"
+                        <LogOut size={15} strokeWidth={1.8} className="shrink-0" />
+                        Sign Out
+                      </button>
+                    </div>
+                  ) : (
+                    <Link
+                      href="/account/login"
+                      className="flex items-center justify-center gap-2 h-11 bg-neutral-900 text-white rounded-xl text-[13.5px] font-semibold hover:bg-[#0C7290] transition-colors"
+                      onClick={() => setMobileOpen(false)}
                     >
-                      <LogOut size={15} strokeWidth={1.8} className="shrink-0" />
-                      Sign Out
-                    </button>
-                  </div>
-                ) : (
-                  <Link
-                    href="/account/login"
-                    className="flex items-center justify-center gap-2 h-11 bg-neutral-900 text-white rounded-xl text-[13.5px] font-semibold hover:bg-neutral-800 transition-colors"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <User size={15} />
-                    Login / Register
-                  </Link>
-                )}
-              </div>
-            </div>
-          </>
-        )}
+                      <User size={15} />
+                      Login / Register
+                    </Link>
+                  )}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* ── Full-screen search overlay (mobile) ─────────────── */}
