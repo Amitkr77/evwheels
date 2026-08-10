@@ -83,8 +83,37 @@ export default function PopularProducts() {
           </Link>
         </div>
 
-        {/* Tabs */}
-        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+        {/* Tabs — segmented card on mobile, pills on desktop */}
+
+        {/* Mobile: full-width card segmented control */}
+        <div className="sm:hidden grid grid-cols-3 bg-neutral-100 rounded-2xl p-1 gap-1 mb-6">
+          {TABS.map((tab) => {
+            const isActive = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`flex flex-col items-center gap-1.5 py-3 rounded-xl transition-all duration-200 ${
+                  isActive ? "bg-white shadow-sm" : ""
+                }`}
+              >
+                <tab.icon
+                  size={15}
+                  strokeWidth={isActive ? 2.2 : 1.6}
+                  className={isActive ? "text-[#19B5D8]" : "text-neutral-400"}
+                />
+                <span className={`text-[10.5px] font-semibold leading-tight text-center ${
+                  isActive ? "text-neutral-900" : "text-neutral-400"
+                }`}>
+                  {tab.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Desktop: pill tabs */}
+        <div className="hidden sm:flex items-center gap-2 mb-6">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.key;
             return (
