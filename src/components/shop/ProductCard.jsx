@@ -13,7 +13,7 @@ export default function ProductCard({ product }) {
       className="group h-full flex flex-col bg-white rounded-2xl overflow-hidden border border-neutral-100 hover:border-[#19B5D8]/25 hover:shadow-[0_8px_32px_rgba(0,0,0,0.09)] transition-all duration-300"
     >
       {/* Image */}
-      <div className="relative h-[190px] bg-neutral-50 overflow-hidden shrink-0">
+      <div className="relative aspect-[4/3] bg-neutral-50 overflow-hidden shrink-0">
         {product.images?.[0] ? (
           <Image
             src={product.images[0]}

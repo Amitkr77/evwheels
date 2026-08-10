@@ -471,7 +471,7 @@ export default function ProductDetailClient() {
       </div>
 
       {/* ── Below-fold sections ── */}
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 mt-20 space-y-20">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 mt-10 md:mt-20 space-y-12 md:space-y-20">
 
         {/* Specifications */}
         {product.specifications?.length > 0 && (

@@ -54,7 +54,7 @@ function ProductShowcase({ category, product, loading }) {
   const Icon = style.icon;
 
   return (
-    <div className="relative rounded-2xl overflow-hidden bg-neutral-950 min-h-[380px] flex flex-col">
+    <div className="relative rounded-2xl overflow-hidden bg-neutral-950 min-h-[260px] md:min-h-[380px] flex flex-col">
 
       {/* Background image — cross-fades per product */}
       <AnimatePresence mode="sync">

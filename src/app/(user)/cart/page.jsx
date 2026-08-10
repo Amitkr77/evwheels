@@ -151,7 +151,7 @@ export default function CartPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-10 border-b border-neutral-200/70 mb-12">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-neutral-900 mb-2">
               Your Shopping Cart
             </h1>
             <p className="text-lg text-neutral-600 font-light">
@@ -189,7 +189,7 @@ export default function CartPage() {
                   className="bg-white border border-neutral-200/70 rounded-xl p-5 sm:p-6 hover:border-[#19B5D8]/20 transition-colors"
                 >
                   <div className="flex flex-col sm:flex-row gap-5 sm:gap-6">
-                    <div className="relative shrink-0 w-full sm:w-32 aspect-square">
+                    <div className="relative shrink-0 w-24 sm:w-28 md:w-32 aspect-square">
                       <Image
                         src={product.images?.[0] || "/logo.png"}
                         fill

@@ -156,7 +156,7 @@ export default function ContactPage() {
                 📬 Contact Us
               </span>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium text-neutral-900 leading-tight mb-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-neutral-900 leading-tight mb-6">
                 Get in Touch with{" "}
                 <span className="text-[#19B5D8]">EVWheels</span>
               </h1>
@@ -230,7 +230,7 @@ export default function ContactPage() {
                   title="EVWheels Patna Service Center"
                   src="https://www.google.com/maps?q=Naubatpur,+Patna,+Bihar+801109&output=embed"
                   width="100%"
-                  height="240"
+                  className="h-40 sm:h-48 md:h-60"
                   style={{ border: 0, borderRadius: "12px" }}
                   allowFullScreen=""
                   loading="lazy"

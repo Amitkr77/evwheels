@@ -15,7 +15,7 @@ const TABS = [
 function SkeletonCard() {
   return (
     <div className="w-[58vw] sm:w-[240px] rounded-2xl border border-neutral-100 overflow-hidden animate-pulse">
-      <div className="h-[190px] bg-neutral-100" />
+      <div className="aspect-[4/3] bg-neutral-100" />
       <div className="p-4 space-y-2.5">
         <div className="h-3 bg-neutral-100 rounded-full w-full" />
         <div className="h-3 bg-neutral-100 rounded-full w-2/3" />

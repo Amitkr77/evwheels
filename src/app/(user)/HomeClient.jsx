@@ -510,7 +510,7 @@ function ShowcaseSection({ products }) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative lg:w-[52%] rounded-2xl overflow-hidden min-h-[480px] md:min-h-[560px] flex items-end"
+            className="relative lg:w-[52%] rounded-2xl overflow-hidden min-h-[280px] sm:min-h-[360px] md:min-h-[480px] lg:min-h-[560px] flex items-end"
           >
             <Image
               src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop"

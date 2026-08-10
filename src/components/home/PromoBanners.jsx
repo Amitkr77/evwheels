@@ -67,7 +67,7 @@ export default function PromoBanners() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {loading
             ? Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="rounded-2xl bg-neutral-200 animate-pulse h-64" />
+                <div key={i} className="rounded-2xl bg-neutral-200 animate-pulse h-48 sm:h-56 md:h-64" />
               ))
             : displayBanners.map((banner) => {
                 const content = (
@@ -99,7 +99,7 @@ export default function PromoBanners() {
                 );
 
                 const className =
-                  "group relative rounded-2xl overflow-hidden h-64 bg-neutral-900 block";
+                  "group relative rounded-2xl overflow-hidden h-48 sm:h-56 md:h-64 bg-neutral-900 block";
 
                 return banner.buttonLink ? (
                   <Link key={banner._id} href={banner.buttonLink} className={className}>

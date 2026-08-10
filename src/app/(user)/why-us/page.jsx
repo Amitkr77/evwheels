@@ -50,7 +50,7 @@ export default function WhyUsPage() {
 
           <motion.h1
             variants={fadeInUp}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium text-neutral-900 leading-tight mb-6"
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-medium text-neutral-900 leading-tight mb-6"
           >
             Ride Better.
             <br />
