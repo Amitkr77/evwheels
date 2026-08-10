@@ -27,34 +27,55 @@ import { useCartStore } from "@/store/cartStore";
 import UserAvatar from "@/components/user/UserAvatar";
 import HeaderSearch from "@/components/HeaderSearch";
 import { useDebounce } from "@/hooks/useDebounce";
+import { AnimatePresence, motion } from "framer-motion";
 
 const ACCOUNT_LINKS = [
-  { label: "Profile",  href: "/profile",              icon: LayoutDashboard },
-  { label: "Orders",   href: "/profile?tab=orders",   icon: Package },
+  { label: "Profile", href: "/profile", icon: LayoutDashboard },
+  { label: "Orders", href: "/profile?tab=orders", icon: Package },
   { label: "Wishlist", href: "/profile?tab=wishlist", icon: Heart },
   { label: "Settings", href: "/profile?tab=settings", icon: Settings },
 ];
 
 const EV_LINKS = [
-  { name: "Electric Cycles",   href: "/shop?category=electric-cycles",   icon: Zap,      sub: "In-house manufactured"  },
-  { name: "Electric Scooters", href: "/shop?category=electric-scooters", icon: Gauge,    sub: "Assembled in Patna"     },
-  { name: "Lithium Batteries", href: "/shop?category=batteries",         icon: Battery,  sub: "We build our own cells" },
-  { name: "Conversion Kits",   href: "/shop?category=conversion-kits",   icon: Settings, sub: "Electrify your cycle"   },
+  {
+    name: "Electric Cycles",
+    href: "/shop?category=electric-cycles",
+    icon: Zap,
+    sub: "In-house manufactured",
+  },
+  {
+    name: "Electric Scooters",
+    href: "/shop?category=electric-scooters",
+    icon: Gauge,
+    sub: "Assembled in Patna",
+  },
+  {
+    name: "Lithium Batteries",
+    href: "/shop?category=batteries",
+    icon: Battery,
+    sub: "We build our own cells",
+  },
+  {
+    name: "Conversion Kits",
+    href: "/shop?category=conversion-kits",
+    icon: Settings,
+    sub: "Electrify your cycle",
+  },
 ];
 
 const PART_CATS = [
-  { name: "Bells",           href: "/shop?category=bells"             },
-  { name: "Brakes",          href: "/shop?category=brakes"            },
-  { name: "Chains",          href: "/shop?category=chains"            },
-  { name: "Gear Sets",       href: "/shop?category=gear-sets"         },
-  { name: "Lights",          href: "/shop?category=lights-reflectors" },
-  { name: "Locks",           href: "/shop?category=locks-security"    },
-  { name: "Mudguards",       href: "/shop?category=mudguards-fenders" },
-  { name: "Saddles",         href: "/shop?category=saddles-seats"     },
-  { name: "Tyres & Tubes",   href: "/shop?category=tyres-tubes"       },
-  { name: "Tools",           href: "/shop?category=tools-maintenance" },
-  { name: "Wheels & Hubs",   href: "/shop?category=wheels-hubs"       },
-  { name: "Handlebar Parts", href: "/shop?category=handlebar-parts"   },
+  { name: "Bells", href: "/shop?category=bells" },
+  { name: "Brakes", href: "/shop?category=brakes" },
+  { name: "Chains", href: "/shop?category=chains" },
+  { name: "Gear Sets", href: "/shop?category=gear-sets" },
+  { name: "Lights", href: "/shop?category=lights-reflectors" },
+  { name: "Locks", href: "/shop?category=locks-security" },
+  { name: "Mudguards", href: "/shop?category=mudguards-fenders" },
+  { name: "Saddles", href: "/shop?category=saddles-seats" },
+  { name: "Tyres & Tubes", href: "/shop?category=tyres-tubes" },
+  { name: "Tools", href: "/shop?category=tools-maintenance" },
+  { name: "Wheels & Hubs", href: "/shop?category=wheels-hubs" },
+  { name: "Handlebar Parts", href: "/shop?category=handlebar-parts" },
 ];
 
 export default function Navbar() {
@@ -63,22 +84,22 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [scrolled,           setScrolled]           = useState(false);
-  const [mobileOpen,         setMobileOpen]          = useState(false);
-  const [mobileShopOpen,     setMobileShopOpen]      = useState(false);
-  const [mobileSearchOpen,   setMobileSearchOpen]    = useState(false);
-  const [userDropOpen,       setUserDropOpen]        = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileShopOpen, setMobileShopOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [userDropOpen, setUserDropOpen] = useState(false);
 
   // Full-screen mobile search state
-  const [mobileQ,            setMobileQ]             = useState("");
-  const [mobileResults,      setMobileResults]       = useState([]);
+  const [mobileQ, setMobileQ] = useState("");
+  const [mobileResults, setMobileResults] = useState([]);
   const [mobileSearchLoading, setMobileSearchLoading] = useState(false);
   const mobileInputRef = useRef(null);
   const debouncedMobileQ = useDebounce(mobileQ, 300);
 
   const userDropRef = useRef(null);
 
-  const isHome    = pathname === "/";
+  const isHome = pathname === "/";
   const transparent = isHome && !scrolled;
 
   // Scroll listener
@@ -100,8 +121,11 @@ export default function Navbar() {
 
   // Lock body scroll while mobile drawer or search is open
   useEffect(() => {
-    document.body.style.overflow = (mobileOpen || mobileSearchOpen) ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    document.body.style.overflow =
+      mobileOpen || mobileSearchOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen, mobileSearchOpen]);
 
   // Close user dropdown on outside click
@@ -118,15 +142,27 @@ export default function Navbar() {
   // Debounced product search for mobile full-screen
   useEffect(() => {
     const term = debouncedMobileQ.trim();
-    if (!term) { setMobileResults([]); setMobileSearchLoading(false); return; }
+    if (!term) {
+      setMobileResults([]);
+      setMobileSearchLoading(false);
+      return;
+    }
     let cancelled = false;
     setMobileSearchLoading(true);
     fetch(`/api/products?search=${encodeURIComponent(term)}&limit=6`)
       .then((r) => r.json())
-      .then((d) => { if (!cancelled) setMobileResults(d.products || []); })
-      .catch(() => { if (!cancelled) setMobileResults([]); })
-      .finally(() => { if (!cancelled) setMobileSearchLoading(false); });
-    return () => { cancelled = true; };
+      .then((d) => {
+        if (!cancelled) setMobileResults(d.products || []);
+      })
+      .catch(() => {
+        if (!cancelled) setMobileResults([]);
+      })
+      .finally(() => {
+        if (!cancelled) setMobileSearchLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [debouncedMobileQ]);
 
   // Auto-focus input when search overlay opens
@@ -161,10 +197,8 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
-
           {/* ── Desktop bar ─────────────────────────────────── */}
           <div className="hidden lg:flex items-center h-16">
-
             {/* Logo */}
             <Link href="/" className="flex items-center shrink-0">
               <Image
@@ -195,7 +229,6 @@ export default function Navbar() {
                 {/* Mega-menu panel */}
                 <div className="absolute left-0 top-full pt-2 opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-200 ease-out z-50">
                   <div className="flex rounded-2xl border border-neutral-100 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.12)] overflow-hidden">
-
                     {/* EV Products column */}
                     <div className="w-60 p-5 border-r border-neutral-50">
                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 mb-3 px-1">
@@ -209,13 +242,19 @@ export default function Navbar() {
                             className="group/row flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-[#F0FEFF] transition-colors"
                           >
                             <div className="w-8 h-8 rounded-lg bg-[#DDF8FD] flex items-center justify-center shrink-0">
-                              <ev.icon size={15} className="text-[#0C7290]" strokeWidth={1.8} />
+                              <ev.icon
+                                size={15}
+                                className="text-[#0C7290]"
+                                strokeWidth={1.8}
+                              />
                             </div>
                             <div className="min-w-0">
                               <p className="text-[13px] font-semibold text-neutral-800 group-hover/row:text-[#0C7290] leading-tight transition-colors">
                                 {ev.name}
                               </p>
-                              <p className="text-[11px] text-neutral-400 leading-tight">{ev.sub}</p>
+                              <p className="text-[11px] text-neutral-400 leading-tight">
+                                {ev.sub}
+                              </p>
                             </div>
                           </Link>
                         ))}
@@ -262,13 +301,14 @@ export default function Navbar() {
                         <p className="text-[#19B5D8] text-[9px] font-bold uppercase tracking-widest mb-1.5">
                           In Stock
                         </p>
-                        <p className="text-white font-bold text-2xl leading-none">240+</p>
+                        <p className="text-white font-bold text-2xl leading-none">
+                          240+
+                        </p>
                         <p className="text-white/55 text-[11px] mt-1.5 leading-snug">
                           Products across 16 categories
                         </p>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -327,8 +367,12 @@ export default function Navbar() {
                         <p className="text-[9px] font-bold uppercase tracking-widest text-[#19B5D8] mb-1">
                           My Account
                         </p>
-                        <p className="text-[13px] font-semibold text-neutral-900 truncate">{user?.name}</p>
-                        <p className="text-[11px] text-neutral-400 mt-0.5 truncate">{user?.email}</p>
+                        <p className="text-[13px] font-semibold text-neutral-900 truncate">
+                          {user?.name}
+                        </p>
+                        <p className="text-[11px] text-neutral-400 mt-0.5 truncate">
+                          {user?.email}
+                        </p>
                       </div>
                       {ACCOUNT_LINKS.map((link) => (
                         <Link
@@ -337,16 +381,27 @@ export default function Navbar() {
                           className="flex items-center gap-3 px-4 py-2.5 text-[13px] text-neutral-700 hover:bg-neutral-50 hover:text-[#19B5D8] transition-colors"
                           onClick={() => setUserDropOpen(false)}
                         >
-                          <link.icon size={14} strokeWidth={1.8} className="shrink-0" />
+                          <link.icon
+                            size={14}
+                            strokeWidth={1.8}
+                            className="shrink-0"
+                          />
                           {link.label}
                         </Link>
                       ))}
                       <div className="border-t border-neutral-50 mt-1 pt-1">
                         <button
-                          onClick={() => { logout(); setUserDropOpen(false); }}
+                          onClick={() => {
+                            logout();
+                            setUserDropOpen(false);
+                          }}
                           className="w-full flex items-center gap-3 text-left px-4 py-2.5 text-[13px] text-red-500 hover:bg-red-50 transition-colors"
                         >
-                          <LogOut size={14} strokeWidth={1.8} className="shrink-0" />
+                          <LogOut
+                            size={14}
+                            strokeWidth={1.8}
+                            className="shrink-0"
+                          />
                           Sign Out
                         </button>
                       </div>
@@ -366,7 +421,6 @@ export default function Navbar() {
 
           {/* ── Mobile bar ──────────────────────────────────── */}
           <div className="flex items-center h-16 lg:hidden">
-
             {/* Left: Hamburger */}
             <div className="flex-1 flex justify-start">
               <button
@@ -421,7 +475,6 @@ export default function Navbar() {
               )}
             </div>
           </div>
-
         </div>
 
         {/* ── Mobile drawer ─────────────────────────────────── */}
@@ -466,7 +519,6 @@ export default function Navbar() {
 
                 {/* Nav */}
                 <div className="flex-1 overflow-y-auto py-3 px-2">
-
                   {/* Shop accordion */}
                   <button
                     onClick={() => setMobileShopOpen((p) => !p)}
@@ -474,7 +526,11 @@ export default function Navbar() {
                   >
                     <span className="flex items-center gap-3">
                       <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#DDF8FD]">
-                        <ShoppingBag size={15} className="text-[#0C7290]" strokeWidth={1.8} />
+                        <ShoppingBag
+                          size={15}
+                          className="text-[#0C7290]"
+                          strokeWidth={1.8}
+                        />
                       </span>
                       Shop
                     </span>
@@ -507,11 +563,19 @@ export default function Navbar() {
                                 onClick={() => setMobileOpen(false)}
                               >
                                 <div className="w-7 h-7 rounded-lg bg-[#DDF8FD] flex items-center justify-center shrink-0">
-                                  <ev.icon size={13} className="text-[#0C7290]" strokeWidth={1.8} />
+                                  <ev.icon
+                                    size={13}
+                                    className="text-[#0C7290]"
+                                    strokeWidth={1.8}
+                                  />
                                 </div>
                                 <div className="min-w-0">
-                                  <p className="text-[13px] font-medium text-neutral-800 leading-tight">{ev.name}</p>
-                                  <p className="text-[11px] text-neutral-400 leading-tight truncate">{ev.sub}</p>
+                                  <p className="text-[13px] font-medium text-neutral-800 leading-tight">
+                                    {ev.name}
+                                  </p>
+                                  <p className="text-[11px] text-neutral-400 leading-tight truncate">
+                                    {ev.sub}
+                                  </p>
                                 </div>
                               </Link>
                             ))}
@@ -549,8 +613,8 @@ export default function Navbar() {
 
                   {[
                     { label: "Why EVWheels", href: "/why-us" },
-                    { label: "Contact",      href: "/contact" },
-                    { label: "Support",      href: "/support" },
+                    { label: "Contact", href: "/contact" },
+                    { label: "Support", href: "/support" },
                   ].map((link) => (
                     <Link
                       key={link.href}
@@ -570,8 +634,12 @@ export default function Navbar() {
                       <div className="flex items-center gap-3 px-1 py-2 mb-2">
                         <UserAvatar name={user?.name} size="sm" />
                         <div className="min-w-0">
-                          <p className="text-[13px] font-semibold text-neutral-900 truncate">{user?.name}</p>
-                          <p className="text-[11px] text-neutral-400 truncate">{user?.email}</p>
+                          <p className="text-[13px] font-semibold text-neutral-900 truncate">
+                            {user?.name}
+                          </p>
+                          <p className="text-[11px] text-neutral-400 truncate">
+                            {user?.email}
+                          </p>
                         </div>
                       </div>
                       {ACCOUNT_LINKS.map((link) => (
@@ -581,15 +649,26 @@ export default function Navbar() {
                           className="flex items-center gap-3 px-1 py-2.5 text-[13px] text-neutral-700 hover:text-[#19B5D8] transition-colors"
                           onClick={() => setMobileOpen(false)}
                         >
-                          <link.icon size={15} strokeWidth={1.8} className="shrink-0 text-neutral-400" />
+                          <link.icon
+                            size={15}
+                            strokeWidth={1.8}
+                            className="shrink-0 text-neutral-400"
+                          />
                           {link.label}
                         </Link>
                       ))}
                       <button
-                        onClick={() => { logout(); setMobileOpen(false); }}
+                        onClick={() => {
+                          logout();
+                          setMobileOpen(false);
+                        }}
                         className="flex items-center gap-3 px-1 py-2.5 w-full text-left text-[13px] text-red-500 hover:text-red-600 transition-colors"
                       >
-                        <LogOut size={15} strokeWidth={1.8} className="shrink-0" />
+                        <LogOut
+                          size={15}
+                          strokeWidth={1.8}
+                          className="shrink-0"
+                        />
                         Sign Out
                       </button>
                     </div>
@@ -613,12 +692,14 @@ export default function Navbar() {
       {/* ── Full-screen search overlay (mobile) ─────────────── */}
       {mobileSearchOpen && (
         <div className="fixed inset-0 z-[60] bg-white flex flex-col lg:hidden">
-
           {/* Top bar */}
           <div className="flex items-center gap-3 px-4 h-16 border-b border-neutral-100 shrink-0">
             <Search size={18} className="text-neutral-400 shrink-0" />
             <form
-              onSubmit={(e) => { e.preventDefault(); goToResults(mobileQ); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                goToResults(mobileQ);
+              }}
               className="flex-1"
             >
               <input
@@ -649,7 +730,6 @@ export default function Navbar() {
 
           {/* Body */}
           <div className="flex-1 overflow-y-auto">
-
             {/* Empty state — show category shortcuts */}
             {mobileQ.trim() === "" && (
               <div className="px-5 pt-7 pb-4">
@@ -665,7 +745,11 @@ export default function Navbar() {
                       className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-neutral-50 hover:bg-[#F0FEFF] border border-neutral-100 transition-colors"
                     >
                       <div className="w-8 h-8 rounded-xl bg-[#DDF8FD] flex items-center justify-center shrink-0">
-                        <ev.icon size={15} className="text-[#0C7290]" strokeWidth={1.8} />
+                        <ev.icon
+                          size={15}
+                          className="text-[#0C7290]"
+                          strokeWidth={1.8}
+                        />
                       </div>
                       <div className="min-w-0">
                         <p className="text-[12.5px] font-semibold text-neutral-800 leading-tight truncate">
@@ -706,62 +790,72 @@ export default function Navbar() {
             )}
 
             {/* Results */}
-            {mobileQ.trim() !== "" && !mobileSearchLoading && mobileResults.length > 0 && (
-              <>
-                <ul className="divide-y divide-neutral-50">
-                  {mobileResults.map((p) => (
-                    <li key={p._id}>
-                      <Link
-                        href={`/shop/${p.slug}`}
-                        onClick={closeMobileSearch}
-                        className="flex items-center gap-3.5 px-5 py-3.5 hover:bg-neutral-50 transition-colors"
-                      >
-                        <div className="relative w-12 h-12 rounded-xl bg-neutral-50 border border-neutral-100 overflow-hidden shrink-0">
-                          {p.images?.[0] ? (
-                            <Image
-                              src={p.images[0]}
-                              alt={p.title}
-                              fill
-                              sizes="48px"
-                              className="object-contain"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-neutral-300 text-sm font-bold">
-                              {p.title?.charAt(0)}
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[13.5px] font-medium text-neutral-900 truncate">{p.title}</p>
-                          <p className="text-[12px] text-neutral-500 mt-0.5">
-                            ₹{Number(p.price).toLocaleString("en-IN")}
-                          </p>
-                        </div>
-                        <ArrowRight size={14} className="text-neutral-300 shrink-0" />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  onClick={() => goToResults(mobileQ)}
-                  className="w-full px-5 py-4 text-[13px] font-semibold text-[#0C7290] text-left border-t border-neutral-100 hover:bg-neutral-50 transition-colors"
-                >
-                  See all results for &ldquo;{mobileQ.trim()}&rdquo; →
-                </button>
-              </>
-            )}
+            {mobileQ.trim() !== "" &&
+              !mobileSearchLoading &&
+              mobileResults.length > 0 && (
+                <>
+                  <ul className="divide-y divide-neutral-50">
+                    {mobileResults.map((p) => (
+                      <li key={p._id}>
+                        <Link
+                          href={`/shop/${p.slug}`}
+                          onClick={closeMobileSearch}
+                          className="flex items-center gap-3.5 px-5 py-3.5 hover:bg-neutral-50 transition-colors"
+                        >
+                          <div className="relative w-12 h-12 rounded-xl bg-neutral-50 border border-neutral-100 overflow-hidden shrink-0">
+                            {p.images?.[0] ? (
+                              <Image
+                                src={p.images[0]}
+                                alt={p.title}
+                                fill
+                                sizes="48px"
+                                className="object-contain"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-neutral-300 text-sm font-bold">
+                                {p.title?.charAt(0)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[13.5px] font-medium text-neutral-900 truncate">
+                              {p.title}
+                            </p>
+                            <p className="text-[12px] text-neutral-500 mt-0.5">
+                              ₹{Number(p.price).toLocaleString("en-IN")}
+                            </p>
+                          </div>
+                          <ArrowRight
+                            size={14}
+                            className="text-neutral-300 shrink-0"
+                          />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    onClick={() => goToResults(mobileQ)}
+                    className="w-full px-5 py-4 text-[13px] font-semibold text-[#0C7290] text-left border-t border-neutral-100 hover:bg-neutral-50 transition-colors"
+                  >
+                    See all results for &ldquo;{mobileQ.trim()}&rdquo; →
+                  </button>
+                </>
+              )}
 
             {/* No results */}
-            {mobileQ.trim() !== "" && !mobileSearchLoading && mobileResults.length === 0 && (
-              <div className="px-5 py-14 text-center">
-                <p className="text-sm font-medium text-neutral-500 mb-1">
-                  No results for &ldquo;{mobileQ.trim()}&rdquo;
-                </p>
-                <p className="text-xs text-neutral-400">Try a different keyword</p>
-              </div>
-            )}
-
+            {mobileQ.trim() !== "" &&
+              !mobileSearchLoading &&
+              mobileResults.length === 0 && (
+                <div className="px-5 py-14 text-center">
+                  <p className="text-sm font-medium text-neutral-500 mb-1">
+                    No results for &ldquo;{mobileQ.trim()}&rdquo;
+                  </p>
+                  <p className="text-xs text-neutral-400">
+                    Try a different keyword
+                  </p>
+                </div>
+              )}
           </div>
         </div>
       )}
