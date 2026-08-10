@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
 
         {/* Category chip — top-left */}
         {product.category?.name && (
-          <span className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-sm text-[10px] font-semibold text-neutral-500 px-2.5 py-1 rounded-full border border-neutral-100 leading-none">
+          <span className="hidden sm:block absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-sm text-[10px] font-semibold text-neutral-500 px-2.5 py-1 rounded-full border border-neutral-100 leading-none">
             {product.category.name}
           </span>
         )}
