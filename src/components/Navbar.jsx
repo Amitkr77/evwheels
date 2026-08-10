@@ -476,9 +476,10 @@ export default function Navbar() {
             </div>
           </div>
         </div>
+      </nav>
 
-        {/* ── Mobile drawer ─────────────────────────────────── */}
-        <AnimatePresence>
+      {/* ── Mobile drawer ─────────────────────────────────── */}
+      <AnimatePresence>
           {mobileOpen && (
             <>
               {/* Backdrop */}
@@ -518,7 +519,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Nav */}
-                <div className="flex-1 overflow-y-auto py-3 px-2">
+                <div className="flex-1 overflow-y-auto py-3 px-2 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: "none" }}>
                   {/* Shop accordion */}
                   <button
                     onClick={() => setMobileShopOpen((p) => !p)}
@@ -687,7 +688,6 @@ export default function Navbar() {
             </>
           )}
         </AnimatePresence>
-      </nav>
 
       {/* ── Full-screen search overlay (mobile) ─────────────── */}
       {mobileSearchOpen && (
