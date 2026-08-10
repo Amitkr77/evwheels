@@ -190,47 +190,51 @@ const CARD_VARIANTS = {
 const HERO_SLIDES = [
   {
     badgeIcon: Zap,
-    badge:     "In-house manufactured · COD Available · Pan-India Delivery",
-    headline:  ["Electric Cycles", "& Scooters."],
-    accent:    "Made in Patna.",
-    desc:      "We manufacture electric cycles and lithium batteries in-house. Assemble e-scooters. Supply conversion kits and 240+ accessories — retail or wholesale, delivered Pan-India.",
-    cta1:      { label: "Shop Now",           href: "/shop" },
-    cta2:      { label: "Get Wholesale Quote", href: "/contact" },
+    badge: "In-house manufactured · COD Available · Pan-India Delivery",
+    headline: ["Electric Cycles", "& Scooters."],
+    accent: "Made in Patna.",
+    desc: "We manufacture electric cycles and lithium batteries in-house. Assemble e-scooters. Supply conversion kits and 240+ accessories — retail or wholesale, delivered Pan-India.",
+    cta1: { label: "Shop Now", href: "/shop" },
+    cta2: { label: "Get Wholesale Quote", href: "/contact" },
   },
   {
     badgeIcon: Battery,
-    badge:     "In-house battery manufacturing",
-    headline:  ["Batteries built", "by us."],
-    accent:    "Not outsourced.",
-    desc:      "We make our own lithium-ion battery packs — the safety-critical part most EV brands import or rebadge. Our cells power our cycles, scooters, and conversion kits.",
-    cta1:      { label: "Browse Batteries",    href: "/shop?category=batteries" },
-    cta2:      { label: "Get Wholesale Quote", href: "/contact" },
+    badge: "In-house battery manufacturing",
+    headline: ["Batteries built", "by us."],
+    accent: "Not outsourced.",
+    desc: "We make our own lithium-ion battery packs — the safety-critical part most EV brands import or rebadge. Our cells power our cycles, scooters, and conversion kits.",
+    cta1: { label: "Browse Batteries", href: "/shop?category=batteries" },
+    cta2: { label: "Get Wholesale Quote", href: "/contact" },
   },
   {
     badgeIcon: Settings,
-    badge:     "Conversion kits · 240+ spare parts",
-    headline:  ["Electrify your", "existing cycle."],
-    accent:    "Simpler than you think.",
-    desc:      "Our conversion kits include motor, battery, controller and all hardware. Plus 240+ genuine parts across 23 categories — Shimano, disc brakes, lights, helmets and more.",
-    cta1:      { label: "Shop Conversion Kits", href: "/shop?category=conversion-kits" },
-    cta2:      { label: "Browse All Parts",     href: "/shop" },
+    badge: "Conversion kits · 240+ spare parts",
+    headline: ["Electrify your", "existing cycle."],
+    accent: "Simpler than you think.",
+    desc: "Our conversion kits include motor, battery, controller and all hardware. Plus 240+ genuine parts across 23 categories — Shimano, disc brakes, lights, helmets and more.",
+    cta1: {
+      label: "Shop Conversion Kits",
+      href: "/shop?category=conversion-kits",
+    },
+    cta2: { label: "Browse All Parts", href: "/shop" },
   },
 ];
 
 function HeroSlider({ slides: dbSlides }) {
   // Normalise DB slides (which use headline0/headline1) into the same shape
   // as the hardcoded HERO_SLIDES so the render code is uniform.
-  const slides = dbSlides && dbSlides.length > 0
-    ? dbSlides.map((s) => ({
-        badgeIcon: ICON_MAP[s.badgeIcon] || Zap,
-        badge:     s.badge,
-        headline:  [s.headline0, s.headline1],
-        accent:    s.accent,
-        desc:      s.description,
-        cta1:      { label: s.cta1Label, href: s.cta1Href },
-        cta2:      { label: s.cta2Label, href: s.cta2Href },
-      }))
-    : HERO_SLIDES;
+  const slides =
+    dbSlides && dbSlides.length > 0
+      ? dbSlides.map((s) => ({
+          badgeIcon: ICON_MAP[s.badgeIcon] || Zap,
+          badge: s.badge,
+          headline: [s.headline0, s.headline1],
+          accent: s.accent,
+          desc: s.description,
+          cta1: { label: s.cta1Label, href: s.cta1Href },
+          cta2: { label: s.cta2Label, href: s.cta2Href },
+        }))
+      : HERO_SLIDES;
 
   const [active, setActive] = useState(0);
 
@@ -536,7 +540,7 @@ function ShowcaseSection({ products }) {
                 we build ourselves.
               </p>
 
-              <div className="grid grid-cols-3 gap-3 mb-7">
+              <div className="grid  grid-cols-1 sm:grid-cols-3 gap-3 mb-7">
                 {EV_FEATURES.map(({ icon: Icon, label, desc }) => (
                   <div
                     key={label}
@@ -590,14 +594,20 @@ function ShowcaseSection({ products }) {
               className="grid grid-cols-2 gap-3 flex-1"
             >
               {products.map((p) => (
-                <motion.div key={p._id} variants={CARD_VARIANTS} className="h-full">
+                <motion.div
+                  key={p._id}
+                  variants={CARD_VARIANTS}
+                  className="h-full"
+                >
                   <ProductCard product={p} />
                 </motion.div>
               ))}
             </motion.div>
 
             <div className="mt-5 pt-5 border-t border-neutral-100 flex items-center justify-between">
-              <p className="text-sm text-neutral-500">Electric cycles &amp; scooters</p>
+              <p className="text-sm text-neutral-500">
+                Electric cycles &amp; scooters
+              </p>
               <Link
                 href="/shop?category=electric-cycles"
                 className="flex items-center gap-1 text-sm font-semibold text-neutral-900 hover:text-[#19B5D8] transition-colors"
@@ -614,7 +624,11 @@ function ShowcaseSection({ products }) {
 
 // ── Page ──────────────────────────────────────────────────
 
-export default function HomeClient({ trendingProducts, heroSlides, instagramPosts }) {
+export default function HomeClient({
+  trendingProducts,
+  heroSlides,
+  instagramPosts,
+}) {
   return (
     <div className="bg-white text-neutral-900">
       {/* ── Hero ─────────────────────────────────────────── */}
@@ -633,7 +647,7 @@ export default function HomeClient({ trendingProducts, heroSlides, instagramPost
 
               <HeroSlider slides={heroSlides} />
 
-              <div className="relative z-10 flex items-center gap-8 sm:gap-12 pt-6 mt-6 border-t border-neutral-100">
+              <div className="relative z-10 flex sm:flex-col items-center gap-8 sm:gap-12 pt-6 mt-6 border-t border-neutral-100">
                 {HERO_STATS.map((s) => (
                   <div key={s.label}>
                     <p className="text-2xl font-bold text-neutral-900 leading-none">
@@ -879,7 +893,11 @@ export default function HomeClient({ trendingProducts, heroSlides, instagramPost
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" fill="white" className="w-7 h-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="white"
+                      className="w-7 h-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >
                       <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
                     </svg>
                   </div>
@@ -888,7 +906,9 @@ export default function HomeClient({ trendingProducts, heroSlides, instagramPost
             </motion.div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <p className="text-sm text-neutral-400 mb-3">No posts added yet.</p>
+              <p className="text-sm text-neutral-400 mb-3">
+                No posts added yet.
+              </p>
               <a
                 href="https://www.instagram.com/evwheels_patna"
                 target="_blank"

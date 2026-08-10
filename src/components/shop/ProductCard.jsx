@@ -51,17 +51,17 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Content */}
-      <div className="flex flex-col gap-2 p-3 sm:p-4 flex-1">
-        <h3 className="text-[12px] sm:text-[13px] font-semibold text-neutral-800 line-clamp-2 leading-snug flex-1">
+      <div className="flex flex-col gap-2.5 p-3.5 sm:p-5 flex-1">
+        <h3 className="text-[13px] sm:text-[14px] font-semibold text-neutral-800 line-clamp-2 leading-snug flex-1">
           {product.title}
         </h3>
 
-        <div className="flex items-center justify-between gap-1.5 mt-auto min-w-0">
-          <p className="text-[13px] sm:text-[15px] font-bold text-neutral-900 tracking-tight truncate">
+        <div className="flex items-center justify-between gap-2 mt-auto min-w-0">
+          <p className="text-[14px] sm:text-[16px] font-bold text-neutral-900 tracking-tight truncate">
             ₹{Number(product.price).toLocaleString("en-IN")}
           </p>
           <span
-            className={`shrink-0 text-[9px] sm:text-[10px] font-semibold px-1.5 sm:px-2 py-0.5 rounded-full leading-none ${
+            className={`shrink-0 text-[10px] sm:text-[11px] font-semibold px-2 sm:px-2.5 py-0.5 rounded-full leading-none ${
               inStock
                 ? "text-emerald-700 bg-emerald-50"
                 : "text-red-500 bg-red-50"
