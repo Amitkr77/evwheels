@@ -413,9 +413,10 @@ export default function Navbar() {
               ) : (
                 <Link
                   href="/account/login"
-                  className="flex items-center gap-1.5 px-4 py-2 text-[12.5px] font-semibold bg-neutral-900 text-white rounded-full hover:bg-neutral-700 transition-all"
+                  className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
+                  aria-label="Login"
                 >
-                  Login
+                  <User size={19} strokeWidth={1.8} />
                 </Link>
               )}
             </div>

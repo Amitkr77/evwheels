@@ -460,13 +460,13 @@ function ShopInner() {
             {/* Mobile toolbar */}
             <div className="flex lg:hidden items-center gap-2 mb-5">
               {/* Search */}
-              <div className="flex-1 flex items-center gap-2 px-3.5 py-2.5 border border-neutral-200 rounded-xl bg-neutral-50">
+              <div className="flex-1 min-w-0 flex items-center gap-2 px-3.5 py-2.5 border border-neutral-200 rounded-xl bg-neutral-50">
                 <Search size={13} className="text-neutral-400 shrink-0" />
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search…"
-                  className="flex-1 bg-transparent text-sm outline-none text-neutral-700 placeholder:text-neutral-400"
+                  className="flex-1 min-w-0 bg-transparent text-sm outline-none text-neutral-700 placeholder:text-neutral-400"
                 />
                 {search && (
                   <button onClick={() => setSearch("")} aria-label="Clear search">
@@ -477,7 +477,7 @@ function ShopInner() {
               {/* Filter button */}
               <button
                 onClick={() => setDrawerOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2.5 border border-neutral-200 rounded-xl text-sm font-medium text-neutral-700 bg-white"
+                className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 border border-neutral-200 rounded-xl text-sm font-medium text-neutral-700 bg-white"
               >
                 <SlidersHorizontal size={14} />
                 Filter

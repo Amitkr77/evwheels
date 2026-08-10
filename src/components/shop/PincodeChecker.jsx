@@ -80,15 +80,14 @@ export default function PincodeChecker({ cod = false }) {
             onKeyDown={(e) => e.key === "Enter" && check()}
             placeholder="Enter 6-digit pincode"
             aria-label="Delivery pincode"
-            className="flex-1 px-3.5 py-2.5 text-sm border border-neutral-200 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors placeholder:text-neutral-400"
+            className="flex-1 min-w-0 px-3.5 py-2.5 text-sm border border-neutral-200 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors placeholder:text-neutral-400"
           />
           <button
             onClick={() => check()}
             disabled={loading || pincode.length !== 6}
-            className="px-4 py-2.5 text-[12.5px] font-semibold bg-[#19B5D8] text-white rounded-xl hover:bg-[#1297B5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 shrink-0"
+            className="px-4 py-2.5 text-[12.5px] font-semibold bg-[#19B5D8] text-white rounded-xl hover:bg-[#1297B5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shrink-0 w-16"
           >
-            {loading && <Loader2 size={13} className="animate-spin" />}
-            {loading ? "Checking…" : "Check"}
+            {loading ? <Loader2 size={14} className="animate-spin" /> : "Check"}
           </button>
         </div>
       )}
