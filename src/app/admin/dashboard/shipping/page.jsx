@@ -37,7 +37,7 @@ function ShippingBadge({ status }) {
   if (!status) return <span className="text-xs text-neutral-400 italic">Not pushed</span>;
   const cls = SR_STATUS_COLORS[status] || "bg-neutral-100 text-neutral-600";
   return (
-    <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${cls}`}>
+    <span className={`px-2.5 py-1 rounded-none text-xs font-medium ${cls}`}>
       {status.replace(/_/g, " ")}
     </span>
   );
@@ -92,7 +92,7 @@ function CourierDialog({ order, onClose, onAssigned }) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
     >
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 z-10">
+      <div className="relative bg-white rounded-none shadow-2xl w-full max-w-md p-6 z-10">
         <div className="flex items-center justify-between mb-5">
           <h2 id="courier-dialog-title" className="text-lg font-semibold">Select Courier</h2>
           <button onClick={onClose} aria-label="Close" className="text-neutral-400 hover:text-neutral-600">
@@ -113,7 +113,7 @@ function CourierDialog({ order, onClose, onAssigned }) {
             {couriers.map((c) => (
               <label
                 key={c.courier_company_id}
-                className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                className={`flex items-center gap-3 p-3 rounded-none border cursor-pointer transition-all ${
                   selected?.courier_company_id === c.courier_company_id
                     ? "border-[#19B5D8] bg-[#DDF8FD]/40"
                     : "border-neutral-200 hover:border-neutral-300"
@@ -134,7 +134,7 @@ function CourierDialog({ order, onClose, onAssigned }) {
                   </p>
                 </div>
                 {c.is_recommended && (
-                  <span className="text-[10px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full font-medium shrink-0">
+                  <span className="text-[10px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-none font-medium shrink-0">
                     Recommended
                   </span>
                 )}
@@ -146,7 +146,7 @@ function CourierDialog({ order, onClose, onAssigned }) {
         <button
           onClick={handleAssign}
           disabled={!selected || assigning}
-          className="w-full py-3 bg-[#19B5D8] text-white rounded-xl font-medium text-sm disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full py-3 bg-[#19B5D8] text-white rounded-none font-medium text-sm disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {assigning && <Loader2 size={15} className="animate-spin" />}
           {assigning ? "Assigning…" : "Assign & Generate AWB"}
@@ -209,7 +209,7 @@ function TrackingDrawer({ order, onClose }) {
 
           {/* Courier info */}
           {order.shiprocket?.awbCode && (
-            <div className="mb-5 p-4 bg-neutral-50 rounded-xl space-y-1.5">
+            <div className="mb-5 p-4 bg-neutral-50 rounded-none space-y-1.5">
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">AWB</span>
                 <span className="font-mono font-medium">{order.shiprocket.awbCode}</span>
@@ -257,7 +257,7 @@ function TrackingDrawer({ order, onClose }) {
             <ol className="relative border-l border-neutral-200 space-y-0 ml-2">
               {history.map((event, i) => (
                 <li key={i} className="ml-5 pb-6 last:pb-0">
-                  <div className="absolute -left-[7px] w-3.5 h-3.5 rounded-full border-2 border-white bg-[#19B5D8] mt-0.5" />
+                  <div className="absolute -left-[7px] w-3.5 h-3.5 rounded-none border-2 border-white bg-[#19B5D8] mt-0.5" />
                   <p className="text-sm font-semibold text-neutral-900 leading-snug">{event.status}</p>
                   {event.location && (
                     <p className="flex items-center gap-1 text-xs text-neutral-500 mt-0.5">
@@ -503,13 +503,13 @@ export default function ShippingPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search order ID or AWB…"
-            className="w-full pl-9 pr-4 py-3 border border-neutral-300 rounded-xl text-sm focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full pl-9 pr-4 py-3 border border-neutral-300 rounded-none text-sm focus:outline-none focus:border-[#19B5D8] transition-colors"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-3 border border-neutral-300 rounded-xl text-sm focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="px-4 py-3 border border-neutral-300 rounded-none text-sm focus:outline-none focus:border-[#19B5D8] transition-colors"
         >
           {STATUS_FILTER_OPTIONS.map((s) => (
             <option key={s} value={s}>{s || "All Statuses"}</option>
@@ -518,7 +518,7 @@ export default function ShippingPage() {
       </div>
 
       {/* Table */}
-      <div className="border border-neutral-200/70 rounded-2xl overflow-hidden">
+      <div className="border border-neutral-200/70 rounded-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50/70">
@@ -566,7 +566,7 @@ export default function ShippingPage() {
 
                       {/* Order Status */}
                       <td className="py-4 px-5 hidden md:table-cell">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${ORDER_STATUS_COLORS[order.orderStatus] || "bg-neutral-100 text-neutral-600"}`}>
+                        <span className={`px-2.5 py-1 rounded-none text-xs font-medium ${ORDER_STATUS_COLORS[order.orderStatus] || "bg-neutral-100 text-neutral-600"}`}>
                           {order.orderStatus}
                         </span>
                       </td>
@@ -719,7 +719,7 @@ export default function ShippingPage() {
 // ── Reusable action button ────────────────────────────────────────────────────
 
 function ActionBtn({ label, icon, loading, onClick, variant = "default" }) {
-  const base = "inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50";
+  const base = "inline-flex items-center gap-1 px-2.5 py-1.5 rounded-none text-xs font-medium transition-all disabled:opacity-50";
   const variants = {
     default: "bg-neutral-100 text-neutral-700 hover:bg-neutral-200",
     primary: "bg-[#19B5D8] text-white hover:bg-[#1297B5]",

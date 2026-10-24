@@ -79,7 +79,7 @@ export default function HeaderSearch({ className = "" }) {
     <div ref={containerRef} className={`relative ${className}`}>
       <form
         onSubmit={handleSearch}
-        className="flex items-center bg-neutral-50 border border-neutral-200 rounded-full overflow-hidden focus-within:border-[#19B5D8] focus-within:ring-2 focus-within:ring-[#19B5D8]/10 transition-all"
+        className="flex items-center bg-neutral-50 border border-neutral-200 overflow-hidden focus-within:border-[#19B5D8] focus-within:ring-2 focus-within:ring-[#19B5D8]/10 transition-all"
       >
         <Search size={15} className="ml-4 text-neutral-400 shrink-0" />
         <input
@@ -96,14 +96,14 @@ export default function HeaderSearch({ className = "" }) {
         />
         <button
           type="submit"
-          className="mr-1.5 px-4 py-1.5 bg-[#0C7290] text-white text-xs font-semibold rounded-full hover:bg-[#0a5f78] transition-colors shrink-0"
+          className="mr-1.5 px-4 py-1.5 bg-[#0C7290] text-white text-xs font-semibold hover:bg-[#0a5f78] transition-colors shrink-0"
         >
           Search
         </button>
       </form>
 
       {showDropdown && (
-        <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-neutral-200 rounded-2xl shadow-lg overflow-hidden z-30">
+        <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-neutral-200 shadow-lg overflow-hidden z-30">
           {loading ? (
             <div className="flex items-center justify-center gap-2 py-6 text-sm text-neutral-500">
               <Loader2 size={16} className="animate-spin" />
@@ -119,7 +119,7 @@ export default function HeaderSearch({ className = "" }) {
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors"
                     >
-                      <div className="relative w-10 h-10 rounded-lg bg-neutral-50 overflow-hidden shrink-0">
+                      <div className="relative w-10 h-10 bg-neutral-50 overflow-hidden shrink-0">
                         {p.images?.[0] ? (
                           <Image
                             src={p.images[0]}

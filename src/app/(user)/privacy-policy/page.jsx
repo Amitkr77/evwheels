@@ -107,7 +107,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         {/* Contact */}
-        <div className="mt-14 p-6 bg-[#DDF8FD] rounded-2xl border border-[#19B5D8]/20">
+        <div className="mt-14 p-6 bg-[#DDF8FD] rounded-none border border-[#19B5D8]/20">
           <h2 className="text-lg font-semibold text-neutral-900 mb-2">Questions about this policy?</h2>
           <p className="text-neutral-600 text-sm mb-4">
             Contact our data team at <a href="mailto:support@evwheels.in" className="text-[#19B5D8] hover:underline">support@evwheels.in</a> or visit our <Link href="/contact" className="text-[#19B5D8] hover:underline">Contact page</Link>.

@@ -204,11 +204,11 @@ export default function ReportsPage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
+        className="bg-white border border-neutral-200/70 rounded-none p-6 hover:border-[#19B5D8]/20 transition-colors"
       >
         <div className="flex items-start justify-between mb-3">
           <span className="text-sm font-light text-neutral-600">{title}</span>
-          <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${colorMap[color]}`}>
+          <div className={`w-9 h-9 rounded-none flex items-center justify-center ${colorMap[color]}`}>
             <Icon size={18} strokeWidth={1.6} />
           </div>
         </div>
@@ -338,11 +338,11 @@ export default function ReportsPage() {
         </div>
 
         {/* Category Breakdown */}
-        <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8 mb-10">
+        <div className="bg-white border border-neutral-200/70 rounded-none p-6 md:p-8 mb-10">
           <h3 className="text-xl font-medium mb-6">
             Category Breakdown
           </h3>
-          <div className="border border-neutral-200/60 rounded-lg overflow-hidden">
+          <div className="border border-neutral-200/60 rounded-none overflow-hidden">
             <table className="w-full">
               <thead className="bg-neutral-50/70">
                 <tr>
@@ -391,7 +391,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Price Distribution */}
-        <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8">
+        <div className="bg-white border border-neutral-200/70 rounded-none p-6 md:p-8">
           <h3 className="text-xl font-medium mb-6">
             Price Distribution
           </h3>
@@ -400,12 +400,12 @@ export default function ReportsPage() {
               {d.priceDistribution.map((range, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between px-4 py-3 bg-neutral-50/60 rounded-lg hover:bg-[#DDF8FD]/40 transition-colors"
+                  className="flex items-center justify-between px-4 py-3 bg-neutral-50/60 rounded-none hover:bg-[#DDF8FD]/40 transition-colors"
                 >
                   <span className="text-sm font-medium text-neutral-800">
                     {range._id}
                   </span>
-                  <span className="px-3 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-full">
+                  <span className="px-3 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-none">
                     {range.count} product{range.count !== 1 ? "s" : ""}
                   </span>
                 </div>
@@ -452,7 +452,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Revenue Chart */}
-        <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8 mb-10">
+        <div className="bg-white border border-neutral-200/70 rounded-none p-6 md:p-8 mb-10">
           <h3 className="text-xl font-medium mb-6">
             Daily Revenue
           </h3>
@@ -464,7 +464,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Orders by Status */}
-        <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8">
+        <div className="bg-white border border-neutral-200/70 rounded-none p-6 md:p-8">
           <h3 className="text-xl font-medium mb-6">
             Orders by Status
           </h3>
@@ -484,11 +484,11 @@ export default function ReportsPage() {
                 return (
                   <div
                     key={i}
-                    className="flex items-center justify-between px-4 py-3 bg-neutral-50/60 rounded-lg"
+                    className="flex items-center justify-between px-4 py-3 bg-neutral-50/60 rounded-none"
                   >
                     <div className="flex items-center gap-3">
                       <span
-                        className={`px-3 py-1 text-xs font-medium rounded-full ${badgeClass}`}
+                        className={`px-3 py-1 text-xs font-medium rounded-none ${badgeClass}`}
                       >
                         {s._id}
                       </span>
@@ -524,7 +524,7 @@ export default function ReportsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <div className="bg-white border border-neutral-200/70 rounded-xl overflow-hidden">
+        <div className="bg-white border border-neutral-200/70 rounded-none overflow-hidden">
           <table className="w-full">
             <thead className="bg-neutral-50/70">
               <tr>
@@ -602,14 +602,14 @@ export default function ReportsPage() {
               <button
                 disabled={pagination.page <= 1}
                 onClick={() => setProductPage((p) => Math.max(1, p - 1))}
-                className="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-none border border-neutral-200 text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeft size={16} />
               </button>
               <button
                 disabled={pagination.page >= pagination.pages}
                 onClick={() => setProductPage((p) => p + 1)}
-                className="w-9 h-9 flex items-center justify-center rounded-lg border border-neutral-200 text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-none border border-neutral-200 text-neutral-600 hover:bg-neutral-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronRight size={16} />
               </button>
@@ -642,11 +642,11 @@ export default function ReportsPage() {
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.35, delay: i * 0.05 }}
-                  className="bg-white border border-neutral-200/70 rounded-xl p-5 hover:border-[#19B5D8]/20 transition-colors"
+                  className="bg-white border border-neutral-200/70 rounded-none p-5 hover:border-[#19B5D8]/20 transition-colors"
                 >
                   <div className="flex items-center gap-4 mb-3">
                     <span
-                      className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold ${
+                      className={`w-9 h-9 rounded-none flex items-center justify-center text-sm font-bold ${
                         i === 0
                           ? "bg-[#19B5D8] text-white"
                           : i === 1
@@ -671,12 +671,12 @@ export default function ReportsPage() {
                     </div>
                   </div>
                   {/* Progress bar */}
-                  <div className="h-2.5 bg-neutral-100 rounded-full overflow-hidden">
+                  <div className="h-2.5 bg-neutral-100 rounded-none overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}
                       transition={{ duration: 0.6, delay: i * 0.06 }}
-                      className={`h-full rounded-full ${
+                      className={`h-full rounded-none ${
                         i === 0
                           ? "bg-[#19B5D8]"
                           : i === 1
@@ -692,7 +692,7 @@ export default function ReportsPage() {
             })}
           </div>
         ) : (
-          <div className="bg-white border border-neutral-200/70 rounded-xl p-12 text-center text-neutral-400">
+          <div className="bg-white border border-neutral-200/70 rounded-none p-12 text-center text-neutral-400">
             No best selling data for this period
           </div>
         )}
@@ -793,7 +793,7 @@ export default function ReportsPage() {
             },
           };
           return (
-            <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8 mb-6">
+            <div className="bg-white border border-neutral-200/70 rounded-none p-6 md:p-8 mb-6">
               <h3 className="text-xl font-medium mb-6">Monthly Revenue Trend</h3>
               <div className="h-56">
                 <Line data={lineData} options={lineOptions} />
@@ -803,11 +803,11 @@ export default function ReportsPage() {
         })()}
 
         {/* Monthly Revenue Breakdown */}
-        <div className="bg-white border border-neutral-200/70 rounded-xl p-6 md:p-8">
+        <div className="bg-white border border-neutral-200/70 rounded-none p-6 md:p-8">
           <h3 className="text-xl font-medium mb-6">
             Monthly Revenue Breakdown
           </h3>
-          <div className="border border-neutral-200/60 rounded-lg overflow-hidden">
+          <div className="border border-neutral-200/60 rounded-none overflow-hidden">
             <table className="w-full">
               <thead className="bg-neutral-50/70">
                 <tr>
@@ -921,7 +921,7 @@ export default function ReportsPage() {
                   setActiveTab(tab.key);
                   if (tab.key === "product-performance") setProductPage(1);
                 }}
-                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-none whitespace-nowrap transition-colors ${
                   isActive
                     ? "bg-[#19B5D8] text-white shadow-sm"
                     : "text-neutral-600 hover:bg-neutral-100"
@@ -939,12 +939,12 @@ export default function ReportsPage() {
 
         <div className="flex items-center gap-3">
           {/* Period selector */}
-          <div className="flex items-center gap-1 bg-neutral-100 rounded-lg p-1">
+          <div className="flex items-center gap-1 bg-neutral-100 rounded-none p-1">
             {PERIODS.map((p) => (
               <button
                 key={p.key}
                 onClick={() => setPeriod(p.key)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-4 py-2 text-sm font-medium rounded-none transition-colors ${
                   period === p.key
                     ? "bg-white text-[#19B5D8] shadow-sm"
                     : "text-neutral-600 hover:text-neutral-800"
@@ -959,7 +959,7 @@ export default function ReportsPage() {
           <button
             onClick={handleExport}
             disabled={!canExport}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border border-neutral-200 text-neutral-700 hover:bg-neutral-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-none border border-neutral-200 text-neutral-700 hover:bg-neutral-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             title={activeTab === "product-performance" ? "Exports the current page only" : "Export this table as CSV"}
           >
             <Download size={16} />

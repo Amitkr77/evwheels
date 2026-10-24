@@ -77,7 +77,7 @@
    Base Color Values (Light)
    ========================================================= */
 :root {
-  --radius: 0.625rem;
+  --radius: 0rem;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

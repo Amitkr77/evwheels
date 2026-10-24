@@ -14,12 +14,12 @@ const TABS = [
 
 function SkeletonCard() {
   return (
-    <div className="w-[72vw] sm:w-[265px] rounded-2xl border border-neutral-100 overflow-hidden animate-pulse">
+    <div className="w-[72vw] sm:w-[265px] rounded-none border border-neutral-100 overflow-hidden animate-pulse">
       <div className="aspect-[4/3] bg-neutral-100" />
       <div className="p-5 space-y-2.5">
-        <div className="h-3 bg-neutral-100 rounded-full w-full" />
-        <div className="h-3 bg-neutral-100 rounded-full w-2/3" />
-        <div className="h-4 bg-neutral-100 rounded-full w-1/2 mt-1" />
+        <div className="h-3 bg-neutral-100 rounded-none w-full" />
+        <div className="h-3 bg-neutral-100 rounded-none w-2/3" />
+        <div className="h-4 bg-neutral-100 rounded-none w-1/2 mt-1" />
       </div>
     </div>
   );
@@ -86,14 +86,14 @@ export default function PopularProducts() {
         {/* Tabs — segmented card on mobile, pills on desktop */}
 
         {/* Mobile: full-width card segmented control */}
-        <div className="sm:hidden grid grid-cols-3 bg-neutral-100 rounded-2xl p-1 gap-1 mb-6">
+        <div className="sm:hidden grid grid-cols-3 bg-neutral-100 rounded-none p-1 gap-1 mb-6">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.key;
             return (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex flex-col items-center gap-1.5 py-3 rounded-xl transition-all duration-200 ${
+                className={`flex flex-col items-center gap-1.5 py-3 rounded-none transition-all duration-200 ${
                   isActive ? "bg-white shadow-sm" : ""
                 }`}
               >
@@ -120,7 +120,7 @@ export default function PopularProducts() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-full whitespace-nowrap transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-none whitespace-nowrap transition-colors ${
                   isActive
                     ? "bg-neutral-900 text-white"
                     : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
@@ -138,7 +138,7 @@ export default function PopularProducts() {
             {Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : products.length === 0 ? (
-          <p className="text-neutral-400 text-sm py-12 text-center border border-dashed border-neutral-200 rounded-xl">
+          <p className="text-neutral-400 text-sm py-12 text-center border border-dashed border-neutral-200 rounded-none">
             No products here yet.
           </p>
         ) : (

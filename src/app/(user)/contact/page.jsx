@@ -152,7 +152,7 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <span className="inline-block px-4 py-1.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm font-medium mb-6">
+              <span className="inline-block px-4 py-1.5 bg-[#DDF8FD] text-[#19B5D8] rounded-none text-sm font-medium mb-6">
                 📬 Contact Us
               </span>
 
@@ -172,7 +172,7 @@ export default function ContactPage() {
                   href="https://wa.me/918298922623"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
                 >
                   <MessageCircle size={18} />
                   WhatsApp Us
@@ -180,7 +180,7 @@ export default function ContactPage() {
 
                 <a
                   href="mailto:support@evwheels.in"
-                  className="flex items-center gap-2 px-6 py-3 border border-neutral-300 text-neutral-900 rounded-full text-sm md:text-base font-medium hover:bg-neutral-50 transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 border border-neutral-300 text-neutral-900 rounded-none text-sm md:text-base font-medium hover:bg-neutral-50 transition-colors"
                 >
                   <Mail size={18} />
                   Email Us
@@ -207,11 +207,11 @@ export default function ContactPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="bg-white border border-neutral-200/70 rounded-2xl overflow-hidden shadow-sm"
+              className="bg-white border border-neutral-200/70 rounded-none overflow-hidden shadow-sm"
             >
               <div className="p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white">
+                  <div className="w-10 h-10 rounded-none bg-[#19B5D8] flex items-center justify-center text-white">
                     <MapPin size={20} />
                   </div>
                   <div>
@@ -264,10 +264,10 @@ export default function ContactPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
+                className="bg-white border border-neutral-200/70 rounded-none p-6 hover:border-[#19B5D8]/20 transition-colors"
               >
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mb-5 text-[#19B5D8]"
+                  className="w-12 h-12 rounded-none flex items-center justify-center mb-5 text-[#19B5D8]"
                   style={{ background: "rgba(25,181,216,0.08)" }}
                 >
                   {card.icon}
@@ -307,9 +307,9 @@ export default function ContactPage() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-white border border-neutral-200/70 rounded-2xl p-10 md:p-12 text-center"
+                  className="bg-white border border-neutral-200/70 rounded-none p-10 md:p-12 text-center"
                 >
-                  <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-[#DDF8FD] flex items-center justify-center">
+                  <div className="w-20 h-20 mx-auto mb-8 rounded-none bg-[#DDF8FD] flex items-center justify-center">
                     <CheckCircle size={40} className="text-[#19B5D8]" />
                   </div>
                   <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-4">
@@ -324,21 +324,21 @@ export default function ContactPage() {
                       href="https://wa.me/918298922623"
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center justify-center gap-2 px-8 py-4 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
+                      className="flex items-center justify-center gap-2 px-8 py-4 bg-[#19B5D8] text-white rounded-none text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
                     >
                       <MessageCircle size={18} />
                       WhatsApp Us
                     </Link>
                     <button
                       onClick={() => setSent(false)}
-                      className="px-8 py-4 border border-neutral-300 text-neutral-900 rounded-full text-sm md:text-base font-medium hover:bg-neutral-50 transition-colors"
+                      className="px-8 py-4 border border-neutral-300 text-neutral-900 rounded-none text-sm md:text-base font-medium hover:bg-neutral-50 transition-colors"
                     >
                       Send Another Message
                     </button>
                   </div>
                 </motion.div>
               ) : (
-                <div className="bg-white border border-neutral-200/70 rounded-2xl p-8 md:p-12">
+                <div className="bg-white border border-neutral-200/70 rounded-none p-8 md:p-12">
                   <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-2">
                     Send Us a Message
                   </h2>
@@ -362,7 +362,7 @@ export default function ContactPage() {
                           placeholder="Your full name"
                           aria-invalid={Boolean(errors.name)}
                           aria-describedby={errors.name ? "contact-name-error" : undefined}
-                          className={`w-full px-5 py-4 border ${errors.name ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
+                          className={`w-full px-5 py-4 border ${errors.name ? "border-red-500" : "border-neutral-300"} rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors`}
                         />
                         {errors.name && (
                           <p id="contact-name-error" role="alert" className="mt-2 text-sm text-red-600">
@@ -384,7 +384,7 @@ export default function ContactPage() {
                           placeholder="+91 98765 43210"
                           aria-invalid={Boolean(errors.phone)}
                           aria-describedby={errors.phone ? "contact-phone-error" : undefined}
-                          className={`w-full px-5 py-4 border ${errors.phone ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
+                          className={`w-full px-5 py-4 border ${errors.phone ? "border-red-500" : "border-neutral-300"} rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors`}
                         />
                         {errors.phone && (
                           <p id="contact-phone-error" role="alert" className="mt-2 text-sm text-red-600">
@@ -408,7 +408,7 @@ export default function ContactPage() {
                         placeholder="your@email.com"
                         aria-invalid={Boolean(errors.email)}
                         aria-describedby={errors.email ? "contact-email-error" : undefined}
-                        className={`w-full px-5 py-4 border ${errors.email ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
+                        className={`w-full px-5 py-4 border ${errors.email ? "border-red-500" : "border-neutral-300"} rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors`}
                       />
                       {errors.email && (
                         <p id="contact-email-error" role="alert" className="mt-2 text-sm text-red-600">
@@ -430,7 +430,7 @@ export default function ContactPage() {
                         onChange={handleChange}
                         aria-invalid={Boolean(errors.subject)}
                         aria-describedby={errors.subject ? "contact-subject-error" : undefined}
-                        className={`w-full px-5 py-4 border ${errors.subject ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors`}
+                        className={`w-full px-5 py-4 border ${errors.subject ? "border-red-500" : "border-neutral-300"} rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors`}
                       >
                         <option value="">Select an option...</option>
                         <option>RangeX City</option>
@@ -463,7 +463,7 @@ export default function ContactPage() {
                         rows={5}
                         aria-invalid={Boolean(errors.message)}
                         aria-describedby={errors.message ? "contact-message-error" : undefined}
-                        className={`w-full px-5 py-4 border ${errors.message ? "border-red-500" : "border-neutral-300"} rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none`}
+                        className={`w-full px-5 py-4 border ${errors.message ? "border-red-500" : "border-neutral-300"} rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors resize-none`}
                       />
                       <div className="flex justify-between text-xs text-neutral-500 mt-2">
                         <span>{form.message.length} / 500 characters</span>
@@ -476,7 +476,7 @@ export default function ContactPage() {
                     </div>
 
                     {submitError && (
-                      <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mt-4">
+                      <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-none px-4 py-3 mt-4">
                         {submitError}
                       </p>
                     )}
@@ -484,7 +484,7 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className={`w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4`}
+                      className={`w-full py-4 bg-neutral-900 text-white rounded-none text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4`}
                     >
                       {loading ? (
                         <>
@@ -527,8 +527,8 @@ export default function ContactPage() {
             {/* Quick Contact Sidebar */}
             <div className="space-y-8">
               {/* WhatsApp Quick Card */}
-              <div className="bg-[#DDF8FD]/60 border border-[#19B5D8]/20 rounded-xl p-6 text-center">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-[#DDF8FD] flex items-center justify-center">
+              <div className="bg-[#DDF8FD]/60 border border-[#19B5D8]/20 rounded-none p-6 text-center">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-none bg-[#DDF8FD] flex items-center justify-center">
                   <MessageCircle size={28} className="text-[#19B5D8]" />
                 </div>
                 <h3 className="text-xl font-medium text-neutral-900 mb-2">
@@ -541,14 +541,14 @@ export default function ContactPage() {
                   href="https://wa.me/918298922623"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-8 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+                  className="inline-flex items-center gap-2 px-8 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
                 >
                   Open WhatsApp
                 </Link>
               </div>
 
               {/* Office & Response Info */}
-              <div className="bg-white border border-neutral-200/70 rounded-xl p-6">
+              <div className="bg-white border border-neutral-200/70 rounded-none p-6">
                 <h4 className="text-lg font-medium text-neutral-900 mb-6">
                   Our Details
                 </h4>
@@ -604,7 +604,7 @@ export default function ContactPage() {
               </div>
 
               {/* Response Time */}
-              <div className="bg-white border border-neutral-200/70 rounded-xl p-6">
+              <div className="bg-white border border-neutral-200/70 rounded-none p-6">
                 <h4 className="text-lg font-medium text-neutral-900 mb-6">
                   Response Time
                 </h4>
@@ -633,7 +633,7 @@ export default function ContactPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-8xl mx-auto px-5 sm:px-8 lg:px-12">
           <div className="text-center mb-12 md:mb-16">
-            <span className="inline-block px-4 py-1.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-1.5 bg-[#DDF8FD] text-[#19B5D8] rounded-none text-sm font-medium mb-4">
               ❓ FAQs
             </span>
             <h2 className="text-4xl md:text-5xl font-medium text-neutral-900">
@@ -649,7 +649,7 @@ export default function ContactPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
+                className="bg-white border border-neutral-200/70 rounded-none p-6 hover:border-[#19B5D8]/20 transition-colors"
               >
                 <h4 className="text-lg font-medium text-neutral-900 mb-3">
                   {faq.q}
@@ -668,7 +668,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white border border-neutral-200/70 rounded-2xl p-10 md:p-12"
+            className="bg-white border border-neutral-200/70 rounded-none p-10 md:p-12"
           >
             <h2 className="text-3xl md:text-4xl font-medium text-neutral-900 mb-4">
               Still Have Questions?
@@ -683,7 +683,7 @@ export default function ContactPage() {
                 href="https://wa.me/918298922623"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 px-8 py-4 bg-[#19B5D8] text-white rounded-full text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
+                className="flex items-center justify-center gap-2 px-8 py-4 bg-[#19B5D8] text-white rounded-none text-sm md:text-base font-medium hover:bg-[#1297B5] transition-colors"
               >
                 <MessageCircle size={18} />
                 WhatsApp Us
@@ -691,7 +691,7 @@ export default function ContactPage() {
 
               <Link
                 href="mailto:support@evwheels.in"
-                className="flex items-center justify-center gap-2 px-8 py-4 border border-neutral-300 text-neutral-900 rounded-full text-sm md:text-base font-medium hover:bg-neutral-50 transition-colors"
+                className="flex items-center justify-center gap-2 px-8 py-4 border border-neutral-300 text-neutral-900 rounded-none text-sm md:text-base font-medium hover:bg-neutral-50 transition-colors"
               >
                 <Mail size={18} />
                 Email Us

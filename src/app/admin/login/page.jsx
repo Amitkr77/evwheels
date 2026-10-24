@@ -87,7 +87,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+                className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
                 placeholder="hello@evwheels.in"
                 required
               />
@@ -106,7 +106,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+                className="w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
                 placeholder="••••••••"
                 required
               />
@@ -123,7 +123,7 @@ export default function LoginPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="text-red-600 text-sm text-center font-medium bg-red-50 py-2.5 rounded-2xl">
+            <div className="text-red-600 text-sm text-center font-medium bg-red-50 py-2.5 rounded-none">
               {error}
             </div>
           )}
@@ -133,7 +133,7 @@ export default function LoginPage() {
             type="submit"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors mt-4 flex justify-center items-center gap-2"
+            className="w-full py-4 bg-neutral-900 text-white rounded-none text-lg font-medium hover:bg-neutral-800 transition-colors mt-4 flex justify-center items-center gap-2"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -150,7 +150,7 @@ export default function LoginPage() {
         </form>
 
         {/* Footer Info */}
-        <div className="bg-gray-50 border-t border-gray-100 px-10 py-6 text-center text-xs text-gray-500 flex items-center justify-center gap-2 mt-6 rounded-lg">
+        <div className="bg-gray-50 border-t border-gray-100 px-10 py-6 text-center text-xs text-gray-500 flex items-center justify-center gap-2 mt-6 rounded-none">
           <Shield size={16} />
           Secure admin access • Patna, Bihar
         </div>

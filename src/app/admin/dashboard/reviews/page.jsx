@@ -71,7 +71,7 @@ export default function ReviewsPage() {
       );
 
     return (
-      <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+      <div className="border border-neutral-200/60 rounded-none overflow-hidden">
         <table className="w-full">
           <thead className="bg-neutral-50/70">
             <tr>
@@ -119,7 +119,7 @@ export default function ReviewsPage() {
                 </td>
                 <td className="py-6 px-6">
                   <span
-                    className={`px-4 py-1 text-xs font-medium rounded-full ${
+                    className={`px-4 py-1 text-xs font-medium rounded-none ${
                       review.status?.toLowerCase() === "approved"
                         ? "bg-[#DDF8FD] text-[#19B5D8]"
                         : review.status?.toLowerCase() === "rejected"
@@ -135,13 +135,13 @@ export default function ReviewsPage() {
                     <>
                       <button
                         onClick={() => approveReview(review._id)}
-                        className="px-4 py-1.5 bg-[#19B5D8] text-white text-xs rounded-lg hover:bg-[#1297B5] transition-colors"
+                        className="px-4 py-1.5 bg-[#19B5D8] text-white text-xs rounded-none hover:bg-[#1297B5] transition-colors"
                       >
                         Approve
                       </button>
                       <button
                         onClick={() => rejectReview(review._id)}
-                        className="px-4 py-1.5 bg-red-600 text-white text-xs rounded-lg hover:bg-red-700 transition-colors"
+                        className="px-4 py-1.5 bg-red-600 text-white text-xs rounded-none hover:bg-red-700 transition-colors"
                       >
                         Reject
                       </button>

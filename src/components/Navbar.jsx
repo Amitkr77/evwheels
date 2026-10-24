@@ -216,7 +216,7 @@ export default function Navbar() {
               <div className="relative group h-16 flex items-center">
                 <button
                   aria-haspopup="true"
-                  className="flex items-center gap-1.5 px-4 py-2 text-[13.5px] font-semibold text-neutral-800 rounded-full hover:bg-neutral-100 hover:text-[#0C7290] transition-all duration-200"
+                  className="flex items-center gap-1.5 px-4 py-2 text-[13.5px] font-semibold text-neutral-800 hover:bg-neutral-100 hover:text-[#0C7290] transition-all duration-200"
                 >
                   Shop
                   <ChevronDown
@@ -228,7 +228,7 @@ export default function Navbar() {
 
                 {/* Mega-menu panel */}
                 <div className="absolute left-0 top-full pt-2 opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-200 ease-out z-50">
-                  <div className="flex rounded-2xl border border-neutral-100 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.12)] overflow-hidden">
+                  <div className="flex border border-neutral-100 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.12)] overflow-hidden">
                     {/* EV Products column */}
                     <div className="w-60 p-5 border-r border-neutral-50">
                       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 mb-3 px-1">
@@ -239,9 +239,9 @@ export default function Navbar() {
                           <Link
                             key={ev.name}
                             href={ev.href}
-                            className="group/row flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-[#F0FEFF] transition-colors"
+                            className="group/row flex items-center gap-3 px-2 py-2.5 hover:bg-[#F0FEFF] transition-colors"
                           >
-                            <div className="w-8 h-8 rounded-lg bg-[#DDF8FD] flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 bg-[#DDF8FD] flex items-center justify-center shrink-0">
                               <ev.icon
                                 size={15}
                                 className="text-[#0C7290]"
@@ -271,7 +271,7 @@ export default function Navbar() {
                           <Link
                             key={cat.name}
                             href={cat.href}
-                            className="px-2 py-2 text-[12px] text-neutral-600 hover:bg-neutral-50 hover:text-[#19B5D8] rounded-lg transition-colors leading-tight"
+                            className="px-2 py-2 text-[12px] text-neutral-600 hover:bg-neutral-50 hover:text-[#19B5D8] transition-colors leading-tight"
                           >
                             {cat.name}
                           </Link>
@@ -280,7 +280,7 @@ export default function Navbar() {
                       <div className="mt-3 pt-3 border-t border-neutral-50">
                         <Link
                           href="/shop"
-                          className="flex items-center gap-1.5 px-2 py-2 text-[12.5px] font-semibold text-[#19B5D8] hover:bg-[#DDF8FD]/50 rounded-lg transition-colors"
+                          className="flex items-center gap-1.5 px-2 py-2 text-[12.5px] font-semibold text-[#19B5D8] hover:bg-[#DDF8FD]/50 transition-colors"
                         >
                           View All Products <ArrowRight size={11} />
                         </Link>
@@ -323,7 +323,7 @@ export default function Navbar() {
             <div className="flex items-center gap-0.5 shrink-0">
               <Link
                 href="/profile?tab=wishlist"
-                className="w-9 h-9 flex items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
+                className="w-9 h-9 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
                 aria-label="Wishlist"
               >
                 <Heart size={19} strokeWidth={1.8} />
@@ -331,7 +331,7 @@ export default function Navbar() {
 
               <Link
                 href="/cart"
-                className="relative w-9 h-9 flex items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
+                className="relative w-9 h-9 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
                 aria-label="Cart"
               >
                 <ShoppingBag size={19} strokeWidth={1.8} />
@@ -343,12 +343,12 @@ export default function Navbar() {
               </Link>
 
               {isLoading ? (
-                <div className="w-8 h-8 rounded-full bg-neutral-100 animate-pulse ml-1" />
+                <div className="w-8 h-8 bg-neutral-100 animate-pulse ml-1" />
               ) : isAuthenticated ? (
                 <div className="relative ml-1" ref={userDropRef}>
                   <button
                     onClick={() => setUserDropOpen((p) => !p)}
-                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-full text-neutral-700 hover:bg-neutral-100 transition-all"
+                    className="flex items-center gap-2 px-2.5 py-1.5 text-neutral-700 hover:bg-neutral-100 transition-all"
                   >
                     <UserAvatar name={user?.name} size="sm" />
                     <span className="hidden md:block text-[13px] font-medium max-w-[72px] truncate">
@@ -362,7 +362,7 @@ export default function Navbar() {
                   </button>
 
                   {userDropOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-neutral-100 py-1.5 overflow-hidden z-50">
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-neutral-100 py-1.5 overflow-hidden z-50">
                       <div className="px-4 py-3 border-b border-neutral-50">
                         <p className="text-[9px] font-bold uppercase tracking-widest text-[#19B5D8] mb-1">
                           My Account
@@ -411,7 +411,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   href="/account/login"
-                  className="flex items-center gap-1.5 ml-1 px-4 py-2 text-[13px] font-semibold bg-neutral-900 text-white rounded-full hover:bg-neutral-700 transition-all"
+                  className="flex items-center gap-1.5 ml-1 px-4 py-2 text-[13px] font-semibold bg-neutral-900 text-white hover:bg-neutral-700 transition-all"
                 >
                   Login
                 </Link>
@@ -424,7 +424,7 @@ export default function Navbar() {
             {/* Left: Hamburger */}
             <div className="flex-1 flex justify-start">
               <button
-                className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 transition-all"
+                className="w-10 h-10 flex items-center justify-center text-neutral-700 hover:bg-neutral-100 transition-all"
                 onClick={() => setMobileOpen((p) => !p)}
                 aria-label="Open menu"
               >
@@ -447,7 +447,7 @@ export default function Navbar() {
             {/* Right: Search + Login/Avatar */}
             <div className="flex-1 flex justify-end items-center gap-1">
               <button
-                className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
+                className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
                 onClick={() => setMobileSearchOpen(true)}
                 aria-label="Search"
               >
@@ -455,11 +455,11 @@ export default function Navbar() {
               </button>
 
               {isLoading ? (
-                <div className="w-8 h-8 rounded-full bg-neutral-100 animate-pulse" />
+                <div className="w-8 h-8 bg-neutral-100 animate-pulse" />
               ) : isAuthenticated ? (
                 <button
                   onClick={() => setMobileOpen(true)}
-                  className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-all"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-neutral-100 transition-all"
                   aria-label="Account"
                 >
                   <UserAvatar name={user?.name} size="sm" />
@@ -467,7 +467,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   href="/account/login"
-                  className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
+                  className="w-10 h-10 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 hover:text-[#19B5D8] transition-all"
                   aria-label="Login"
                 >
                   <User size={19} strokeWidth={1.8} />
@@ -511,7 +511,7 @@ export default function Navbar() {
                   />
                   <button
                     onClick={() => setMobileOpen(false)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 transition-colors"
+                    className="w-8 h-8 flex items-center justify-center text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 transition-colors"
                     aria-label="Close menu"
                   >
                     <X size={17} />
@@ -523,10 +523,10 @@ export default function Navbar() {
                   {/* Shop accordion */}
                   <button
                     onClick={() => setMobileShopOpen((p) => !p)}
-                    className="flex items-center justify-between w-full px-3 py-3 rounded-xl text-[14px] font-semibold text-neutral-800 hover:bg-neutral-50 hover:text-[#0C7290] transition-colors"
+                    className="flex items-center justify-between w-full px-3 py-3 text-[14px] font-semibold text-neutral-800 hover:bg-neutral-50 hover:text-[#0C7290] transition-colors"
                   >
                     <span className="flex items-center gap-3">
-                      <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#DDF8FD]">
+                      <span className="w-8 h-8 flex items-center justify-center bg-[#DDF8FD]">
                         <ShoppingBag
                           size={15}
                           className="text-[#0C7290]"
@@ -560,10 +560,10 @@ export default function Navbar() {
                               <Link
                                 key={ev.name}
                                 href={ev.href}
-                                className="flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-[#F0FEFF] transition-colors"
+                                className="flex items-center gap-3 px-2 py-2.5 hover:bg-[#F0FEFF] transition-colors"
                                 onClick={() => setMobileOpen(false)}
                               >
-                                <div className="w-7 h-7 rounded-lg bg-[#DDF8FD] flex items-center justify-center shrink-0">
+                                <div className="w-7 h-7 bg-[#DDF8FD] flex items-center justify-center shrink-0">
                                   <ev.icon
                                     size={13}
                                     className="text-[#0C7290]"
@@ -590,7 +590,7 @@ export default function Navbar() {
                               <Link
                                 key={cat.name}
                                 href={cat.href}
-                                className="px-2 py-2 text-[12px] text-neutral-600 hover:text-[#19B5D8] hover:bg-neutral-50 rounded-lg transition-colors"
+                                className="px-2 py-2 text-[12px] text-neutral-600 hover:text-[#19B5D8] hover:bg-neutral-50 transition-colors"
                                 onClick={() => setMobileOpen(false)}
                               >
                                 {cat.name}
@@ -620,7 +620,7 @@ export default function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="flex items-center px-3 py-3 rounded-xl text-[14px] font-medium text-neutral-700 hover:text-[#19B5D8] hover:bg-neutral-50 transition-colors"
+                      className="flex items-center px-3 py-3 text-[14px] font-medium text-neutral-700 hover:text-[#19B5D8] hover:bg-neutral-50 transition-colors"
                       onClick={() => setMobileOpen(false)}
                     >
                       {link.label}
@@ -676,7 +676,7 @@ export default function Navbar() {
                   ) : (
                     <Link
                       href="/account/login"
-                      className="flex items-center justify-center gap-2 h-11 bg-neutral-900 text-white rounded-xl text-[13.5px] font-semibold hover:bg-[#0C7290] transition-colors"
+                      className="flex items-center justify-center gap-2 h-11 bg-neutral-900 text-white text-[13.5px] font-semibold hover:bg-[#0C7290] transition-colors"
                       onClick={() => setMobileOpen(false)}
                     >
                       <User size={15} />
@@ -714,7 +714,7 @@ export default function Navbar() {
             {mobileQ && (
               <button
                 onClick={() => setMobileQ("")}
-                className="w-6 h-6 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-500 transition-colors shrink-0"
+                className="w-6 h-6 flex items-center justify-center bg-neutral-100 text-neutral-500 transition-colors shrink-0"
                 aria-label="Clear"
               >
                 <X size={13} />
@@ -742,9 +742,9 @@ export default function Navbar() {
                       key={ev.name}
                       href={ev.href}
                       onClick={closeMobileSearch}
-                      className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-neutral-50 hover:bg-[#F0FEFF] border border-neutral-100 transition-colors"
+                      className="flex items-center gap-2.5 p-3.5 bg-neutral-50 hover:bg-[#F0FEFF] border border-neutral-100 transition-colors"
                     >
-                      <div className="w-8 h-8 rounded-xl bg-[#DDF8FD] flex items-center justify-center shrink-0">
+                      <div className="w-8 h-8 bg-[#DDF8FD] flex items-center justify-center shrink-0">
                         <ev.icon
                           size={15}
                           className="text-[#0C7290]"
@@ -772,7 +772,7 @@ export default function Navbar() {
                       key={cat.name}
                       href={cat.href}
                       onClick={closeMobileSearch}
-                      className="px-3 py-1.5 text-[12px] font-medium text-neutral-700 bg-neutral-100 rounded-full hover:bg-[#DDF8FD] hover:text-[#0C7290] transition-colors"
+                      className="px-3 py-1.5 text-[12px] font-medium text-neutral-700 bg-neutral-100 hover:bg-[#DDF8FD] hover:text-[#0C7290] transition-colors"
                     >
                       {cat.name}
                     </Link>
@@ -802,7 +802,7 @@ export default function Navbar() {
                           onClick={closeMobileSearch}
                           className="flex items-center gap-3.5 px-5 py-3.5 hover:bg-neutral-50 transition-colors"
                         >
-                          <div className="relative w-12 h-12 rounded-xl bg-neutral-50 border border-neutral-100 overflow-hidden shrink-0">
+                          <div className="relative w-12 h-12 bg-neutral-50 border border-neutral-100 overflow-hidden shrink-0">
                             {p.images?.[0] ? (
                               <Image
                                 src={p.images[0]}

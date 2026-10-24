@@ -85,14 +85,14 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="text-center max-w-sm">
-          <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 bg-red-50 rounded-none flex items-center justify-center mx-auto mb-4">
             <Package size={24} className="text-red-400" strokeWidth={1.5} />
           </div>
           <h2 className="text-lg font-medium text-neutral-900 mb-2">Order not found</h2>
           <p className="text-sm text-neutral-500 mb-6">{error || "We couldn't load your order."}</p>
           <Link
             href="/profile"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-neutral-900 text-white text-sm rounded-full hover:bg-neutral-800 transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-neutral-900 text-white text-sm rounded-none hover:bg-neutral-800 transition-colors"
           >
             View My Orders <ArrowRight size={15} />
           </Link>
@@ -119,7 +119,7 @@ export default function OrderConfirmationPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: "easeOut" }}
-          className="bg-white rounded-2xl border border-neutral-200/70 shadow-sm p-6 sm:p-8 md:p-10 text-center mb-5"
+          className="bg-white rounded-none border border-neutral-200/70 shadow-sm p-6 sm:p-8 md:p-10 text-center mb-5"
         >
           {/* Checkmark */}
           <div className="relative inline-flex items-center justify-center mb-5">
@@ -156,7 +156,7 @@ export default function OrderConfirmationPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.45 }}
-            className="mt-4 inline-flex items-center gap-2.5 bg-neutral-50 border border-neutral-200 rounded-full px-4 py-2"
+            className="mt-4 inline-flex items-center gap-2.5 bg-neutral-50 border border-neutral-200 rounded-none px-4 py-2"
           >
             <span className="text-xs text-neutral-400">Order</span>
             <span className="text-sm font-semibold text-neutral-900 font-mono">{displayId}</span>
@@ -179,7 +179,7 @@ export default function OrderConfirmationPage() {
             className="mt-8 px-1 sm:px-4"
           >
             {isCancelled ? (
-              <div className="flex items-center justify-center gap-2 py-3 px-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm font-medium">
+              <div className="flex items-center justify-center gap-2 py-3 px-4 bg-red-50 border border-red-100 rounded-none text-red-600 text-sm font-medium">
                 This order has been cancelled
               </div>
             ) : (
@@ -246,7 +246,7 @@ export default function OrderConfirmationPage() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="lg:col-span-3 bg-white rounded-2xl border border-neutral-200/70 shadow-sm overflow-hidden"
+            className="lg:col-span-3 bg-white rounded-none border border-neutral-200/70 shadow-sm overflow-hidden"
           >
             <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-neutral-900">Items Ordered</h2>
@@ -261,7 +261,7 @@ export default function OrderConfirmationPage() {
                   key={item.product?._id || index}
                   className="flex items-center gap-4 px-6 py-4"
                 >
-                  <div className="relative w-14 h-14 shrink-0 rounded-xl bg-neutral-50 overflow-hidden">
+                  <div className="relative w-14 h-14 shrink-0 rounded-none bg-neutral-50 overflow-hidden">
                     {item.product?.images?.[0] ? (
                       <Image
                         src={item.product.images[0]}
@@ -305,7 +305,7 @@ export default function OrderConfirmationPage() {
             className="lg:col-span-2 flex flex-col gap-4"
           >
             {/* Order Summary */}
-            <div className="bg-white rounded-2xl border border-neutral-200/70 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-none border border-neutral-200/70 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-neutral-100">
                 <h2 className="text-sm font-semibold text-neutral-900">Payment Summary</h2>
               </div>
@@ -362,7 +362,7 @@ export default function OrderConfirmationPage() {
 
             {/* Delivery Address */}
             {hasAddr && (
-              <div className="bg-white rounded-2xl border border-neutral-200/70 shadow-sm overflow-hidden">
+              <div className="bg-white rounded-none border border-neutral-200/70 shadow-sm overflow-hidden">
                 <div className="px-6 py-4 border-b border-neutral-100 flex items-center gap-2">
                   <MapPin size={14} className="text-neutral-400" />
                   <h2 className="text-sm font-semibold text-neutral-900">Deliver To</h2>
@@ -400,14 +400,14 @@ export default function OrderConfirmationPage() {
         >
           <Link
             href="/profile"
-            className="flex-1 flex items-center justify-center gap-2 py-3.5 px-6 bg-neutral-900 text-white text-sm font-medium rounded-full hover:bg-neutral-800 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 py-3.5 px-6 bg-neutral-900 text-white text-sm font-medium rounded-none hover:bg-neutral-800 transition-colors"
           >
             <Package size={15} />
             Track My Order
           </Link>
           <Link
             href="/shop"
-            className="flex-1 flex items-center justify-center gap-2 py-3.5 px-6 border border-neutral-200 text-neutral-700 text-sm font-medium rounded-full hover:bg-neutral-50 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 py-3.5 px-6 border border-neutral-200 text-neutral-700 text-sm font-medium rounded-none hover:bg-neutral-50 transition-colors"
           >
             <ShoppingBag size={15} />
             Continue Shopping

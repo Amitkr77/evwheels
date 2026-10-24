@@ -54,7 +54,7 @@ function ProductShowcase({ category, product, loading }) {
   const Icon = style.icon;
 
   return (
-    <div className="relative rounded-2xl overflow-hidden bg-neutral-950 min-h-[260px] md:min-h-[380px] flex flex-col">
+    <div className="relative rounded-none overflow-hidden bg-neutral-950 min-h-[260px] md:min-h-[380px] flex flex-col">
 
       {/* Background image — cross-fades per product */}
       <AnimatePresence mode="sync">
@@ -94,7 +94,7 @@ function ProductShowcase({ category, product, loading }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.28 }}
-                className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-white/15"
+                className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-none border border-white/15"
               >
                 <Icon size={9} />
                 {category.name}
@@ -107,9 +107,9 @@ function ProductShowcase({ category, product, loading }) {
         <AnimatePresence mode="popLayout">
           {loading ? (
             <motion.div key="skeleton" className="space-y-3">
-              <div className="h-4 bg-white/10 rounded-full animate-pulse w-3/4" />
-              <div className="h-4 bg-white/10 rounded-full animate-pulse w-1/2" />
-              <div className="h-8 bg-white/10 rounded-full animate-pulse w-1/3 mt-3" />
+              <div className="h-4 bg-white/10 rounded-none animate-pulse w-3/4" />
+              <div className="h-4 bg-white/10 rounded-none animate-pulse w-1/2" />
+              <div className="h-8 bg-white/10 rounded-none animate-pulse w-1/3 mt-3" />
             </motion.div>
           ) : product ? (
             <motion.div
@@ -127,7 +127,7 @@ function ProductShowcase({ category, product, loading }) {
               </p>
               <Link
                 href={`/shop/${product.slug}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-neutral-900 rounded-full text-[12px] font-semibold hover:bg-[#19B5D8] hover:text-white transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-neutral-900 rounded-none text-[12px] font-semibold hover:bg-[#19B5D8] hover:text-white transition-colors"
               >
                 View Product <ArrowUpRight size={12} strokeWidth={2.2} />
               </Link>
@@ -141,7 +141,7 @@ function ProductShowcase({ category, product, loading }) {
               <p className="text-white/40 text-sm mb-3">Browse this category</p>
               <Link
                 href={`/shop?category=${category.slug}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-neutral-900 rounded-full text-[12px] font-semibold hover:bg-[#19B5D8] hover:text-white transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-neutral-900 rounded-none text-[12px] font-semibold hover:bg-[#19B5D8] hover:text-white transition-colors"
               >
                 Explore <ArrowRight size={12} />
               </Link>

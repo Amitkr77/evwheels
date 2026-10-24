@@ -119,12 +119,12 @@ export default function OrdersPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by order ID or customer..."
-          className="flex-1 sm:max-w-sm px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+          className="flex-1 sm:max-w-sm px-5 py-3.5 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
         />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+          className="px-5 py-3.5 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
         >
           <option value="">All Statuses</option>
           {STATUS_OPTIONS.map((s) => (
@@ -136,7 +136,7 @@ export default function OrdersPage() {
         </span>
       </div>
 
-      <div className="border border-neutral-200/70 rounded-xl overflow-hidden">
+      <div className="border border-neutral-200/70 rounded-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-neutral-50/70">
@@ -176,7 +176,7 @@ export default function OrdersPage() {
                       ₹{order.totalAmount?.toLocaleString("en-IN") || "0"}
                     </td>
                     <td className="py-5 px-6">
-                      <span className={`px-3 py-1.5 text-xs font-medium rounded-full ${STATUS_COLORS[order.orderStatus] || "bg-neutral-100 text-neutral-600"}`}>
+                      <span className={`px-3 py-1.5 text-xs font-medium rounded-none ${STATUS_COLORS[order.orderStatus] || "bg-neutral-100 text-neutral-600"}`}>
                         {order.orderStatus}
                       </span>
                     </td>
@@ -244,7 +244,7 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Customer */}
-                <div className="mb-6 p-5 bg-neutral-50 rounded-xl">
+                <div className="mb-6 p-5 bg-neutral-50 rounded-none">
                   <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-3">Customer</h3>
                   <p className="font-medium text-neutral-900">{selectedOrder.user?.name || "Unknown"}</p>
                   <p className="text-sm text-neutral-600">{selectedOrder.user?.email || "—"}</p>
@@ -252,7 +252,7 @@ export default function OrdersPage() {
 
                 {/* Shipping */}
                 {selectedOrder.shippingAddress && (
-                  <div className="mb-6 p-5 bg-neutral-50 rounded-xl">
+                  <div className="mb-6 p-5 bg-neutral-50 rounded-none">
                     <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-3">Shipping Address</h3>
                     <p className="text-neutral-700 text-sm leading-relaxed">
                       {selectedOrder.shippingAddress.name && <span className="font-medium">{selectedOrder.shippingAddress.name}<br /></span>}
@@ -277,12 +277,12 @@ export default function OrdersPage() {
                   </h3>
                   <div className="space-y-3">
                     {selectedOrder.items?.map((item, i) => (
-                      <div key={i} className="flex items-center gap-4 p-4 border border-neutral-200/60 rounded-lg">
+                      <div key={i} className="flex items-center gap-4 p-4 border border-neutral-200/60 rounded-none">
                         {item.image && (
                           <img
                             src={item.image}
                             alt={item.title}
-                            className="w-14 h-14 object-cover rounded-lg flex-shrink-0"
+                            className="w-14 h-14 object-cover rounded-none flex-shrink-0"
                           />
                         )}
                         <div className="flex-1 min-w-0">
@@ -298,7 +298,7 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Totals */}
-                <div className="mb-6 p-5 bg-neutral-50 rounded-xl space-y-2">
+                <div className="mb-6 p-5 bg-neutral-50 rounded-none space-y-2">
                   <div className="flex justify-between text-sm text-neutral-600">
                     <span>Payment Method</span>
                     <span className="font-medium text-neutral-900">{selectedOrder.paymentMethod || "—"}</span>
@@ -316,11 +316,11 @@ export default function OrdersPage() {
                 </div>
 
                 {/* Status Update */}
-                <div className="p-5 border border-neutral-200/60 rounded-xl">
+                <div className="p-5 border border-neutral-200/60 rounded-none">
                   <h3 className="text-sm font-medium text-neutral-500 uppercase tracking-wide mb-4">Update Status</h3>
 
                   <div className="mb-4">
-                    <span className={`px-3 py-1.5 text-xs font-medium rounded-full ${STATUS_COLORS[selectedOrder.orderStatus] || "bg-neutral-100"}`}>
+                    <span className={`px-3 py-1.5 text-xs font-medium rounded-none ${STATUS_COLORS[selectedOrder.orderStatus] || "bg-neutral-100"}`}>
                       Current: {selectedOrder.orderStatus}
                     </span>
                   </div>
@@ -328,7 +328,7 @@ export default function OrdersPage() {
                   <select
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value)}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm mb-3"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm mb-3"
                   >
                     {STATUS_OPTIONS.map((s) => (
                       <option key={s} value={s}>{s}</option>
@@ -340,7 +340,7 @@ export default function OrdersPage() {
                     value={statusNote}
                     onChange={(e) => setStatusNote(e.target.value)}
                     placeholder="Optional note (e.g. tracking number)"
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm mb-4"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm mb-4"
                   />
 
                   {statusError && (
@@ -350,7 +350,7 @@ export default function OrdersPage() {
                   <button
                     onClick={handleStatusUpdate}
                     disabled={updatingStatus || newStatus === selectedOrder.orderStatus}
-                    className="w-full py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-3.5 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {updatingStatus && <Loader2 size={16} className="animate-spin" />}
                     {updatingStatus ? "Updating..." : "Update Status"}

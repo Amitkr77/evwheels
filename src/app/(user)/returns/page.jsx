@@ -50,8 +50,8 @@ export default function ReturnsPage() {
         </div>
 
         {/* Return Window Banner */}
-        <div className="flex items-center gap-4 bg-[#DDF8FD] border border-[#19B5D8]/20 rounded-2xl p-6 mb-12">
-          <div className="w-14 h-14 rounded-full bg-[#DDF8FD] flex items-center justify-center shrink-0">
+        <div className="flex items-center gap-4 bg-[#DDF8FD] border border-[#19B5D8]/20 rounded-none p-6 mb-12">
+          <div className="w-14 h-14 rounded-none bg-[#DDF8FD] flex items-center justify-center shrink-0">
             <RefreshCw size={24} className="text-[#19B5D8]" />
           </div>
           <div>
@@ -67,7 +67,7 @@ export default function ReturnsPage() {
           <h2 className="text-2xl font-medium text-neutral-900 mb-6">What Can Be Returned</h2>
           <div className="grid gap-4 mb-8">
             {ELIGIBLE.map((item, i) => (
-              <div key={i} className="flex gap-3 items-start bg-white border border-neutral-200 rounded-xl p-4">
+              <div key={i} className="flex gap-3 items-start bg-white border border-neutral-200 rounded-none p-4">
                 <CheckCircle size={20} className="text-[#19B5D8] mt-0.5 shrink-0" />
                 <p className="text-neutral-700 text-sm">{item}</p>
               </div>
@@ -90,7 +90,7 @@ export default function ReturnsPage() {
           <h2 className="text-2xl font-medium text-neutral-900 mb-6">How to Return</h2>
           <div className="space-y-4">
             {STEPS.map((s) => (
-              <div key={s.step} className="flex gap-4 bg-white border border-neutral-200 rounded-xl p-5">
+              <div key={s.step} className="flex gap-4 bg-white border border-neutral-200 rounded-none p-5">
                 <span className="text-2xl font-bold text-[#19B5D8] shrink-0">{s.step}</span>
                 <div>
                   <h3 className="font-semibold text-neutral-900">{s.title}</h3>
@@ -104,7 +104,7 @@ export default function ReturnsPage() {
         {/* Refund Timeline */}
         <section className="mb-12">
           <h2 className="text-2xl font-medium text-neutral-900 mb-4">Refund Timeline</h2>
-          <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+          <div className="bg-white border border-neutral-200 rounded-none overflow-hidden">
             {[
               { label: "Return request reviewed", time: "Within 2 business days" },
               { label: "Item inspection after receipt", time: "2–3 business days" },
@@ -131,14 +131,14 @@ export default function ReturnsPage() {
         </section>
 
         {/* Contact */}
-        <div className="p-6 bg-[#DDF8FD] rounded-2xl border border-[#19B5D8]/20">
+        <div className="p-6 bg-[#DDF8FD] rounded-none border border-[#19B5D8]/20">
           <h2 className="text-lg font-semibold text-neutral-900 mb-2">Ready to return or have questions?</h2>
           <p className="text-neutral-600 text-sm mb-4">
             Email us at <a href="mailto:support@evwheels.in" className="text-[#19B5D8] hover:underline font-medium">support@evwheels.in</a> or call <a href="tel:+918298922623" className="text-[#19B5D8] hover:underline font-medium">+91 8298922623</a>. Our team is available Monday – Saturday, 10 AM – 7 PM.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Phone size={16} />
             Contact Support

@@ -113,7 +113,7 @@ const UserDashboard = () => {
         {/* Logo → links to home */}
         <div className="px-5 py-5 border-b border-neutral-200/60">
           <Link href="/" className="flex items-center gap-3 group w-fit">
-            <div className="w-8 h-8 rounded-lg bg-[#19B5D8] flex items-center justify-center text-white font-bold text-base shadow-sm shrink-0">
+            <div className="w-8 h-8 rounded-none bg-[#19B5D8] flex items-center justify-center text-white font-bold text-base shadow-sm shrink-0">
               E
             </div>
             <span className="text-base font-semibold tracking-tight text-neutral-900 group-hover:text-[#19B5D8] transition-colors duration-150">
@@ -132,7 +132,7 @@ const UserDashboard = () => {
               aria-selected={activeTab === tab.id}
               aria-controls={`panel-${tab.id}`}
               onClick={() => handleTabChange(tab.id)}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-xl transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-none transition-all ${
                 activeTab === tab.id
                   ? "bg-[#DDF8FD] text-[#19B5D8]"
                   : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
@@ -148,14 +148,14 @@ const UserDashboard = () => {
         <div className="p-3 border-t border-neutral-200/60 space-y-0.5">
           <Link
             href="/"
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 rounded-xl transition-all"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 rounded-none transition-all"
           >
             <Home size={17} strokeWidth={1.9} />
             Back to Store
           </Link>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50/80 rounded-xl transition-all"
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50/80 rounded-none transition-all"
           >
             <LogOut size={17} strokeWidth={1.9} />
             Sign Out
@@ -170,7 +170,7 @@ const UserDashboard = () => {
         <header className="fixed top-0 left-0 right-0 lg:left-60 h-14 bg-white/95 backdrop-blur-sm border-b border-neutral-200/70 flex items-center px-5 lg:px-8 justify-between z-20">
           {/* Mobile: brand logo → home */}
           <Link href="/" className="flex items-center gap-2 lg:hidden">
-            <div className="w-7 h-7 rounded-lg bg-[#19B5D8] flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-7 h-7 rounded-none bg-[#19B5D8] flex items-center justify-center text-white font-bold text-sm">
               E
             </div>
             <span className="text-base font-semibold text-neutral-900 tracking-tight">EVWheels</span>
@@ -221,7 +221,7 @@ const UserDashboard = () => {
                     {statCards.map((stat, i) => (
                       <div
                         key={i}
-                        className="bg-white border border-neutral-200/70 rounded-2xl p-5 hover:border-[#19B5D8]/30 transition-all"
+                        className="bg-white border border-neutral-200/70 rounded-none p-5 hover:border-[#19B5D8]/30 transition-all"
                       >
                         <div className="flex items-start justify-between">
                           <div>
@@ -232,7 +232,7 @@ const UserDashboard = () => {
                               {stat.value}
                             </p>
                           </div>
-                          <div className="w-10 h-10 bg-[#DDF8FD] rounded-xl flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 bg-[#DDF8FD] rounded-none flex items-center justify-center shrink-0">
                             <stat.icon size={20} className="text-[#19B5D8]" strokeWidth={1.7} />
                           </div>
                         </div>
@@ -253,12 +253,12 @@ const UserDashboard = () => {
                     </div>
 
                     {recentOrders.length === 0 ? (
-                      <div className="bg-white border border-neutral-200/70 rounded-2xl p-12 text-center">
+                      <div className="bg-white border border-neutral-200/70 rounded-none p-12 text-center">
                         <Package size={28} className="text-neutral-300 mx-auto mb-3" strokeWidth={1.4} />
                         <p className="text-sm text-neutral-400">No orders yet</p>
                       </div>
                     ) : (
-                      <div className="bg-white border border-neutral-200/70 rounded-2xl overflow-hidden">
+                      <div className="bg-white border border-neutral-200/70 rounded-none overflow-hidden">
                         <div className="overflow-x-auto">
                           <table className="w-full min-w-[500px]">
                             <thead>

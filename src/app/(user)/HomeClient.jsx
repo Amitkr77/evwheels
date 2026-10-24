@@ -258,7 +258,7 @@ function HeroSlider({ slides: dbSlides }) {
           exit={{ opacity: 0, y: -14 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="inline-flex items-center gap-1.5 bg-[#DDF8FD] text-[#0C7290] text-[11px] font-semibold px-3 py-1.5 rounded-full mb-5 border border-[#19B5D8]/15">
+          <div className="inline-flex items-center gap-1.5 bg-[#DDF8FD] text-[#0C7290] text-[11px] font-semibold px-3 py-1.5 rounded-none mb-5 border border-[#19B5D8]/15">
             <BadgeIcon size={11} />
             {slide.badge}
           </div>
@@ -278,14 +278,14 @@ function HeroSlider({ slides: dbSlides }) {
           <div className="flex flex-wrap gap-3">
             <Link
               href={slide.cta1.href}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white text-sm font-semibold rounded-full hover:bg-neutral-800 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white text-sm font-semibold rounded-none hover:bg-neutral-800 transition-colors shadow-sm"
             >
               {slide.cta1.label} <ArrowRight size={14} />
             </Link>
             {slide.cta2?.label && slide.cta2?.href && (
               <Link
                 href={slide.cta2.href}
-                className="inline-flex items-center gap-2 px-6 py-3 border border-neutral-200 text-neutral-700 text-sm font-medium rounded-full hover:bg-neutral-50 hover:border-neutral-300 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-neutral-200 text-neutral-700 text-sm font-medium rounded-none hover:bg-neutral-50 hover:border-neutral-300 transition-colors"
               >
                 {slide.cta2.label}
               </Link>
@@ -357,7 +357,7 @@ function PromoCarousel() {
   const BadgeIcon = slide.badgeIcon;
 
   return (
-    <div className="relative bg-neutral-900 rounded-2xl overflow-hidden flex flex-col justify-between p-6 h-[150px] shrink-0">
+    <div className="relative bg-neutral-900 rounded-none overflow-hidden flex flex-col justify-between p-6 h-[150px] shrink-0">
       <AnimatePresence mode="popLayout">
         <motion.div
           key={active}
@@ -390,7 +390,7 @@ function PromoCarousel() {
           className="relative z-10 flex flex-col h-full justify-between"
         >
           <div>
-            <span className="inline-flex items-center gap-1.5 bg-[#19B5D8]/20 text-[#19B5D8] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#19B5D8]/30 mb-2">
+            <span className="inline-flex items-center gap-1.5 bg-[#19B5D8]/20 text-[#19B5D8] text-[10px] font-bold px-2.5 py-1 rounded-none border border-[#19B5D8]/30 mb-2">
               <BadgeIcon size={9} fill="currentColor" />
               {slide.badge}
             </span>
@@ -469,10 +469,10 @@ function ProductLinesSection() {
             >
               <Link
                 href={line.href}
-                className={`group flex flex-col gap-4 p-5 rounded-2xl border h-full ${line.bg} ${line.border} hover:shadow-md transition-all`}
+                className={`group flex flex-col gap-4 p-5 rounded-none border h-full ${line.bg} ${line.border} hover:shadow-md transition-all`}
               >
                 <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center bg-white/70 border ${line.border}`}
+                  className={`w-10 h-10 rounded-none flex items-center justify-center bg-white/70 border ${line.border}`}
                 >
                   <line.icon
                     size={18}
@@ -514,7 +514,7 @@ function ShowcaseSection({ products }) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative lg:w-[52%] rounded-2xl overflow-hidden min-h-[280px] sm:min-h-[360px] md:min-h-[480px] lg:min-h-[560px] flex items-end"
+            className="relative lg:w-[52%] rounded-none overflow-hidden min-h-[280px] sm:min-h-[360px] md:min-h-[480px] lg:min-h-[560px] flex items-end"
           >
             <Image
               src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop"
@@ -544,7 +544,7 @@ function ShowcaseSection({ products }) {
                 {EV_FEATURES.map(({ icon: Icon, label, desc }) => (
                   <div
                     key={label}
-                    className="bg-white/8 backdrop-blur-sm border border-white/10 rounded-xl p-3"
+                    className="bg-white/8 backdrop-blur-sm border border-white/10 rounded-none p-3"
                   >
                     <Icon
                       size={16}
@@ -563,7 +563,7 @@ function ShowcaseSection({ products }) {
 
               <Link
                 href="/shop?category=electric-cycles"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-neutral-900 rounded-full text-sm font-semibold hover:bg-neutral-100 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-neutral-900 rounded-none text-sm font-semibold hover:bg-neutral-100 transition-colors"
               >
                 Explore EV Range <ArrowRight size={14} />
               </Link>
@@ -640,7 +640,7 @@ export default function HomeClient({
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, ease: "easeOut" }}
-              className="relative bg-white rounded-2xl border border-neutral-100 overflow-hidden flex flex-col justify-between p-7 sm:p-9 md:p-10 min-h-[400px] md:min-h-[460px]"
+              className="relative bg-white rounded-none border border-neutral-100 overflow-hidden flex flex-col justify-between p-7 sm:p-9 md:p-10 min-h-[400px] md:min-h-[460px]"
             >
               <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-gradient-to-br from-[#DDF8FD] to-white opacity-60 -translate-y-1/3 translate-x-1/3 pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-52 h-52 rounded-full bg-[#F0FEFF] opacity-50 translate-y-1/2 -translate-x-1/3 pointer-events-none" />
@@ -675,10 +675,10 @@ export default function HomeClient({
                   <Link
                     key={cat.name}
                     href={cat.href}
-                    className={`group rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-neutral-100 hover:shadow-sm transition-all ${cat.cardCls}`}
+                    className={`group rounded-none p-4 sm:p-5 flex flex-col justify-between border border-neutral-100 hover:shadow-sm transition-all ${cat.cardCls}`}
                   >
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 ${cat.iconBg}`}
+                      className={`w-9 h-9 rounded-none flex items-center justify-center mb-3 ${cat.iconBg}`}
                     >
                       <cat.icon
                         size={17}
@@ -773,7 +773,7 @@ export default function HomeClient({
               <motion.div
                 key={item.n}
                 variants={CARD_VARIANTS}
-                className="p-6 rounded-xl bg-white border border-neutral-100"
+                className="p-6 rounded-none bg-white border border-neutral-100"
               >
                 <p className="text-4xl font-black text-neutral-100 mb-4 select-none leading-none">
                   {item.n}
@@ -822,13 +822,13 @@ export default function HomeClient({
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/shop"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-neutral-900 rounded-full text-sm font-semibold hover:bg-neutral-100 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-neutral-900 rounded-none text-sm font-semibold hover:bg-neutral-100 transition-colors"
               >
                 Explore Our Range <ArrowRight size={14} />
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-full text-sm font-medium hover:bg-white/8 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-none text-sm font-medium hover:bg-white/8 transition-colors"
               >
                 Get Wholesale Quote
               </Link>
@@ -846,7 +846,7 @@ export default function HomeClient({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="EVWheels on Instagram"
-              className="mb-4 w-14 h-14 rounded-2xl flex items-center justify-center"
+              className="mb-4 w-14 h-14 rounded-none flex items-center justify-center"
               style={{
                 background:
                   "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
@@ -882,7 +882,7 @@ export default function HomeClient({
                   target="_blank"
                   rel="noopener noreferrer"
                   variants={CARD_VARIANTS}
-                  className="group relative aspect-square overflow-hidden rounded-xl bg-neutral-100 block"
+                  className="group relative aspect-square overflow-hidden rounded-none bg-neutral-100 block"
                   title={post.caption || ""}
                 >
                   <Image
@@ -925,7 +925,7 @@ export default function HomeClient({
               href="https://www.instagram.com/evwheels_patna"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-opacity hover:opacity-90"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-none text-sm font-semibold text-white transition-opacity hover:opacity-90"
               style={{
                 background:
                   "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
@@ -946,7 +946,7 @@ export default function HomeClient({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
-        className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-[#19B5D8] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+        className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-[#19B5D8] rounded-none flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
       >
         <MessageCircle size={22} className="text-white" />
       </a>

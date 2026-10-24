@@ -49,7 +49,7 @@ export function ToastProvider({ children }) {
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
-              className={`px-5 py-3.5 rounded-xl shadow-lg text-sm font-medium flex items-center gap-3 max-w-sm ${
+              className={`px-5 py-3.5 rounded-none shadow-lg text-sm font-medium flex items-center gap-3 max-w-sm ${
                 toast.type === "error" ? "bg-red-600 text-white" : "bg-[#19B5D8] text-white"
               }`}
             >

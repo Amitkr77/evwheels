@@ -173,7 +173,7 @@ export default function RegisterPage() {
           {serverMessage && (
             <div
               role="alert"
-              className={`p-4 rounded-lg text-center text-sm font-medium border ${
+              className={`p-4 rounded-none text-center text-sm font-medium border ${
                 isSuccess
                   ? "bg-[#DDF8FD] text-[#1297B5] border-[#19B5D8]/30"
                   : "bg-red-50 text-red-700 border-red-200"
@@ -195,7 +195,7 @@ export default function RegisterPage() {
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors ${
+                className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors ${
                   errors.name ? "border-red-500" : ""
                 }`}
                 placeholder="Amit Sharma"
@@ -222,7 +222,7 @@ export default function RegisterPage() {
                   type="email"
                   value={form.email}
                   onChange={handleChange}
-                  className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors ${
+                  className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors ${
                     errors.email ? "border-red-500" : ""
                   }`}
                   placeholder="amit@evwheels.in"
@@ -246,7 +246,7 @@ export default function RegisterPage() {
                   type="tel"
                   value={form.phone}
                   onChange={handleChange}
-                  className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors ${
+                  className={`w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors ${
                     errors.phone ? "border-red-500" : ""
                   }`}
                   placeholder="+91 98765 43210"
@@ -272,7 +272,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 value={form.password}
                 onChange={handleChange}
-                className={`w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors ${
+                className={`w-full pl-12 pr-12 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors ${
                   errors.password ? "border-red-500" : ""
                 }`}
                 placeholder="••••••••"
@@ -292,7 +292,7 @@ export default function RegisterPage() {
             {/* Password strength bar */}
             {form.password && (
               <div className="mt-4">
-                <div className="h-1.5 w-full bg-neutral-200 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-neutral-200 rounded-none overflow-hidden">
                   <div
                     className={`h-full transition-all duration-300 ${color}`}
                     style={{ width: `${width}%` }}
@@ -313,7 +313,7 @@ export default function RegisterPage() {
             <input
               id="terms"
               type="checkbox"
-              className="mt-1 w-4 h-4 rounded border-neutral-300 text-[#19B5D8] focus:ring-[#19B5D8]"
+              className="mt-1 w-4 h-4 rounded-none border-neutral-300 text-[#19B5D8] focus:ring-[#19B5D8]"
               required
               disabled={loading}
             />
@@ -338,7 +338,7 @@ export default function RegisterPage() {
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-4 flex items-center justify-center gap-2"
+            className="w-full py-4 bg-neutral-900 text-white rounded-none text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-4 flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

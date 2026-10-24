@@ -17,7 +17,7 @@ export default function OrderStatusBadge({ status, className = "" }) {
   const style = STYLES[status] || "bg-neutral-100 text-neutral-600";
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full ${style} ${className}`}
+      className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-none ${style} ${className}`}
     >
       {humanizeStatus(status)}
     </span>

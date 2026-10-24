@@ -41,17 +41,17 @@ export default function ShippingPolicyPage() {
 
         {/* Key Info Cards */}
         <div className="grid sm:grid-cols-3 gap-4 mb-12">
-          <div className="bg-white border border-neutral-200 rounded-xl p-5">
+          <div className="bg-white border border-neutral-200 rounded-none p-5">
             <Truck size={24} className="text-[#19B5D8] mb-3" />
             <h3 className="font-semibold text-neutral-900 mb-1">Free Shipping</h3>
             <p className="text-sm text-neutral-600">On all electric cycles across Bihar</p>
           </div>
-          <div className="bg-white border border-neutral-200 rounded-xl p-5">
+          <div className="bg-white border border-neutral-200 rounded-none p-5">
             <Clock size={24} className="text-[#19B5D8] mb-3" />
             <h3 className="font-semibold text-neutral-900 mb-1">4–8 Business Days</h3>
             <p className="text-sm text-neutral-600">Standard delivery to major cities</p>
           </div>
-          <div className="bg-white border border-neutral-200 rounded-xl p-5">
+          <div className="bg-white border border-neutral-200 rounded-none p-5">
             <Package size={24} className="text-[#19B5D8] mb-3" />
             <h3 className="font-semibold text-neutral-900 mb-1">Carefully Packed</h3>
             <p className="text-sm text-neutral-600">Heavy-duty packaging for safe transit</p>
@@ -65,7 +65,7 @@ export default function ShippingPolicyPage() {
           </h2>
           <div className="space-y-4">
             {STEPS.map((s) => (
-              <div key={s.step} className="flex gap-4 bg-white border border-neutral-200 rounded-xl p-5">
+              <div key={s.step} className="flex gap-4 bg-white border border-neutral-200 rounded-none p-5">
                 <span className="text-2xl font-bold text-[#19B5D8] shrink-0">{s.step}</span>
                 <div>
                   <h3 className="font-semibold text-neutral-900">{s.title}</h3>
@@ -86,12 +86,12 @@ export default function ShippingPolicyPage() {
           </p>
           <div className="flex flex-wrap gap-3">
             {COVERAGE.map((city) => (
-              <span key={city} className="flex items-center gap-1.5 px-4 py-2 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm font-medium border border-[#19B5D8]/20">
+              <span key={city} className="flex items-center gap-1.5 px-4 py-2 bg-[#DDF8FD] text-[#19B5D8] rounded-none text-sm font-medium border border-[#19B5D8]/20">
                 <MapPin size={14} />
                 {city}
               </span>
             ))}
-            <span className="flex items-center gap-1.5 px-4 py-2 bg-neutral-100 text-neutral-600 rounded-full text-sm font-medium">
+            <span className="flex items-center gap-1.5 px-4 py-2 bg-neutral-100 text-neutral-600 rounded-none text-sm font-medium">
               + more cities
             </span>
           </div>
@@ -119,7 +119,7 @@ export default function ShippingPolicyPage() {
         </section>
 
         {/* Contact */}
-        <div className="p-6 bg-[#DDF8FD] rounded-2xl border border-[#19B5D8]/20">
+        <div className="p-6 bg-[#DDF8FD] rounded-none border border-[#19B5D8]/20">
           <h2 className="text-lg font-semibold text-neutral-900 mb-2">Need help with your delivery?</h2>
           <p className="text-neutral-600 text-sm mb-4">
             Call or WhatsApp us at <a href="tel:+918298922623" className="text-[#19B5D8] hover:underline font-medium">+91 8298922623</a>, or visit our <Link href="/contact" className="text-[#19B5D8] hover:underline">Contact page</Link>.

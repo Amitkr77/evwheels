@@ -66,7 +66,7 @@ function ProductForm({
   submitLabel,
 }) {
   const inp =
-    "w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20 transition-colors text-sm";
+    "w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20 transition-colors text-sm";
   const sel = `${inp} bg-white`;
 
   const set = (key, val) => setFormData((p) => ({ ...p, [key]: val }));
@@ -264,7 +264,7 @@ function ProductForm({
           <button
             type="button"
             onClick={addSpec}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#19B5D8] border border-[#19B5D8]/20 bg-[#DDF8FD] rounded-lg hover:bg-[#DDF8FD] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#19B5D8] border border-[#19B5D8]/20 bg-[#DDF8FD] rounded-none hover:bg-[#DDF8FD] transition-colors"
           >
             <Plus size={13} /> Add Spec
           </button>
@@ -273,7 +273,7 @@ function ProductForm({
           <button
             type="button"
             onClick={addSpec}
-            className="w-full text-center py-5 border border-dashed border-neutral-200 rounded-xl text-neutral-400 text-sm hover:border-[#19B5D8]/30 hover:text-[#19B5D8] transition-colors"
+            className="w-full text-center py-5 border border-dashed border-neutral-200 rounded-none text-neutral-400 text-sm hover:border-[#19B5D8]/30 hover:text-[#19B5D8] transition-colors"
           >
             Click to add specifications (battery, range, motor power…)
           </button>
@@ -298,7 +298,7 @@ function ProductForm({
                 <button
                   type="button"
                   onClick={() => removeSpec(i)}
-                  className="p-3 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+                  className="p-3 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-none transition-colors shrink-0"
                 >
                   <Trash2 size={15} />
                 </button>
@@ -333,7 +333,7 @@ function ProductForm({
           type="button"
           onClick={onCancel}
           disabled={submitting}
-          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors disabled:opacity-50"
+          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors disabled:opacity-50"
         >
           Cancel
         </button>
@@ -341,7 +341,7 @@ function ProductForm({
           type="button"
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {submitting
@@ -1020,11 +1020,11 @@ export default function ProductsPage() {
   };
 
   const inputClass =
-    "w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm";
+    "w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm";
 
   // ─── Loading skeleton ───────────────────────────────────────
   const renderLoading = () => (
-    <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+    <div className="border border-neutral-200/60 rounded-none overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-neutral-50/70">
@@ -1069,8 +1069,8 @@ export default function ProductsPage() {
 
   // ─── Empty state ────────────────────────────────────────────
   const renderEmpty = () => (
-    <div className="border border-neutral-200/60 rounded-xl py-20 flex flex-col items-center justify-center text-center">
-      <div className="w-20 h-20 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
+    <div className="border border-neutral-200/60 rounded-none py-20 flex flex-col items-center justify-center text-center">
+      <div className="w-20 h-20 rounded-none bg-neutral-100 flex items-center justify-center mb-6">
         <Package size={36} className="text-neutral-400" />
       </div>
       <h3 className="text-xl font-medium text-neutral-800 mb-2">
@@ -1084,7 +1084,7 @@ export default function ProductsPage() {
       {!searchQuery && !categoryFilter && statusFilter === "all" && (
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+          className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
         >
           <Plus size={18} />
           Add Product
@@ -1103,7 +1103,7 @@ export default function ProductsPage() {
     };
     return (
       <span
-        className={`px-2.5 py-1 text-xs font-medium rounded-full border ${styles[status]}`}
+        className={`px-2.5 py-1 text-xs font-medium rounded-none border ${styles[status]}`}
       >
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
@@ -1115,7 +1115,7 @@ export default function ProductsPage() {
     if (products.length === 0) return renderEmpty();
 
     return (
-      <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+      <div className="border border-neutral-200/60 rounded-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-neutral-50/70">
@@ -1214,7 +1214,7 @@ export default function ProductsPage() {
                         <img
                           src={getImage(product)}
                           alt={getName(product)}
-                          className="w-10 h-10 object-cover rounded-lg border border-neutral-200/60"
+                          className="w-10 h-10 object-cover rounded-none border border-neutral-200/60"
                           onError={(e) => {
                             e.target.style.display = "none";
                             e.target.nextSibling.style.display = "flex";
@@ -1222,7 +1222,7 @@ export default function ProductsPage() {
                         />
                       ) : null}
                       <div
-                        className={`w-10 h-10 bg-neutral-100 rounded-lg items-center justify-center text-neutral-400 text-xs ${
+                        className={`w-10 h-10 bg-neutral-100 rounded-none items-center justify-center text-neutral-400 text-xs ${
                           getImage(product) ? "hidden" : "flex"
                         }`}
                       >
@@ -1242,7 +1242,7 @@ export default function ProductsPage() {
 
                     {/* Category */}
                     <td className="py-4 px-4">
-                      <span className="px-2.5 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-full">
+                      <span className="px-2.5 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-none">
                         {getCategoryName(product)}
                       </span>
                     </td>
@@ -1320,14 +1320,14 @@ export default function ProductsPage() {
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => openEdit(product)}
-                          className="p-2 text-neutral-500 hover:text-[#19B5D8] hover:bg-[#DDF8FD] rounded-lg transition-colors"
+                          className="p-2 text-neutral-500 hover:text-[#19B5D8] hover:bg-[#DDF8FD] rounded-none transition-colors"
                           title="Edit product"
                         >
                           <Edit2 size={16} />
                         </button>
                         <button
                           onClick={() => handleDuplicate(product._id)}
-                          className="p-2 text-neutral-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-neutral-500 hover:text-blue-600 hover:bg-blue-50 rounded-none transition-colors"
                           title="Duplicate product"
                         >
                           <Copy size={16} />
@@ -1342,7 +1342,7 @@ export default function ProductsPage() {
                                   : product._id
                               );
                             }}
-                            className="p-2 text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors"
+                            className="p-2 text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 rounded-none transition-colors"
                             title="More actions"
                           >
                             <MoreVertical size={16} />
@@ -1354,7 +1354,7 @@ export default function ProductsPage() {
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: -5, scale: 0.95 }}
                                 transition={{ duration: 0.15 }}
-                                className="absolute right-0 top-10 bg-white border border-neutral-200/70 rounded-xl shadow-xl py-2 w-48 z-50"
+                                className="absolute right-0 top-10 bg-white border border-neutral-200/70 rounded-none shadow-xl py-2 w-48 z-50"
                               >
                                 <button
                                   onClick={() => {
@@ -1439,7 +1439,7 @@ export default function ProductsPage() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="p-2 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="p-2 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-none transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronLeft size={20} />
           </button>
@@ -1447,7 +1447,7 @@ export default function ProductsPage() {
             <>
               <button
                 onClick={() => setCurrentPage(1)}
-                className="w-10 h-10 text-sm font-medium rounded-lg hover:bg-neutral-100 transition-colors"
+                className="w-10 h-10 text-sm font-medium rounded-none hover:bg-neutral-100 transition-colors"
               >
                 1
               </button>
@@ -1462,7 +1462,7 @@ export default function ProductsPage() {
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
-              className={`w-10 h-10 text-sm font-medium rounded-lg transition-colors ${
+              className={`w-10 h-10 text-sm font-medium rounded-none transition-colors ${
                 page === currentPage
                   ? "bg-[#19B5D8] text-white"
                   : "hover:bg-neutral-100 text-neutral-700"
@@ -1480,7 +1480,7 @@ export default function ProductsPage() {
               )}
               <button
                 onClick={() => setCurrentPage(totalPages)}
-                className="w-10 h-10 text-sm font-medium rounded-lg hover:bg-neutral-100 transition-colors"
+                className="w-10 h-10 text-sm font-medium rounded-none hover:bg-neutral-100 transition-colors"
               >
                 {totalPages}
               </button>
@@ -1489,7 +1489,7 @@ export default function ProductsPage() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="p-2 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="p-2 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-none transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronRight size={20} />
           </button>
@@ -1509,7 +1509,7 @@ export default function ProductsPage() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white border border-neutral-200/70 shadow-2xl rounded-2xl px-6 py-4 flex items-center gap-4"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white border border-neutral-200/70 shadow-2xl rounded-none px-6 py-4 flex items-center gap-4"
         >
           <span className="text-sm font-medium text-neutral-700">
             {selectedIds.size} selected
@@ -1520,7 +1520,7 @@ export default function ProductsPage() {
           <select
             value={bulkAction}
             onChange={(e) => setBulkAction(e.target.value)}
-            className="px-3 py-2 border border-neutral-200 rounded-lg text-sm bg-white focus:outline-none focus:border-[#19B5D8]"
+            className="px-3 py-2 border border-neutral-200 rounded-none text-sm bg-white focus:outline-none focus:border-[#19B5D8]"
           >
             <option value="">Choose action...</option>
             <option value="activate">Activate</option>
@@ -1535,7 +1535,7 @@ export default function ProductsPage() {
           <button
             onClick={handleBulkAction}
             disabled={!bulkAction || bulkSubmitting}
-            className={`px-5 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+            className={`px-5 py-2 text-sm font-medium rounded-none transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
               bulkAction === "delete"
                 ? "bg-red-600 text-white hover:bg-red-700"
                 : "bg-[#19B5D8] text-white hover:bg-[#1297B5]"
@@ -1573,7 +1573,7 @@ export default function ProductsPage() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Add Product
@@ -1593,7 +1593,7 @@ export default function ProductsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..."
-              className="w-full pl-11 pr-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+              className="w-full pl-11 pr-5 py-3.5 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
             />
           </div>
 
@@ -1604,7 +1604,7 @@ export default function ProductsPage() {
               setCategoryFilter(e.target.value);
               setSubcategoryFilter("");
             }}
-            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[180px]"
+            className="px-5 py-3.5 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[180px]"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -1619,7 +1619,7 @@ export default function ProductsPage() {
             <select
               value={subcategoryFilter}
               onChange={(e) => setSubcategoryFilter(e.target.value)}
-              className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[180px]"
+              className="px-5 py-3.5 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[180px]"
             >
               <option value="">All Subcategories</option>
               {subcategories.map((sub) => (
@@ -1634,7 +1634,7 @@ export default function ProductsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[150px]"
+            className="px-5 py-3.5 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[150px]"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -1646,7 +1646,7 @@ export default function ProductsPage() {
           <select
             value={priceRangeFilter}
             onChange={(e) => setPriceRangeFilter(e.target.value)}
-            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[150px]"
+            className="px-5 py-3.5 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[150px]"
           >
             <option value="">All Prices</option>
             <option value="under-10000">Under ₹10,000</option>
@@ -1667,30 +1667,30 @@ export default function ProductsPage() {
             <Filter size={14} className="text-neutral-400" />
             <span className="text-xs text-neutral-500">Active filters:</span>
             {searchQuery && (
-              <span className="px-3 py-1 bg-neutral-100 text-neutral-700 text-xs rounded-full">
+              <span className="px-3 py-1 bg-neutral-100 text-neutral-700 text-xs rounded-none">
                 Search: &ldquo;{searchQuery}&rdquo;
               </span>
             )}
             {categoryFilter && (
-              <span className="px-3 py-1 bg-[#DDF8FD] text-[#19B5D8] text-xs rounded-full">
+              <span className="px-3 py-1 bg-[#DDF8FD] text-[#19B5D8] text-xs rounded-none">
                 Category:{" "}
                 {categories.find((c) => c._id === categoryFilter)?.name || "..."}
               </span>
             )}
             {subcategoryFilter && (
-              <span className="px-3 py-1 bg-[#DDF8FD] text-[#19B5D8] text-xs rounded-full">
+              <span className="px-3 py-1 bg-[#DDF8FD] text-[#19B5D8] text-xs rounded-none">
                 Subcategory:{" "}
                 {subcategories.find((s) => s._id === subcategoryFilter)?.name ||
                   "..."}
               </span>
             )}
             {statusFilter !== "all" && (
-              <span className="px-3 py-1 bg-amber-50 text-amber-700 text-xs rounded-full">
+              <span className="px-3 py-1 bg-amber-50 text-amber-700 text-xs rounded-none">
                 Status: {statusFilter}
               </span>
             )}
             {priceRangeFilter && (
-              <span className="px-3 py-1 bg-amber-50 text-amber-700 text-xs rounded-full">
+              <span className="px-3 py-1 bg-amber-50 text-amber-700 text-xs rounded-none">
                 Price: {priceRangeFilter}
               </span>
             )}
@@ -1702,7 +1702,7 @@ export default function ProductsPage() {
                 setStatusFilter("all");
                 setPriceRangeFilter("");
               }}
-              className="px-3 py-1 text-xs text-red-600 hover:bg-red-50 rounded-full transition-colors"
+              className="px-3 py-1 text-xs text-red-600 hover:bg-red-50 rounded-none transition-colors"
             >
               Clear all
             </button>
@@ -1731,7 +1731,7 @@ export default function ProductsPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="product-create-title"
-              className="bg-white rounded-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="product-create-title" className="text-3xl font-medium">
@@ -1778,7 +1778,7 @@ export default function ProductsPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="product-edit-title"
-              className="bg-white rounded-2xl w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-3xl p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="product-edit-title" className="text-3xl font-medium">
@@ -1825,7 +1825,7 @@ export default function ProductsPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="stock-adjust-title"
-              className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
+              className="bg-white rounded-none w-full max-w-md p-8 md:p-10"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="stock-adjust-title" className="text-2xl font-medium">
@@ -1871,7 +1871,7 @@ export default function ProductsPage() {
                         onClick={() =>
                           setStockModal({ ...stockModal, type: value })
                         }
-                        className={`flex items-center gap-2 px-4 py-3 border rounded-lg text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-2 px-4 py-3 border rounded-none text-sm font-medium transition-colors ${
                           stockModal.type === value
                             ? "border-[#19B5D8] bg-[#DDF8FD] text-[#19B5D8]"
                             : "border-neutral-200 text-neutral-600 hover:bg-neutral-50"
@@ -1924,13 +1924,13 @@ export default function ProductsPage() {
               <div className="flex gap-4 mt-8">
                 <button
                   onClick={() => setStockModal(null)}
-                  className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
+                  className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleStockAdjust}
-                  className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors"
+                  className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors"
                 >
                   Update Stock
                 </button>

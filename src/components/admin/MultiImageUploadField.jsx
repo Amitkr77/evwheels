@@ -158,7 +158,7 @@ export default function MultiImageUploadField({
               onDragOver={(e) => handleDragOver(i, e)}
               onDrop={() => handleDrop(i)}
               onDragEnd={() => setDragOverIndex(null)}
-              className={`relative aspect-square rounded-lg border-2 overflow-hidden cursor-move bg-neutral-50 transition-colors ${
+              className={`relative aspect-square rounded-none border-2 overflow-hidden cursor-move bg-neutral-50 transition-colors ${
                 dragOverIndex === i ? "border-[#19B5D8]" : "border-neutral-200/60"
               }`}
             >
@@ -181,7 +181,7 @@ export default function MultiImageUploadField({
               <button
                 type="button"
                 onClick={() => removeAt(i)}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-none flex items-center justify-center hover:bg-red-600 transition-colors"
                 aria-label={`Remove image ${i + 1}`}
               >
                 <X size={11} />
@@ -226,7 +226,7 @@ export default function MultiImageUploadField({
             }
           }}
           disabled={remainingSlots <= 0}
-          className="flex-1 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors disabled:opacity-50 disabled:bg-neutral-50"
+          className="flex-1 px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors disabled:opacity-50 disabled:bg-neutral-50"
           placeholder={remainingSlots > 0 ? "https://example.com/image.jpg — or upload below" : `Maximum ${max} images reached`}
         />
         <input
@@ -241,7 +241,7 @@ export default function MultiImageUploadField({
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={uploading || remainingSlots <= 0}
-          className="shrink-0 flex items-center gap-2 px-4 py-2.5 border border-neutral-300 rounded-lg text-sm font-medium text-neutral-600 hover:border-[#19B5D8] hover:text-[#19B5D8] hover:bg-[#DDF8FD]/40 transition-colors disabled:opacity-60"
+          className="shrink-0 flex items-center gap-2 px-4 py-2.5 border border-neutral-300 rounded-none text-sm font-medium text-neutral-600 hover:border-[#19B5D8] hover:text-[#19B5D8] hover:bg-[#DDF8FD]/40 transition-colors disabled:opacity-60"
         >
           {uploading ? (
             <Loader2 size={16} className="animate-spin" />

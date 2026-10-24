@@ -74,17 +74,17 @@ function MiniTracker({ status }) {
 
 function SkeletonCard() {
   return (
-    <div className="bg-white border border-neutral-200/70 rounded-2xl p-5 animate-pulse">
+    <div className="bg-white border border-neutral-200/70 rounded-none p-5 animate-pulse">
       <div className="flex items-start justify-between mb-4">
         <div className="space-y-2">
-          <div className="h-3 w-32 bg-neutral-100 rounded-full" />
-          <div className="h-3 w-20 bg-neutral-100 rounded-full" />
+          <div className="h-3 w-32 bg-neutral-100 rounded-none" />
+          <div className="h-3 w-20 bg-neutral-100 rounded-none" />
         </div>
-        <div className="h-6 w-20 bg-neutral-100 rounded-full" />
+        <div className="h-6 w-20 bg-neutral-100 rounded-none" />
       </div>
       <div className="space-y-2.5 mb-4">
-        <div className="h-3 w-full bg-neutral-100 rounded-full" />
-        <div className="h-3 w-3/4 bg-neutral-100 rounded-full" />
+        <div className="h-3 w-full bg-neutral-100 rounded-none" />
+        <div className="h-3 w-3/4 bg-neutral-100 rounded-none" />
       </div>
       <div className="flex items-center gap-2 pt-4 border-t border-neutral-100">
         {[0,1,2,3].map((i) => (
@@ -135,15 +135,15 @@ export default function MyOrders() {
 
       {/* Empty state */}
       {!loading && orders.length === 0 && (
-        <div className="bg-white border border-neutral-200/70 rounded-2xl p-16 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-neutral-50 flex items-center justify-center mx-auto mb-5">
+        <div className="bg-white border border-neutral-200/70 rounded-none p-16 text-center">
+          <div className="w-16 h-16 rounded-none bg-neutral-50 flex items-center justify-center mx-auto mb-5">
             <ShoppingBag size={28} className="text-neutral-300" strokeWidth={1.4} />
           </div>
           <p className="text-base font-semibold text-neutral-700 mb-1">No orders yet</p>
           <p className="text-sm text-neutral-400 mb-7">Your orders will appear here once you make a purchase.</p>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-neutral-900 text-white text-sm font-semibold rounded-full hover:bg-neutral-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-neutral-900 text-white text-sm font-semibold rounded-none hover:bg-neutral-700 transition-colors"
           >
             Browse Products <ArrowRight size={14} />
           </Link>
@@ -160,7 +160,7 @@ export default function MyOrders() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className="bg-white border border-neutral-200/70 rounded-2xl overflow-hidden hover:border-neutral-300 hover:shadow-sm transition-all"
+                className="bg-white border border-neutral-200/70 rounded-none overflow-hidden hover:border-neutral-300 hover:shadow-sm transition-all"
               >
                 {/* Card header */}
                 <div className="px-5 pt-5 pb-4">
@@ -187,7 +187,7 @@ export default function MyOrders() {
                     {order.items?.slice(0, 2).map((item) => (
                       <div key={item.product} className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center shrink-0">
+                          <div className="w-8 h-8 rounded-none bg-neutral-100 flex items-center justify-center shrink-0">
                             <Package size={13} className="text-neutral-400" strokeWidth={1.6} />
                           </div>
                           <div className="min-w-0">

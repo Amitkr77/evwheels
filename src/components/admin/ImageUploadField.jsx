@@ -22,8 +22,8 @@ export default function ImageUploadField({
   type = "product",
   label = "Image",
   required = false,
-  inputClassName = "w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors",
-  previewClassName = "mt-4 max-h-40 rounded-lg border border-neutral-200/60 object-cover",
+  inputClassName = "w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors",
+  previewClassName = "mt-4 max-h-40 rounded-none border border-neutral-200/60 object-cover",
 }) {
   const fileRef = useRef(null);
   const [uploading, setUploading] = useState(false);
@@ -101,7 +101,7 @@ export default function ImageUploadField({
           type="button"
           onClick={() => fileRef.current?.click()}
           disabled={uploading}
-          className="shrink-0 flex items-center gap-2 px-4 py-2.5 border border-neutral-300 rounded-lg text-sm font-medium text-neutral-600 hover:border-[#19B5D8] hover:text-[#19B5D8] hover:bg-[#DDF8FD]/40 transition-colors disabled:opacity-60"
+          className="shrink-0 flex items-center gap-2 px-4 py-2.5 border border-neutral-300 rounded-none text-sm font-medium text-neutral-600 hover:border-[#19B5D8] hover:text-[#19B5D8] hover:bg-[#DDF8FD]/40 transition-colors disabled:opacity-60"
         >
           {uploading ? (
             <Loader2 size={16} className="animate-spin" />
@@ -132,7 +132,7 @@ export default function ImageUploadField({
               }
               onChange("");
             }}
-            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-none flex items-center justify-center hover:bg-red-600 transition-colors"
           >
             <X size={12} />
           </button>

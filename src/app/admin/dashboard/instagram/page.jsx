@@ -144,7 +144,7 @@ export default function InstagramPage() {
   const renderForm = (onSubmit, label) => (
     <div className="space-y-5">
       {error && (
-        <div className="p-4 bg-red-50 border border-red-100 rounded-lg text-red-700 text-sm">{error}</div>
+        <div className="p-4 bg-red-50 border border-red-100 rounded-none text-red-700 text-sm">{error}</div>
       )}
       <ImageUploadField
         value={formData.imageUrl}
@@ -159,7 +159,7 @@ export default function InstagramPage() {
           rows={3}
           value={formData.caption}
           onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
-          className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none text-sm"
+          className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors resize-none text-sm"
           placeholder="Electric cycle delivery day! 🚴‍♂️ #EVWheels"
         />
       </div>
@@ -169,7 +169,7 @@ export default function InstagramPage() {
           type="url"
           value={formData.link}
           onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-          className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+          className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
           placeholder="https://www.instagram.com/p/..."
         />
         <p className="text-xs text-neutral-400 mt-1">Leave blank to link to the profile page.</p>
@@ -187,14 +187,14 @@ export default function InstagramPage() {
         <button
           onClick={() => { setShowCreate(false); setEditPost(null); }}
           disabled={submitting}
-          className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors text-sm"
+          className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors text-sm"
         >
           Cancel
         </button>
         <button
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70 text-sm"
+          className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70 text-sm"
         >
           {submitting && <Loader2 size={16} className="animate-spin" />}
           {submitting ? "Saving…" : label}
@@ -222,7 +222,7 @@ export default function InstagramPage() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors shrink-0"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors shrink-0"
           >
             <Plus size={18} /> Add Post
           </button>
@@ -233,9 +233,9 @@ export default function InstagramPage() {
 
         {/* Empty state */}
         {!loading && posts.length === 0 && (
-          <div className="border border-neutral-200/60 rounded-xl py-20 flex flex-col items-center justify-center text-center">
+          <div className="border border-neutral-200/60 rounded-none py-20 flex flex-col items-center justify-center text-center">
             <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 text-white"
+              className="w-16 h-16 rounded-none flex items-center justify-center mb-5 text-white"
               style={{ background: "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)" }}
             >
               <IGIcon />
@@ -246,7 +246,7 @@ export default function InstagramPage() {
             </p>
             <button
               onClick={openCreate}
-              className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
             >
               <Plus size={18} /> Add Post
             </button>
@@ -259,7 +259,7 @@ export default function InstagramPage() {
             {posts.map((post, i) => (
               <div
                 key={post._id}
-                className="flex items-center gap-4 bg-white border border-neutral-200/70 rounded-xl p-4"
+                className="flex items-center gap-4 bg-white border border-neutral-200/70 rounded-none p-4"
               >
                 {/* Reorder */}
                 <div className="flex flex-col shrink-0">
@@ -274,7 +274,7 @@ export default function InstagramPage() {
                 </div>
 
                 {/* Thumbnail */}
-                <div className="w-16 h-16 rounded-lg overflow-hidden border border-neutral-200/60 shrink-0 bg-neutral-100">
+                <div className="w-16 h-16 rounded-none overflow-hidden border border-neutral-200/60 shrink-0 bg-neutral-100">
                   <img
                     src={post.imageUrl}
                     alt={post.caption || "Post"}
@@ -337,7 +337,7 @@ export default function InstagramPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               role="dialog" aria-modal="true" aria-labelledby="ig-create-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-7">
                 <h2 id="ig-create-title" className="text-2xl font-medium">Add Post</h2>
@@ -358,7 +358,7 @@ export default function InstagramPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               role="dialog" aria-modal="true" aria-labelledby="ig-edit-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-7">
                 <h2 id="ig-edit-title" className="text-2xl font-medium">Edit Post</h2>

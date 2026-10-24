@@ -90,7 +90,7 @@ export default function SupportPage() {
         <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-[#DDF8FD] to-transparent pointer-events-none" />
         <div className="max-w-5xl mx-auto px-4 md:px-8 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#DDF8FD] text-[#19B5D8] text-xs font-semibold uppercase tracking-wider mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-[#DDF8FD] text-[#19B5D8] text-xs font-semibold uppercase tracking-wider mb-6">
               <Wrench size={14} />
               Part Finder
             </div>
@@ -107,7 +107,7 @@ export default function SupportPage() {
 
           <form
             onSubmit={handleCheckFit}
-            className="bg-neutral-50 border border-neutral-200/70 rounded-2xl p-5 shadow-sm"
+            className="bg-neutral-50 border border-neutral-200/70 rounded-none p-5 shadow-sm"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-1.5">
@@ -118,7 +118,7 @@ export default function SupportPage() {
                   id="finder-category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20"
+                  className="w-full rounded-none bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20"
                 >
                   <option value="">All categories</option>
                   {CATEGORIES.map((c) => (
@@ -136,13 +136,13 @@ export default function SupportPage() {
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
                   placeholder="e.g. Shimano"
-                  className="w-full rounded-xl bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20"
+                  className="w-full rounded-none bg-white border border-neutral-200 text-neutral-800 font-light py-3 px-4 focus:outline-none focus:border-[#19B5D8] focus:ring-1 focus:ring-[#19B5D8]/20"
                 />
               </div>
               <div className="flex items-end">
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-[#19B5D8] hover:bg-[#1297B5] text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full py-3.5 bg-[#19B5D8] hover:bg-[#1297B5] text-white font-medium rounded-none transition-colors flex items-center justify-center gap-2 shadow-sm"
                 >
                   <Search size={18} />
                   Check Fit
@@ -188,7 +188,7 @@ export default function SupportPage() {
             <Link
               key={cat.slug}
               href={`/shop?category=${cat.slug}`}
-              className="group flex flex-col items-center gap-3 p-6 rounded-xl bg-white border border-neutral-200/70 hover:border-[#19B5D8]/50 hover:shadow-md transition-all text-center"
+              className="group flex flex-col items-center gap-3 p-6 rounded-none bg-white border border-neutral-200/70 hover:border-[#19B5D8]/50 hover:shadow-md transition-all text-center"
             >
               <cat.icon
                 size={28}
@@ -219,7 +219,7 @@ export default function SupportPage() {
               <div className="space-y-6">
                 {IDENTIFY_STEPS.map((step) => (
                   <div key={step.title} className="flex gap-4">
-                    <div className="w-11 h-11 shrink-0 rounded-full bg-white border border-neutral-200 flex items-center justify-center text-[#19B5D8] shadow-sm">
+                    <div className="w-11 h-11 shrink-0 rounded-none bg-white border border-neutral-200 flex items-center justify-center text-[#19B5D8] shadow-sm">
                       <step.icon size={20} strokeWidth={1.6} />
                     </div>
                     <div>
@@ -231,7 +231,7 @@ export default function SupportPage() {
               </div>
             </div>
 
-            <div className="bg-white border border-neutral-200/70 rounded-2xl p-8 shadow-sm">
+            <div className="bg-white border border-neutral-200/70 rounded-none p-8 shadow-sm">
               <h3 className="text-lg font-medium text-neutral-900 mb-6">
                 Common Serial Number Locations
               </h3>
@@ -239,7 +239,7 @@ export default function SupportPage() {
                 {SERIAL_LOCATIONS.map((loc) => (
                   <div
                     key={loc}
-                    className="bg-neutral-50 border border-neutral-100 p-4 rounded-xl text-center"
+                    className="bg-neutral-50 border border-neutral-100 p-4 rounded-none text-center"
                   >
                     <MapPin
                       size={28}
@@ -254,7 +254,7 @@ export default function SupportPage() {
                 href="https://wa.me/918298922623?text=Hi%20EVWheels%2C%20I%20need%20help%20identifying%20my%20bike%20model%20so%20I%20can%20find%20the%20right%20parts."
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 w-full mt-6 py-3 border border-neutral-200 hover:border-[#19B5D8] hover:text-[#19B5D8] text-neutral-700 font-medium rounded-xl transition-colors text-sm"
+                className="flex items-center justify-center gap-2 w-full mt-6 py-3 border border-neutral-200 hover:border-[#19B5D8] hover:text-[#19B5D8] text-neutral-700 font-medium rounded-none transition-colors text-sm"
               >
                 <Headphones size={16} />
                 Ask us on WhatsApp

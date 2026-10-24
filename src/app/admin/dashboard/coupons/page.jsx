@@ -174,7 +174,7 @@ export default function CouponsPage() {
   const renderForm = (onSubmit, submitLabel) => (
     <div className="space-y-5">
       {error && (
-        <div className="p-4 bg-red-50 border border-red-100 rounded-lg text-red-700 text-sm">
+        <div className="p-4 bg-red-50 border border-red-100 rounded-none text-red-700 text-sm">
           {error}
         </div>
       )}
@@ -187,7 +187,7 @@ export default function CouponsPage() {
           type="text"
           value={formData.code}
           onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors uppercase font-mono"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors uppercase font-mono"
           placeholder="SAVE10"
         />
       </div>
@@ -198,7 +198,7 @@ export default function CouponsPage() {
           <select
             value={formData.discountType}
             onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
           >
             <option value="percentage">Percentage (%)</option>
             <option value="fixed">Fixed (₹)</option>
@@ -210,7 +210,7 @@ export default function CouponsPage() {
             type="number"
             value={formData.discountValue}
             onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="20"
             min="0"
             max={formData.discountType === "percentage" ? 100 : undefined}
@@ -225,7 +225,7 @@ export default function CouponsPage() {
             type="number"
             value={formData.minOrderAmount}
             onChange={(e) => setFormData({ ...formData, minOrderAmount: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="1000"
             min="0"
           />
@@ -236,7 +236,7 @@ export default function CouponsPage() {
             type="number"
             value={formData.usageLimit}
             onChange={(e) => setFormData({ ...formData, usageLimit: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="Unlimited"
             min="1"
           />
@@ -251,7 +251,7 @@ export default function CouponsPage() {
           type="date"
           value={formData.expiryDate}
           onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
         />
       </div>
 
@@ -261,7 +261,7 @@ export default function CouponsPage() {
           role="switch"
           aria-checked={formData.isActive}
           onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
-          className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none ${
+          className={`relative inline-flex h-7 w-12 items-center rounded-none transition-colors focus:outline-none ${
             formData.isActive ? "bg-[#19B5D8]" : "bg-neutral-300"
           }`}
         >
@@ -280,14 +280,14 @@ export default function CouponsPage() {
         <button
           onClick={() => { setShowCreateModal(false); setEditCoupon(null); }}
           disabled={submitting}
-          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
+          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {submitting ? "Saving..." : submitLabel}
@@ -303,7 +303,7 @@ export default function CouponsPage() {
           <h1 className="text-4xl md:text-5xl font-medium">Coupons</h1>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Create Coupon
@@ -313,11 +313,11 @@ export default function CouponsPage() {
         {loading ? (
           <p className="text-neutral-500 py-10 text-center">Loading coupons...</p>
         ) : coupons.length === 0 ? (
-          <div className="border border-neutral-200/60 rounded-xl py-20 text-center text-neutral-500">
+          <div className="border border-neutral-200/60 rounded-none py-20 text-center text-neutral-500">
             No coupons yet. Create your first coupon above.
           </div>
         ) : (
-          <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+          <div className="border border-neutral-200/60 rounded-none overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-neutral-50/70">
@@ -337,7 +337,7 @@ export default function CouponsPage() {
                     <tr key={coupon._id} className="hover:bg-neutral-50/50 transition-colors">
                       <td className="py-5 px-6 font-mono font-semibold text-neutral-900">{coupon.code}</td>
                       <td className="py-5 px-6">
-                        <span className="px-3 py-1 text-xs font-medium bg-neutral-100 rounded-full">
+                        <span className="px-3 py-1 text-xs font-medium bg-neutral-100 rounded-none">
                           {coupon.discountType === "percentage" ? "Percentage" : "Fixed ₹"}
                         </span>
                       </td>
@@ -364,7 +364,7 @@ export default function CouponsPage() {
                       </td>
                       <td className="py-5 px-6">
                         <span
-                          className={`px-3 py-1 text-xs font-medium rounded-full ${
+                          className={`px-3 py-1 text-xs font-medium rounded-none ${
                             coupon.isActive
                               ? "bg-[#DDF8FD] text-[#19B5D8]"
                               : "bg-neutral-100 text-neutral-500"
@@ -411,7 +411,7 @@ export default function CouponsPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="coupon-create-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="coupon-create-title" className="text-3xl font-medium">Create Coupon</h2>
@@ -440,7 +440,7 @@ export default function CouponsPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="coupon-edit-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="coupon-edit-title" className="text-3xl font-medium">Edit Coupon</h2>

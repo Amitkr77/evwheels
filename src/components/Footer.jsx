@@ -221,13 +221,13 @@ export default function Footer() {
                 placeholder="Your email address"
                 className={`w-full px-5 py-3.5 bg-[#1E293B] border ${
                   status === "error" ? "border-red-500" : "border-[#334155]"
-                } rounded-xl focus:outline-none focus:border-[#19B5D8] transition-colors text-sm text-white placeholder-[#64748B]`}
+                } focus:outline-none focus:border-[#19B5D8] transition-colors text-sm text-white placeholder-[#64748B]`}
                 required
               />
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-[#0C7290] text-white rounded-full text-sm font-medium hover:bg-[#0a5f78] transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-[#0C7290] text-white text-sm font-medium hover:bg-[#0a5f78] transition-colors flex items-center justify-center gap-2"
               >
                 <Newspaper size={15} />
                 Subscribe

@@ -370,7 +370,7 @@ export default function CategoriesPage() {
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="e.g. Electric Scooters"
         />
       </div>
@@ -384,7 +384,7 @@ export default function CategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, segment: e.target.value })
           }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
         >
           <option value="">Select Segment</option>
           {segments.map((seg) => (
@@ -404,7 +404,7 @@ export default function CategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
           }
-          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
+          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
           placeholder="Brief description of this category..."
         />
       </div>
@@ -422,7 +422,7 @@ export default function CategoriesPage() {
           onChange={(url) => setFormData({ ...formData, icon: url })}
           type="categoryIcon"
           label="Icon"
-          previewClassName="mt-4 max-h-16 rounded-lg border border-neutral-200/60 object-contain"
+          previewClassName="mt-4 max-h-16 rounded-none border border-neutral-200/60 object-contain"
         />
         <p className="text-xs text-neutral-400 mt-1.5">
           Small square glyph shown in category tiles and menus — separate from the banner image above. Falls back to a default icon if left empty.
@@ -443,7 +443,7 @@ export default function CategoriesPage() {
                 sortOrder: e.target.value,
               })
             }
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="0"
           />
         </div>
@@ -469,14 +469,14 @@ export default function CategoriesPage() {
             setFormData({ ...emptyForm });
           }}
           disabled={submitting}
-          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors disabled:opacity-50"
+          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors disabled:opacity-50"
         >
           Cancel
         </button>
         <button
           onClick={editCategory ? handleUpdate : handleCreate}
           disabled={submitting}
-          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {editCategory
@@ -493,7 +493,7 @@ export default function CategoriesPage() {
 
   // ─── Loading skeleton ───
   const renderLoading = () => (
-    <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+    <div className="border border-neutral-200/60 rounded-none overflow-hidden">
       <table className="w-full">
         <thead className="bg-neutral-50/70">
           <tr>
@@ -526,8 +526,8 @@ export default function CategoriesPage() {
 
   // ─── Empty state ───
   const renderEmpty = () => (
-    <div className="bg-white border border-neutral-200/70 rounded-xl p-16 flex flex-col items-center justify-center text-center">
-      <div className="w-20 h-20 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
+    <div className="bg-white border border-neutral-200/70 rounded-none p-16 flex flex-col items-center justify-center text-center">
+      <div className="w-20 h-20 rounded-none bg-neutral-100 flex items-center justify-center mb-6">
         <FolderOpen size={36} className="text-neutral-400" />
       </div>
       <h3 className="text-xl font-medium text-neutral-800 mb-2">
@@ -541,7 +541,7 @@ export default function CategoriesPage() {
           setFormData({ ...emptyForm });
           setShowCreateModal(true);
         }}
-        className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+        className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
       >
         <Plus size={18} />
         Create Category
@@ -551,7 +551,7 @@ export default function CategoriesPage() {
 
   // ─── No search results ───
   const renderNoResults = () => (
-    <div className="bg-white border border-neutral-200/70 rounded-xl p-12 flex flex-col items-center justify-center text-center">
+    <div className="bg-white border border-neutral-200/70 rounded-none p-12 flex flex-col items-center justify-center text-center">
       <Search size={36} className="text-neutral-300 mb-4" />
       <h3 className="text-lg font-medium text-neutral-700 mb-1">
         No results found
@@ -570,7 +570,7 @@ export default function CategoriesPage() {
     }
 
     return (
-      <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+      <div className="border border-neutral-200/60 rounded-none overflow-hidden">
         <table className="w-full">
           <thead className="bg-neutral-50/70">
             <tr>
@@ -614,7 +614,7 @@ export default function CategoriesPage() {
                         <img
                           src={category.image}
                           alt={category.name}
-                          className="w-10 h-10 rounded-lg object-cover border border-neutral-200/60"
+                          className="w-10 h-10 rounded-none object-cover border border-neutral-200/60"
                           onError={(e) => {
                             e.target.style.display = "none";
                             e.target.nextSibling.style.display = "flex";
@@ -622,7 +622,7 @@ export default function CategoriesPage() {
                         />
                       ) : null}
                       <div
-                        className={`w-10 h-10 rounded-lg bg-neutral-100 items-center justify-center text-neutral-400 text-xs ${
+                        className={`w-10 h-10 rounded-none bg-neutral-100 items-center justify-center text-neutral-400 text-xs ${
                           category.image ? "hidden" : "flex"
                         }`}
                       >
@@ -632,7 +632,7 @@ export default function CategoriesPage() {
                         <img
                           src={category.icon}
                           alt=""
-                          className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white object-cover bg-white"
+                          className="absolute -bottom-1 -right-1 w-5 h-5 rounded-none border-2 border-white object-cover bg-white"
                           onError={(e) => { e.target.style.display = "none"; }}
                         />
                       )}
@@ -643,7 +643,7 @@ export default function CategoriesPage() {
                   </div>
                 </td>
                 <td className="py-5 px-6">
-                  <span className="px-3 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-full">
+                  <span className="px-3 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-none">
                     {getSegmentName(category)}
                   </span>
                 </td>
@@ -705,7 +705,7 @@ export default function CategoriesPage() {
               setFormData({ ...emptyForm });
               setShowCreateModal(true);
             }}
-            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Create Category
@@ -726,13 +726,13 @@ export default function CategoriesPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search categories..."
-                  className="w-full pl-11 pr-5 py-3 border border-neutral-200/70 rounded-lg bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+                  className="w-full pl-11 pr-5 py-3 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
                 />
               </div>
               <select
                 value={segmentFilter}
                 onChange={(e) => setSegmentFilter(e.target.value)}
-                className="px-5 py-3 border border-neutral-200/70 rounded-lg bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[200px]"
+                className="px-5 py-3 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[200px]"
               >
                 <option value="">All Segments</option>
                 {segments.map((seg) => (
@@ -768,7 +768,7 @@ export default function CategoriesPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="category-create-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="category-create-title" className="text-3xl font-medium">
@@ -803,7 +803,7 @@ export default function CategoriesPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="category-edit-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="category-edit-title" className="text-3xl font-medium">

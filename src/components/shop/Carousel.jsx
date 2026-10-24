@@ -55,7 +55,7 @@ export default function Carousel({ children, itemClassName = "" }) {
           type="button"
           onClick={() => scrollByAmount(-1)}
           aria-label="Scroll left"
-          className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white shadow-lg border border-neutral-100 items-center justify-center text-neutral-700 hover:text-[#19B5D8] transition-colors z-10"
+          className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 rounded-none bg-white shadow-lg border border-neutral-100 items-center justify-center text-neutral-700 hover:text-[#19B5D8] transition-colors z-10"
         >
           <ChevronLeft size={18} />
         </button>
@@ -66,7 +66,7 @@ export default function Carousel({ children, itemClassName = "" }) {
           type="button"
           onClick={() => scrollByAmount(1)}
           aria-label="Scroll right"
-          className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-10 h-10 rounded-full bg-white shadow-lg border border-neutral-100 items-center justify-center text-neutral-700 hover:text-[#19B5D8] transition-colors z-10"
+          className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-10 h-10 rounded-none bg-white shadow-lg border border-neutral-100 items-center justify-center text-neutral-700 hover:text-[#19B5D8] transition-colors z-10"
         >
           <ChevronRight size={18} />
         </button>

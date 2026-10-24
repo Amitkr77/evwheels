@@ -199,7 +199,7 @@ export default function BannersPage() {
   const renderForm = (onSubmit, submitLabel) => (
     <div className="space-y-5">
       {error && (
-        <div className="p-4 bg-red-50 border border-red-100 rounded-lg text-red-700 text-sm" role="alert">
+        <div className="p-4 bg-red-50 border border-red-100 rounded-none text-red-700 text-sm" role="alert">
           {error}
         </div>
       )}
@@ -213,7 +213,7 @@ export default function BannersPage() {
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="e.g. Monsoon Sale — Up to 30% Off"
         />
       </div>
@@ -227,7 +227,7 @@ export default function BannersPage() {
           type="text"
           value={formData.subtitle}
           onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="e.g. On brakes, lights & tyres this week"
         />
       </div>
@@ -250,7 +250,7 @@ export default function BannersPage() {
             type="text"
             value={formData.buttonText}
             onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="Shop Now"
           />
         </div>
@@ -263,7 +263,7 @@ export default function BannersPage() {
             type="text"
             value={formData.buttonLink}
             onChange={(e) => setFormData({ ...formData, buttonLink: e.target.value })}
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="/shop?category=brakes"
           />
         </div>
@@ -282,14 +282,14 @@ export default function BannersPage() {
         <button
           onClick={() => { setShowCreateModal(false); setEditBanner(null); }}
           disabled={submitting}
-          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
+          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {submitting ? "Saving..." : submitLabel}
@@ -310,7 +310,7 @@ export default function BannersPage() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Create Banner
@@ -320,8 +320,8 @@ export default function BannersPage() {
         {loading ? (
           <p className="text-neutral-500 py-10 text-center">Loading banners...</p>
         ) : banners.length === 0 ? (
-          <div className="border border-neutral-200/60 rounded-xl py-20 flex flex-col items-center justify-center text-center">
-            <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-5">
+          <div className="border border-neutral-200/60 rounded-none py-20 flex flex-col items-center justify-center text-center">
+            <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center mb-5">
               <ImageIcon size={28} className="text-neutral-400" />
             </div>
             <h3 className="text-xl font-medium text-neutral-800 mb-2">No banners yet</h3>
@@ -330,7 +330,7 @@ export default function BannersPage() {
             </p>
             <button
               onClick={openCreate}
-              className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
             >
               <Plus size={18} />
               Create Banner
@@ -341,7 +341,7 @@ export default function BannersPage() {
             {banners.map((banner, i) => (
               <div
                 key={banner._id}
-                className="flex items-center gap-4 bg-white border border-neutral-200/70 rounded-xl p-4"
+                className="flex items-center gap-4 bg-white border border-neutral-200/70 rounded-none p-4"
               >
                 <div className="flex flex-col shrink-0">
                   <button
@@ -365,7 +365,7 @@ export default function BannersPage() {
                 <img
                   src={banner.image}
                   alt={banner.title}
-                  className="w-24 h-16 rounded-lg object-cover border border-neutral-200/60 shrink-0"
+                  className="w-24 h-16 rounded-none object-cover border border-neutral-200/60 shrink-0"
                   onError={(e) => { e.target.style.visibility = "hidden"; }}
                 />
 
@@ -421,7 +421,7 @@ export default function BannersPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="banner-create-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="banner-create-title" className="text-3xl font-medium">Create Banner</h2>
@@ -450,7 +450,7 @@ export default function BannersPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="banner-edit-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="banner-edit-title" className="text-3xl font-medium">Edit Banner</h2>

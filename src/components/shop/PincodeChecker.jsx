@@ -58,7 +58,7 @@ export default function PincodeChecker({ cod = false }) {
   };
 
   return (
-    <div className="rounded-2xl border border-neutral-100 bg-neutral-50/50 p-4">
+    <div className="rounded-none border border-neutral-100 bg-neutral-50/50 p-4">
       <div className="flex items-center gap-2 mb-3">
         <Truck size={14} className="text-[#19B5D8] shrink-0" />
         <p className="text-[13px] font-semibold text-neutral-800">Check Delivery</p>
@@ -80,12 +80,12 @@ export default function PincodeChecker({ cod = false }) {
             onKeyDown={(e) => e.key === "Enter" && check()}
             placeholder="Enter 6-digit pincode"
             aria-label="Delivery pincode"
-            className="flex-1 min-w-0 px-3.5 py-2.5 text-sm border border-neutral-200 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors placeholder:text-neutral-400"
+            className="flex-1 min-w-0 px-3.5 py-2.5 text-sm border border-neutral-200 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors placeholder:text-neutral-400"
           />
           <button
             onClick={() => check()}
             disabled={loading || pincode.length !== 6}
-            className="px-4 py-2.5 text-[12.5px] font-semibold bg-[#19B5D8] text-white rounded-xl hover:bg-[#1297B5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shrink-0 w-16"
+            className="px-4 py-2.5 text-[12.5px] font-semibold bg-[#19B5D8] text-white rounded-none hover:bg-[#1297B5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shrink-0 w-16"
           >
             {loading ? <Loader2 size={14} className="animate-spin" /> : "Check"}
           </button>

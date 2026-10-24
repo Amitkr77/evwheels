@@ -333,7 +333,7 @@ export default function SubcategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, name: e.target.value })
           }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="e.g. Mountain Bikes"
         />
       </div>
@@ -348,7 +348,7 @@ export default function SubcategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, category: e.target.value })
           }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
         >
           <option value="">Select Category</option>
           {categories.map((cat) => (
@@ -369,7 +369,7 @@ export default function SubcategoriesPage() {
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
           }
-          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
+          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
           placeholder="Optional description..."
         />
       </div>
@@ -380,7 +380,7 @@ export default function SubcategoriesPage() {
         onChange={(url) => setFormData({ ...formData, image: url })}
         type="subcategory"
         label="Image"
-        previewClassName="mt-3 max-h-36 rounded-lg border border-neutral-200/60"
+        previewClassName="mt-3 max-h-36 rounded-none border border-neutral-200/60"
       />
 
       {/* Sort Order */}
@@ -397,7 +397,7 @@ export default function SubcategoriesPage() {
               sortOrder: e.target.value,
             })
           }
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="0"
         />
       </div>
@@ -411,7 +411,7 @@ export default function SubcategoriesPage() {
           onClick={() =>
             setFormData({ ...formData, isActive: !formData.isActive })
           }
-          className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
+          className={`relative inline-flex h-7 w-12 items-center rounded-none transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
             formData.isActive ? "bg-[#19B5D8]" : "bg-neutral-300"
           }`}
         >
@@ -434,14 +434,14 @@ export default function SubcategoriesPage() {
             setEditItem(null);
             setFormData({ ...EMPTY_FORM });
           }}
-          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
+          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={onSubmit}
           disabled={submitting}
-          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting ? "Saving..." : submitLabel}
         </button>
@@ -451,7 +451,7 @@ export default function SubcategoriesPage() {
 
   // ─── Render: loading skeleton ───
   const renderLoading = () => (
-    <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+    <div className="border border-neutral-200/60 rounded-none overflow-hidden">
       <table className="w-full">
         <thead className="bg-neutral-50/70">
           <tr>
@@ -484,8 +484,8 @@ export default function SubcategoriesPage() {
 
   // ─── Render: empty state ───
   const renderEmpty = () => (
-    <div className="border border-neutral-200/60 rounded-xl py-20 flex flex-col items-center justify-center text-center">
-      <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-5">
+    <div className="border border-neutral-200/60 rounded-none py-20 flex flex-col items-center justify-center text-center">
+      <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center mb-5">
         <Tag size={28} className="text-neutral-400" />
       </div>
       <h3 className="text-xl font-medium text-neutral-800 mb-2">
@@ -505,7 +505,7 @@ export default function SubcategoriesPage() {
     if (displayed.length === 0) return renderEmpty();
 
     return (
-      <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+      <div className="border border-neutral-200/60 rounded-none overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-neutral-50/70">
@@ -551,10 +551,10 @@ export default function SubcategoriesPage() {
                         <img
                           src={sub.image}
                           alt={sub.name}
-                          className="w-10 h-10 object-cover rounded-lg flex-shrink-0"
+                          className="w-10 h-10 object-cover rounded-none flex-shrink-0"
                         />
                       ) : (
-                        <div className="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center text-neutral-400 flex-shrink-0">
+                        <div className="w-10 h-10 bg-neutral-100 rounded-none flex items-center justify-center text-neutral-400 flex-shrink-0">
                           <Tag size={16} />
                         </div>
                       )}
@@ -566,7 +566,7 @@ export default function SubcategoriesPage() {
 
                   {/* Category */}
                   <td className="py-6 px-6">
-                    <span className="px-3 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-full">
+                    <span className="px-3 py-1 text-xs font-medium bg-[#DDF8FD] text-[#19B5D8] rounded-none">
                       {getCategoryName(sub)}
                     </span>
                   </td>
@@ -584,7 +584,7 @@ export default function SubcategoriesPage() {
                       aria-checked={sub.isActive ?? true}
                       aria-label={`Toggle ${sub.name} active status`}
                       onClick={() => handleToggleActive(sub)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
+                      className={`relative inline-flex h-6 w-11 items-center rounded-none transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
                         sub.isActive !== false
                           ? "bg-[#19B5D8]"
                           : "bg-neutral-300"
@@ -655,7 +655,7 @@ export default function SubcategoriesPage() {
               setFormData({ ...EMPTY_FORM });
               setShowCreateModal(true);
             }}
-            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Add Subcategory
@@ -675,7 +675,7 @@ export default function SubcategoriesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search subcategories..."
-              className="w-full pl-11 pr-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+              className="w-full pl-11 pr-5 py-3.5 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
             />
           </div>
 
@@ -683,7 +683,7 @@ export default function SubcategoriesPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-5 py-3.5 border border-neutral-200/70 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[200px]"
+            className="px-5 py-3.5 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm min-w-[200px]"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -709,7 +709,7 @@ export default function SubcategoriesPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="subcategory-create-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="subcategory-create-title" className="text-3xl font-medium">
@@ -743,7 +743,7 @@ export default function SubcategoriesPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="subcategory-edit-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="subcategory-edit-title" className="text-3xl font-medium">

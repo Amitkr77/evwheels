@@ -30,7 +30,7 @@ export default function FeaturedProductCard() {
   }, []);
 
   if (loading) {
-    return <div className="rounded-2xl bg-neutral-100 animate-pulse h-full min-h-[420px]" />;
+    return <div className="rounded-none bg-neutral-100 animate-pulse h-full min-h-[420px]" />;
   }
 
   // Nothing to show — the admin hasn't set one and there isn't even a
@@ -41,7 +41,7 @@ export default function FeaturedProductCard() {
   return (
     <Link
       href={`/shop/${product.slug}`}
-      className="group relative flex flex-col h-full min-h-[420px] overflow-hidden rounded-2xl border border-neutral-100 bg-neutral-950"
+      className="group relative flex flex-col h-full min-h-[420px] overflow-hidden rounded-none border border-neutral-100 bg-neutral-950"
     >
       <div className="relative w-full flex-1 min-h-[220px]">
         {product.images?.[0] ? (
@@ -59,7 +59,7 @@ export default function FeaturedProductCard() {
       </div>
 
       <div className="relative z-10 p-7 md:p-9">
-        <span className="inline-flex items-center gap-1.5 bg-[#19B5D8]/20 text-[#19B5D8] text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-[#19B5D8]/30 mb-4 w-fit">
+        <span className="inline-flex items-center gap-1.5 bg-[#19B5D8]/20 text-[#19B5D8] text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-none border border-[#19B5D8]/30 mb-4 w-fit">
           <Sparkles size={11} />
           Trending Now
         </span>
@@ -75,7 +75,7 @@ export default function FeaturedProductCard() {
           <span className="text-2xl font-bold text-white">
             ₹{Number(product.price).toLocaleString("en-IN")}
           </span>
-          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-neutral-900 rounded-full text-sm font-semibold group-hover:bg-[#19B5D8] group-hover:text-white transition-colors">
+          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-neutral-900 rounded-none text-sm font-semibold group-hover:bg-[#19B5D8] group-hover:text-white transition-colors">
             Shop Now <ArrowRight size={14} />
           </span>
         </div>

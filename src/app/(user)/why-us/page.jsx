@@ -43,7 +43,7 @@ export default function WhyUsPage() {
         >
           <motion.span
             variants={fadeInUp}
-            className="inline-block px-5 py-2 bg-[#DDF8FD] text-[#19B5D8] rounded-full text-sm md:text-base font-medium mb-6"
+            className="inline-block px-5 py-2 bg-[#DDF8FD] text-[#19B5D8] rounded-none text-sm md:text-base font-medium mb-6"
           >
             Why Choose EVWheels
           </motion.span>
@@ -94,9 +94,9 @@ export default function WhyUsPage() {
             <motion.div
               key={i}
               variants={fadeInUp}
-              className="bg-white border border-neutral-200/70 rounded-2xl p-8 hover:border-[#19B5D8]/20 transition-colors group"
+              className="bg-white border border-neutral-200/70 rounded-none p-8 hover:border-[#19B5D8]/20 transition-colors group"
             >
-              <div className="w-14 h-14 rounded-full bg-[#DDF8FD] flex items-center justify-center mb-6 text-[#19B5D8] group-hover:bg-[#C7F3FC] transition-colors">
+              <div className="w-14 h-14 rounded-none bg-[#DDF8FD] flex items-center justify-center mb-6 text-[#19B5D8] group-hover:bg-[#C7F3FC] transition-colors">
                 {item.icon}
               </div>
               <h3 className="text-2xl font-medium text-neutral-900 mb-4">
@@ -155,9 +155,9 @@ export default function WhyUsPage() {
               <motion.div
                 key={i}
                 variants={fadeInUp}
-                className="flex gap-5 bg-white border border-neutral-200/70 rounded-xl p-6 hover:border-[#19B5D8]/20 transition-colors"
+                className="flex gap-5 bg-white border border-neutral-200/70 rounded-none p-6 hover:border-[#19B5D8]/20 transition-colors"
               >
-                <div className="w-12 h-12 rounded-full bg-[#DDF8FD] flex items-center justify-center text-[#19B5D8] shrink-0">
+                <div className="w-12 h-12 rounded-none bg-[#DDF8FD] flex items-center justify-center text-[#19B5D8] shrink-0">
                   {item.icon}
                 </div>
                 <div>
@@ -190,7 +190,7 @@ export default function WhyUsPage() {
               <img
                 src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&q=80&w=1600"
                 alt="EV cycle riding in Patna street – real urban test"
-                className="rounded-2xl shadow-lg w-full h-auto object-cover"
+                className="rounded-none shadow-lg w-full h-auto object-cover"
               />
             </motion.div>
 
@@ -249,7 +249,7 @@ export default function WhyUsPage() {
           whileInView="visible"
           viewport={{ once: true }}
           variants={staggerContainer}
-          className="bg-white border border-neutral-200/70 rounded-2xl p-10 md:p-16 text-center mb-20 md:mb-32"
+          className="bg-white border border-neutral-200/70 rounded-none p-10 md:p-16 text-center mb-20 md:mb-32"
         >
           <motion.div variants={fadeInUp}>
             <Award
@@ -288,7 +288,7 @@ export default function WhyUsPage() {
           <div className="flex flex-col sm:flex-row justify-center gap-5">
             <Link
               href="/shop"
-              className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-neutral-900 text-white rounded-none text-lg font-medium hover:bg-neutral-800 transition-colors"
             >
               Explore Cycles
               <ArrowRight size={20} />
@@ -298,7 +298,7 @@ export default function WhyUsPage() {
               href="https://wa.me/918298922623"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-[#19B5D8] text-[#19B5D8] rounded-full text-lg font-medium hover:bg-[#DDF8FD] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-[#19B5D8] text-[#19B5D8] rounded-none text-lg font-medium hover:bg-[#DDF8FD] transition-colors"
             >
               <MessageCircle size={20} />
               Chat on WhatsApp

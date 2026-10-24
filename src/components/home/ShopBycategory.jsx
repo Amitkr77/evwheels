@@ -40,7 +40,7 @@ const FALLBACK_STYLE = {
 const DEFAULT_STYLE = { icon: Package, bg: "bg-neutral-100", fg: "text-neutral-500" };
 
 function SkeletonTile() {
-  return <div className="rounded-2xl bg-neutral-100 animate-pulse h-[90px] md:h-[100px]" />;
+  return <div className="rounded-none bg-neutral-100 animate-pulse h-[90px] md:h-[100px]" />;
 }
 
 // Content only — no outer <section>/container, so it can sit as the right
@@ -107,10 +107,10 @@ export default function ShopByCategory() {
                 >
                   <Link
                     href={`/shop?category=${cat.slug}`}
-                    className="group flex flex-col items-center gap-2.5 p-3 rounded-2xl border border-neutral-100 bg-neutral-50/60 hover:border-[#19B5D8]/30 hover:bg-white hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all duration-200"
+                    className="group flex flex-col items-center gap-2.5 p-3 rounded-none border border-neutral-100 bg-neutral-50/60 hover:border-[#19B5D8]/30 hover:bg-white hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 transition-all duration-200"
                   >
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden transition-transform duration-200 group-hover:scale-105 ${
+                      className={`w-10 h-10 rounded-none flex items-center justify-center overflow-hidden transition-transform duration-200 group-hover:scale-105 ${
                         cat.icon ? "bg-neutral-50" : style.bg
                       }`}
                     >

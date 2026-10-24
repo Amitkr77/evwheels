@@ -23,13 +23,13 @@ export default function NotFound() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/"
-              className="px-8 py-4 bg-neutral-900 text-white rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors"
+              className="px-8 py-4 bg-neutral-900 text-white rounded-none text-sm font-medium hover:bg-neutral-800 transition-colors"
             >
               Go to Homepage
             </Link>
             <Link
               href="/shop"
-              className="px-8 py-4 border border-neutral-300 text-neutral-900 rounded-full text-sm font-medium hover:bg-neutral-50 transition-colors"
+              className="px-8 py-4 border border-neutral-300 text-neutral-900 rounded-none text-sm font-medium hover:bg-neutral-50 transition-colors"
             >
               Browse Cycles
             </Link>

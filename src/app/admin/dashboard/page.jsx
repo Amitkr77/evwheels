@@ -65,7 +65,7 @@ const STATUS_BADGE = {
 };
 
 const Skeleton = ({ className = "" }) => (
-  <div className={`bg-neutral-100 rounded-xl animate-pulse ${className}`} />
+  <div className={`bg-neutral-100 rounded-none animate-pulse ${className}`} />
 );
 
 export default function DashboardPage() {
@@ -233,7 +233,7 @@ export default function DashboardPage() {
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
-            className="px-3 py-2 border border-neutral-200 rounded-lg text-sm text-neutral-700 focus:outline-none focus:border-[#19B5D8] bg-white"
+            className="px-3 py-2 border border-neutral-200 rounded-none text-sm text-neutral-700 focus:outline-none focus:border-[#19B5D8] bg-white"
           >
             <option value="7d">Last 7 days</option>
             <option value="30d">Last 30 days</option>
@@ -241,7 +241,7 @@ export default function DashboardPage() {
           <button
             onClick={fetchDashboard}
             disabled={loading}
-            className="p-2 border border-neutral-200 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 transition-colors disabled:opacity-50"
+            className="p-2 border border-neutral-200 rounded-none text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 transition-colors disabled:opacity-50"
           >
             <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
           </button>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
       </div>
 
       {fetchError && (
-        <div className="mb-5 p-3.5 bg-red-50 border border-red-100 rounded-xl text-red-700 text-sm">
+        <div className="mb-5 p-3.5 bg-red-50 border border-red-100 rounded-none text-red-700 text-sm">
           Couldn&rsquo;t load dashboard data. Please refresh the page.
         </div>
       )}
@@ -264,13 +264,13 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.06 }}
-                className="bg-white border border-neutral-100 rounded-2xl p-4 hover:shadow-sm transition-shadow"
+                className="bg-white border border-neutral-100 rounded-none p-4 hover:shadow-sm transition-shadow"
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wide">
                     {kpi.label}
                   </span>
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${kpi.iconBg}`}>
+                  <div className={`w-8 h-8 rounded-none flex items-center justify-center ${kpi.iconBg}`}>
                     <kpi.icon size={15} />
                   </div>
                 </div>
@@ -294,7 +294,7 @@ export default function DashboardPage() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
         {/* Bar chart — 2/3 width */}
-        <div className="lg:col-span-2 bg-white border border-neutral-100 rounded-2xl p-5">
+        <div className="lg:col-span-2 bg-white border border-neutral-100 rounded-none p-5">
           <h2 className="text-sm font-semibold text-neutral-900 mb-4">Revenue Overview</h2>
           <div className="h-60">
             {loading
@@ -305,14 +305,14 @@ export default function DashboardPage() {
         </div>
 
         {/* Doughnut — 1/3 width */}
-        <div className="bg-white border border-neutral-100 rounded-2xl p-5">
+        <div className="bg-white border border-neutral-100 rounded-none p-5">
           <h2 className="text-sm font-semibold text-neutral-900 mb-4">
             Orders by Status
             <span className="text-[10px] font-normal text-neutral-400 ml-1">(last 30d)</span>
           </h2>
           <div className="h-60 flex items-center justify-center">
             {loading ? (
-              <Skeleton className="w-36 h-36 rounded-full" />
+              <Skeleton className="w-36 h-36 rounded-none" />
             ) : orderStatus.length ? (
               <Doughnut data={doughnutData} options={doughnutOptions} />
             ) : (
@@ -323,7 +323,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-neutral-100 rounded-none overflow-hidden">
         <div className="px-5 py-4 border-b border-neutral-100">
           <h2 className="text-sm font-semibold text-neutral-900">Recent Orders</h2>
         </div>
@@ -358,7 +358,7 @@ export default function DashboardPage() {
                         ₹{Number(order.amount || 0).toLocaleString("en-IN")}
                       </td>
                       <td className="py-3.5 px-5">
-                        <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${
+                        <span className={`inline-flex px-2.5 py-1 rounded-none text-xs font-medium ${
                           STATUS_BADGE[order.status] || "bg-neutral-100 text-neutral-600"
                         }`}>
                           {order.status}

@@ -135,7 +135,7 @@ export default function CartPage() {
           </p>
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-none hover:bg-neutral-800 transition"
           >
             Start Shopping
             <ArrowRight size={18} />
@@ -171,7 +171,7 @@ export default function CartPage() {
           {/* Cart Items */}
           <div className="flex-1 flex flex-col gap-6 lg:gap-8">
             {summary?.shipping === 0 && !isSummaryLoading && (
-              <div className="flex items-center gap-3 p-5 bg-[#DDF8FD]/70 border border-[#19B5D8]/20 rounded-xl text-sm text-neutral-700">
+              <div className="flex items-center gap-3 p-5 bg-[#DDF8FD]/70 border border-[#19B5D8]/20 rounded-none text-sm text-neutral-700">
                 <ShieldCheck size={20} className="text-[#19B5D8] flex-shrink-0" />
                 <span>
                   You&apos;ve qualified for <strong className="text-[#19B5D8]">Free Shipping</strong>!
@@ -186,7 +186,7 @@ export default function CartPage() {
               return (
                 <div
                   key={product._id}
-                  className="bg-white border border-neutral-200/70 rounded-xl p-5 sm:p-6 hover:border-[#19B5D8]/20 transition-colors"
+                  className="bg-white border border-neutral-200/70 rounded-none p-5 sm:p-6 hover:border-[#19B5D8]/20 transition-colors"
                 >
                   <div className="flex flex-col sm:flex-row gap-5 sm:gap-6">
                     <div className="relative shrink-0 w-24 sm:w-28 md:w-32 aspect-square">
@@ -195,7 +195,7 @@ export default function CartPage() {
                         fill
                         sizes="(max-width: 640px) 100vw, 128px"
                         alt={product.title || "Product image"}
-                        className="object-cover rounded-lg"
+                        className="object-cover rounded-none"
                       />
                     </div>
 
@@ -222,7 +222,7 @@ export default function CartPage() {
                       <div className="flex items-center justify-between mt-5 sm:mt-6">
                         <div className="flex items-center gap-5">
                           <div className="flex flex-col gap-1">
-                            <div className="flex items-center border border-neutral-300 rounded-lg overflow-hidden">
+                            <div className="flex items-center border border-neutral-300 rounded-none overflow-hidden">
                               <button
                                 onClick={() => handleQuantityChange(product._id, quantity - 1, product.moq || 1)}
                                 disabled={isPending || quantity <= (product.moq || 1)}
@@ -273,15 +273,15 @@ export default function CartPage() {
           {/* Order Summary – Sticky on lg */}
           <div className="lg:w-[380px] shrink-0">
             <div className="lg:sticky lg:top-24 flex flex-col gap-8">
-              <div className="bg-white border border-neutral-200/70 rounded-xl p-6 sm:p-8">
+              <div className="bg-white border border-neutral-200/70 rounded-none p-6 sm:p-8">
                 <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
 
                 {isSummaryLoading ? (
                   <div className="space-y-4 animate-pulse">
-                    <div className="h-5 bg-neutral-200 rounded w-3/4"></div>
-                    <div className="h-5 bg-neutral-200 rounded w-3/4"></div>
-                    <div className="h-5 bg-neutral-200 rounded w-3/4"></div>
-                    <div className="h-8 bg-neutral-200 rounded w-full mt-6"></div>
+                    <div className="h-5 bg-neutral-200 rounded-none w-3/4"></div>
+                    <div className="h-5 bg-neutral-200 rounded-none w-3/4"></div>
+                    <div className="h-5 bg-neutral-200 rounded-none w-3/4"></div>
+                    <div className="h-8 bg-neutral-200 rounded-none w-full mt-6"></div>
                   </div>
                 ) : (
                   <>
@@ -330,12 +330,12 @@ export default function CartPage() {
                             setCouponError("");
                           }}
                           placeholder="Enter code"
-                          className="flex-1 px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] focus:ring-2 focus:ring-[#19B5D8]/10 transition text-sm uppercase"
+                          className="flex-1 px-5 py-3.5 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] focus:ring-2 focus:ring-[#19B5D8]/10 transition text-sm uppercase"
                         />
                         <button
                           onClick={applyCoupon}
                           disabled={!coupon.trim() || isSummaryLoading}
-                          className="px-6 py-3.5 disabled:opacity-50 bg-neutral-900 text-white rounded-lg text-sm font-medium hover:bg-neutral-800 transition"
+                          className="px-6 py-3.5 disabled:opacity-50 bg-neutral-900 text-white rounded-none text-sm font-medium hover:bg-neutral-800 transition"
                         >
                           Apply
                         </button>
@@ -360,7 +360,7 @@ export default function CartPage() {
                     <Link href="/checkout">
                       <button
                         disabled={isSummaryLoading || items.length === 0}
-                        className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full py-4 bg-neutral-900 text-white rounded-none text-lg font-medium hover:bg-neutral-800 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-disabled={isSummaryLoading || items.length === 0}
                       >
                         Proceed to Checkout

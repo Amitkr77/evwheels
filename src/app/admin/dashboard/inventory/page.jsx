@@ -74,7 +74,7 @@ function getTypeBadge(type) {
 // ─── Skeleton Loader ────────────────────────────────────────────────────
 function SkeletonCard() {
   return (
-    <div className="bg-white border border-neutral-200/70 rounded-xl p-6 animate-pulse">
+    <div className="bg-white border border-neutral-200/70 rounded-none p-6 animate-pulse">
       <div className="h-4 bg-neutral-200 rounded w-24 mb-3" />
       <div className="h-8 bg-neutral-200 rounded w-16 mb-4" />
       <div className="h-3 bg-neutral-200 rounded w-20" />
@@ -84,7 +84,7 @@ function SkeletonCard() {
 
 function SkeletonTable({ cols = 5, rows = 5 }) {
   return (
-    <div className="border border-neutral-200/70 rounded-xl overflow-hidden">
+    <div className="border border-neutral-200/70 rounded-none overflow-hidden">
       <div className="bg-neutral-50/70 px-6 py-5 flex gap-6">
         {Array.from({ length: cols }).map((_, i) => (
           <div key={i} className="h-4 bg-neutral-200 rounded flex-1" />
@@ -126,7 +126,7 @@ function Pagination({ page, pages, total, onPageChange }) {
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
-          className="p-2 rounded-lg hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded-none hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeft size={18} />
         </button>
@@ -134,7 +134,7 @@ function Pagination({ page, pages, total, onPageChange }) {
           <button
             key={p}
             onClick={() => onPageChange(p)}
-            className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+            className={`w-9 h-9 rounded-none text-sm font-medium transition-colors ${
               p === page
                 ? "bg-[#19B5D8] text-white"
                 : "hover:bg-neutral-100 text-neutral-600"
@@ -146,7 +146,7 @@ function Pagination({ page, pages, total, onPageChange }) {
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page >= pages}
-          className="p-2 rounded-lg hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="p-2 rounded-none hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronRight size={18} />
         </button>
@@ -159,7 +159,7 @@ function Pagination({ page, pages, total, onPageChange }) {
 function EmptyState({ icon: Icon, title, description }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-neutral-100 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center mb-4">
         <Icon size={28} className="text-neutral-400" />
       </div>
       <h3 className="text-lg font-medium text-neutral-700 mb-1">{title}</h3>
@@ -481,13 +481,13 @@ export default function InventoryPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05, duration: 0.3 }}
-            className="bg-white border border-neutral-200/70 rounded-xl p-5 hover:border-[#19B5D8]/20 hover:shadow-sm transition-all"
+            className="bg-white border border-neutral-200/70 rounded-none p-5 hover:border-[#19B5D8]/20 hover:shadow-sm transition-all"
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-light text-neutral-500 uppercase tracking-wider">
                 {card.title}
               </span>
-              <div className={`w-8 h-8 rounded-lg ${card.bgIcon} flex items-center justify-center`}>
+              <div className={`w-8 h-8 rounded-none ${card.bgIcon} flex items-center justify-center`}>
                 <card.icon size={16} className={card.textIcon} />
               </div>
             </div>
@@ -504,7 +504,7 @@ export default function InventoryPage() {
       {renderSummaryCards()}
 
       {/* Threshold Setting */}
-      <div className="bg-white border border-neutral-200/70 rounded-xl p-6 mb-8">
+      <div className="bg-white border border-neutral-200/70 rounded-none p-6 mb-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-medium text-neutral-900">Low Stock Threshold</h3>
@@ -521,11 +521,11 @@ export default function InventoryPage() {
               min="1"
               value={thresholdInput}
               onChange={(e) => { setThresholdInput(e.target.value); setThresholdError(""); }}
-              className="w-24 px-4 py-2.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-center text-sm"
+              className="w-24 px-4 py-2.5 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-center text-sm"
             />
             <button
               onClick={handleThresholdApply}
-              className="px-5 py-2.5 bg-[#19B5D8] text-white rounded-lg text-sm font-medium hover:bg-[#1297B5] transition-colors"
+              className="px-5 py-2.5 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
             >
               Apply
             </button>
@@ -550,7 +550,7 @@ export default function InventoryPage() {
         {loadingLogs ? (
           <SkeletonTable cols={5} rows={5} />
         ) : logs.length === 0 ? (
-          <div className="bg-white border border-neutral-200/70 rounded-xl">
+          <div className="bg-white border border-neutral-200/70 rounded-none">
             <EmptyState
               icon={History}
               title="No adjustments yet"
@@ -558,7 +558,7 @@ export default function InventoryPage() {
             />
           </div>
         ) : (
-          <div className="border border-neutral-200/70 rounded-xl overflow-hidden">
+          <div className="border border-neutral-200/70 rounded-none overflow-hidden">
             <table className="w-full">
               <thead className="bg-neutral-50/70">
                 <tr>
@@ -581,7 +581,7 @@ export default function InventoryPage() {
                         {log.productName}
                       </td>
                       <td className="py-5 px-6">
-                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${badge.cls}`}>
+                        <span className={`px-3 py-1 text-xs font-medium rounded-none ${badge.cls}`}>
                           {badge.label}
                         </span>
                       </td>
@@ -614,7 +614,7 @@ export default function InventoryPage() {
 
     if (!lowStockProducts.length) {
       return (
-        <div className="bg-white border border-neutral-200/70 rounded-xl">
+        <div className="bg-white border border-neutral-200/70 rounded-none">
           <EmptyState
             icon={AlertTriangle}
             title="No low stock products"
@@ -626,7 +626,7 @@ export default function InventoryPage() {
 
     return (
       <div>
-        <div className="border border-neutral-200/70 rounded-xl overflow-hidden">
+        <div className="border border-neutral-200/70 rounded-none overflow-hidden">
           <table className="w-full">
             <thead className="bg-neutral-50/70">
               <tr>
@@ -655,14 +655,14 @@ export default function InventoryPage() {
                     </td>
                     <td className="py-5 px-6 text-sm text-neutral-600">—</td>
                     <td className="py-5 px-6">
-                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${status.cls}`}>
+                      <span className={`px-3 py-1 text-xs font-medium rounded-none ${status.cls}`}>
                         {status.label}
                       </span>
                     </td>
                     <td className="py-5 px-6">
                       <button
                         onClick={() => openQuickAdjust(product, "restock")}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-[#19B5D8] text-white rounded-lg text-xs font-medium hover:bg-[#1297B5] transition-colors"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-[#19B5D8] text-white rounded-none text-xs font-medium hover:bg-[#1297B5] transition-colors"
                       >
                         <Plus size={14} />
                         Quick Adjust
@@ -690,7 +690,7 @@ export default function InventoryPage() {
 
     if (!outOfStockProducts.length) {
       return (
-        <div className="bg-white border border-neutral-200/70 rounded-xl">
+        <div className="bg-white border border-neutral-200/70 rounded-none">
           <EmptyState
             icon={AlertCircle}
             title="No out of stock products"
@@ -702,7 +702,7 @@ export default function InventoryPage() {
 
     return (
       <div>
-        <div className="border border-neutral-200/70 rounded-xl overflow-hidden">
+        <div className="border border-neutral-200/70 rounded-none overflow-hidden">
           <table className="w-full">
             <thead className="bg-neutral-50/70">
               <tr>
@@ -726,14 +726,14 @@ export default function InventoryPage() {
                     {formatCurrency(product.price ?? 0)}
                   </td>
                   <td className="py-5 px-6">
-                    <span className="px-3 py-1 text-xs font-medium rounded-full bg-red-50 text-red-700">
+                    <span className="px-3 py-1 text-xs font-medium rounded-none bg-red-50 text-red-700">
                       Out of Stock
                     </span>
                   </td>
                   <td className="py-5 px-6">
                     <button
                       onClick={() => openQuickAdjust(product, "restock")}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-[#19B5D8] text-white rounded-lg text-xs font-medium hover:bg-[#1297B5] transition-colors"
+                      className="flex items-center gap-1.5 px-4 py-2 bg-[#19B5D8] text-white rounded-none text-xs font-medium hover:bg-[#1297B5] transition-colors"
                     >
                       <RefreshCw size={14} />
                       Quick Restock
@@ -760,7 +760,7 @@ export default function InventoryPage() {
 
     if (!logs.length) {
       return (
-        <div className="bg-white border border-neutral-200/70 rounded-xl">
+        <div className="bg-white border border-neutral-200/70 rounded-none">
           <EmptyState
             icon={History}
             title="No adjustment logs"
@@ -772,7 +772,7 @@ export default function InventoryPage() {
 
     return (
       <div>
-        <div className="border border-neutral-200/70 rounded-xl overflow-hidden">
+        <div className="border border-neutral-200/70 rounded-none overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px]">
               <thead className="bg-neutral-50/70">
@@ -799,7 +799,7 @@ export default function InventoryPage() {
                         {log.productName}
                       </td>
                       <td className="py-5 px-6">
-                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${badge.cls}`}>
+                        <span className={`px-3 py-1 text-xs font-medium rounded-none ${badge.cls}`}>
                           {badge.label}
                         </span>
                       </td>
@@ -858,7 +858,7 @@ export default function InventoryPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="stock-adjustment-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
@@ -876,12 +876,12 @@ export default function InventoryPage() {
 
               {/* Success / Error Messages */}
               {adjustSuccess && (
-                <div className="mb-6 p-4 bg-[#DDF8FD] border border-[#19B5D8]/20 rounded-lg text-[#19B5D8] text-sm">
+                <div className="mb-6 p-4 bg-[#DDF8FD] border border-[#19B5D8]/20 rounded-none text-[#19B5D8] text-sm">
                   {adjustSuccess}
                 </div>
               )}
               {adjustError && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-none text-red-800 text-sm">
                   {adjustError}
                 </div>
               )}
@@ -907,7 +907,7 @@ export default function InventoryPage() {
                       }
                     }}
                     placeholder="Search products..."
-                    className="w-full pl-11 pr-4 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+                    className="w-full pl-11 pr-4 py-3.5 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
                   />
                   {searchingProducts && (
                     <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -918,7 +918,7 @@ export default function InventoryPage() {
 
                 {/* Search Results Dropdown */}
                 {searchResults.length > 0 && !selectedProduct && (
-                  <div className="mt-2 border border-neutral-200 rounded-lg max-h-48 overflow-y-auto bg-white shadow-lg">
+                  <div className="mt-2 border border-neutral-200 rounded-none max-h-48 overflow-y-auto bg-white shadow-lg">
                     {searchResults.map((p) => (
                       <button
                         key={p._id}
@@ -946,7 +946,7 @@ export default function InventoryPage() {
 
                 {/* Selected Product Info */}
                 {selectedProduct && (
-                  <div className="mt-3 p-4 bg-[#DDF8FD]/60 border border-[#19B5D8]/20 rounded-lg">
+                  <div className="mt-3 p-4 bg-[#DDF8FD]/60 border border-[#19B5D8]/20 rounded-none">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-sm font-medium text-neutral-900">
@@ -980,7 +980,7 @@ export default function InventoryPage() {
                         onClick={() =>
                           setAdjustForm((f) => ({ ...f, type: at.value }))
                         }
-                        className={`flex items-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium transition-all ${
+                        className={`flex items-center gap-2 px-4 py-3 rounded-none border text-sm font-medium transition-all ${
                           isActive
                             ? at.color === "emerald"
                               ? "border-[#19B5D8]/30 bg-[#DDF8FD] text-[#19B5D8]"
@@ -1017,7 +1017,7 @@ export default function InventoryPage() {
                       ? "Enter new stock level"
                       : "Enter quantity"
                   }
-                  className="w-full px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+                  className="w-full px-5 py-3.5 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
                 />
               </div>
 
@@ -1033,13 +1033,13 @@ export default function InventoryPage() {
                   }
                   placeholder="Optional reason for this adjustment..."
                   rows={3}
-                  className="w-full px-5 py-3.5 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm resize-none"
+                  className="w-full px-5 py-3.5 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm resize-none"
                 />
               </div>
 
               {/* Stock Preview */}
               {preview && adjustForm.quantity && (
-                <div className="mb-8 p-4 bg-neutral-50 border border-neutral-200/70 rounded-lg">
+                <div className="mb-8 p-4 bg-neutral-50 border border-neutral-200/70 rounded-none">
                   <div className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2">
                     Stock Change Preview
                   </div>
@@ -1079,14 +1079,14 @@ export default function InventoryPage() {
               <div className="flex gap-4">
                 <button
                   onClick={() => setShowAdjustModal(false)}
-                  className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors text-sm"
+                  className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAdjustSubmit}
                   disabled={submitting || !adjustForm.productId || adjustForm.quantity === ""}
-                  className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {submitting ? (
                     <>
@@ -1151,7 +1151,7 @@ export default function InventoryPage() {
             setAdjustSuccess("");
             setShowAdjustModal(true);
           }}
-          className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+          className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
         >
           <Plus size={18} />
           Adjust Stock
@@ -1166,7 +1166,7 @@ export default function InventoryPage() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-none text-sm font-medium whitespace-nowrap transition-all ${
                 isActive
                   ? "bg-[#19B5D8] text-white shadow-sm"
                   : "text-neutral-600 hover:bg-neutral-100"
@@ -1176,7 +1176,7 @@ export default function InventoryPage() {
               {tab.label}
               {tab.key === "low-stock" && summary?.lowStock > 0 && (
                 <span
-                  className={`ml-1 px-2 py-0.5 text-xs font-semibold rounded-full ${
+                  className={`ml-1 px-2 py-0.5 text-xs font-semibold rounded-none ${
                     isActive ? "bg-white/20 text-white" : "bg-amber-100 text-amber-700"
                   }`}
                 >
@@ -1185,7 +1185,7 @@ export default function InventoryPage() {
               )}
               {tab.key === "out-of-stock" && summary?.outOfStock > 0 && (
                 <span
-                  className={`ml-1 px-2 py-0.5 text-xs font-semibold rounded-full ${
+                  className={`ml-1 px-2 py-0.5 text-xs font-semibold rounded-none ${
                     isActive ? "bg-white/20 text-white" : "bg-red-100 text-red-700"
                   }`}
                 >

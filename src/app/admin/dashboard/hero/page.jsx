@@ -43,7 +43,7 @@ function Input({ value, onChange, placeholder, className = "" }) {
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className={`w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm ${className}`}
+      className={`w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm ${className}`}
     />
   );
 }
@@ -204,7 +204,7 @@ export default function HeroSlidesPage() {
   const renderForm = (onSubmit, label) => (
     <div className="space-y-5">
       {error && (
-        <div className="p-4 bg-red-50 border border-red-100 rounded-lg text-red-700 text-sm">{error}</div>
+        <div className="p-4 bg-red-50 border border-red-100 rounded-none text-red-700 text-sm">{error}</div>
       )}
 
       {/* Badge row */}
@@ -213,7 +213,7 @@ export default function HeroSlidesPage() {
           <select
             value={formData.badgeIcon}
             onChange={(e) => set("badgeIcon")(e.target.value)}
-            className="w-full px-3 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors text-sm bg-white"
+            className="w-full px-3 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm bg-white"
           >
             {ICON_OPTIONS.map((o) => <option key={o} value={o}>{o}</option>)}
           </select>
@@ -242,7 +242,7 @@ export default function HeroSlidesPage() {
           rows={3}
           value={formData.description}
           onChange={(e) => set("description")(e.target.value)}
-          className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none text-sm"
+          className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors resize-none text-sm"
           placeholder="We manufacture electric cycles and lithium batteries in-house…"
         />
       </Field>
@@ -277,11 +277,11 @@ export default function HeroSlidesPage() {
 
       <div className="flex gap-4 pt-2">
         <button onClick={closeModal} disabled={submitting}
-          className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors text-sm">
+          className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors text-sm">
           Cancel
         </button>
         <button onClick={onSubmit} disabled={submitting}
-          className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70 text-sm">
+          className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70 text-sm">
           {submitting && <Loader2 size={16} className="animate-spin" />}
           {submitting ? "Saving…" : label}
         </button>
@@ -301,7 +301,7 @@ export default function HeroSlidesPage() {
             </p>
           </div>
           <button onClick={openCreate}
-            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors shrink-0">
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors shrink-0">
             <Plus size={18} /> Add Slide
           </button>
         </div>
@@ -309,8 +309,8 @@ export default function HeroSlidesPage() {
         {loading && <p className="text-neutral-500 py-10 text-center">Loading slides…</p>}
 
         {!loading && slides.length === 0 && (
-          <div className="border border-neutral-200/60 rounded-xl py-20 flex flex-col items-center justify-center text-center">
-            <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-5">
+          <div className="border border-neutral-200/60 rounded-none py-20 flex flex-col items-center justify-center text-center">
+            <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center mb-5">
               <MonitorPlay size={28} className="text-neutral-400" />
             </div>
             <h3 className="text-xl font-medium text-neutral-800 mb-2">No slides yet</h3>
@@ -318,7 +318,7 @@ export default function HeroSlidesPage() {
               Create the first slide to control the homepage hero section.
             </p>
             <button onClick={openCreate}
-              className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors">
+              className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors">
               <Plus size={18} /> Add Slide
             </button>
           </div>
@@ -328,7 +328,7 @@ export default function HeroSlidesPage() {
           <div className="space-y-3">
             {slides.map((slide, i) => (
               <div key={slide._id}
-                className="flex items-center gap-4 bg-white border border-neutral-200/70 rounded-xl p-5">
+                className="flex items-center gap-4 bg-white border border-neutral-200/70 rounded-none p-5">
                 {/* Reorder */}
                 <div className="flex flex-col shrink-0">
                   <button onClick={() => moveSlide(i, -1)} disabled={i === 0 || reordering} aria-label="Move up"
@@ -342,7 +342,7 @@ export default function HeroSlidesPage() {
                 </div>
 
                 {/* Slide number */}
-                <div className="w-8 h-8 rounded-full bg-[#DDF8FD] flex items-center justify-center text-[#19B5D8] text-xs font-bold shrink-0">
+                <div className="w-8 h-8 rounded-none bg-[#DDF8FD] flex items-center justify-center text-[#19B5D8] text-xs font-bold shrink-0">
                   {i + 1}
                 </div>
 
@@ -393,7 +393,7 @@ export default function HeroSlidesPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               role="dialog" aria-modal="true" aria-labelledby="hero-create-title"
-              className="bg-white rounded-2xl w-full max-w-xl p-8 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-xl p-8 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-7">
                 <h2 id="hero-create-title" className="text-2xl font-medium">Add Slide</h2>
@@ -414,7 +414,7 @@ export default function HeroSlidesPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               role="dialog" aria-modal="true" aria-labelledby="hero-edit-title"
-              className="bg-white rounded-2xl w-full max-w-xl p-8 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-xl p-8 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-7">
                 <h2 id="hero-edit-title" className="text-2xl font-medium">Edit Slide</h2>

@@ -45,12 +45,12 @@ const SORT_OPTIONS = [
 
 function SkeletonCard() {
   return (
-    <div className="rounded-xl border border-neutral-100 overflow-hidden animate-pulse">
+    <div className="rounded-none border border-neutral-100 overflow-hidden animate-pulse">
       <div className="aspect-square bg-neutral-100" />
       <div className="px-3.5 pb-3.5 pt-3 space-y-2">
-        <div className="h-3 bg-neutral-100 rounded w-full" />
-        <div className="h-3 bg-neutral-100 rounded w-2/3" />
-        <div className="h-3 bg-neutral-100 rounded w-1/3 mt-1" />
+        <div className="h-3 bg-neutral-100 rounded-none w-full" />
+        <div className="h-3 bg-neutral-100 rounded-none w-2/3" />
+        <div className="h-3 bg-neutral-100 rounded-none w-1/3 mt-1" />
       </div>
     </div>
   );
@@ -64,7 +64,7 @@ function CategoryList({ active, onChange, categories }) {
         <button
           key={cat.slug}
           onClick={() => onChange(cat.slug)}
-          className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex items-center justify-between group ${
+          className={`w-full text-left px-3 py-2 rounded-none text-sm transition-colors flex items-center justify-between group ${
             active === cat.slug
               ? "bg-neutral-900 text-white font-medium"
               : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
@@ -102,7 +102,7 @@ function Pagination({ page, totalPages, onChange }) {
       <button
         onClick={() => onChange(page - 1)}
         disabled={page === 1}
-        className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm text-neutral-500 hover:bg-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-1 px-3 py-2 rounded-none text-sm text-neutral-500 hover:bg-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <ChevronLeft size={15} /> Prev
       </button>
@@ -117,7 +117,7 @@ function Pagination({ page, totalPages, onChange }) {
           <button
             key={p}
             onClick={() => onChange(p)}
-            className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+            className={`w-9 h-9 rounded-none text-sm font-medium transition-colors ${
               p === page
                 ? "bg-neutral-900 text-white"
                 : "text-neutral-600 hover:bg-neutral-100"
@@ -132,7 +132,7 @@ function Pagination({ page, totalPages, onChange }) {
       <button
         onClick={() => onChange(page + 1)}
         disabled={page === totalPages}
-        className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm text-neutral-500 hover:bg-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-1 px-3 py-2 rounded-none text-sm text-neutral-500 hover:bg-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         Next <ChevronRight size={15} />
       </button>
@@ -350,7 +350,7 @@ function ShopInner() {
               </h1>
             </div>
             {/* Search — desktop */}
-            <div className="hidden sm:flex items-center gap-2 px-4 py-2.5 border border-neutral-200 rounded-xl bg-neutral-50 w-64 focus-within:border-[#19B5D8] focus-within:bg-white transition-colors">
+            <div className="hidden sm:flex items-center gap-2 px-4 py-2.5 border border-neutral-200 rounded-none bg-neutral-50 w-64 focus-within:border-[#19B5D8] focus-within:bg-white transition-colors">
               <Search size={14} className="text-neutral-400 shrink-0" />
               <input
                 value={search}

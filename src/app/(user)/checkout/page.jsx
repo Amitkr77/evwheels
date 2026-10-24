@@ -35,7 +35,7 @@ function Field({ label, id, children, span2 }) {
 const PHONE_REGEX = /^\+?\d{9,15}$/;
 const PIN_REGEX = /^\d{6}$/;
 
-const inputCls = "w-full px-4 py-3 text-sm border border-neutral-200 rounded-xl bg-white focus:outline-none focus:border-[#19B5D8] focus:ring-2 focus:ring-[#19B5D8]/10 transition-colors placeholder:text-neutral-300";
+const inputCls = "w-full px-4 py-3 text-sm border border-neutral-200 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] focus:ring-2 focus:ring-[#19B5D8]/10 transition-colors placeholder:text-neutral-300";
 const selectCls = `${inputCls} appearance-none cursor-pointer`;
 
 export default function CheckoutPage() {
@@ -250,7 +250,7 @@ function CheckoutContent() {
   if (displayItems.length === 0) {
     return (
       <div className="min-h-screen bg-neutral-50 pt-24 flex flex-col items-center justify-center text-center px-6 gap-4">
-        <div className="w-16 h-16 rounded-2xl bg-neutral-100 flex items-center justify-center mb-2">
+        <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center mb-2">
           <ShieldCheck size={28} className="text-neutral-300" />
         </div>
         <h2 className="text-2xl font-bold text-neutral-900">
@@ -261,7 +261,7 @@ function CheckoutContent() {
             ? "This product is no longer available."
             : "Add some products before proceeding to checkout."}
         </p>
-        <Link href="/shop" className="mt-2 inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white rounded-full text-sm font-semibold hover:bg-neutral-800 transition-colors">
+        <Link href="/shop" className="mt-2 inline-flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white rounded-none text-sm font-semibold hover:bg-neutral-800 transition-colors">
           <ArrowLeft size={15} /> Browse Products
         </Link>
       </div>
@@ -288,7 +288,7 @@ function CheckoutContent() {
 
             {/* Saved addresses */}
             {savedAddresses.length > 0 && (
-              <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+              <div className="bg-white border border-neutral-100 rounded-none overflow-hidden">
                 <div className="px-5 py-4 border-b border-neutral-100 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <MapPin size={15} className="text-[#19B5D8]" />
@@ -306,7 +306,7 @@ function CheckoutContent() {
                     <button
                       key={a._id}
                       onClick={() => selectSavedAddress(a)}
-                      className={`relative text-left p-4 rounded-xl border-2 transition-all ${
+                      className={`relative text-left p-4 rounded-none border-2 transition-all ${
                         selectedAddressId === a._id
                           ? "border-[#19B5D8] bg-[#DDF8FD]/20"
                           : "border-neutral-100 hover:border-neutral-200 bg-white"
@@ -316,7 +316,7 @@ function CheckoutContent() {
                         <CheckCircle2 size={15} className="absolute top-3 right-3 text-[#19B5D8]" />
                       )}
                       {a.isDefault && (
-                        <span className="text-[9px] font-semibold uppercase tracking-wide text-[#19B5D8] bg-[#DDF8FD] px-2 py-0.5 rounded-full mb-1.5 inline-block">
+                        <span className="text-[9px] font-semibold uppercase tracking-wide text-[#19B5D8] bg-[#DDF8FD] px-2 py-0.5 rounded-none mb-1.5 inline-block">
                           Default
                         </span>
                       )}
@@ -333,7 +333,7 @@ function CheckoutContent() {
 
             {/* Address form */}
             {(showForm || savedAddresses.length === 0) && (
-              <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+              <div className="bg-white border border-neutral-100 rounded-none overflow-hidden">
                 <div className="px-5 py-4 border-b border-neutral-100 flex items-center gap-2">
                   <MapPin size={15} className="text-[#19B5D8]" />
                   <span className="text-sm font-semibold text-neutral-900">
@@ -367,12 +367,12 @@ function CheckoutContent() {
             )}
 
             {/* Payment */}
-            <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+            <div className="bg-white border border-neutral-100 rounded-none overflow-hidden">
               <div className="px-5 py-4 border-b border-neutral-100">
                 <span className="text-sm font-semibold text-neutral-900">Payment Method</span>
               </div>
               <div className="p-5">
-                <div className="flex items-center gap-3 p-4 rounded-xl border-2 border-[#19B5D8] bg-[#DDF8FD]/20">
+                <div className="flex items-center gap-3 p-4 rounded-none border-2 border-[#19B5D8] bg-[#DDF8FD]/20">
                   <div className="w-4 h-4 rounded-full border-2 border-[#19B5D8] flex items-center justify-center shrink-0">
                     <div className="w-2 h-2 rounded-full bg-[#19B5D8]" />
                   </div>
@@ -387,7 +387,7 @@ function CheckoutContent() {
 
             {/* Error */}
             {error && (
-              <div role="alert" className="px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
+              <div role="alert" className="px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-none text-sm">
                 {error}
               </div>
             )}
@@ -396,7 +396,7 @@ function CheckoutContent() {
             <button
               onClick={placeOrder}
               disabled={submitting || summaryLoading}
-              className="w-full py-4 bg-neutral-900 text-white rounded-2xl text-sm font-semibold hover:bg-neutral-800 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-4 bg-neutral-900 text-white rounded-none text-sm font-semibold hover:bg-neutral-800 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {submitting ? (
                 <>
@@ -420,7 +420,7 @@ function CheckoutContent() {
 
           {/* ── Right: Order summary (sticky) ── */}
           <div className="w-full lg:w-[360px] shrink-0">
-            <div className="sticky top-24 bg-white border border-neutral-100 rounded-2xl overflow-hidden">
+            <div className="sticky top-24 bg-white border border-neutral-100 rounded-none overflow-hidden">
               <div className="px-5 py-4 border-b border-neutral-100">
                 <span className="text-sm font-semibold text-neutral-900">
                   Order Summary ({displayItems.length} item{displayItems.length !== 1 ? "s" : ""})
@@ -431,7 +431,7 @@ function CheckoutContent() {
               <div className="p-5 space-y-4 max-h-72 overflow-y-auto">
                 {displayItems.map(({ product, quantity }) => (
                   <div key={product._id} className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-xl border border-neutral-100 bg-neutral-50 shrink-0 relative overflow-hidden">
+                    <div className="w-14 h-14 rounded-none border border-neutral-100 bg-neutral-50 shrink-0 relative overflow-hidden">
                       <Image
                         src={product.images?.[0] || "/logo.png"}
                         alt={product.title || "Product"}
@@ -457,9 +457,9 @@ function CheckoutContent() {
               <div className="px-5 pb-5 space-y-3 border-t border-neutral-100 pt-4">
                 {summaryLoading ? (
                   <div className="space-y-2 animate-pulse">
-                    <div className="h-3 bg-neutral-100 rounded w-full" />
-                    <div className="h-3 bg-neutral-100 rounded w-2/3" />
-                    <div className="h-4 bg-neutral-100 rounded w-1/2 mt-2" />
+                    <div className="h-3 bg-neutral-100 rounded-none w-full" />
+                    <div className="h-3 bg-neutral-100 rounded-none w-2/3" />
+                    <div className="h-4 bg-neutral-100 rounded-none w-1/2 mt-2" />
                   </div>
                 ) : (
                   <>

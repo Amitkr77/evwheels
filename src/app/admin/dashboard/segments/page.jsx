@@ -331,7 +331,7 @@ export default function SegmentsPage() {
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+          className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
           placeholder="e.g. Electric Vehicles"
         />
       </div>
@@ -345,7 +345,7 @@ export default function SegmentsPage() {
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
           }
-          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
+          className="w-full h-28 px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
           placeholder="Brief description of this segment..."
         />
       </div>
@@ -371,7 +371,7 @@ export default function SegmentsPage() {
                 sortOrder: e.target.value,
               })
             }
-            className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+            className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             placeholder="0"
           />
         </div>
@@ -397,14 +397,14 @@ export default function SegmentsPage() {
             setFormData({ ...emptyForm });
           }}
           disabled={submitting}
-          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors disabled:opacity-50"
+          className="flex-1 py-4 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors disabled:opacity-50"
         >
           Cancel
         </button>
         <button
           onClick={editSegment ? handleUpdate : handleCreate}
           disabled={submitting}
-          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+          className="flex-1 py-4 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
         >
           {submitting && <Loader2 size={18} className="animate-spin" />}
           {editSegment
@@ -421,7 +421,7 @@ export default function SegmentsPage() {
 
   // ─── Loading skeleton ───
   const renderLoading = () => (
-    <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+    <div className="border border-neutral-200/60 rounded-none overflow-hidden">
       <table className="w-full">
         <thead className="bg-neutral-50/70">
           <tr>
@@ -454,8 +454,8 @@ export default function SegmentsPage() {
 
   // ─── Empty state ───
   const renderEmpty = () => (
-    <div className="bg-white border border-neutral-200/70 rounded-xl p-16 flex flex-col items-center justify-center text-center">
-      <div className="w-20 h-20 rounded-full bg-neutral-100 flex items-center justify-center mb-6">
+    <div className="bg-white border border-neutral-200/70 rounded-none p-16 flex flex-col items-center justify-center text-center">
+      <div className="w-20 h-20 rounded-none bg-neutral-100 flex items-center justify-center mb-6">
         <Layers3 size={36} className="text-neutral-400" />
       </div>
       <h3 className="text-xl font-medium text-neutral-800 mb-2">
@@ -470,7 +470,7 @@ export default function SegmentsPage() {
           setFormData({ ...emptyForm });
           setShowCreateModal(true);
         }}
-        className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+        className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
       >
         <Plus size={18} />
         Create Segment
@@ -480,7 +480,7 @@ export default function SegmentsPage() {
 
   // ─── No search results ───
   const renderNoResults = () => (
-    <div className="bg-white border border-neutral-200/70 rounded-xl p-12 flex flex-col items-center justify-center text-center">
+    <div className="bg-white border border-neutral-200/70 rounded-none p-12 flex flex-col items-center justify-center text-center">
       <Search size={36} className="text-neutral-300 mb-4" />
       <h3 className="text-lg font-medium text-neutral-700 mb-1">
         No results found
@@ -499,7 +499,7 @@ export default function SegmentsPage() {
     }
 
     return (
-      <div className="border border-neutral-200/60 rounded-xl overflow-hidden">
+      <div className="border border-neutral-200/60 rounded-none overflow-hidden">
         <table className="w-full">
           <thead className="bg-neutral-50/70">
             <tr>
@@ -539,7 +539,7 @@ export default function SegmentsPage() {
                       <img
                         src={segment.image}
                         alt={segment.name}
-                        className="w-10 h-10 rounded-lg object-cover border border-neutral-200/60 flex-shrink-0"
+                        className="w-10 h-10 rounded-none object-cover border border-neutral-200/60 flex-shrink-0"
                         onError={(e) => {
                           e.target.style.display = "none";
                           e.target.nextSibling.style.display = "flex";
@@ -547,7 +547,7 @@ export default function SegmentsPage() {
                       />
                     ) : null}
                     <div
-                      className={`w-10 h-10 rounded-lg bg-neutral-100 items-center justify-center text-neutral-400 text-xs flex-shrink-0 ${
+                      className={`w-10 h-10 rounded-none bg-neutral-100 items-center justify-center text-neutral-400 text-xs flex-shrink-0 ${
                         segment.image ? "hidden" : "flex"
                       }`}
                     >
@@ -616,7 +616,7 @@ export default function SegmentsPage() {
               setFormData({ ...emptyForm });
               setShowCreateModal(true);
             }}
-            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
           >
             <Plus size={18} />
             Create Segment
@@ -636,7 +636,7 @@ export default function SegmentsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search segments..."
-                className="w-full pl-11 pr-5 py-3 border border-neutral-200/70 rounded-lg bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+                className="w-full pl-11 pr-5 py-3 border border-neutral-200/70 rounded-none bg-white focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
               />
             </div>
             <p className="text-sm text-neutral-500">
@@ -665,7 +665,7 @@ export default function SegmentsPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="segment-create-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="segment-create-title" className="text-3xl font-medium">
@@ -700,7 +700,7 @@ export default function SegmentsPage() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="segment-edit-title"
-              className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+              className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
             >
               <div className="flex items-center justify-between mb-8">
                 <h2 id="segment-edit-title" className="text-3xl font-medium">

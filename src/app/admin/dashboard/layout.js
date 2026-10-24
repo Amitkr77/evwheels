@@ -118,12 +118,12 @@ function NotificationBell() {
         <div ref={ref} className="relative">
             <button
                 onClick={handleToggle}
-                className="relative w-9 h-9 flex items-center justify-center rounded-lg text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 transition-colors"
+                className="relative w-9 h-9 flex items-center justify-center rounded-none text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 transition-colors"
                 aria-label="Notifications"
             >
                 <Bell size={18} />
                 {badgeCount > 0 && (
-                    <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                    <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-none flex items-center justify-center leading-none">
                         {badgeCount > 9 ? "9+" : badgeCount}
                     </span>
                 )}
@@ -136,12 +136,12 @@ function NotificationBell() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 6, scale: 0.97 }}
                         transition={{ duration: 0.13 }}
-                        className="absolute right-0 top-full mt-2 w-80 bg-white border border-neutral-200 rounded-2xl shadow-xl shadow-neutral-200/60 z-50 overflow-hidden"
+                        className="absolute right-0 top-full mt-2 w-80 bg-white border border-neutral-200 rounded-none shadow-xl shadow-neutral-200/60 z-50 overflow-hidden"
                     >
                         <div className="px-4 py-3 border-b border-neutral-100 flex items-center justify-between">
                             <p className="text-sm font-semibold text-neutral-900">Notifications</p>
                             {badgeCount > 0 && (
-                                <span className="px-2 py-0.5 rounded-full bg-red-50 text-red-600 text-xs font-semibold">
+                                <span className="px-2 py-0.5 rounded-none bg-red-50 text-red-600 text-xs font-semibold">
                                     {badgeCount} alert{badgeCount !== 1 ? "s" : ""}
                                 </span>
                             )}
@@ -155,7 +155,7 @@ function NotificationBell() {
                             <div className="max-h-80 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                 {pendingOrders > 0 && (
                                     <div className="flex items-center gap-3 px-4 py-3 hover:bg-neutral-50 transition-colors">
-                                        <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                                        <div className="w-8 h-8 rounded-none bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
                                             <Clock size={15} />
                                         </div>
                                         <div>
@@ -168,7 +168,7 @@ function NotificationBell() {
                                 )}
                                 {lowStock > 0 && (
                                     <div className="flex items-center gap-3 px-4 py-3 hover:bg-neutral-50 transition-colors">
-                                        <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                                        <div className="w-8 h-8 rounded-none bg-red-50 text-red-600 flex items-center justify-center shrink-0">
                                             <AlertTriangle size={15} />
                                         </div>
                                         <div>
@@ -186,7 +186,7 @@ function NotificationBell() {
                                         </div>
                                         {recentOrders.map((o) => (
                                             <div key={o.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors">
-                                                <div className="w-8 h-8 rounded-lg bg-[#DDF8FD] text-[#19B5D8] flex items-center justify-center shrink-0">
+                                                <div className="w-8 h-8 rounded-none bg-[#DDF8FD] text-[#19B5D8] flex items-center justify-center shrink-0">
                                                     <ShoppingBag size={14} />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
@@ -197,7 +197,7 @@ function NotificationBell() {
                                                         {o.name} · ₹{Number(o.amount || 0).toLocaleString("en-IN")}
                                                     </p>
                                                 </div>
-                                                <span className="text-[10px] px-2 py-0.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full font-medium shrink-0">
+                                                <span className="text-[10px] px-2 py-0.5 bg-[#DDF8FD] text-[#19B5D8] rounded-none font-medium shrink-0">
                                                     {o.status}
                                                 </span>
                                             </div>
@@ -250,7 +250,7 @@ function DashboardShell({ children }) {
             {/* Logo */}
             <div className="px-5 py-4 border-b border-neutral-100 shrink-0">
                 <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-bold text-lg shadow-sm shrink-0">
+                    <div className="w-9 h-9 rounded-none bg-[#19B5D8] flex items-center justify-center text-white font-bold text-lg shadow-sm shrink-0">
                         E
                     </div>
                     <div>
@@ -274,7 +274,7 @@ function DashboardShell({ children }) {
                                     <button
                                         key={item.path}
                                         onClick={() => goTo(item.path)}
-                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium rounded-lg transition-all border-l-2 ${
+                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium rounded-none transition-all border-l-2 ${
                                             active
                                                 ? "bg-[#DDF8FD]/70 text-[#0C7290] border-[#19B5D8]"
                                                 : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 border-transparent"
@@ -292,8 +292,8 @@ function DashboardShell({ children }) {
 
             {/* Footer */}
             <div className="px-3 py-3 border-t border-neutral-100 shrink-0">
-                <div className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-neutral-50 transition-colors group">
-                    <div className="w-8 h-8 bg-[#19B5D8] rounded-full flex items-center justify-center text-white font-semibold text-xs shrink-0">
+                <div className="flex items-center gap-2.5 px-2 py-2 rounded-none hover:bg-neutral-50 transition-colors group">
+                    <div className="w-8 h-8 bg-[#19B5D8] rounded-none flex items-center justify-center text-white font-semibold text-xs shrink-0">
                         {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -343,7 +343,7 @@ function DashboardShell({ children }) {
                         >
                             <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 shrink-0">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 rounded-xl bg-[#19B5D8] flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                                    <div className="w-9 h-9 rounded-none bg-[#19B5D8] flex items-center justify-center text-white font-bold text-lg shadow-sm">
                                         E
                                     </div>
                                     <div>
@@ -374,7 +374,7 @@ function DashboardShell({ children }) {
                                                     <button
                                                         key={item.path}
                                                         onClick={() => goTo(item.path)}
-                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium rounded-lg transition-all border-l-2 ${
+                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium rounded-none transition-all border-l-2 ${
                                                             active
                                                                 ? "bg-[#DDF8FD]/70 text-[#0C7290] border-[#19B5D8]"
                                                                 : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 border-transparent"
@@ -392,7 +392,7 @@ function DashboardShell({ children }) {
 
                             <div className="px-3 py-3 border-t border-neutral-100 shrink-0">
                                 <div className="flex items-center gap-2.5 px-2 py-2">
-                                    <div className="w-8 h-8 bg-[#19B5D8] rounded-full flex items-center justify-center text-white font-semibold text-xs shrink-0">
+                                    <div className="w-8 h-8 bg-[#19B5D8] rounded-none flex items-center justify-center text-white font-semibold text-xs shrink-0">
                                         {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -431,7 +431,7 @@ function DashboardShell({ children }) {
                                 </p>
                                 <p className="text-xs text-neutral-400 leading-tight">Administrator</p>
                             </div>
-                            <div className="w-8 h-8 bg-[#19B5D8] rounded-full flex items-center justify-center text-white font-semibold text-xs shrink-0">
+                            <div className="w-8 h-8 bg-[#19B5D8] rounded-none flex items-center justify-center text-white font-semibold text-xs shrink-0">
                                 {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
                             </div>
                         </div>

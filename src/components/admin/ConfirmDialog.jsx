@@ -89,11 +89,11 @@ export function ConfirmDialogProvider({ children }) {
               aria-modal="true"
               aria-labelledby="confirm-dialog-title"
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl w-full max-w-md p-8 md:p-10"
+              className="bg-white rounded-none w-full max-w-md p-8 md:p-10"
             >
               <div className="flex items-center gap-4 mb-6">
                 <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  className={`w-12 h-12 rounded-none flex items-center justify-center flex-shrink-0 ${
                     isDanger ? "bg-red-50" : "bg-[#DDF8FD]"
                   }`}
                 >
@@ -116,7 +116,7 @@ export function ConfirmDialogProvider({ children }) {
               {message && <div className="text-neutral-700 mb-6">{message}</div>}
 
               {blocked && (
-                <div className="mb-6 bg-red-50 border border-red-200/60 rounded-lg p-4 flex items-start gap-3">
+                <div className="mb-6 bg-red-50 border border-red-200/60 rounded-none p-4 flex items-start gap-3">
                   <AlertTriangle size={20} className="text-red-500 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-red-800">Cannot {confirmLabel.toLowerCase()}</p>
@@ -129,14 +129,14 @@ export function ConfirmDialogProvider({ children }) {
                 <button
                   ref={cancelBtnRef}
                   onClick={() => resolveDialog(false)}
-                  className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
+                  className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors"
                 >
                   {cancelLabel}
                 </button>
                 <button
                   onClick={() => resolveDialog(true)}
                   disabled={Boolean(blocked)}
-                  className={`flex-1 py-3.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`flex-1 py-3.5 rounded-none font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     isDanger
                       ? "bg-red-600 text-white hover:bg-red-700"
                       : "bg-neutral-900 text-white hover:bg-neutral-800"

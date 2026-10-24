@@ -64,7 +64,7 @@ function ProductSearchBox({ placeholder, exclude = [], onPick }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="w-full pl-11 pr-5 py-3.5 border border-neutral-300 rounded-xl focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
+          className="w-full pl-11 pr-5 py-3.5 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors text-sm"
         />
         {searching && (
           <Loader2 size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 animate-spin" />
@@ -72,7 +72,7 @@ function ProductSearchBox({ placeholder, exclude = [], onPick }) {
       </div>
 
       {query.trim().length >= 2 && (
-        <div className="absolute left-0 right-0 top-[calc(100%+6px)] bg-white border border-neutral-200 rounded-xl shadow-lg z-20 max-h-72 overflow-y-auto">
+        <div className="absolute left-0 right-0 top-[calc(100%+6px)] bg-white border border-neutral-200 rounded-none shadow-lg z-20 max-h-72 overflow-y-auto">
           {results.length === 0 && !searching ? (
             <p className="px-4 py-4 text-sm text-neutral-400 text-center">No products found</p>
           ) : (
@@ -90,7 +90,7 @@ function ProductSearchBox({ placeholder, exclude = [], onPick }) {
                   }}
                   className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 transition-colors text-left disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  <div className="w-9 h-9 rounded-lg bg-neutral-100 shrink-0 overflow-hidden flex items-center justify-center text-neutral-400 text-xs">
+                  <div className="w-9 h-9 rounded-none bg-neutral-100 shrink-0 overflow-hidden flex items-center justify-center text-neutral-400 text-xs">
                     {p.images?.[0] ? (
                       <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
                     ) : (
@@ -232,19 +232,19 @@ export default function ShowcasePage() {
         </div>
 
         {/* ─── Featured / Trending Product ─── */}
-        <div className="bg-white border border-neutral-200/70 rounded-2xl p-6 md:p-8 mb-10">
+        <div className="bg-white border border-neutral-200/70 rounded-none p-6 md:p-8 mb-10">
           <h2 className="text-xl font-medium mb-1">Trending / Featured Product</h2>
           <p className="text-sm text-neutral-500 mb-5">
             The single product highlighted above the categories section.
           </p>
 
           {loadingFeatured ? (
-            <div className="h-16 bg-neutral-100 rounded-xl animate-pulse" />
+            <div className="h-16 bg-neutral-100 rounded-none animate-pulse" />
           ) : (
             <div className="space-y-4">
               {featuredProduct && (
-                <div className="flex items-center gap-4 p-4 bg-neutral-50 rounded-xl border border-neutral-100">
-                  <div className="w-12 h-12 rounded-lg bg-white shrink-0 overflow-hidden flex items-center justify-center text-neutral-400">
+                <div className="flex items-center gap-4 p-4 bg-neutral-50 rounded-none border border-neutral-100">
+                  <div className="w-12 h-12 rounded-none bg-white shrink-0 overflow-hidden flex items-center justify-center text-neutral-400">
                     {featuredProduct.images?.[0] ? (
                       <img src={featuredProduct.images[0]} alt="" className="w-full h-full object-cover" />
                     ) : (
@@ -280,7 +280,7 @@ export default function ShowcasePage() {
         </div>
 
         {/* ─── Showcase tabs ─── */}
-        <div className="bg-white border border-neutral-200/70 rounded-2xl overflow-hidden">
+        <div className="bg-white border border-neutral-200/70 rounded-none overflow-hidden">
           <div className="flex items-center gap-1 p-2 border-b border-neutral-100 overflow-x-auto">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.key;
@@ -289,14 +289,14 @@ export default function ShowcasePage() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-none whitespace-nowrap transition-colors ${
                     isActive ? "bg-[#19B5D8] text-white" : "text-neutral-600 hover:bg-neutral-100"
                   }`}
                 >
                   <tab.icon size={15} />
                   {tab.label}
                   <span
-                    className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                    className={`ml-1 px-1.5 py-0.5 rounded-none text-[10px] font-semibold ${
                       isActive ? "bg-white/20 text-white" : "bg-neutral-200 text-neutral-600"
                     }`}
                   >
@@ -329,10 +329,10 @@ export default function ShowcasePage() {
 
             {loading ? (
               <div className="space-y-2">
-                {[1, 2, 3].map((i) => <div key={i} className="h-16 bg-neutral-100 rounded-xl animate-pulse" />)}
+                {[1, 2, 3].map((i) => <div key={i} className="h-16 bg-neutral-100 rounded-none animate-pulse" />)}
               </div>
             ) : currentItems.length === 0 ? (
-              <div className="py-14 text-center text-neutral-400 text-sm border border-dashed border-neutral-200 rounded-xl">
+              <div className="py-14 text-center text-neutral-400 text-sm border border-dashed border-neutral-200 rounded-none">
                 No products curated yet — the landing page will show an automatic fallback list until you add some here.
               </div>
             ) : (
@@ -340,7 +340,7 @@ export default function ShowcasePage() {
                 {currentItems.map((p, i) => (
                   <div
                     key={p._id}
-                    className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl border border-neutral-100"
+                    className="flex items-center gap-3 p-3 bg-neutral-50 rounded-none border border-neutral-100"
                   >
                     <div className="flex flex-col shrink-0">
                       <button
@@ -361,7 +361,7 @@ export default function ShowcasePage() {
                       </button>
                     </div>
                     <span className="w-5 text-center text-xs font-medium text-neutral-400 shrink-0">{i + 1}</span>
-                    <div className="w-10 h-10 rounded-lg bg-white shrink-0 overflow-hidden flex items-center justify-center text-neutral-400">
+                    <div className="w-10 h-10 rounded-none bg-white shrink-0 overflow-hidden flex items-center justify-center text-neutral-400">
                       {p.images?.[0] ? (
                         <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
                       ) : (

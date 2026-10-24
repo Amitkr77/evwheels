@@ -31,7 +31,7 @@ export default function Wishlist() {
         <p className="text-neutral-600 mb-8">Start adding items you love ♥</p>
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition-colors"
+          className="inline-flex items-center gap-2 px-8 py-4 bg-neutral-900 text-white rounded-none hover:bg-neutral-800 transition-colors"
         >
           Browse Products
           <ArrowRight size={18} />
@@ -60,7 +60,7 @@ export default function Wishlist() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="group bg-white border border-neutral-200 rounded-xl overflow-hidden hover:border-[#19B5D8]/20 hover:shadow-md transition-all duration-300"
+            className="group bg-white border border-neutral-200 rounded-none overflow-hidden hover:border-[#19B5D8]/20 hover:shadow-md transition-all duration-300"
           >
             <div className="relative aspect-[4/3] bg-neutral-100">
               <Image
@@ -72,7 +72,7 @@ export default function Wishlist() {
               />
               <button
                 onClick={() => toggleWishlist(item._id)}
-                className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-red-50 transition-colors z-10"
+                className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-sm rounded-none shadow-md hover:bg-red-50 transition-colors z-10"
                 aria-label={`Remove ${item.title} from wishlist`}
               >
                 <Heart size={18} className="text-red-600" fill="#dc2626" />
@@ -88,7 +88,7 @@ export default function Wishlist() {
               </div>
               <button
                 onClick={() => addToCart(item, 1, { source: "wishlist" })}
-                className="w-full py-3.5 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-colors"
+                className="w-full py-3.5 bg-black text-white rounded-none font-medium hover:bg-neutral-800 transition-colors"
               >
                 Add to Cart
               </button>

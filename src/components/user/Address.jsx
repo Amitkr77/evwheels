@@ -129,7 +129,7 @@ export default function Address() {
         </h1>
         <button
           onClick={() => { setShowForm(true); setError(null); setForm(EMPTY_FORM); }}
-          className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-full text-sm font-medium hover:bg-[#1297B5] transition-colors"
+          className="flex items-center gap-2 px-6 py-3 bg-[#19B5D8] text-white rounded-none text-sm font-medium hover:bg-[#1297B5] transition-colors"
         >
           <Plus size={18} />
           Add New
@@ -137,7 +137,7 @@ export default function Address() {
       </div>
 
       {error && (
-        <div role="alert" className="mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+        <div role="alert" className="mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-none text-sm">
           {error}
         </div>
       )}
@@ -155,14 +155,14 @@ export default function Address() {
           {addresses.map((addr) => (
             <div
               key={addr._id}
-              className="bg-white border border-neutral-200/70 rounded-xl p-8 hover:border-[#19B5D8]/20 transition-colors"
+              className="bg-white border border-neutral-200/70 rounded-none p-8 hover:border-[#19B5D8]/20 transition-colors"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-lg font-medium">{addr.fullName}</span>
                     {addr.isDefault && (
-                      <span className="text-xs font-medium px-2.5 py-0.5 bg-[#DDF8FD] text-[#19B5D8] rounded-full">
+                      <span className="text-xs font-medium px-2.5 py-0.5 bg-[#DDF8FD] text-[#19B5D8] rounded-none">
                         Default
                       </span>
                     )}
@@ -207,14 +207,14 @@ export default function Address() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="address-modal-title"
-            className="bg-white rounded-2xl w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
+            className="bg-white rounded-none w-full max-w-lg p-8 md:p-10 overflow-y-auto max-h-[90vh]"
           >
             <h2 id="address-modal-title" className="text-3xl font-medium mb-8">
               Add New Address
             </h2>
 
             {error && (
-              <div role="alert" className="mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+              <div role="alert" className="mb-6 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-none text-sm">
                 {error}
               </div>
             )}
