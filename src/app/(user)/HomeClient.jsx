@@ -8,7 +8,6 @@ import {
   ArrowRight,
   ShieldCheck,
   Truck,
-  MessageCircle,
   MapPin,
   Package,
   Zap,
@@ -940,16 +939,6 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* ── WhatsApp float ────────────────────────────────── */}
-      <a
-        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918298922623"}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp"
-        className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-[#19B5D8] rounded-none flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-      >
-        <MessageCircle size={22} className="text-white" />
-      </a>
     </div>
   );
 }
