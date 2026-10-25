@@ -11,16 +11,14 @@ export const metadata = {
 
 export default function UserRootLayout({ children }) {
     return (
-        <ToastProvider>
-            <main suppressHydrationWarning>
-                <TopBar />
-                <Navbar />
-                {/* Spacer so page content clears the combined topbar (36px) + navbar (80px) */}
-                <div className="h-9" />
-                {children}
-                <Footer />
-                <WhatsAppWidget />
-            </main>
-        </ToastProvider>
+        <main suppressHydrationWarning>
+            <TopBar />
+            <Navbar />
+            {/* Spacer so page content clears the combined topbar (36px) + navbar (80px) */}
+            <div className="h-9" />
+            <ToastProvider>{children}</ToastProvider>
+            <Footer />
+            <WhatsAppWidget />
+        </main>
     );
 }

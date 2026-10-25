@@ -1,30 +1,13 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Heart } from "lucide-react";
-import { useWishlistStore } from "@/store/wishlistStore";
-import { useAuthStore } from "@/store/authStore";
-import { useToast } from "@/components/Toast";
+import { ArrowUpRight } from "lucide-react";
+import WishlistButton from "@/components/shop/WishlistButton";
 
-export default function ProductCard({ product }) {
+function ProductCard({ product }) {
   const inStock = product.stock > 0;
-  const isInWishlist = useWishlistStore((s) => s.isInWishlist(product._id));
-  const toggleWishlist = useWishlistStore((s) => s.toggleWishlist);
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const toast = useToast();
-
-  const handleWishlist = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleWishlist(product._id);
-    if (isAuthenticated) {
-      toast(
-        isInWishlist ? "Removed from wishlist" : "Added to wishlist",
-        "wishlist"
-      );
-    }
-  };
 
   return (
     <Link
@@ -57,19 +40,7 @@ export default function ProductCard({ product }) {
         )}
 
         {/* Wishlist button — top-right */}
-        <button
-          onClick={handleWishlist}
-          className={`absolute top-2.5 right-2.5 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm border border-neutral-100 transition-all hover:border-red-200 hover:bg-red-50 z-10 ${
-            isInWishlist ? "text-red-500" : "text-neutral-400"
-          }`}
-          aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <Heart
-            size={14}
-            strokeWidth={1.8}
-            className={isInWishlist ? "fill-red-500" : ""}
-          />
-        </button>
+        <WishlistButton productId={product._id} />
 
         {/* MOQ badge */}
         {(product.moq || 1) > 1 && (
@@ -108,3 +79,5 @@ export default function ProductCard({ product }) {
     </Link>
   );
 }
+
+export default memo(ProductCard);

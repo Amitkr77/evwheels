@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  MessageCircle,
   ShieldCheck,
   Truck,
   ChevronDown,
@@ -92,6 +91,22 @@ function SectionHeader({ label, title }) {
   );
 }
 
+function RecentlyViewedSection({ excludeId }) {
+  const items = useRecentlyViewedStore((s) => s.items);
+  const filtered = items.filter((p) => p._id !== excludeId).slice(0, 4);
+  if (filtered.length === 0) return null;
+  return (
+    <section>
+      <SectionHeader label="Your History" title="Recently Viewed" />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+        {filtered.map((p) => (
+          <ProductCard key={p._id} product={p} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 const TRUST = [
   { icon: Truck,       text: "Free delivery above ₹5,000"   },
   { icon: ShieldCheck, text: "100% genuine products"         },
@@ -106,7 +121,6 @@ export default function ProductDetailClient() {
   const router    = useRouter();
   const addToCart = useCartStore((state) => state.addToCart);
   const addToRecentlyViewed = useRecentlyViewedStore((s) => s.addProduct);
-  const recentlyViewed = useRecentlyViewedStore((s) => s.items);
   const toast = useToast();
 
   const [product,           setProduct]           = useState(null);
@@ -634,19 +648,7 @@ export default function ProductDetailClient() {
         )}
 
         {/* Recently Viewed */}
-        {recentlyViewed.filter((p) => p._id !== product?._id).length > 0 && (
-          <section>
-            <SectionHeader label="Your History" title="Recently Viewed" />
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-              {recentlyViewed
-                .filter((p) => p._id !== product?._id)
-                .slice(0, 4)
-                .map((p) => (
-                  <ProductCard key={p._id} product={p} />
-                ))}
-            </div>
-          </section>
-        )}
+        <RecentlyViewedSection excludeId={product?._id} />
 
       </div>
 
