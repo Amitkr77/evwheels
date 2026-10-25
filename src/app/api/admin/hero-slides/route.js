@@ -90,8 +90,14 @@ export async function POST(req) {
       return NextResponse.json({ error: "headline0 is required" }, { status: 400 });
 
     await connectDB();
+    // Whitelist only allowed fields — prevent mass assignment
+    const { badgeIcon, badge, headline0, headline1, accent, description, cta1Label, cta1Href,
+            cta2Label, cta2Href, isActive, image } = body;
     const count = await HeroSlide.countDocuments();
-    const slide = await HeroSlide.create({ ...body, displayOrder: count });
+    const slide = await HeroSlide.create({
+      badgeIcon, badge, headline0, headline1, accent, description, cta1Label, cta1Href,
+      cta2Label, cta2Href, isActive, image, displayOrder: count,
+    });
     return NextResponse.json({ success: true, slide }, { status: 201 });
   } catch (error) {
     captureServerException(error, { route: "admin/hero-slides POST" });
@@ -110,8 +116,16 @@ export async function PATCH(req) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
     const body = await req.json();
+    // Whitelist only allowed fields
+    const { badgeIcon, badge, headline0, headline1, accent, description, cta1Label, cta1Href,
+            cta2Label, cta2Href, isActive, image, displayOrder } = body;
+    const allowedUpdate = {};
+    for (const [k, v] of Object.entries({ badgeIcon, badge, headline0, headline1, accent, description,
+        cta1Label, cta1Href, cta2Label, cta2Href, isActive, image, displayOrder })) {
+      if (v !== undefined) allowedUpdate[k] = v;
+    }
     await connectDB();
-    const slide = await HeroSlide.findByIdAndUpdate(id, { $set: body }, { new: true });
+    const slide = await HeroSlide.findByIdAndUpdate(id, { $set: allowedUpdate }, { new: true });
     if (!slide) return NextResponse.json({ error: "Slide not found" }, { status: 404 });
 
     return NextResponse.json({ success: true, slide });

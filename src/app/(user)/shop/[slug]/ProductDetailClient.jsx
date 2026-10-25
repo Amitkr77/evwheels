@@ -297,7 +297,7 @@ export default function ProductDetailClient() {
             className="lg:sticky lg:top-24"
           >
             {/* Main image */}
-            <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-neutral-50 border border-neutral-100">
+            <div className="relative aspect-square w-full rounded-none overflow-hidden bg-neutral-50 border border-neutral-100">
               <AnimatePresence mode="sync">
                 <motion.div
                   key={selectedImage}
@@ -328,7 +328,7 @@ export default function ProductDetailClient() {
                     type="button"
                     onClick={() => setSelectedImage(i)}
                     aria-label={`View image ${i + 1}`}
-                    className={`relative w-[72px] h-[72px] flex-shrink-0 rounded-xl overflow-hidden bg-neutral-50 border-2 transition-all duration-200 ${
+                    className={`relative w-[72px] h-[72px] flex-shrink-0 rounded-none overflow-hidden bg-neutral-50 border-2 transition-all duration-200 ${
                       selectedImage === i
                         ? "border-[#19B5D8] shadow-[0_0_0_3px_rgba(25,181,216,0.15)]"
                         : "border-neutral-100 hover:border-neutral-300"
@@ -351,14 +351,14 @@ export default function ProductDetailClient() {
             {/* Brand + Category chips */}
             <div className="flex items-center gap-2 mb-3 flex-wrap">
               {product.brand && (
-                <span className="text-[11px] font-semibold text-neutral-500 px-3 py-1 bg-neutral-100 rounded-full">
+                <span className="text-[11px] font-semibold text-neutral-500 px-3 py-1 bg-neutral-100 rounded-none">
                   {product.brand}
                 </span>
               )}
               {product.category?.name && (
                 <Link
                   href={`/shop?category=${product.category.slug}`}
-                  className="text-[11px] font-semibold text-[#0C7290] px-3 py-1 bg-[#DDF8FD] rounded-full hover:bg-[#c5f1fb] transition-colors"
+                  className="text-[11px] font-semibold text-[#0C7290] px-3 py-1 bg-[#DDF8FD] rounded-none hover:bg-[#c5f1fb] transition-colors"
                 >
                   {product.category.name}
                 </Link>
@@ -387,7 +387,7 @@ export default function ProductDetailClient() {
                 {price}
               </span>
               <span
-                className={`text-[12px] font-bold px-3 py-1 rounded-full ${
+                className={`text-[12px] font-bold px-3 py-1 rounded-none ${
                   inStock
                     ? "bg-emerald-50 text-emerald-700"
                     : "bg-red-50 text-red-600"
@@ -403,7 +403,7 @@ export default function ProductDetailClient() {
                 {highlights.map((h) => (
                   <div
                     key={h.label}
-                    className="flex flex-col px-3 py-2.5 bg-neutral-50 rounded-xl border border-neutral-100"
+                    className="flex flex-col px-3 py-2.5 bg-neutral-50 rounded-none border border-neutral-100"
                   >
                     <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-400 mb-0.5">
                       {h.label}
@@ -425,7 +425,7 @@ export default function ProductDetailClient() {
 
             {/* MOQ notice */}
             {moq > 1 && (
-              <div className="flex items-center gap-2 px-4 py-3 bg-[#DDF8FD]/60 border border-[#19B5D8]/20 rounded-xl mb-5 text-[13px]">
+              <div className="flex items-center gap-2 px-4 py-3 bg-[#DDF8FD]/60 border border-[#19B5D8]/20 rounded-none mb-5 text-[13px]">
                 <Zap size={13} className="text-[#19B5D8] shrink-0" />
                 <span className="text-[#0C7290] font-medium">
                   Minimum order quantity: <strong>{moq} units</strong>
@@ -438,7 +438,7 @@ export default function ProductDetailClient() {
               <button
                 onClick={() => addToCart(product, moq, { source: "pdp" })}
                 disabled={!inStock}
-                className="flex-1 h-12 flex items-center justify-center gap-2 bg-neutral-900 text-white text-[13.5px] font-semibold rounded-xl hover:bg-neutral-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex-1 h-12 flex items-center justify-center gap-2 bg-neutral-900 text-white text-[13.5px] font-semibold rounded-none hover:bg-neutral-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <ShoppingBag size={15} strokeWidth={1.8} />
                 {moq > 1 ? `Add ${moq} to Cart` : "Add to Cart"}
@@ -446,7 +446,7 @@ export default function ProductDetailClient() {
               <button
                 onClick={handleBuyNow}
                 disabled={!inStock}
-                className="flex-1 h-12 flex items-center justify-center bg-[#19B5D8] text-white text-[13.5px] font-semibold rounded-xl hover:bg-[#1297B5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex-1 h-12 flex items-center justify-center bg-[#19B5D8] text-white text-[13.5px] font-semibold rounded-none hover:bg-[#1297B5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Buy Now
               </button>
@@ -460,7 +460,7 @@ export default function ProductDetailClient() {
             {/* Trust strip */}
             <div className="grid grid-cols-2 gap-2.5">
               {TRUST.map(({ icon: Icon, text }) => (
-                <div key={text} className="flex items-center gap-2 px-3 py-2.5 bg-neutral-50 rounded-xl border border-neutral-100">
+                <div key={text} className="flex items-center gap-2 px-3 py-2.5 bg-neutral-50 rounded-none border border-neutral-100">
                   <Icon size={13} className="text-[#19B5D8] shrink-0" strokeWidth={1.8} />
                   <span className="text-[11.5px] text-neutral-600 leading-tight">{text}</span>
                 </div>
@@ -477,7 +477,7 @@ export default function ProductDetailClient() {
         {product.specifications?.length > 0 && (
           <section>
             <SectionHeader label="Product Details" title="Specifications" />
-            <div className="rounded-2xl border border-neutral-100 overflow-hidden">
+            <div className="rounded-none border border-neutral-100 overflow-hidden">
               {product.specifications.map((spec, i) => (
                 <div
                   key={i}
@@ -500,8 +500,8 @@ export default function ProductDetailClient() {
           <section>
             <SectionHeader label="Coverage" title="Warranty" />
             <div className="grid sm:grid-cols-3 gap-4">
-              <div className="flex flex-col gap-3 p-5 bg-[#F0FEFF] rounded-2xl border border-[#19B5D8]/15">
-                <div className="w-9 h-9 rounded-xl bg-[#DDF8FD] flex items-center justify-center">
+              <div className="flex flex-col gap-3 p-5 bg-[#F0FEFF] rounded-none border border-[#19B5D8]/15">
+                <div className="w-9 h-9 rounded-none bg-[#DDF8FD] flex items-center justify-center">
                   <ShieldCheck size={17} className="text-[#0C7290]" strokeWidth={1.8} />
                 </div>
                 <div>
@@ -511,8 +511,8 @@ export default function ProductDetailClient() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 p-5 bg-neutral-50 rounded-2xl border border-neutral-100">
-                <div className="w-9 h-9 rounded-xl bg-neutral-100 flex items-center justify-center">
+              <div className="flex flex-col gap-3 p-5 bg-neutral-50 rounded-none border border-neutral-100">
+                <div className="w-9 h-9 rounded-none bg-neutral-100 flex items-center justify-center">
                   <ShieldCheck size={17} className="text-neutral-600" strokeWidth={1.8} />
                 </div>
                 <div>
@@ -523,8 +523,8 @@ export default function ProductDetailClient() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 p-5 bg-neutral-50 rounded-2xl border border-neutral-100">
-                <div className="w-9 h-9 rounded-xl bg-neutral-100 flex items-center justify-center">
+              <div className="flex flex-col gap-3 p-5 bg-neutral-50 rounded-none border border-neutral-100">
+                <div className="w-9 h-9 rounded-none bg-neutral-100 flex items-center justify-center">
                   <Phone size={17} className="text-neutral-600" strokeWidth={1.8} />
                 </div>
                 <div>
@@ -541,7 +541,7 @@ export default function ProductDetailClient() {
         {/* FAQ */}
         <section>
           <SectionHeader label="Got Questions?" title="Frequently Asked" />
-          <div className="rounded-2xl border border-neutral-100 bg-white px-6 divide-y divide-neutral-50">
+          <div className="rounded-none border border-neutral-100 bg-white px-6 divide-y divide-neutral-50">
             {FAQ_ITEMS.map((item, i) => (
               <FAQItem key={i} q={item.q} a={item.a} />
             ))}
@@ -564,11 +564,11 @@ export default function ProductDetailClient() {
               {reviews.map((review) => (
                 <div
                   key={review._id}
-                  className="flex flex-col gap-3 p-5 bg-neutral-50 rounded-2xl border border-neutral-100"
+                  className="flex flex-col gap-3 p-5 bg-neutral-50 rounded-none border border-neutral-100"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-[#DDF8FD] flex items-center justify-center text-[12px] font-bold text-[#0C7290]">
+                      <div className="w-8 h-8 rounded-none bg-[#DDF8FD] flex items-center justify-center text-[12px] font-bold text-[#0C7290]">
                         {review.user?.name?.charAt(0)?.toUpperCase() || "?"}
                       </div>
                       <span className="text-[13px] font-semibold text-neutral-900">
@@ -602,11 +602,11 @@ export default function ProductDetailClient() {
             {loadingRecommended ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="rounded-2xl border border-neutral-100 overflow-hidden animate-pulse">
+                  <div key={i} className="rounded-none border border-neutral-100 overflow-hidden animate-pulse">
                     <div className="h-[190px] bg-neutral-100" />
                     <div className="p-4 space-y-2">
-                      <div className="h-3 bg-neutral-100 rounded-full w-full" />
-                      <div className="h-3 bg-neutral-100 rounded-full w-2/3" />
+                      <div className="h-3 bg-neutral-100 rounded-none w-full" />
+                      <div className="h-3 bg-neutral-100 rounded-none w-2/3" />
                     </div>
                   </div>
                 ))}
@@ -629,7 +629,7 @@ export default function ProductDetailClient() {
           <button
             onClick={() => addToCart(product, moq, { source: "pdp-sticky" })}
             disabled={!inStock}
-            className="flex-1 h-12 flex items-center justify-center gap-1.5 bg-neutral-900 text-white text-[13px] font-semibold rounded-xl disabled:opacity-40"
+            className="flex-1 h-12 flex items-center justify-center gap-1.5 bg-neutral-900 text-white text-[13px] font-semibold rounded-none disabled:opacity-40"
           >
             <ShoppingBag size={14} strokeWidth={1.8} />
             {moq > 1 ? `Add ${moq}` : "Add to Cart"}
@@ -637,23 +637,13 @@ export default function ProductDetailClient() {
           <button
             onClick={handleBuyNow}
             disabled={!inStock}
-            className="flex-1 h-12 flex items-center justify-center bg-[#19B5D8] text-white text-[13px] font-semibold rounded-xl disabled:opacity-40"
+            className="flex-1 h-12 flex items-center justify-center bg-[#19B5D8] text-white text-[13px] font-semibold rounded-none disabled:opacity-40"
           >
             Buy Now
           </button>
         </div>
       </div>
 
-      {/* WhatsApp float */}
-      <a
-        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918298922623"}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-20 sm:bottom-8 right-5 sm:right-8 z-50 w-12 h-12 bg-[#19B5D8] rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
-        aria-label="Contact us on WhatsApp"
-      >
-        <MessageCircle size={22} className="text-white" />
-      </a>
     </div>
   );
 }

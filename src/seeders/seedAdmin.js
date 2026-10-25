@@ -7,11 +7,19 @@ dotenv.config();
 // ── Admin credentials ─────────────────────────────────────────────────────────
 // Override any field via env vars (ADMIN_NAME, ADMIN_EMAIL, ADMIN_PHONE,
 // ADMIN_PASSWORD) or edit the defaults below before running.
+if (!process.env.ADMIN_SEED_PASSWORD) {
+  console.error(
+    "\n❌  ADMIN_SEED_PASSWORD is not set.\n" +
+    "    Set it in .env or pass it inline:\n" +
+    "    ADMIN_SEED_PASSWORD='YourStr0ngP@ss!' npm run seed:admin\n"
+  );
+  process.exit(1);
+}
 const ADMIN = {
   name:     process.env.ADMIN_SEED_NAME     || "Admin",
   email:    process.env.ADMIN_SEED_EMAIL    || "admin@evwheels.in",
   phone:    process.env.ADMIN_SEED_PHONE    || "9000000000",
-  password: process.env.ADMIN_SEED_PASSWORD || "Admin@1234",
+  password: process.env.ADMIN_SEED_PASSWORD,
 };
 // ─────────────────────────────────────────────────────────────────────────────
 

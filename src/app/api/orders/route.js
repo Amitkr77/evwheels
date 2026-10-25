@@ -12,8 +12,14 @@ import { sendEmail } from "@/lib/email/sendMail";
 import { getUserId, getUserIdStrict } from "@/lib/getUserId";
 import { newOrderAdminTemplate } from "@/lib/email/templates/newOrderAdmin";
 import { captureServerException } from "@/lib/analytics/posthog-server";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(req) {
+  // Rate limit order placement — 5 orders per minute per IP
+  if (rateLimit(req, { limit: 5, windowMs: 60_000, prefix: "order" })) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
+
   // Strict path: order placement moves money, so a token invalidated by a
   // password reset must not still be able to place orders just because it
   // hasn't expired yet.

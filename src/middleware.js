@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 
 const protectedRoutes = ["/cart", "/checkout", "/profile", "/order-success"];
-const adminRoutes = ["/admin/dashboard"];
+const adminRoutes = ["/admin"];
 const authRoutes = ["/account/login", "/account/register", "/account/forgot-password", "/admin/login"];
 
 function getToken(req) {

@@ -25,10 +25,13 @@ export async function POST(req) {
 
   const body = await req.json();
 
+  // Whitelist only allowed fields — prevent mass assignment
+  const { fullName, phone, addressLine, city, state, postalCode, country, isDefault } = body;
+
   await connectDB();
 
   // If isDefault = true → remove default from others
-  if (body.isDefault) {
+  if (isDefault) {
     await Address.updateMany(
       { user: userId },
       { isDefault: false }
@@ -36,7 +39,7 @@ export async function POST(req) {
   }
 
   const address = await Address.create({
-    ...body,
+    fullName, phone, addressLine, city, state, postalCode, country, isDefault,
     user: userId,
   });
 

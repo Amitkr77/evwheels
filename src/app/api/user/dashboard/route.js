@@ -24,7 +24,7 @@ export async function GET(req) {
         orderStatusSummary
     ] = await Promise.all([
 
-        User.findById(userId).select("-password").lean(),
+        User.findById(userId).select("name email phone avatar isEmailVerified role createdAt").lean(),
 
         Order.aggregate([
             { $match: { user: objectUserId } },

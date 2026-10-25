@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { verifyToken } from "@/lib/jwt";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 
@@ -11,7 +11,10 @@ export async function GET(req) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
+    const decoded = await verifyToken(token);
+    if (!decoded) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
 
     // This is the one place the client asks "is my session still valid" —
     // called once per app load, not per request — so it's worth the DB hit

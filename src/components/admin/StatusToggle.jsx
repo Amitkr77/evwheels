@@ -35,7 +35,7 @@ export default function StatusToggle({
       className={`flex items-center gap-2 cursor-pointer group ${className}`}
     >
       <span
-        className={`relative inline-flex ${track} items-center rounded-none transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
+        className={`relative inline-flex ${track} items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
           checked ? "bg-[#19B5D8]" : "bg-neutral-300"
         }`}
       >

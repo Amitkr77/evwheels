@@ -181,7 +181,7 @@ function CategoryRow({ cat, index, isActive, product, onHover, onLeave }) {
 
       {/* Icon bubble */}
       <div
-        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 overflow-hidden transition-all duration-200 ${
+        className={`w-9 h-9 rounded-none flex items-center justify-center shrink-0 overflow-hidden transition-all duration-200 ${
           isActive ? "bg-[#DDF8FD] scale-105" : `${style.bg} opacity-75 group-hover:opacity-100`
         }`}
       >
@@ -232,7 +232,7 @@ function CategoryExplorer({ categories, products, activeIndex, loading, onHover,
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 divide-x divide-neutral-50 rounded-2xl border border-neutral-100 overflow-hidden">
+      <div className="grid grid-cols-1 sm:grid-cols-2 divide-x divide-neutral-50 rounded-none border border-neutral-100 overflow-hidden">
         {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="h-[68px] border-b border-neutral-50 animate-pulse bg-neutral-50/40" />
         ))}
@@ -241,7 +241,7 @@ function CategoryExplorer({ categories, products, activeIndex, loading, onHover,
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 divide-x divide-neutral-100 rounded-2xl border border-neutral-100 overflow-hidden">
+    <div className="grid grid-cols-1 sm:grid-cols-2 divide-x divide-neutral-100 rounded-none border border-neutral-100 overflow-hidden">
       <div>
         {leftCol.map((cat, i) => (
           <CategoryRow

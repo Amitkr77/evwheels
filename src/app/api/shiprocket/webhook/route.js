@@ -40,14 +40,17 @@ export async function POST(req) {
     const rawBody = await req.text();
     const signature = req.headers.get("x-shiprocket-signature") || "";
 
-    // Verify signature if webhook secret is configured
+    // Fail-closed: reject all webhook calls if secret is not configured
     const secret = process.env.SHIPROCKET_WEBHOOK_SECRET;
-    if (secret) {
-      const valid = verifyWebhookSignature(rawBody, signature);
-      if (!valid) {
-        console.warn("[webhook] Invalid Shiprocket signature");
-        return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-      }
+    if (!secret) {
+      console.error("[webhook] SHIPROCKET_WEBHOOK_SECRET is not set — rejecting webhook");
+      return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
+    }
+
+    const valid = verifyWebhookSignature(rawBody, signature);
+    if (!valid) {
+      console.warn("[webhook] Invalid Shiprocket signature");
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
     let payload;

@@ -44,7 +44,7 @@ export default function OrderTracker({ status, orderId }) {
 
   if (status === "CANCELLED") {
     return (
-      <div className="flex items-center gap-2 py-3 px-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm font-medium">
+      <div className="flex items-center gap-2 py-3 px-4 bg-red-50 border border-red-100 rounded-none text-red-600 text-sm font-medium">
         <XCircle size={16} strokeWidth={1.8} className="shrink-0" />
         This order has been cancelled
       </div>
@@ -70,7 +70,7 @@ export default function OrderTracker({ status, orderId }) {
             <div key={step.key} className={`flex items-center ${!isLast ? "flex-1" : ""}`}>
               <div className="flex flex-col items-center gap-1.5 min-w-0 shrink-0">
                 <div
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                  className={`w-9 h-9 rounded-none flex items-center justify-center transition-all ${
                     done
                       ? isCurr
                         ? "bg-[#19B5D8] ring-4 ring-[#DDF8FD] shadow-sm"
@@ -118,7 +118,7 @@ export default function OrderTracker({ status, orderId }) {
 
       {/* ── Live tracking info ── */}
       {!loadingTracking && sr && (sr.awbCode || sr.shippingStatus) && (
-        <div className="border border-neutral-100 rounded-xl overflow-hidden">
+        <div className="border border-neutral-100 rounded-none overflow-hidden">
 
           {/* Courier bar */}
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-4 py-3 bg-neutral-50 border-b border-neutral-100">

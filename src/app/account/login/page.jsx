@@ -62,7 +62,9 @@ function LoginForm() {
 
       await login(data.user);
       analytics.track("User Logged In", { method: "password" });
-      const redirectTo = searchParams.get("redirect") || "/";
+      const rawRedirect = searchParams.get("redirect") || "/";
+      // Prevent open redirect — only allow relative paths on the same origin
+      const redirectTo = rawRedirect.startsWith("/") && !rawRedirect.startsWith("//") ? rawRedirect : "/";
       window.location.href = redirectTo;
     } catch (err) {
       const msg = "Something went wrong. Please try again later.";

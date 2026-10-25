@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div role="alert" className="bg-red-50 border border-red-200 text-red-700 px-5 py-3 rounded-lg text-sm">
+              <div role="alert" className="bg-red-50 border border-red-200 text-red-700 px-5 py-3 rounded-none text-sm">
                 {error}
               </div>
             )}
@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value.trim())}
-                  className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+                  className="w-full pl-12 pr-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
                   placeholder="amit@evwheels.in"
                   required
                   disabled={loading}
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               disabled={loading}
-              className="w-full py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-4 bg-neutral-900 text-white rounded-none text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? 'Sending...' : 'Send Reset Link'}
             </motion.button>
@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-8"
           >
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[#DDF8FD] flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-none bg-[#DDF8FD] flex items-center justify-center">
               <Mail size={28} className="text-[#19B5D8]" />
             </div>
             <h2 className="text-2xl md:text-3xl font-medium mb-4">

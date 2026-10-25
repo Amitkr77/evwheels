@@ -409,7 +409,7 @@ function ShopInner() {
                   <button
                     key={p.label}
                     onClick={() => setPriceRange(p.label)}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-none text-sm transition-colors ${
                       priceRange === p.label
                         ? "bg-neutral-900 text-white font-medium"
                         : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
@@ -431,7 +431,7 @@ function ShopInner() {
                   <button
                     key={o.value}
                     onClick={() => setSort(o.value)}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-none text-sm transition-colors ${
                       sort === o.value
                         ? "bg-neutral-900 text-white font-medium"
                         : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
@@ -460,7 +460,7 @@ function ShopInner() {
             {/* Mobile toolbar */}
             <div className="flex lg:hidden items-center gap-2 mb-5">
               {/* Search */}
-              <div className="flex-1 min-w-0 flex items-center gap-2 px-3.5 py-2.5 border border-neutral-200 rounded-xl bg-neutral-50">
+              <div className="flex-1 min-w-0 flex items-center gap-2 px-3.5 py-2.5 border border-neutral-200 rounded-none bg-neutral-50">
                 <Search size={13} className="text-neutral-400 shrink-0" />
                 <input
                   value={search}
@@ -477,12 +477,12 @@ function ShopInner() {
               {/* Filter button */}
               <button
                 onClick={() => setDrawerOpen(true)}
-                className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 border border-neutral-200 rounded-xl text-sm font-medium text-neutral-700 bg-white"
+                className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 border border-neutral-200 rounded-none text-sm font-medium text-neutral-700 bg-white"
               >
                 <SlidersHorizontal size={14} />
                 Filter
                 {activeFilterCount > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-neutral-900 text-white text-[9px] flex items-center justify-center">
+                  <span className="w-4 h-4 rounded-none bg-neutral-900 text-white text-[9px] flex items-center justify-center">
                     {activeFilterCount}
                   </span>
                 )}
@@ -499,7 +499,7 @@ function ShopInner() {
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
-                  className="text-sm text-neutral-700 border border-neutral-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:border-[#19B5D8] transition-colors"
+                  className="text-sm text-neutral-700 border border-neutral-200 rounded-none px-3 py-1.5 bg-white focus:outline-none focus:border-[#19B5D8] transition-colors"
                 >
                   {SORT_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>{o.label}</option>
@@ -520,14 +520,14 @@ function ShopInner() {
               </div>
             ) : paginated.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-neutral-100 flex items-center justify-center mb-5">
+                <div className="w-16 h-16 rounded-none bg-neutral-100 flex items-center justify-center mb-5">
                   <Search size={24} className="text-neutral-300" />
                 </div>
                 <p className="text-neutral-900 font-semibold mb-1">No products found</p>
                 <p className="text-sm text-neutral-400 mb-6">Try adjusting your filters or search query.</p>
                 <button
                   onClick={() => { handleCategoryChange(""); setPriceRange("All Prices"); setSearch(""); }}
-                  className="px-5 py-2.5 bg-neutral-900 text-white rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors"
+                  className="px-5 py-2.5 bg-neutral-900 text-white rounded-none text-sm font-medium hover:bg-neutral-800 transition-colors"
                 >
                   Clear filters
                 </button>
@@ -569,7 +569,7 @@ function ShopInner() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 280 }}
-              className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto lg:hidden"
+              className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-none shadow-2xl max-h-[85vh] overflow-y-auto lg:hidden"
             >
               <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-neutral-100">
                 <h3 className="font-semibold text-neutral-900">Filters</h3>
@@ -590,7 +590,7 @@ function ShopInner() {
                       <button
                         key={cat.slug}
                         onClick={() => { handleCategoryChange(cat.slug); setDrawerOpen(false); }}
-                        className={`py-2.5 px-3 rounded-xl text-sm text-left transition-colors border ${
+                        className={`py-2.5 px-3 rounded-none text-sm text-left transition-colors border ${
                           category === cat.slug
                             ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                             : "border-neutral-200 text-neutral-700 hover:border-neutral-400"
@@ -612,7 +612,7 @@ function ShopInner() {
                       <button
                         key={p.label}
                         onClick={() => setPriceRange(p.label)}
-                        className={`py-3 px-4 rounded-xl text-sm text-left border transition-colors ${
+                        className={`py-3 px-4 rounded-none text-sm text-left border transition-colors ${
                           priceRange === p.label
                             ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                             : "border-neutral-200 text-neutral-700 hover:border-neutral-400"
@@ -634,7 +634,7 @@ function ShopInner() {
                       <button
                         key={o.value}
                         onClick={() => setSort(o.value)}
-                        className={`py-3 px-4 rounded-xl text-sm text-left border transition-colors ${
+                        className={`py-3 px-4 rounded-none text-sm text-left border transition-colors ${
                           sort === o.value
                             ? "bg-neutral-900 text-white border-neutral-900 font-medium"
                             : "border-neutral-200 text-neutral-700 hover:border-neutral-400"
@@ -650,13 +650,13 @@ function ShopInner() {
               <div className="px-5 pb-8 pt-2 flex gap-3">
                 <button
                   onClick={() => { handleCategoryChange(""); setPriceRange("All Prices"); setSort("featured"); }}
-                  className="flex-1 py-3.5 border border-neutral-300 rounded-xl text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
+                  className="flex-1 py-3.5 border border-neutral-300 rounded-none text-sm font-medium text-neutral-700 hover:bg-neutral-50 transition-colors"
                 >
                   Reset all
                 </button>
                 <button
                   onClick={() => setDrawerOpen(false)}
-                  className="flex-1 py-3.5 bg-neutral-900 text-white rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors"
+                  className="flex-1 py-3.5 bg-neutral-900 text-white rounded-none text-sm font-medium hover:bg-neutral-800 transition-colors"
                 >
                   View {!loading && `${resultsCount} `}products
                 </button>

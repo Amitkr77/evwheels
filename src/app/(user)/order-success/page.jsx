@@ -124,14 +124,14 @@ export default function OrderConfirmationPage() {
           {/* Checkmark */}
           <div className="relative inline-flex items-center justify-center mb-5">
             <span
-              className="absolute w-20 h-20 rounded-full bg-[#DDF8FD] opacity-60 animate-ping"
+              className="absolute w-20 h-20 rounded-none bg-[#DDF8FD] opacity-60 animate-ping"
               style={{ animationDuration: "2.2s" }}
             />
             <motion.div
               initial={{ scale: 0.4, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.15, type: "spring", stiffness: 280, damping: 22 }}
-              className="relative w-20 h-20 rounded-full bg-[#19B5D8] flex items-center justify-center shadow-lg shadow-[#19B5D8]/20"
+              className="relative w-20 h-20 rounded-none bg-[#19B5D8] flex items-center justify-center shadow-lg shadow-[#19B5D8]/20"
             >
               <CheckCircle size={36} className="text-white" strokeWidth={1.8} />
             </motion.div>
@@ -162,7 +162,7 @@ export default function OrderConfirmationPage() {
             <span className="text-sm font-semibold text-neutral-900 font-mono">{displayId}</span>
             <button
               onClick={handleCopy}
-              className="p-1 rounded-full hover:bg-neutral-200 transition-colors"
+              className="p-1 rounded-none hover:bg-neutral-200 transition-colors"
               title="Copy order ID"
             >
               {copied

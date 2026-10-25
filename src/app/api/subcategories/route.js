@@ -87,9 +87,10 @@ export async function POST(req) {
       );
     }
 
-    // duplicate check
+    // duplicate check — escape regex metacharacters to prevent ReDoS
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const exists = await Subcategory.findOne({
-      name: { $regex: `^${name}$`, $options: "i" },
+      name: { $regex: `^${escapedName}$`, $options: "i" },
       category,
     });
 

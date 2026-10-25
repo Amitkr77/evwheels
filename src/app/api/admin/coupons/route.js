@@ -21,7 +21,13 @@ export async function POST(req) {
 
     await connectDB();
 
-    const coupon = await Coupon.create(body);
+    // Whitelist only allowed fields — prevent mass assignment
+    const { code, description, discountType, discountValue, minOrderAmount, maxDiscount,
+            expiryDate, usageLimit, isActive, applicableProducts, applicableCategories } = body;
+    const coupon = await Coupon.create({
+      code, description, discountType, discountValue, minOrderAmount, maxDiscount,
+      expiryDate, usageLimit, isActive, applicableProducts, applicableCategories,
+    });
     return NextResponse.json(coupon);
   } catch (error) {
     console.error("[admin/coupons]", error.message);
@@ -94,7 +100,23 @@ export async function PATCH(req) {
 
     await connectDB();
 
-    const updatedCoupon = await Coupon.findByIdAndUpdate(id, body, {
+    // Whitelist only allowed fields — prevent mass assignment (e.g. resetting usedCount)
+    const { code, description, discountType, discountValue, minOrderAmount, maxDiscount,
+            expiryDate, usageLimit, isActive, applicableProducts, applicableCategories } = body;
+    const allowedUpdate = {};
+    if (code !== undefined) allowedUpdate.code = code;
+    if (description !== undefined) allowedUpdate.description = description;
+    if (discountType !== undefined) allowedUpdate.discountType = discountType;
+    if (discountValue !== undefined) allowedUpdate.discountValue = discountValue;
+    if (minOrderAmount !== undefined) allowedUpdate.minOrderAmount = minOrderAmount;
+    if (maxDiscount !== undefined) allowedUpdate.maxDiscount = maxDiscount;
+    if (expiryDate !== undefined) allowedUpdate.expiryDate = expiryDate;
+    if (usageLimit !== undefined) allowedUpdate.usageLimit = usageLimit;
+    if (isActive !== undefined) allowedUpdate.isActive = isActive;
+    if (applicableProducts !== undefined) allowedUpdate.applicableProducts = applicableProducts;
+    if (applicableCategories !== undefined) allowedUpdate.applicableCategories = applicableCategories;
+
+    const updatedCoupon = await Coupon.findByIdAndUpdate(id, allowedUpdate, {
       new: true,
       runValidators: true,
     });

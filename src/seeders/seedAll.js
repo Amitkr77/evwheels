@@ -242,15 +242,20 @@ async function seed() {
   const bcrypt = (await import("bcryptjs")).default;
   const existingAdmin = await User.findOne({ role: "admin" });
   if (!existingAdmin) {
-    const hashedPassword = await bcrypt.hash("admin123", 12);
-    await User.create({
-      name: "Admin",
-      email: "admin@evwheels.com",
-      phone: "9999999999",
-      password: hashedPassword,
-      role: "admin",
-    });
-    console.log("  ✅ Admin user created (admin@evwheels.com / admin123)");
+    const adminPassword = process.env.ADMIN_SEED_PASSWORD;
+    if (!adminPassword) {
+      console.warn("  ⚠ ADMIN_SEED_PASSWORD not set — skipping admin creation. Set it in .env to create an admin.");
+    } else {
+      const hashedPassword = await bcrypt.hash(adminPassword, 12);
+      await User.create({
+        name: "Admin",
+        email: process.env.ADMIN_SEED_EMAIL || "admin@evwheels.com",
+        phone: process.env.ADMIN_SEED_PHONE || "9999999999",
+        password: hashedPassword,
+        role: "admin",
+      });
+      console.log("  ✅ Admin user created");
+    }
   } else {
     console.log("  ℹ Admin user already exists");
   }

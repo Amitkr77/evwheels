@@ -261,7 +261,7 @@ export default function CouponsPage() {
           role="switch"
           aria-checked={formData.isActive}
           onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
-          className={`relative inline-flex h-7 w-12 items-center rounded-none transition-colors focus:outline-none ${
+          className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none ${
             formData.isActive ? "bg-[#19B5D8]" : "bg-neutral-300"
           }`}
         >

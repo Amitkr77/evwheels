@@ -44,7 +44,7 @@ export default function OrderDetailsModal({ order, onClose }) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 40 }}
         transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-        className="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl overflow-hidden max-h-[92vh] sm:max-h-[88vh] flex flex-col shadow-2xl"
+        className="bg-white w-full sm:max-w-lg rounded-none overflow-hidden max-h-[92vh] sm:max-h-[88vh] flex flex-col shadow-2xl"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 shrink-0">
@@ -60,7 +60,7 @@ export default function OrderDetailsModal({ order, onClose }) {
           <button
             onClick={onClose}
             aria-label="Close"
-            className="w-8 h-8 rounded-full flex items-center justify-center text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 transition-colors"
+            className="w-8 h-8 rounded-none flex items-center justify-center text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 transition-colors"
           >
             <X size={16} />
           </button>
@@ -78,11 +78,11 @@ export default function OrderDetailsModal({ order, onClose }) {
               <Package size={14} className="text-neutral-400" strokeWidth={1.8} />
               <p className="text-[12px] font-semibold text-neutral-500 uppercase tracking-wider">Items</p>
             </div>
-            <div className="rounded-xl border border-neutral-100 divide-y divide-neutral-50 overflow-hidden">
+            <div className="rounded-none border border-neutral-100 divide-y divide-neutral-50 overflow-hidden">
               {order.items.map((item) => (
                 <div key={item.product} className="flex items-center justify-between gap-3 px-4 py-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-lg bg-neutral-100 flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-none bg-neutral-100 flex items-center justify-center shrink-0">
                       <Package size={14} className="text-neutral-400" strokeWidth={1.6} />
                     </div>
                     <div className="min-w-0">
@@ -104,7 +104,7 @@ export default function OrderDetailsModal({ order, onClose }) {
               <Receipt size={14} className="text-neutral-400" strokeWidth={1.8} />
               <p className="text-[12px] font-semibold text-neutral-500 uppercase tracking-wider">Price Breakdown</p>
             </div>
-            <div className="rounded-xl border border-neutral-100 px-4 py-3 space-y-2">
+            <div className="rounded-none border border-neutral-100 px-4 py-3 space-y-2">
               <div className="flex justify-between text-[13px] text-neutral-600">
                 <span>Subtotal</span>
                 <span className="font-medium">{formatCurrency((order.totalAmount || 0) - (order.taxAmount || 0) - (order.shippingAmount || 0))}</span>
@@ -135,7 +135,7 @@ export default function OrderDetailsModal({ order, onClose }) {
                 <MapPin size={14} className="text-neutral-400" strokeWidth={1.8} />
                 <p className="text-[12px] font-semibold text-neutral-500 uppercase tracking-wider">Shipping Address</p>
               </div>
-              <div className="rounded-xl border border-neutral-100 px-4 py-3">
+              <div className="rounded-none border border-neutral-100 px-4 py-3">
                 <p className="text-[13px] font-semibold text-neutral-800">{order.shippingAddress.fullName}</p>
                 {addressLine && <p className="text-[13px] text-neutral-500 mt-0.5">{addressLine}</p>}
                 <p className="text-[13px] text-neutral-500">
@@ -153,7 +153,7 @@ export default function OrderDetailsModal({ order, onClose }) {
               <CreditCard size={14} className="text-neutral-400" strokeWidth={1.8} />
               <p className="text-[12px] font-semibold text-neutral-500 uppercase tracking-wider">Order Info</p>
             </div>
-            <div className="rounded-xl border border-neutral-100 px-4 py-3 space-y-2">
+            <div className="rounded-none border border-neutral-100 px-4 py-3 space-y-2">
               <div className="flex justify-between text-[13px]">
                 <span className="text-neutral-500">Placed on</span>
                 <span className="font-medium text-neutral-800">{formatDate(order.createdAt)}</span>
@@ -177,7 +177,7 @@ export default function OrderDetailsModal({ order, onClose }) {
         <div className="px-5 py-4 border-t border-neutral-100 shrink-0">
           <button
             onClick={onClose}
-            className="w-full py-2.5 text-sm font-semibold text-neutral-700 bg-neutral-100 hover:bg-neutral-200 rounded-xl transition-colors"
+            className="w-full py-2.5 text-sm font-semibold text-neutral-700 bg-neutral-100 hover:bg-neutral-200 rounded-none transition-colors"
           >
             Close
           </button>

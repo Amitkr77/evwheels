@@ -10,7 +10,9 @@ export async function GET(req) {
 
   await connectDB();
 
-  const user = await User.findById(userId).select("-password");
+  const user = await User.findById(userId)
+    .select("name email phone avatar isEmailVerified role createdAt updatedAt")
+    .lean();
   if (!user)
     return NextResponse.json({ error: "User not found" }, { status: 404 });
 

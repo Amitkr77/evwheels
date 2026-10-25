@@ -26,9 +26,11 @@ export async function GET(req) {
     const query = {};
     if (status) query.orderStatus = status;
     if (search) {
+      // Escape regex metacharacters to prevent ReDoS
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       query.$or = [
-        { id: { $regex: search, $options: "i" } },
-        { "shiprocket.awbCode": { $regex: search, $options: "i" } },
+        { id: { $regex: escapedSearch, $options: "i" } },
+        { "shiprocket.awbCode": { $regex: escapedSearch, $options: "i" } },
       ];
     }
 

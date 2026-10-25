@@ -411,7 +411,7 @@ export default function SubcategoriesPage() {
           onClick={() =>
             setFormData({ ...formData, isActive: !formData.isActive })
           }
-          className={`relative inline-flex h-7 w-12 items-center rounded-none transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
+          className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
             formData.isActive ? "bg-[#19B5D8]" : "bg-neutral-300"
           }`}
         >
@@ -584,7 +584,7 @@ export default function SubcategoriesPage() {
                       aria-checked={sub.isActive ?? true}
                       aria-label={`Toggle ${sub.name} active status`}
                       onClick={() => handleToggleActive(sub)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-none transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#19B5D8] focus:ring-offset-2 ${
                         sub.isActive !== false
                           ? "bg-[#19B5D8]"
                           : "bg-neutral-300"

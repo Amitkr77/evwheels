@@ -228,7 +228,7 @@ export default function Address() {
                   name="fullName"
                   value={form.fullName}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
                 />
               </div>
 
@@ -240,7 +240,7 @@ export default function Address() {
                   name="phone"
                   value={form.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
                 />
               </div>
 
@@ -253,7 +253,7 @@ export default function Address() {
                   onChange={handleChange}
                   rows={2}
                   placeholder="House no, Building, Street, Area"
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors resize-none"
                 />
               </div>
 
@@ -266,7 +266,7 @@ export default function Address() {
                     name="city"
                     value={form.city}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
                   />
                 </div>
                 <div>
@@ -277,7 +277,7 @@ export default function Address() {
                     name="postalCode"
                     value={form.postalCode}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
                   />
                 </div>
               </div>
@@ -289,7 +289,7 @@ export default function Address() {
                   name="state"
                   value={form.state}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors bg-white"
+                  className="w-full px-4 py-3 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors bg-white"
                 >
                   <option value="">Select State</option>
                   {INDIAN_STATES.map((s) => (
@@ -316,14 +316,14 @@ export default function Address() {
             <div className="flex gap-4 mt-8">
               <button
                 onClick={() => { setShowForm(false); setError(null); }}
-                className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-lg font-medium transition-colors"
+                className="flex-1 py-3.5 text-neutral-600 hover:bg-neutral-100 rounded-none font-medium transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAdd}
                 disabled={saving}
-                className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-lg font-medium hover:bg-[#1297B5] transition-colors disabled:opacity-50"
+                className="flex-1 py-3.5 bg-[#19B5D8] text-white rounded-none font-medium hover:bg-[#1297B5] transition-colors disabled:opacity-50"
               >
                 {saving ? "Saving..." : "Save Address"}
               </button>

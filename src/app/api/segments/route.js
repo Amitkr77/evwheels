@@ -64,9 +64,10 @@ export async function POST(req) {
       );
     }
 
-    // Check duplicate
+    // Check duplicate — escape regex metacharacters to prevent ReDoS
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const existing = await Segment.findOne({
-      name: { $regex: `^${name}$`, $options: "i" },
+      name: { $regex: `^${escapedName}$`, $options: "i" },
     });
 
     if (existing) {

@@ -44,7 +44,7 @@ function MiniTracker({ status }) {
           <React.Fragment key={step}>
             <div className="flex flex-col items-center gap-1">
               <div
-                className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
+                className={`w-5 h-5 rounded-none flex items-center justify-center transition-colors ${
                   done
                     ? isCurr
                       ? "bg-[#19B5D8] ring-4 ring-[#DDF8FD]"
@@ -89,7 +89,7 @@ function SkeletonCard() {
       <div className="flex items-center gap-2 pt-4 border-t border-neutral-100">
         {[0,1,2,3].map((i) => (
           <React.Fragment key={i}>
-            <div className="w-5 h-5 rounded-full bg-neutral-100" />
+            <div className="w-5 h-5 rounded-none bg-neutral-100" />
             {i < 3 && <div className="flex-1 h-px bg-neutral-100" />}
           </React.Fragment>
         ))}

@@ -85,7 +85,7 @@ export default function Settings() {
         Profile
       </h1>
 
-      <div className="bg-white border border-neutral-200/70 rounded-xl p-10 md:p-12">
+      <div className="bg-white border border-neutral-200/70 rounded-none p-10 md:p-12">
         {/* Avatar + name header */}
         <div className="flex flex-col sm:flex-row gap-8 items-start mb-12">
           <UserAvatar name={user?.name} size="lg" />
@@ -103,7 +103,7 @@ export default function Settings() {
         {message && (
           <div
             role="alert"
-            className={`mb-8 px-4 py-3 rounded-lg text-sm ${
+            className={`mb-8 px-4 py-3 rounded-none text-sm ${
               message.type === "success"
                 ? "bg-[#DDF8FD] border border-[#19B5D8]/20 text-[#19B5D8]"
                 : "bg-red-50 border border-red-200 text-red-700"
@@ -124,7 +124,7 @@ export default function Settings() {
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+              className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             />
           </div>
 
@@ -137,7 +137,7 @@ export default function Settings() {
               type="email"
               value={user?.email || ""}
               disabled
-              className="w-full px-5 py-4 border border-neutral-200 rounded-lg bg-neutral-50 text-neutral-500 cursor-not-allowed"
+              className="w-full px-5 py-4 border border-neutral-200 rounded-none bg-neutral-50 text-neutral-500 cursor-not-allowed"
             />
           </div>
 
@@ -151,7 +151,7 @@ export default function Settings() {
               name="phone"
               value={form.phone}
               onChange={handleChange}
-              className="w-full px-5 py-4 border border-neutral-300 rounded-lg focus:outline-none focus:border-[#19B5D8] transition-colors"
+              className="w-full px-5 py-4 border border-neutral-300 rounded-none focus:outline-none focus:border-[#19B5D8] transition-colors"
             />
           </div>
         </div>
@@ -159,7 +159,7 @@ export default function Settings() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="mt-12 px-10 py-4 bg-neutral-900 text-white rounded-full text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-12 px-10 py-4 bg-neutral-900 text-white rounded-none text-lg font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>

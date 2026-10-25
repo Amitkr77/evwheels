@@ -63,9 +63,17 @@ export async function PATCH(req) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
     const body = await req.json();
+    // Whitelist only allowed fields — prevent mass assignment
+    const { imageUrl, caption, link, isActive, displayOrder } = body;
+    const allowedUpdate = {};
+    if (imageUrl !== undefined) allowedUpdate.imageUrl = imageUrl;
+    if (caption !== undefined) allowedUpdate.caption = caption;
+    if (link !== undefined) allowedUpdate.link = link;
+    if (isActive !== undefined) allowedUpdate.isActive = isActive;
+    if (displayOrder !== undefined) allowedUpdate.displayOrder = displayOrder;
 
     await connectDB();
-    const post = await InstagramPost.findByIdAndUpdate(id, { $set: body }, { new: true });
+    const post = await InstagramPost.findByIdAndUpdate(id, { $set: allowedUpdate }, { new: true });
     if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
 
     return NextResponse.json({ success: true, post });

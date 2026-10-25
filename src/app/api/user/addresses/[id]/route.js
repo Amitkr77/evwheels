@@ -21,14 +21,25 @@ export async function PATCH(req, { params }) {
     if (!address)
         return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    if (body.isDefault) {
+    // Whitelist only allowed fields — prevent IDOR via user field override
+    const { fullName, phone, addressLine, city, state, postalCode, country, isDefault } = body;
+
+    if (isDefault) {
         await Address.updateMany(
             { user: userId },
             { isDefault: false }
         );
     }
 
-    Object.assign(address, body);
+    if (fullName !== undefined) address.fullName = fullName;
+    if (phone !== undefined) address.phone = phone;
+    if (addressLine !== undefined) address.addressLine = addressLine;
+    if (city !== undefined) address.city = city;
+    if (state !== undefined) address.state = state;
+    if (postalCode !== undefined) address.postalCode = postalCode;
+    if (country !== undefined) address.country = country;
+    if (isDefault !== undefined) address.isDefault = isDefault;
+
     await address.save();
 
     return NextResponse.json(address);
