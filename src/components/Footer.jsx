@@ -23,15 +23,26 @@ export default function Footer() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
     if (!email.trim() || !email.includes("@")) {
       setStatus("error");
       setTimeout(() => setStatus(""), 3000);
       return;
     }
-    setStatus("success");
-    setEmail("");
+    try {
+      setStatus("loading");
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("success");
+      setEmail("");
+    } catch {
+      setStatus("error");
+    }
     setTimeout(() => setStatus(""), 4000);
   };
 

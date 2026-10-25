@@ -17,11 +17,14 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
+import { useRecentlyViewedStore } from "@/store/recentlyViewedStore";
+import { useToast } from "@/components/Toast";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { analytics } from "@/lib/analytics";
 import ProductCard from "@/components/shop/ProductCard";
 import PincodeChecker from "@/components/shop/PincodeChecker";
+import ShareButtons from "@/components/shop/ShareButtons";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -102,6 +105,9 @@ export default function ProductDetailClient() {
   const { slug } = useParams();
   const router    = useRouter();
   const addToCart = useCartStore((state) => state.addToCart);
+  const addToRecentlyViewed = useRecentlyViewedStore((s) => s.addProduct);
+  const recentlyViewed = useRecentlyViewedStore((s) => s.items);
+  const toast = useToast();
 
   const [product,           setProduct]           = useState(null);
   const [loading,           setLoading]           = useState(true);
@@ -126,7 +132,7 @@ export default function ProductDetailClient() {
     return () => { cancelled = true; };
   }, [slug]);
 
-  // ── Analytics ─────────────────────────────────────────────────────────────
+  // ── Analytics + Recently Viewed ────────────────────────────────────────────
   useEffect(() => {
     if (!product?._id) return;
     analytics.track("Product Viewed", {
@@ -138,6 +144,7 @@ export default function ProductDetailClient() {
       price:        product.price,
       currency:     "INR",
     });
+    addToRecentlyViewed(product);
   }, [product?._id]);
 
   // ── Fetch reviews ──────────────────────────────────────────────────────────
@@ -397,6 +404,11 @@ export default function ProductDetailClient() {
               </span>
             </div>
 
+            {/* Share */}
+            <div className="mb-5">
+              <ShareButtons title={product.title} slug={product.slug} />
+            </div>
+
             {/* Key highlights grid */}
             {highlights.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-5">
@@ -436,7 +448,7 @@ export default function ProductDetailClient() {
             {/* CTAs — hidden on mobile (sticky bar handles it) */}
             <div className="hidden sm:flex gap-3 mb-6">
               <button
-                onClick={() => addToCart(product, moq, { source: "pdp" })}
+                onClick={() => { addToCart(product, moq, { source: "pdp" }); toast(`${product.title} added to cart`, "cart"); }}
                 disabled={!inStock}
                 className="flex-1 h-12 flex items-center justify-center gap-2 bg-neutral-900 text-white text-[13.5px] font-semibold rounded-none hover:bg-neutral-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
@@ -621,13 +633,28 @@ export default function ProductDetailClient() {
           </section>
         )}
 
+        {/* Recently Viewed */}
+        {recentlyViewed.filter((p) => p._id !== product?._id).length > 0 && (
+          <section>
+            <SectionHeader label="Your History" title="Recently Viewed" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              {recentlyViewed
+                .filter((p) => p._id !== product?._id)
+                .slice(0, 4)
+                .map((p) => (
+                  <ProductCard key={p._id} product={p} />
+                ))}
+            </div>
+          </section>
+        )}
+
       </div>
 
       {/* ── Mobile sticky CTA ── */}
       <div className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-sm border-t border-neutral-100 px-4 py-3">
         <div className="flex gap-3">
           <button
-            onClick={() => addToCart(product, moq, { source: "pdp-sticky" })}
+            onClick={() => { addToCart(product, moq, { source: "pdp-sticky" }); toast(`${product.title} added to cart`, "cart"); }}
             disabled={!inStock}
             className="flex-1 h-12 flex items-center justify-center gap-1.5 bg-neutral-900 text-white text-[13px] font-semibold rounded-none disabled:opacity-40"
           >
