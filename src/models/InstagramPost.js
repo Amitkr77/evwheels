@@ -11,5 +11,7 @@ const InstagramPostSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+InstagramPostSchema.index({ isActive: 1, displayOrder: 1 });
+
 export default mongoose.models.InstagramPost ||
   mongoose.model("InstagramPost", InstagramPostSchema);

@@ -8,6 +8,8 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import HeroSlide from "@/models/HeroSlide";
 
+export const revalidate = 3600;
+
 const DEFAULT_SLIDES = [
   {
     badgeIcon: "Zap",

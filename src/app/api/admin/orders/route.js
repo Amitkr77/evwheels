@@ -22,7 +22,8 @@ export async function GET(req) {
         const orders = await Order.find(filter)
             .populate("user", "name email")
             .sort({ createdAt: -1 })
-            .limit(500);
+            .limit(500)
+            .lean();
 
         return NextResponse.json({ success: true, orders });
     } catch (error) {

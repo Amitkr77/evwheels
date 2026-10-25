@@ -4,6 +4,8 @@ import HomepageSettings from "@/models/HomepageSettings";
 import Product from "@/models/Product";
 import { captureServerException } from "@/lib/analytics/posthog-server";
 
+export const revalidate = 1800;
+
 const PRODUCT_FIELDS = "title slug images price moq description stock";
 
 // GET /api/homepage-settings — the trending/featured product for the

@@ -21,7 +21,7 @@ async function updateCartActivity(userId) {
 // Helper: fetch and populate the cart, return plain items array
 async function getPopulatedItems(userId) {
   const cart = await Cart.findOne({ user: userId })
-    .populate("items.product")
+    .populate({ path: "items.product", select: "title price stock moq images slug" })
     .lean();
   return cart?.items ?? [];
 }

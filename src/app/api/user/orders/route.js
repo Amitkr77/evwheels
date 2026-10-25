@@ -13,7 +13,8 @@ export async function GET(req) {
 
   const orders = await Order.find({ user: userId })
     .sort({ createdAt: -1 })
-    .limit(200);
+    .limit(200)
+    .lean();
 
   return NextResponse.json({ success: true, orders });
 }

@@ -18,5 +18,7 @@ const HeroSlideSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+HeroSlideSchema.index({ isActive: 1, displayOrder: 1 });
+
 export default mongoose.models.HeroSlide ||
   mongoose.model("HeroSlide", HeroSlideSchema);

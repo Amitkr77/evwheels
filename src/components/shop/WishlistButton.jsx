@@ -7,14 +7,10 @@ import { useAuthStore } from "@/store/authStore";
 import { useToast } from "@/components/Toast";
 
 function WishlistButton({ productId }) {
-  const items = useWishlistStore((s) => s.items);
+  const isInWishlist = useWishlistStore((s) => s.isInWishlist(productId));
   const toggleWishlist = useWishlistStore((s) => s.toggleWishlist);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const toast = useToast();
-
-  const isInWishlist = items.some(
-    (item) => item._id?.toString() === productId?.toString()
-  );
 
   const handleClick = (e) => {
     e.preventDefault();

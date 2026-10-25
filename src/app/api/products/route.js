@@ -145,16 +145,25 @@ export async function GET(req) {
       sort[sortBy] = sortOrder;
     }
 
+    // Listing select — exclude heavy fields (description, specifications) for
+    // public listing queries.  Admin queries keep all fields.
+    const listingSelect = isAdmin
+      ? undefined
+      : "title slug price stock moq images brand colors category subcategory segment isActive createdAt";
+
     // Run products query, count, and stats aggregation in parallel
-    const [products, total, statsAgg] = await Promise.all([
-      Product.find(filter)
+    const productsQuery = Product.find(filter)
         .populate("category", "name slug")
         .populate("subcategory", "name slug")
         .populate("segment", "name slug")
         .sort(sort)
         .skip(skip)
-        .limit(limit)
-        .lean(),
+        .limit(limit);
+
+    if (listingSelect) productsQuery.select(listingSelect);
+
+    const [products, total, statsAgg] = await Promise.all([
+      productsQuery.lean(),
       Product.countDocuments(filter),
       Product.aggregate([
         { $match: filter },

@@ -80,7 +80,8 @@ export async function GET(req) {
     const reviews = await Review.find({ product: productId, status: "Approved" })
       .populate("user", "name")
       .sort({ createdAt: -1 })
-      .limit(200);
+      .limit(200)
+      .lean();
 
     return NextResponse.json(reviews);
   } catch (error) {

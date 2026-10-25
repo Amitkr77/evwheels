@@ -4,6 +4,8 @@ import { verifyAdmin } from "@/lib/adminAuth";
 import Subcategory from "@/models/Subcategory";
 import Category from "@/models/Category";
 
+export const revalidate = 3600;
+
 // GET /api/subcategories
 export async function GET(req) {
   try {
@@ -30,7 +32,8 @@ export async function GET(req) {
     const subcategories = await Subcategory.find(filter)
       .populate("category", "name slug")
       .populate("segment", "name slug")
-      .sort({ sortOrder: 1 });
+      .sort({ sortOrder: 1 })
+      .lean();
 
     return NextResponse.json({
       success: true,

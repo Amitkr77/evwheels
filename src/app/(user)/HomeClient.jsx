@@ -373,6 +373,7 @@ function PromoCarousel() {
             fill
             sizes="(max-width: 1024px) 100vw, 400px"
             className="object-cover"
+            {...(active === 0 && { priority: true })}
           />
         </motion.div>
       </AnimatePresence>

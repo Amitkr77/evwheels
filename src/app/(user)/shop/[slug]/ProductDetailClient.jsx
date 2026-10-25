@@ -161,29 +161,25 @@ export default function ProductDetailClient() {
     addToRecentlyViewed(product);
   }, [product?._id]);
 
-  // ── Fetch reviews ──────────────────────────────────────────────────────────
+  // ── Fetch reviews + recommended (parallel) ─────────────────────────────────
   useEffect(() => {
     if (!product?._id) return;
     let cancelled = false;
     setLoadingReviews(true);
     setReviews([]);
-    fetch(`/api/reviews?id=${product._id}`)
+    setLoadingRecommended(true);
+
+    const recUrl = product.category?.slug
+      ? `/api/products?category=${encodeURIComponent(product.category.slug)}&limit=9`
+      : "/api/products?sort=createdAt&order=desc&limit=9";
+
+    const reviewsP = fetch(`/api/reviews?id=${product._id}`)
       .then((r) => r.json())
       .then((d) => { if (!cancelled) setReviews(Array.isArray(d) ? d : []); })
       .catch(() => { if (!cancelled) setReviews([]); })
       .finally(() => { if (!cancelled) setLoadingReviews(false); });
-    return () => { cancelled = true; };
-  }, [product?._id]);
 
-  // ── Fetch recommended ─────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!product?._id) return;
-    let cancelled = false;
-    setLoadingRecommended(true);
-    const url = product.category?.slug
-      ? `/api/products?category=${encodeURIComponent(product.category.slug)}&limit=9`
-      : "/api/products?sort=createdAt&order=desc&limit=9";
-    fetch(url)
+    const recP = fetch(recUrl)
       .then((r) => r.json())
       .then((d) => {
         if (!cancelled)
